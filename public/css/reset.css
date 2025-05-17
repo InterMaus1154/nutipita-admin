@@ -9,6 +9,10 @@ html, body {
     font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
 }
 
+body{
+    background-color: var(--gray);
+}
+
 a {
     display: block;
     color: inherit;
@@ -28,4 +32,25 @@ img{
 /*global css*/
 :root{
     --primary-red: #4c0519;
+    --bright-red: #e11d48;
+
+    --gray: #ccc;
 }
+
+/*success and error response*/
+.response-holder{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.response-holder .response-text{
+    font-weight: bold;
+    font-size: 1.25rem
+}
+
+.response-holder .response-text.error{
+    color: var(--bright-red);
+}
+
+

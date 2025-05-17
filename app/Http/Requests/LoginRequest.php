@@ -32,7 +32,7 @@ class LoginRequest extends FormRequest
         return [
             'username.required' => 'You must provide a username',
             'password.required' => 'You must provide a password',
-            'username.exists' => 'The entered username does not exist!'
+            'username.exists' => 'Invalid credentials!'
         ];
     }
 }
