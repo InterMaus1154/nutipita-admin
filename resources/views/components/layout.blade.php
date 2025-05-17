@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="{{asset('css/form.css')}}"/>
 </head>
 <body>
-<x-header />
-{{$slot}}
+<x-header/>
+<main>
+    {{$slot}}
+</main>
 </body>
 </html>

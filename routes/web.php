@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Controllers\CustomerController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -18,5 +19,12 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
     // main dashboard
     Route::get('/', [AdminController::class, 'showDashboard'])->name('admin.view.dashboard');
+
+    // routes with customers
+    Route::group(['prefix' => 'customers', 'controller' => CustomerController::class], function () {
+
+        // show customer list page
+        Route::get('/', 'index')->name('view.customers');
+    });
 
 });

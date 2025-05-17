@@ -35,3 +35,16 @@ header nav ul li .form-submit-button{
     font-weight: normal;
     text-decoration: underline;
 }
+
+/*main content*/
+main{
+    padding: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+main .page-section .section-title{
+    color: var(--primary-red);
+}
