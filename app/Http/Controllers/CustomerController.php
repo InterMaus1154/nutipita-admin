@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CustomerController extends Controller
 {
@@ -24,6 +26,23 @@ class CustomerController extends Controller
     // store new customer
     public function store(StoreCustomerRequest $request)
     {
+        try {
+            $customer = Customer::create([
+                'customer_name' => $request->validated('customer_name'),
+                'customer_phone' => $request->validated('customer_phone'),
+                'customer_email' => $request->validated('customer_email')
+            ]);
+            return redirect()->route('customers.show', compact('customer'), status: 201);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('customers.create', status: 500)->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 
+    // show a customer
+    public function show(Customer $customer)
+    {
+        $customer->loadMissing('orders', 'customPrices');
+        return view('customers.show', compact('customer'));
     }
 }

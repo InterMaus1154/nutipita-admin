@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CustomerProductPrice extends Model
 {
-    protected $table = 'customer_product_price';
+    protected $table = 'customer_product_prices';
     protected $primaryKey = 'customer_product_price_id';
     protected $guarded = [];
 

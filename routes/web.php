@@ -31,6 +31,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // store new customer
         Route::post('/', 'store')->name('customers.store');
+
+        // show a customer
+        Route::get('/show/{customer}', 'show')->name('customers.show');
     });
 
 });
