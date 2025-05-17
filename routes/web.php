@@ -28,6 +28,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // show customer create form
         Route::get('/create', 'create')->name('customers.create');
+
+        // store new customer
+        Route::post('/', 'store')->name('customers.store');
     });
 
 });

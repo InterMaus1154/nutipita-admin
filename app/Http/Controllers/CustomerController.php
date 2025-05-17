@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -18,5 +19,11 @@ class CustomerController extends Controller
     public function create()
     {
         return view('customers.create');
+    }
+
+    // store new customer
+    public function store(StoreCustomerRequest $request)
+    {
+
     }
 }

@@ -45,6 +45,10 @@ main{
     gap: 2rem;
 }
 
+main .form-wrapper{
+    background: transparent;
+}
+
 main .page-section{
     display: flex;
     flex-direction: column;
