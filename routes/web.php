@@ -24,7 +24,10 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::group(['prefix' => 'customers', 'controller' => CustomerController::class], function () {
 
         // show customer list page
-        Route::get('/', 'index')->name('view.customers');
+        Route::get('/', 'index')->name('customers.index');
+
+        // show customer create form
+        Route::get('/create', 'create')->name('customers.create');
     });
 
 });

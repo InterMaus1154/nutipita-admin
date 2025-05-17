@@ -12,7 +12,7 @@
                 <a href="">Products</a>
             </li>
             <li>
-                <a href="{{route('view.customers')}}">Customers</a>
+                <a href="{{route('customers.index')}}">Customers</a>
             </li>
             <li>
                 <form method="POST" action="{{route('auth.logout')}}">

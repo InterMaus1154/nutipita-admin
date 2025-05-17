@@ -13,4 +13,10 @@ class CustomerController extends Controller
         $customers = Customer::select('customer_id', 'customer_name', 'customer_phone')->withCount('orders')->get();
         return view('customers.index', compact('customers'));
     }
+
+    // show create customer form
+    public function create()
+    {
+        return view('customers.create');
+    }
 }
