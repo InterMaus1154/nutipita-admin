@@ -13,7 +13,7 @@ class CustomerController extends Controller
     // show customer list
     public function index()
     {
-        $customers = Customer::select('customer_id', 'customer_name', 'customer_phone')->withCount('orders')->get();
+        $customers = Customer::select('customer_id', 'customer_name', 'customer_email', 'customer_phone')->withCount('orders')->get();
         return view('customers.index', compact('customers'));
     }
 

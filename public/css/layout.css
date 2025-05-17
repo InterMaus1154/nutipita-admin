@@ -65,8 +65,18 @@ main .page-section .section-title{
 }
 
 table{
-
+    border-spacing: .5rem 1rem;
+    border-collapse: collapse;
     th, td{
-        padding: .5rem;
+        padding: 1rem;
+        border: 1px solid var(--primary-red);
+    }
+
+    tr:nth-child(even){
+        background-color: #a8a29e;
+    }
+
+    a{
+        color: #2563eb;
     }
 }
