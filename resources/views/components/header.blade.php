@@ -6,7 +6,7 @@
                 <a href="{{route('admin.view.dashboard')}}">Home</a>
             </li>
             <li>
-                <a href="">Orders</a>
+                <a href="{{route('orders.index')}}">Orders</a>
             </li>
             <li>
                 <a href="{{route('products.index')}}">Products</a>

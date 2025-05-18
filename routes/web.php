@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -63,6 +64,13 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // update product details
         Route::put('/update/{product}', 'update')->name('products.update');
+    });
+
+    // order routes
+    Route::group(['prefix' => 'orders', 'controller' => OrderController::class], function(){
+
+        // order list page
+        Route::get('/', 'index')->name('orders.index');
     });
 
 });
