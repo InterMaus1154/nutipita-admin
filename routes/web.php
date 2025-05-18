@@ -60,6 +60,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // show edit form
         Route::get('/edit/{product}', 'edit')->name('products.edit');
+
+        // update product details
+        Route::put('/update/{product}', 'update')->name('products.update');
     });
 
 });

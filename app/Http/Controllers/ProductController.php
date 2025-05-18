@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -23,7 +26,7 @@ class ProductController extends Controller
     }
 
     // store product
-    public function store(StoreProductRequest $request)
+    public function store(ProductRequest $request)
     {
         try {
             $product = Product::create($request->validated());
@@ -38,5 +41,23 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return view('products.show', compact('product'));
+    }
+
+    // show edit form
+    public function edit(Product $product)
+    {
+        return view('products.edit', compact('product'));
+    }
+
+    // update product info
+    public function update(ProductRequest $request, Product $product)
+    {
+        try {
+            $product->update($request->validated());
+            return redirect()->route('products.show', compact('product'));
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());;
+            return redirect()->route('products.edit', status: 500)->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

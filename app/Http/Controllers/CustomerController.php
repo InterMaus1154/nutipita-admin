@@ -29,7 +29,7 @@ class CustomerController extends Controller
     {
         try {
             $customer = Customer::create($request->validated());
-            return redirect()->route('customers.show', compact('customer'), status: 201);
+            return redirect()->route('customers.index', status: 201);
         } catch (Throwable $e) {
             Log::error($e->getMessage());
             return redirect()->route('customers.create', status: 500)->withErrors(['error' => $e->getMessage()]);

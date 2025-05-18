@@ -25,7 +25,7 @@
                 <label for="customer_phone">Customer Phone (optional)</label>
                 <input type="text" id="customer_phone" name="customer_phone" value="{{$customer->customer_phone}}" />
             </div>
-            <input type="submit" value="Edit" class="form-submit-button">
+            <input type="submit" value="Update" class="form-submit-button">
         </form>
     </div>
 </x-layout>
