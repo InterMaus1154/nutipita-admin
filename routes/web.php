@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -42,5 +43,17 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         Route::put('/update/{customer}', 'update')->name('customers.update');
     });
 
+    // product routes
+    Route::group(['prefix' => 'products', 'controller' => ProductController::class], function () {
+
+        // product list page
+        Route::get('/', 'index')->name('products.index');
+
+        // show create form
+        Route::get('/create', 'create')->name('products.create');
+
+        // store new product
+        Route::post('/', 'store')->name('products.store');
+    });
 
 });

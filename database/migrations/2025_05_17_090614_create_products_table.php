@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -19,6 +20,8 @@ return new class extends Migration {
             $table->integer('product_qty_per_pack')->nullable();
             $table->timestamps();
         });
+
+        DB::update('ALTER TABLE products AUTO_INCREMENT = 500');
     }
 
     /**
