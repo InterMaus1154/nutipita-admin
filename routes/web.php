@@ -36,4 +36,5 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         Route::get('/show/{customer}', 'show')->name('customers.show');
     });
 
+
 });

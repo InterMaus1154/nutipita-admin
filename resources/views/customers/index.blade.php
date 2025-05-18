@@ -30,7 +30,7 @@
                 @forelse($customers as $customer)
                     <tr>
                         <td>
-                            <a href="{{route('customers.show', compact('customer'))}}">
+                            <a class="action-link" href="{{route('customers.show', compact('customer'))}}">
                                 {{$customer->customer_id}}
                             </a>
                         </td>
@@ -44,14 +44,14 @@
                         </td>
                         <td>
                             @if($customer->customer_email)
-                                <a href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
+                                <a class="action-link" href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
                             @else
                                 <em>No email provided</em>
                             @endif
                         </td>
                         <td>
                             @if($customer->customer_phone)
-                                <a href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
+                                <a class="action-link" href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
                             @else
                                 <em>No phone provided</em>
                             @endif

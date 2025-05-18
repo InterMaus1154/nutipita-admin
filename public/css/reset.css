@@ -9,7 +9,7 @@ html, body {
     font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
 }
 
-body{
+body {
     background-color: var(--gray);
 }
 
@@ -24,32 +24,44 @@ button {
     font-family: inherit;
 }
 
-img{
+img {
     display: block;
     max-width: 100%;
 }
 
 /*global css*/
-:root{
+:root {
     --primary-red: #4c0519;
     --bright-red: #e11d48;
 
     --gray: #ccc;
+
+    --blue: #2563eb;
+}
+
+.action-link {
+    color: var(--blue);
+
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 /*success and error response*/
-.response-holder{
+.response-holder {
     display: flex;
     flex-direction: column;
     gap: .5rem;
 }
 
-.response-holder .response-text{
+.response-holder .response-text {
     font-weight: bold;
     font-size: 1.25rem
 }
 
-.response-holder .response-text.error{
+.response-holder .response-text.error {
     color: var(--bright-red);
 }
 
