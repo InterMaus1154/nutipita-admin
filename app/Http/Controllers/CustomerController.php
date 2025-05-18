@@ -13,7 +13,7 @@ class CustomerController extends Controller
     // show customer list
     public function index()
     {
-        $customers = Customer::select('customer_id', 'customer_name', 'customer_email', 'customer_phone')->withCount('orders')->get();
+        $customers = Customer::select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')->withCount('orders')->get();
         return view('customers.index', compact('customers'));
     }
 
@@ -27,11 +27,13 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         try {
-            $customer = Customer::create([
-                'customer_name' => $request->validated('customer_name'),
-                'customer_phone' => $request->validated('customer_phone'),
-                'customer_email' => $request->validated('customer_email')
-            ]);
+//            $customer = Customer::create([
+//                'customer_name' => $request->validated('customer_name'),
+//                'customer_phone' => $request->validated('customer_phone'),
+//                'customer_email' => $request->validated('customer_email'),
+//                'customer_address' => $request->validated()
+//            ]);
+            $customer = Customer::create($request->validated());
             return redirect()->route('customers.show', compact('customer'), status: 201);
         } catch (Throwable $e) {
             Log::error($e->getMessage());

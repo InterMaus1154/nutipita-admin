@@ -9,6 +9,11 @@
             <label for="customer_name">Customer Name</label>
             <input type="text" id="customer_name" name="customer_name" value="{{old('customer_name', '')}}" />
         </div>
+        {{--Customer address--}}
+        <div class="input-wrapper">
+            <label for="customer_address">Customer Address</label>
+            <input type="text" id="customer_address" name="customer_address" value="{{old('customer_address', '')}}" />
+        </div>
         {{--Customer email--}}
         <div class="input-wrapper">
             <label for="customer_email">Customer Email (optional)</label>

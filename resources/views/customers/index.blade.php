@@ -13,6 +13,9 @@
                         Name
                     </th>
                     <th>
+                        Address
+                    </th>
+                    <th>
                         Email
                     </th>
                     <th>
@@ -32,6 +35,13 @@
                             </a>
                         </td>
                         <td>{{$customer->customer_name}}</td>
+                        <td>
+                            @if($customer->customer_address)
+                                {{$customer->customer_address}}
+                            @else
+                                <em>No address provided</em>
+                            @endif
+                        </td>
                         <td>
                             @if($customer->customer_email)
                                 <a href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
