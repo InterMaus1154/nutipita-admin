@@ -28,8 +28,8 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         try {
-            $customer = Customer::create($request->validated());
-            return redirect()->route('customers.index', status: 201);
+            Customer::create($request->validated());
+            return redirect()->route('customers.index')->with('success', 'New customer successfully created!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());
             return redirect()->route('customers.create', status: 500)->withErrors(['error' => $e->getMessage()]);
@@ -54,7 +54,8 @@ class CustomerController extends Controller
     {
         try {
             $customer->update($request->validated());
-            return redirect()->route('customers.show', compact('customer'));
+            return redirect()->route('customers.show', compact('customer'))
+                ->with('success', 'Customer successfully updated!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());;
             return redirect()->route('customers.edit', status: 500)->withErrors(['error' => $e->getMessage()]);

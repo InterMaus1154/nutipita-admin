@@ -1,6 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Product Details</h2>
+        <x-success/>
         <h3>{{$product->product_name}}</h3>
         <a href="{{route('products.edit', compact('product'))}}" class="action-link">Update product</a>
         <div class="table-wrapper">

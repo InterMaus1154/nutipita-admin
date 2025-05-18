@@ -1,6 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Customers</h2>
+        <x-success />
         <a href="{{route('customers.create')}}" class="action-link">Add new customer</a>
         <div class="table-wrapper">
             <table>

@@ -37,6 +37,8 @@ img {
     --gray: #ccc;
 
     --blue: #2563eb;
+
+    --green: #16a34a;
 }
 
 .action-link {
@@ -64,5 +66,7 @@ img {
 .response-holder .response-text.error {
     color: var(--bright-red);
 }
-
+.response-holder .response-text.success{
+    color: var(--green);
+}
 

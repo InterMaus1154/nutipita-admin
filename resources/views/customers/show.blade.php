@@ -1,6 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Customer Details</h2>
+        <x-success/>
         <h3>{{$customer->customer_name}}</h3>
         <a href="{{route('customers.edit', compact('customer'))}}" class="action-link">Update customer</a>
         <div class="table-wrapper">
