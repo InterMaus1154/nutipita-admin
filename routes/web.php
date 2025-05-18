@@ -54,6 +54,12 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // store new product
         Route::post('/', 'store')->name('products.store');
+
+        // show a product detail
+        Route::get('/show/{product}', 'show')->name('products.show');
+
+        // show edit form
+        Route::get('/edit/{product}', 'edit')->name('products.edit');
     });
 
 });

@@ -33,4 +33,10 @@ class ProductController extends Controller
             return redirect()->route('products.create', status: 500)->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    // show product detail
+    public function show(Product $product)
+    {
+        return view('products.show', compact('product'));
+    }
 }

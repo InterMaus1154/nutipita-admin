@@ -30,7 +30,7 @@
                 @forelse($products as $product)
                     <tr>
                         <td>
-                            <a class="action-link" href="">
+                            <a class="action-link" href="{{route('products.show', compact('product'))}}">
                                 {{$product->product_id}}
                             </a>
                         </td>
