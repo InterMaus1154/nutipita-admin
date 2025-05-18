@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -27,12 +28,6 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         try {
-//            $customer = Customer::create([
-//                'customer_name' => $request->validated('customer_name'),
-//                'customer_phone' => $request->validated('customer_phone'),
-//                'customer_email' => $request->validated('customer_email'),
-//                'customer_address' => $request->validated()
-//            ]);
             $customer = Customer::create($request->validated());
             return redirect()->route('customers.show', compact('customer'), status: 201);
         } catch (Throwable $e) {
@@ -46,5 +41,23 @@ class CustomerController extends Controller
     {
         $customer->loadMissing('orders', 'customPrices');
         return view('customers.show', compact('customer'));
+    }
+
+    // show edit form
+    public function edit(Customer $customer)
+    {
+        return view('customers.edit', compact('customer'));
+    }
+
+    // update customer details
+    public function update(UpdateCustomerRequest $request, Customer $customer)
+    {
+        try {
+            $customer->update($request->validated());
+            return redirect()->route('customers.show', compact('customer'));
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());;
+            return redirect()->route('customers.edit', status: 500)->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

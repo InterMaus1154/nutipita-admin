@@ -2,7 +2,7 @@
     <section class="page-section">
         <h2 class="section-title">Customer Details</h2>
         <h3>{{$customer->customer_name}}</h3>
-        <a href="" class="action-link">Update customer</a>
+        <a href="{{route('customers.edit', compact('customer'))}}" class="action-link">Update customer</a>
         <div class="table-wrapper">
             <table>
                 <tbody>
@@ -20,7 +20,8 @@
                     <td>Email</td>
                     <td>
                         @if($customer->customer_email)
-                            <a class="action-link" href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
+                            <a class="action-link"
+                               href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
                         @else
                             <em>No email provided</em>
                         @endif
@@ -30,7 +31,8 @@
                     <td>Phone</td>
                     <td>
                         @if($customer->customer_phone)
-                            <a class="action-link" href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
+                            <a class="action-link"
+                               href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
                         @else
                             <em>No phone provided</em>
                         @endif

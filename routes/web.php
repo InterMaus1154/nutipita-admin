@@ -34,6 +34,12 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // show a customer
         Route::get('/show/{customer}', 'show')->name('customers.show');
+
+        // show edit form
+        Route::get('/edit/{customer}', 'edit')->name('customers.edit');
+
+        // update a customer
+        Route::put('/update/{customer}', 'update')->name('customers.update');
     });
 
 

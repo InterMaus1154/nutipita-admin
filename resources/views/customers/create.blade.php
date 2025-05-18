@@ -11,7 +11,7 @@
         </div>
         {{--Customer address--}}
         <div class="input-wrapper">
-            <label for="customer_address">Customer Address</label>
+            <label for="customer_address">Customer Address (optional)</label>
             <input type="text" id="customer_address" name="customer_address" value="{{old('customer_address', '')}}" />
         </div>
         {{--Customer email--}}
