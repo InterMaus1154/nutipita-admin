@@ -24,7 +24,6 @@ class ProductRequest extends FormRequest
         return [
             'product_name' => 'required|string|max:200',
             'product_unit_price' => 'required|decimal:0,2',
-            'product_pack_price' => 'nullable|decimal:0,2',
             'product_weight_g' => 'nullable|numeric',
             'product_qty_per_pack' => 'nullable|numeric'
         ];

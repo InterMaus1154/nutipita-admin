@@ -15,11 +15,6 @@
                 <label for="product_unit_price">Product unit price</label>
                 <input type="number" id="product_unit_price" name="product_unit_price" value="{{$product->product_unit_price}}" step=".01"/>
             </div>
-            {{--Product pack price--}}
-            <div class="input-wrapper">
-                <label for="product_pack_price">Product pack price (optional)</label>
-                <input type="number" id="product_pack_price" name="product_pack_price" value="{{$product->product_pack_price}}" step=".01"/>
-            </div>
             {{--Product weight--}}
             <div class="input-wrapper">
                 <label for="product_weight_g">Product unit weight (gramm) (optional)</label>

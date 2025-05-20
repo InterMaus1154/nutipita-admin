@@ -16,10 +16,10 @@
                 <tr>
                     <td>Pack Price:</td>
                     <td>
-                        @if($product->product_pack_price)
-                            £{{$product->product_pack_price}}
+                        @if($product->product_qty_per_pack)
+                            £{{$product->product_qty_per_pack * $product->product_unit_price}}
                         @else
-                            <em>No specified pack price</em>
+                            <em>No pack price without qty</em>
                         @endif
                     </td>
                 </tr>

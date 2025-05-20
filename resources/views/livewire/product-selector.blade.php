@@ -1,7 +1,7 @@
 <div>
     <div class="input-wrapper">
         <label for="customer_id">Customer</label>
-        <select id="customer_id" name="customer_id" wire:model.live="customer_id">
+        <select id="customer_id" name="customer_id">
             <option value="">---Select a customer---</option>
             @foreach($customers as $customer)
                 <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
@@ -17,5 +17,4 @@
             </div>
         @endforeach
     </div>
-    Selected customer: {{$selectedCustomer?->customer_name}}
 </div>

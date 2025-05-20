@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->increments('product_id')->primary();
             $table->string('product_name', 200);
             $table->decimal('product_unit_price');
-            $table->decimal('product_pack_price')->nullable();
             $table->integer('product_weight_g')->nullable();
             $table->integer('product_qty_per_pack')->nullable();
             $table->timestamps();

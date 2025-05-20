@@ -15,7 +15,7 @@ class ProductController extends Controller
     // product list
     public function index()
     {
-        $products = Product::all(['product_id', 'product_name', 'product_unit_price', 'product_pack_price', 'product_weight_g', 'product_qty_per_pack']);
+        $products = Product::all(['product_id', 'product_name', 'product_unit_price', 'product_weight_g', 'product_qty_per_pack']);
         return view('products.index', compact('products'));
     }
 

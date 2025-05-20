@@ -1,7 +1,8 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Products</h2>
-        <x-success />
+        <x-success/>
+        <x-error/>
         <a href="{{route('products.create')}}" class="action-link">Add new product</a>
         <div class="table-wrapper">
             <table>
@@ -38,10 +39,10 @@
                         <td>{{$product->product_name}}</td>
                         <td>£{{$product->product_unit_price}}</td>
                         <td>
-                            @if($product->product_pack_price)
-                                £{{$product->product_pack_price}}
+                            @if($product->product_qty_per_pack)
+                                £{{$product->product_unit_price * $product->product_qty_per_pack}}
                             @else
-                                <em>No specified pack price</em>
+                                <em>No pack price without qty</em>
                             @endif
                         </td>
                         <td>

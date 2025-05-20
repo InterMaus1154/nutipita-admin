@@ -42,6 +42,13 @@
                 </tbody>
             </table>
         </div>
-
+        <h2 class="section-title">Custom prices</h2>
+        <a href="{{route('customers.create.custom-price', compact('customer'))}}" class="action-link">Add custom
+            prices
+        </a>
+        @if(!$customer->customPrices()->exists())
+            <p>This customer doesn't have custom prices! Base price applies.</p>
+        @else
+        @endif
     </section>
 </x-layout>
