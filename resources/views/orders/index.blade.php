@@ -5,7 +5,7 @@
         <div class="order-filter">
             <h3>Filter & Sort</h3>
         </div>
-{{--        <a href="{{route('customers.create')}}" class="action-link">Add new customer</a>--}}
+        <a href="{{route('orders.create')}}" class="action-link">Add new order</a>
         <div class="table-wrapper">
             <table>
                 <thead>

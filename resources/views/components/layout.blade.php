@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{asset('css/reset.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/layout.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/form.css')}}"/>
+    @livewireScripts
 </head>
 <body>
 <x-header/>

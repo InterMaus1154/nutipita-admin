@@ -71,6 +71,12 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // order list page
         Route::get('/', 'index')->name('orders.index');
+
+        // show order creation form
+        Route::get('/create', 'create')->name('orders.create');
+
+        // store new order
+        Route::post('/', 'store')->name('orders.store');
     });
 
 });

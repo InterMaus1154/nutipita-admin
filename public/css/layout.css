@@ -76,5 +76,11 @@ table{
         background-color: #a8a29e;
     }
 
+}
 
+.product-list-form{
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
 }
