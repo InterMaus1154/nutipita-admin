@@ -49,6 +49,28 @@
         @if(!$customer->customPrices()->exists())
             <p>This customer doesn't have custom prices! Base price applies.</p>
         @else
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product Base Unit Price</th>
+                        <th>Customer Unit Price</th>
+                        <th>Modified</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($customer->customPrices as $customPrice)
+                        <tr>
+                            <td>{{$customPrice->product->product_name}}</td>
+                            <td>£{{$customPrice->product->product_unit_price}}</td>
+                            <td>£{{$customPrice->customer_product_price}}</td>
+                            <td>{{\Illuminate\Support\Carbon::parse($customPrice->created_at)->toDateString()}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         @endif
     </section>
 </x-layout>
