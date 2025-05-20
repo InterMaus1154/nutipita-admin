@@ -78,7 +78,7 @@ class CustomerController extends Controller
         $products = Product::whereDoesntHave('customPrices', function ($q) use ($customer) {
             return $q->where('customer_id', $customer->customer_id);
         })->get();
-        if (empty($products)) {
+        if ($products->isEmpty()) {
             return redirect()->route('customers.edit.custom-price', compact('customer'));
         }
         return view('customers.create-custom-price', compact('customer', 'products'));
@@ -110,7 +110,9 @@ class CustomerController extends Controller
     // show edit price form
     public function editCustomPrice(Customer $customer)
     {
-        $products = Product::all();
+        $products = Product::all()->map(function($product) use($customer){
+            return $product->setCurrentCustomer($customer);
+        });
         return view('customers.edit-custom-price', compact('customer', 'products'));
     }
 }

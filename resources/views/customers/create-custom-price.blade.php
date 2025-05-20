@@ -11,7 +11,7 @@
                     <input type="number"
                            id="products[{{$product->product_id}}]"
                            name="products[{{$product->product_id}}]"
-                           value="{{$product->product_unit_price}}"
+                           value="{{$product->price}}"
                            step="0.01"
                            placeholder="Unit price"
                            min="0.05"
