@@ -9,6 +9,7 @@ use Livewire\Component;
 
 class ProductSelector extends Component
 {
+
     public function render()
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();

@@ -21,6 +21,7 @@ class Product extends Model
         return $this;
     }
 
+
     /*
      * Define relationships
      */

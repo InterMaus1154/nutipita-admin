@@ -7,9 +7,10 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\CustomerProductPrice;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\View;
 use Throwable;
 
 class CustomerController extends Controller
@@ -32,7 +33,7 @@ class CustomerController extends Controller
     /*
      * Show customer list page
      */
-    public function index(): ViewFactory
+    public function index(): View
     {
         $customers = Customer::query()
             ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
@@ -49,8 +50,10 @@ class CustomerController extends Controller
         return view('customers.create');
     }
 
-    // store new customer
-    public function store(StoreCustomerRequest $request)
+    /*
+     * Store new customer
+     */
+    public function store(StoreCustomerRequest $request): RedirectResponse
     {
         try {
             Customer::create($request->validated());
@@ -61,21 +64,27 @@ class CustomerController extends Controller
         }
     }
 
-    // show a customer
-    public function show(Customer $customer)
+    /*
+     * Show a customer details page
+     */
+    public function show(Customer $customer): View
     {
         $customer->loadMissing('orders', 'customPrices');
         return view('customers.show', compact('customer'));
     }
 
-    // show edit form
-    public function edit(Customer $customer)
+    /*
+     * Show customer edit form
+     */
+    public function edit(Customer $customer): View
     {
         return view('customers.edit', compact('customer'));
     }
 
-    // update customer details
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    /*
+     * Update customer details
+     */
+    public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
         try {
             $customer->update($request->validated());
@@ -87,8 +96,10 @@ class CustomerController extends Controller
         }
     }
 
-    // show create custom price form
-    public function createCustomPrice(Customer $customer)
+    /*
+     * Show create custom prices for customer form
+     */
+    public function createCustomPrice(Customer $customer): View|RedirectResponse
     {
         $products = Product::whereDoesntHave('customPrices', function ($q) use ($customer) {
             return $q->where('customer_id', $customer->customer_id);
@@ -102,7 +113,7 @@ class CustomerController extends Controller
     /*
      * Store custom prices for a customer
      */
-    public function storeCustomPrice(Request $request, Customer $customer)
+    public function storeCustomPrice(Request $request, Customer $customer): RedirectResponse
     {
         foreach ($request->array('products') as $key => $value) {
 
@@ -128,15 +139,49 @@ class CustomerController extends Controller
             ->with('success', 'Custom prices successfully added!');
     }
 
-    // show edit price form
-    public function editCustomPrice(Customer $customer)
+    /*
+     * Show edit custom prices form
+     */
+    public function editCustomPrice(Customer $customer): View|RedirectResponse
     {
         if (!$customer->customPrices()->exists()) {
             return redirect()->route('customers.create.custom-price', compact('customer'));
         }
-        $products = Product::all()->map(function ($product) use ($customer) {
-            return $product->setCurrentCustomer($customer);
-        });
+
+        $products = Product::query()
+            ->select(['product_id', 'product_name', 'product_unit_price'])
+            ->get()
+            ->map(function ($product) use ($customer) {
+                // set customer for each product to show custom prices for current customer
+                // only available if set
+                return $product->setCurrentCustomer($customer);
+            });
         return view('customers.edit-custom-price', compact('customer', 'products'));
+    }
+
+    /*
+     * Update custom prices
+     */
+    public function updateCustomPrice(Request $request, Customer $customer)
+    {
+        foreach ($request->array('products') as $key => $value) {
+            $product = Product::find($key)->setCurrentCustomer($customer);
+            if (!$this->isProductPriceValid($product->price, $value)) continue;
+
+            try {
+                CustomerProductPrice::query()
+                    ->where('customer_id', $customer->customer_id)
+                    ->where('product_id', $product->product_id)
+                    ->update([
+                        'customer_product_price' => $value
+                    ]);
+            } catch (Throwable $e) {
+                Log::error($e->getMessage());;
+                return redirect()->route('customers.edit.custom-price', status: 500)->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+        return redirect()
+            ->route('customers.show', compact('customer'))
+            ->with('success', 'Custom prices successfully updated!');
     }
 }
