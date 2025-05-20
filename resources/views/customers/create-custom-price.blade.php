@@ -2,6 +2,7 @@
     <div class="form-wrapper">
         <h2 class="form-title">Add custom unit prices for {{$customer->customer_name}}</h2>
         <h3>Empty fields will be ignored and treated as default price</h3>
+        <h3>Fields left as default price will be ignored</h3>
         <x-error/>
         <form action="{{route('customers.store.custom-price', compact('customer'))}}" method="POST">
             @csrf

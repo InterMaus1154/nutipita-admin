@@ -5,6 +5,7 @@
         <x-error/>
         <form action="{{route('customers.update.custom-price', compact('customer'))}}" method="POST">
             @csrf
+            @method('PUT')
             @foreach($products as $product)
                 <div class="input-wrapper">
                     <label for="products[{{$product->product_id}}]">{{$product->product_name}} - base:

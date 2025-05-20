@@ -9,27 +9,42 @@ use App\Models\CustomerProductPrice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\Factory as ViewFactory;
 use Throwable;
 
 class CustomerController extends Controller
 {
-    private function isProductPriceValid(int $productId, ?int $value): bool
+    /**
+     * Check if received product price is null, or same as default unit price
+     * On both cases, return false -> do nothing
+     * @param float $priceToCompareTo
+     * @param float|null $newPrice
+     * @return bool
+     */
+    private function isProductPriceValid(float $priceToCompareTo, ?float $newPrice): bool
     {
-        if (is_null($value)) {
+        if (is_null($newPrice) || $priceToCompareTo == $newPrice) {
             return false;
         }
         return true;
     }
 
-    // show customer list
-    public function index()
+    /*
+     * Show customer list page
+     */
+    public function index(): ViewFactory
     {
-        $customers = Customer::select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')->withCount('orders')->get();
+        $customers = Customer::query()
+            ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
+            ->withCount('orders')
+            ->get();
         return view('customers.index', compact('customers'));
     }
 
-    // show create customer form
-    public function create()
+    /*
+     * Show create customer form
+     */
+    public function create(): ViewFactory
     {
         return view('customers.create');
     }
@@ -84,12 +99,18 @@ class CustomerController extends Controller
         return view('customers.create-custom-price', compact('customer', 'products'));
     }
 
-    // store custom prices
+    /*
+     * Store custom prices for a customer
+     */
     public function storeCustomPrice(Request $request, Customer $customer)
     {
         foreach ($request->array('products') as $key => $value) {
+
             // ignore null values
-            if (!$this->isProductPriceValid($key, $value)) continue;
+            // ignore values that are same as default price
+            if (!$this->isProductPriceValid(Product::find($key)->product_unit_price, $value)) {
+                continue;
+            }
 
             try {
                 CustomerProductPrice::create([
