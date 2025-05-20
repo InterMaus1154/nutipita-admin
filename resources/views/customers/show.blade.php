@@ -46,6 +46,9 @@
         <a href="{{route('customers.create.custom-price', compact('customer'))}}" class="action-link">Add custom
             prices
         </a>
+        @if($customer->customPrices()->exists())
+            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit custom prices</a>
+        @endif
         @if(!$customer->customPrices()->exists())
             <p>This customer doesn't have custom prices! Base price applies.</p>
         @else

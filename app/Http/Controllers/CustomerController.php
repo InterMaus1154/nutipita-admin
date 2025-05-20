@@ -110,7 +110,10 @@ class CustomerController extends Controller
     // show edit price form
     public function editCustomPrice(Customer $customer)
     {
-        $products = Product::all()->map(function($product) use($customer){
+        if (!$customer->customPrices()->exists()) {
+            return redirect()->route('customers.create.custom-price', compact('customer'));
+        }
+        $products = Product::all()->map(function ($product) use ($customer) {
             return $product->setCurrentCustomer($customer);
         });
         return view('customers.edit-custom-price', compact('customer', 'products'));
