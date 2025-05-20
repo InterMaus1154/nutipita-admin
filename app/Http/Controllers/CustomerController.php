@@ -104,6 +104,7 @@ class CustomerController extends Controller
         $products = Product::whereDoesntHave('customPrices', function ($q) use ($customer) {
             return $q->where('customer_id', $customer->customer_id);
         })->get();
+        // if there are no products, where this customer doesnt have a custom price, show edit form instead
         if ($products->isEmpty()) {
             return redirect()->route('customers.edit.custom-price', compact('customer'));
         }
@@ -150,6 +151,9 @@ class CustomerController extends Controller
 
         $products = Product::query()
             ->select(['product_id', 'product_name', 'product_unit_price'])
+            ->whereHas('customPrices', function ($query) use ($customer) {
+                return $query->where('customer_id', $customer->customer_id);
+            })
             ->get()
             ->map(function ($product) use ($customer) {
                 // set customer for each product to show custom prices for current customer
