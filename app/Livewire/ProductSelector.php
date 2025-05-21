@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use App\Models\Product;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class ProductSelector extends Component
@@ -17,7 +16,7 @@ class ProductSelector extends Component
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
         if (is_null($this->customer_id)) {
             $products = [];
-        }else{
+        } else {
             $products = Product::query()
                 ->select(['product_name', 'product_id', 'product_unit_price'])
                 ->get()

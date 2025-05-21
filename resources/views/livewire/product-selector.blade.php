@@ -13,8 +13,14 @@
     <div class="product-list-form">
         @forelse($products as $product)
             <div class="input-wrapper">
-                <label for="product-{{$product->product_id}}">{{$product->product_name}} - £{{$product->price}}</label>
-                <input type="number" name="products[{{$product->product_id}}]" value="0" placeholder="Quantity">
+                <label for="products-{{$product->product_id}}">
+                    {{$product->product_name}} - £{{$product->price}}
+                </label>
+                <input type="number"
+                       id="products-{{$product->product_id}}"
+                       name="products[{{$product->product_id}}]"
+                       value="0"
+                       placeholder="Quantity">
             </div>
         @empty
             <em>---Please select a customer first!---</em>
