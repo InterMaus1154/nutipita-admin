@@ -54,6 +54,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // update custom prices
         Route::put('/update/customPrice/{customer}', 'updateCustomPrice')->name('customers.update.custom-price');
+
+        // remove a custom price
+        Route::delete('/delete/customPrice/{customer}/{customPrice}', 'deleteCustomPrice')->name('customers.delete.custom-price');
     });
 
     // product routes

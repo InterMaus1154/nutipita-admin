@@ -9,6 +9,7 @@ use App\Models\CustomerProductPrice;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
@@ -187,5 +188,34 @@ class CustomerController extends Controller
         return redirect()
             ->route('customers.show', compact('customer'))
             ->with('success', 'Custom prices successfully updated!');
+    }
+
+    /*
+     * Remove a custom price
+     */
+    public function deleteCustomPrice(Customer $customer, CustomerProductPrice $customPrice): RedirectResponse
+    {
+        if ($customPrice->customer_id !== $customer->customer_id) {
+            return redirect()->route('customers.show')
+                ->withErrors(['owenership_error' => 'This custom price doesnt belong to this customer!']);
+        }
+
+        $result = DB::transaction(function () use ($customPrice, $customer) {
+            try {
+                $customPrice->delete();
+                return redirect()->route('customers.show', compact('customer'))
+                    ->with('success', 'Custom price deleted!');
+            } catch (\Exception $e) {
+                return $e;
+            }
+        }, 3);
+
+        if ($result instanceof \Exception) {
+            Log::error($result->getMessage());
+            return redirect()
+                ->route('customers.show', compact('customer'), status: 500)
+                ->withErrors(['error' => $result->getMessage()]);
+        }
+        return $result;
     }
 }

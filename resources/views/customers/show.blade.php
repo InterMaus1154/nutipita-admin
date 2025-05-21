@@ -2,6 +2,7 @@
     <section class="page-section">
         <h2 class="section-title">Customer Details</h2>
         <x-success/>
+        <x-error/>
         <h3>{{$customer->customer_name}}</h3>
         <a href="{{route('customers.edit', compact('customer'))}}" class="action-link">Update customer</a>
         <div class="table-wrapper">
@@ -69,6 +70,13 @@
                             <td>£{{$customPrice->product->product_unit_price}}</td>
                             <td>£{{$customPrice->customer_product_price}}</td>
                             <td>{{\Illuminate\Support\Carbon::parse($customPrice->created_at)->toDateString()}}</td>
+                            <td>
+                                <form method="POST" action="{{route('customers.delete.custom-price', compact('customer', 'customPrice'))}}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" value="Delete" class="action-link">
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
