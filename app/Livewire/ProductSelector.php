@@ -11,6 +11,11 @@ class ProductSelector extends Component
 
     public ?int $customer_id = null;
 
+    public function mount()
+    {
+        $this->customer_id = old('customer_id', null);
+    }
+
     public function render()
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();

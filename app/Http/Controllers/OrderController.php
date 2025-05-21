@@ -50,7 +50,8 @@ class OrderController extends Controller
         if ($emptyProductTracker === 0) {
             return redirect()
                 ->route('orders.create')
-                ->withErrors(['invalid_amount' => 'At least one product need to be more than 0!']);
+                ->withErrors(['invalid_amount' => 'At least one product need to be more than 0!'])
+                ->withInput();
         }
     }
 }

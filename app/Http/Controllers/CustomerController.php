@@ -45,7 +45,7 @@ class CustomerController extends Controller
     /*
      * Show create customer form
      */
-    public function create(): ViewFactory
+    public function create(): View
     {
         return view('customers.create');
     }

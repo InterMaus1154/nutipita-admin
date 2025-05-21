@@ -4,7 +4,10 @@
         <select id="customer_id" name="customer_id" wire:model.live="customer_id">
             <option value="">---Select a customer---</option>
             @foreach($customers as $customer)
-                <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
+                <option
+                    value="{{$customer->customer_id}}">
+                    {{$customer->customer_name}}
+                </option>
             @endforeach
         </select>
     </div>
