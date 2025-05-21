@@ -43,14 +43,15 @@
                 </tbody>
             </table>
         </div>
+        {{--custom prices section--}}
         <h2 class="section-title">Custom prices</h2>
         <a href="{{route('customers.create.custom-price', compact('customer'))}}" class="action-link">Add custom
             prices
         </a>
-        @if($customer->customPrices()->exists())
+        @if($hasCustomPrices)
             <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit custom prices</a>
         @endif
-        @if(!$customer->customPrices()->exists())
+        @if(!$hasCustomPrices)
             <p>This customer doesn't have custom prices! Base price applies.</p>
         @else
             <div class="table-wrapper">
@@ -83,5 +84,7 @@
                 </table>
             </div>
         @endif
+        {{--custom orders section--}}
+        <h2 class="section-title">Customer Orders</h2>
     </section>
 </x-layout>

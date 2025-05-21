@@ -71,7 +71,8 @@ class CustomerController extends Controller
     public function show(Customer $customer): View
     {
         $customer->loadMissing('orders', 'customPrices');
-        return view('customers.show', compact('customer'));
+        $hasCustomPrices = $customer->customPrices()->exists();
+        return view('customers.show', compact('customer', 'hasCustomPrices'));
     }
 
     /*
