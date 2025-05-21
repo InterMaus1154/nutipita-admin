@@ -7,7 +7,8 @@
             @csrf
             <div class="input-wrapper">
                 <label for="order_placed_at">Order Placed At (default: today)</label>
-                <input type="date" id="order_placed_at" name="order_placed_at" value="{{now()->toDateString()}}">
+                <input type="date" id="order_placed_at" name="order_placed_at"
+                       value="{{old('order_placed_at', now()->toDateString())}}">
             </div>
             <div class="input-wrapper">
                 <label for="order_due_at">Order Due At (optional)</label>

@@ -24,7 +24,9 @@ class StoreOrderRequest extends FormRequest
         return [
             'customer_id' => 'required|integer|exists:customers,customer_id',
             'products' => 'required|array',
-            'products.*' => 'required|integer'
+            'products.*' => 'required|integer',
+            'order_placed_at' => 'required|date',
+            'order_due_at' => 'nullable|date'
         ];
     }
 }

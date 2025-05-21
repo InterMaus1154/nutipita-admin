@@ -1,7 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Orders</h2>
-        <x-success />
+        <x-success/>
         <div class="order-filter">
             <h3>Filter & Sort</h3>
         </div>
@@ -49,10 +49,14 @@
                             {{$order->order_placed_at}}
                         </td>
                         <td>
-                            {{$order->order_due_at}}
+                            {{$order->order_due_at ?? "No due date"}}
                         </td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                            {{$order->total_pita}}
+                        </td>
+                        <td>
+                            £{{$order->total_price}}
+                        </td>
                     </tr>
                 @empty
                     <tr style="text-align: center">
