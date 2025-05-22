@@ -30,10 +30,15 @@ class ProductController extends Controller
     {
         try {
             Product::create($request->validated());
-            return redirect()->route('products.index')->with('success', 'New product successfully added!');
+            return redirect()
+                ->route('products.index')
+                ->with('success', 'New product successfully added!');
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
-            return redirect()->route('products.create', status: 500)->withErrors(['error' => $e->getMessage()]);
+            return redirect()
+                ->route('products.create')
+                ->withErrors(['error' => $e->getMessage()])
+                ->setStatusCode(500);
         }
     }
 
