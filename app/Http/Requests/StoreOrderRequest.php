@@ -29,4 +29,12 @@ class StoreOrderRequest extends FormRequest
             'order_due_at' => 'nullable|date'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'customer_id.required' => 'You need to select a customer from the list!',
+            'products.required' => 'Select a customer to be able to add products!'
+        ];
+    }
 }
