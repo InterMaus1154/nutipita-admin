@@ -48,42 +48,7 @@
         <a href="{{route('customers.create.custom-price', compact('customer'))}}" class="action-link">Add custom
             prices
         </a>
-        @if($hasCustomPrices)
-            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit custom prices</a>
-        @endif
-        @if(!$hasCustomPrices)
-            <p>This customer doesn't have custom prices! Base price applies.</p>
-        @else
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Product Base Unit Price</th>
-                        <th>Customer Unit Price</th>
-                        <th>Modified</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($customer->customPrices as $customPrice)
-                        <tr>
-                            <td>{{$customPrice->product->product_name}}</td>
-                            <td>£{{$customPrice->product->product_unit_price}}</td>
-                            <td>£{{$customPrice->customer_product_price}}</td>
-                            <td>{{\Illuminate\Support\Carbon::parse($customPrice->created_at)->toDateString()}}</td>
-                            <td>
-                                <form method="POST" action="{{route('customers.delete.custom-price', compact('customer', 'customPrice'))}}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="submit" value="Delete" class="action-link">
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
+        @livewire('customer-custom-prices', ['customer' => $customer])
         {{--custom orders section--}}
         <h2 class="section-title">Customer Orders</h2>
     </section>
