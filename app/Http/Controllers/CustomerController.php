@@ -70,7 +70,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer): View
     {
-        $customer->loadMissing('customPrices', 'customPrices.product');
+        $customer->loadMissing('customPrices', 'customPrices.product', 'orders');
         return view('customers.show', compact('customer'));
     }
 
