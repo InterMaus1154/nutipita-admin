@@ -38,7 +38,7 @@ class CustomerCustomPrices extends Component
     {
         // load relationships if not loaded
         $this->customer->loadMissing('customPrices', 'customPrices.product');
-        $hasCustomPrices = collect($this->customer->customPrices())->isNotEmpty();
+        $hasCustomPrices = collect($this->customer->customPrices)->isNotEmpty();
         return view('livewire.customer-custom-prices', compact('hasCustomPrices'));
     }
 }
