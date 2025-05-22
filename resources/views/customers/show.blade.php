@@ -51,5 +51,6 @@
         @livewire('customer-custom-prices', ['customer' => $customer])
         {{--custom orders section--}}
         <h2 class="section-title">Customer Orders</h2>
+        <a href="{{route('orders.create', ['customer_id' => $customer->customer_id])}}" class="action-link">Add new order</a>
     </section>
 </x-layout>
