@@ -21,7 +21,8 @@ class OrderController extends Controller
     {
         $orders = Order::query()
             ->with('customer:customer_id,customer_name', 'products')
-            ->select(['order_status', 'order_placed_at', 'order_due_at','customer_id','order_id'])
+            ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id'])
+            ->orderByDesc('order_placed_at')
             ->get();
         return view('orders.index', compact('orders'));
     }

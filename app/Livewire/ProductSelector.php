@@ -5,8 +5,6 @@ namespace App\Livewire;
 use App\Models\Customer;
 use App\Models\Product;
 use Livewire\Component;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class ProductSelector extends Component
 {
