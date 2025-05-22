@@ -12,7 +12,7 @@
             </div>
             <div class="input-wrapper">
                 <label for="order_due_at">Order Due At (optional)</label>
-                <input type="date" id="order_due_at" name="order_due_at" value="">
+                <input type="date" id="order_due_at" name="order_due_at" value="{{old('order_due_at', '')}}">
             </div>
             {{--livewire component for selecting customer with custom product prices--}}
             @livewire('product-selector')
