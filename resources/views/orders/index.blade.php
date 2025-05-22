@@ -41,7 +41,11 @@
                                 {{$order->order_id}}
                             </a>
                         </td>
-                        <td>{{$order->customer->customer_name}}</td>
+                        <td>
+                            <a href="{{route('customers.show', ['customer' => $order->customer])}}" class="action-link">
+                                {{$order->customer->customer_name}}
+                            </a>
+                        </td>
                         <td>
                             {{$order->order_status}}
                         </td>
