@@ -22,8 +22,16 @@ class CustomerCustomPrices extends Component
     {
         // decrypt ID
         $customer_product_price_id = Crypt::decrypt($encryptedId);
+
+        $customPrice = CustomerProductPrice::findOrFail($customer_product_price_id);
+
+        // check ownership
+        if ($this->customer->customer_id != $customPrice->customer_id) {
+            abort(403);
+        }
+
         // delete custom price
-        CustomerProductPrice::findOrFail($customer_product_price_id)->delete();
+        $customPrice->delete();
     }
 
     public function render()
