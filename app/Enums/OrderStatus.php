@@ -12,4 +12,14 @@ enum OrderStatus: string
     case DUE_PAYMENT = "due_payment";
     case CANCELLED = "cancelled";
     case INVALIDATED = "invalidated";
+
+    public static function fromName(string $name): string
+    {
+        foreach (self::cases() as $case) {
+            if ($case->name === $name) {
+                return $case->value;
+            }
+        }
+        return "UNDEFINED_ORDER_STATUS_FROM_ENUM";
+    }
 }

@@ -95,6 +95,12 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // show an order
         Route::get('/show/{order}', 'show')->name('orders.show');
+
+        // order edit form
+        Route::get('/edit/{order}', 'edit')->name('orders.edit');
+
+        // update order
+        Route::put('/update/{order}', 'update')->name('orders.update');
     });
 
 });

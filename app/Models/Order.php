@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,6 +46,11 @@ class Order extends Model
         return number_format($this->products->sum(function ($product) {
             return $product->pivot->product_qty * $product->pivot->order_product_unit_price;
         }), 2);
+    }
+
+    public function getStatusAttribute()
+    {
+        return ucfirst(OrderStatus::fromName($this->order_status));
     }
 
 }

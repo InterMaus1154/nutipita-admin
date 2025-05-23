@@ -78,9 +78,6 @@
                         <th>
                             Total £
                         </th>
-                        <th>
-                            Edit
-                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -106,7 +103,9 @@
                             <td>
                                 £{{$order->total_price}}
                             </td>
-                            <td><em>Edit</em></td>
+                            <td>
+                                <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

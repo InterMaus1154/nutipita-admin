@@ -47,7 +47,7 @@
                             </a>
                         </td>
                         <td>
-                            {{$order->order_status}}
+                            {{$order->status}}
                         </td>
                         <td>
                             {{$order->order_placed_at}}
@@ -62,7 +62,7 @@
                             £{{$order->total_price}}
                         </td>
                         <td>
-                            <a href="" class="action-link">Edit</a>
+                            <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>
                         </td>
                     </tr>
                 @empty
@@ -70,7 +70,6 @@
                         <td>No orders found!</td>
                     </tr>
                 @endforelse
-
                 </tbody>
             </table>
         </div>
