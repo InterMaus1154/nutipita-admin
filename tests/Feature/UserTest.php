@@ -12,20 +12,20 @@ class UserTest extends TestCase
     /**
      * Test unauthenticated user, should return 401
      */
-    public function test_unauthenticated_user_on_dashboard_expect_401(): void
+    public function test_unauthenticated_user_on_dashboard_expect_redirect_to_login(): void
     {
         $response = $this->get('/');
-        $response->assertStatus(401);
+        $response->assertRedirect(route('auth.view.login'));
     }
 
     /**
      * Test authenticated user, should return 200
      */
-    public function test_authenticated_user_on_dashboard_expect_200()
+    public function test_authenticated_user_on_dashboard_expect_200_admin_index()
     {
         $user = User::first();
         $this->actingAs($user);
         $response = $this->get('/');
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertViewIs('admin.index');
     }
 }

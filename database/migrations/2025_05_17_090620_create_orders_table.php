@@ -19,6 +19,8 @@ return new class extends Migration {
             $table->date('order_placed_at');
             $table->date('order_due_at')->nullable();
         });
+
+        DB::update('ALTER TABLE orders AUTO_INCREMENT = 200');
     }
 
     /**

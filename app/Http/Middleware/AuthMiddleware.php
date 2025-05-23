@@ -18,8 +18,7 @@ class AuthMiddleware
         if (!auth()->check()) {
             session(['url.intended' => $request->fullUrl()]);
             return redirect()->route('auth.view.login')
-                ->withErrors(['error' => 'You need to be authenticated!'])
-                ->setStatusCode(401);
+                ->withErrors(['error' => 'You need to be authenticated!']);
         }
         return $next($request);
     }
