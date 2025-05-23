@@ -94,6 +94,12 @@
                                 <em>No specified pack quantity</em>
                             @endif
                         </td>
+                        <td>
+                            {{$product->pivot->product_qty}}
+                        </td>
+                        <td>
+                            £{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

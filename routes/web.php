@@ -102,5 +102,4 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // update order
         Route::put('/update/{order}', 'update')->name('orders.update');
     });
-
 });
