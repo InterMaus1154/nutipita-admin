@@ -85,7 +85,15 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return redirect()->route('orders.create')->withErrors(['error' => 'Error at creating order.', 'error_msg' => $e->getMessage()]);
+            return redirect()->route('orders.create')
+                ->withErrors(['error' => 'Error at creating order.', 'error_msg' => $e->getMessage()]);
         }
+    }
+
+    public function show(Order $order)
+    {
+        $order->loadCount('products')
+            ->loadMissing('customer:customer_id,customer_name', 'products.customPrices');
+        return view('orders.show', compact('order'));
     }
 }

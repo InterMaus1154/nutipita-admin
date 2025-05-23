@@ -51,7 +51,67 @@
         @livewire('customer-custom-prices', ['customer' => $customer])
         {{--custom orders section--}}
         <h2 class="section-title">Customer Orders</h2>
-        <a href="{{route('orders.create', ['customer_id' => $customer->customer_id])}}" class="action-link">Add new order</a>
-
+        <a href="{{route('orders.create', ['customer_id' => $customer->customer_id])}}" class="action-link">Add new
+            order</a>
+        @if(collect($customer->orders)->isEmpty())
+            <em>This customer hasn't placed an order yet!</em>
+        @else
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Placed At
+                        </th>
+                        <th>
+                            Due At
+                        </th>
+                        <th>
+                            Total Pita
+                        </th>
+                        <th>
+                            Total £
+                        </th>
+                        <th>
+                            Edit
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($customer->orders as $order)
+                        <tr>
+                            <td>
+                                <a class="action-link" href="{{route('orders.show', compact('order'))}}">
+                                    {{$order->order_id}}
+                                </a>
+                            </td>
+                            <td>
+                                {{$order->order_status}}
+                            </td>
+                            <td>
+                                {{$order->order_placed_at}}
+                            </td>
+                            <td>
+                                {{$order->order_due_at ?? "No due date"}}
+                            </td>
+                            <td>
+                                {{$order->total_pita}}
+                            </td>
+                            <td>
+                                £{{$order->total_price}}
+                            </td>
+                            <td><em>Edit</em></td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </section>
 </x-layout>

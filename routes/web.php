@@ -92,6 +92,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // store new order
         Route::post('/', 'store')->name('orders.store');
+
+        // show an order
+        Route::get('/show/{order}', 'show')->name('orders.show');
     });
 
 });

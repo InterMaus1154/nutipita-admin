@@ -14,7 +14,7 @@
                         ID
                     </th>
                     <th>
-                        Customer Name
+                        Customer
                     </th>
                     <th>
                         Status
@@ -37,7 +37,7 @@
                 @forelse($orders as $order)
                     <tr>
                         <td>
-                            <a class="action-link" href="">
+                            <a class="action-link" href="{{route('orders.show', compact('order'))}}">
                                 {{$order->order_id}}
                             </a>
                         </td>
@@ -60,6 +60,9 @@
                         </td>
                         <td>
                             £{{$order->total_price}}
+                        </td>
+                        <td>
+                            <a href="" class="action-link">Edit</a>
                         </td>
                     </tr>
                 @empty
