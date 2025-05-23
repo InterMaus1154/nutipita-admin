@@ -1,6 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Order #{{$order->order_id}}</h2>
+        <a class="action-link" href="{{route('orders.edit', compact('order'))}}">Edit Order</a>
         <div class="table-wrapper">
             <table>
                 <tbody>
@@ -23,6 +24,14 @@
                 <tr>
                     <td>Status</td>
                     <td>{{$order->status}}</td>
+                </tr>
+                <tr>
+                    <td>Total pita</td>
+                    <td>{{$order->total_pita}}</td>
+                </tr>
+                <tr>
+                    <td>Total price</td>
+                    <td>£{{$order->total_price}}</td>
                 </tr>
                 </tbody>
             </table>
