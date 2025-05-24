@@ -12,6 +12,7 @@ enum OrderStatus: string
     case DUE_PAYMENT = "due_payment";
     case CANCELLED = "cancelled";
     case INVALIDATED = "invalidated";
+    case UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED_ORDER_STATUS_FROM_ENUM";
 
     public static function fromName(string $name): string
     {
@@ -20,6 +21,6 @@ enum OrderStatus: string
                 return $case->value;
             }
         }
-        return "UNDEFINED_ORDER_STATUS_FROM_ENUM";
+        return self::UNDEFINED_ORDER_STATUS_FROM_ENUM->value;
     }
 }
