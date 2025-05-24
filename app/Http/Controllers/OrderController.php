@@ -19,12 +19,13 @@ class OrderController extends Controller
      */
     public function index(): View
     {
+        $products = Product::all();
         $orders = Order::query()
             ->with('customer:customer_id,customer_name', 'products')
             ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at'])
             ->orderByDesc('created_at')
             ->get();
-        return view('orders.index', compact('orders'));
+        return view('orders.index', compact('orders', 'products'));
     }
 
     /*
@@ -64,7 +65,7 @@ class OrderController extends Controller
             $customer = Customer::find($customer_id);
             // create order for customer
             $order = $customer->orders()->create([
-                'order_status' => OrderStatus::PENDING->value,
+                'order_status' => OrderStatus::Y_PENDING->name,
                 'order_placed_at' => $order_placed_at,
                 'order_due_at' => $order_due_at
             ]);

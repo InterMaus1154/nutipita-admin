@@ -25,6 +25,9 @@
                     <th>
                         Due At
                     </th>
+                    @foreach($products as $product)
+                        <th>{{$product->product_name}}</th>
+                    @endforeach
                     <th>
                         Total Pita
                     </th>
@@ -55,6 +58,20 @@
                         <td>
                             {{$order->order_due_at ?? "No due date"}}
                         </td>
+                        @foreach($products as $product)
+                            @php
+                                $orderProduct = $order->products->firstWhere('product_id', $product->product_id);
+                            @endphp
+                            <td>
+                                @if($orderProduct)
+                                    {{$orderProduct->pivot->product_qty}} x
+                                    £{{$orderProduct->pivot->order_product_unit_price}} <br>
+                                    £{{$orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price}}
+                                @else
+                                    0
+                                @endif
+                            </td>
+                        @endforeach
                         <td>
                             {{$order->total_pita}}
                         </td>
