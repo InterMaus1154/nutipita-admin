@@ -19,8 +19,7 @@ class OrderController extends Controller
      */
     public function index(): View
     {
-        // TODO optimise later
-        $products = Product::all();
+        $products = Product::select(['product_id','product_name'])->get();
         $orders = Order::query()
             ->with('customer:customer_id,customer_name', 'products')
             ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at'])

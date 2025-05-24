@@ -23,7 +23,7 @@ class ProductSelector extends Component
             $products = [];
         } else {
             $products = Product::query()
-                ->select(['product_name', 'product_id', 'product_unit_price'])
+                ->select(['product_name', 'product_id'])
                 ->get()
                 ->map(fn($p) => $p->setCurrentCustomer(Customer::find($this->customer_id)));
         }

@@ -36,10 +36,9 @@ class CustomerController extends Controller
      */
     public function index(): View
     {
-        // TODO optimise
         $products = Product::query()
             ->with('customPrices')
-            ->select(['product_id','product_name','product_unit_price'])
+            ->select(['product_id','product_name'])
             ->get();
         $customers = Customer::query()
             ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
@@ -110,7 +109,7 @@ class CustomerController extends Controller
     public function editCustomPrice(Customer $customer): View|RedirectResponse
     {
         $products = Product::query()
-            ->select(['product_id', 'product_name', 'product_unit_price'])
+            ->select(['product_id', 'product_name'])
             ->get()
             ->map(function ($product) use ($customer) {
                 // set customer for each product to show custom prices for current customer

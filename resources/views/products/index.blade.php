@@ -15,12 +15,6 @@
                         Name
                     </th>
                     <th>
-                        Unit Price
-                    </th>
-                    <th>
-                        Pack Price
-                    </th>
-                    <th>
                         Unit Weight
                     </th>
                     <th>
@@ -37,14 +31,6 @@
                             </a>
                         </td>
                         <td>{{$product->product_name}}</td>
-                        <td>£{{$product->product_unit_price}}</td>
-                        <td>
-                            @if($product->product_qty_per_pack)
-                                £{{$product->product_unit_price * $product->product_qty_per_pack}}
-                            @else
-                                <em>No pack price without qty</em>
-                            @endif
-                        </td>
                         <td>
                             @if($product->product_weight_g)
                                 {{$product->product_weight_g}}g

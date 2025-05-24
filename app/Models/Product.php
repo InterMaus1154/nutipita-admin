@@ -42,11 +42,11 @@ class Product extends Model
      */
     public function getPriceAttribute()
     {
-        if (!$this->currentCustomer) return $this->attributes['product_unit_price'];
+        if (!$this->currentCustomer) {
+            abort(400, 'Customer is not set for product. Contact administrator!');
+        }
         $price = $this->customPrices
-            ->where('customer_id', $this->currentCustomer->customer_id)
-            ->first();
+            ->firstWhere('customer_id', $this->currentCustomer->customer_id);
         return $price ? $price->customer_product_price : 0;
     }
-
 }
