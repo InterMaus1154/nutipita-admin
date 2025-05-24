@@ -89,7 +89,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{$order->order_status}}
+                                {{$order->status}}
                             </td>
                             <td>
                                 {{$order->order_placed_at}}

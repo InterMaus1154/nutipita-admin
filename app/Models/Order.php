@@ -14,8 +14,6 @@ class Order extends Model
     protected $primaryKey = 'order_id';
     protected $guarded = [];
 
-    public $timestamps = false;
-
     /*
      * Define relationships
      */

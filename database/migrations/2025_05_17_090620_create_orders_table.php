@@ -18,6 +18,7 @@ return new class extends Migration {
                 array_map(fn($value) => $value->name, \App\Enums\OrderStatus::cases()));
             $table->date('order_placed_at');
             $table->date('order_due_at')->nullable();
+            $table->timestamps();
         });
 
         DB::update('ALTER TABLE orders AUTO_INCREMENT = 200');

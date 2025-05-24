@@ -26,7 +26,7 @@ class StoreOrderRequest extends FormRequest
             'products' => 'required|array',
             'products.*' => 'required|integer',
             'order_placed_at' => 'required|date',
-            'order_due_at' => 'nullable|date'
+            'order_due_at' => 'nullable|date|after_or_equal:order_placed_at'
         ];
     }
 
