@@ -43,11 +43,10 @@ class Product extends Model
     public function getPriceAttribute()
     {
         if (!$this->currentCustomer) return $this->attributes['product_unit_price'];
-
-        $price = $this->customPrices()
+        $price = $this->customPrices
             ->where('customer_id', $this->currentCustomer->customer_id)
             ->first();
-        return $price ? $price->customer_product_price : $this->attributes['product_unit_price'];
+        return $price ? $price->customer_product_price : 0;
     }
 
 }

@@ -71,7 +71,7 @@
                                 $product = $product->setCurrentCustomer($customer);
                             @endphp
                             <td>
-                                £{{$product->price}}
+                                {{$product->price === 0 ? "" : "£".$product->price}}
                             </td>
                         @endforeach
                         <td>

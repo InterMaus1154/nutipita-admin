@@ -37,7 +37,10 @@ class CustomerController extends Controller
     public function index(): View
     {
         // TODO optimise
-        $products = Product::all();
+        $products = Product::query()
+            ->with('customPrices')
+            ->select(['product_id','product_name','product_unit_price'])
+            ->get();
         $customers = Customer::query()
             ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
             ->withCount('orders')
@@ -59,11 +62,13 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
         try {
-            Customer::create($request->validated());
-            return redirect()->route('customers.index')->with('success', 'New customer successfully created!');
+            $customer = Customer::create($request->validated());
+            return redirect()
+                ->route('customers.edit.custom-price', compact('customer'))
+                ->with('success', 'New customer successfully created!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());
-            return redirect()->route('customers.create', status: 500)->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('customers.create')->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -95,7 +100,7 @@ class CustomerController extends Controller
                 ->with('success', 'Customer successfully updated!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());;
-            return redirect()->route('customers.edit', status: 500)->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('customers.edit')->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -122,8 +127,9 @@ class CustomerController extends Controller
     {
         foreach ($request->array('products') as $key => $value) {
             $product = Product::find($key)->setCurrentCustomer($customer);
-            if (!$this->isProductPriceValid($product->price, $value)) continue;
+            if (!$this->isProductPriceValid(0, $value)) continue;
 
+            DB::beginTransaction();
             try {
                 CustomerProductPrice::updateOrCreate(
                         [
@@ -136,7 +142,9 @@ class CustomerController extends Controller
                             'customer_id' => $customer->customer_id
                         ]
                     );
+                DB::commit();
             } catch (Throwable $e) {
+                DB::rollBack();
                 Log::error($e->getMessage());;
                 return redirect()->route('customers.edit.custom-price', compact('customer'))->withErrors(['server_error' => $e->getMessage()]);
             }
