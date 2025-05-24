@@ -66,7 +66,7 @@
                                 @if($orderProduct)
                                     {{$orderProduct->pivot->product_qty}} x
                                     £{{$orderProduct->pivot->order_product_unit_price}} <br>
-                                    £{{$orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price}}
+                                        £{{$orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price}}
                                 @else
                                     0
                                 @endif

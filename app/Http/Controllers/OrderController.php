@@ -19,6 +19,7 @@ class OrderController extends Controller
      */
     public function index(): View
     {
+        // TODO optimise later
         $products = Product::all();
         $orders = Order::query()
             ->with('customer:customer_id,customer_name', 'products')

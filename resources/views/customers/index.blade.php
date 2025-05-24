@@ -1,7 +1,7 @@
 <x-layout>
     <section class="page-section">
-        <h2 class="section-title">Customers</h2>
-        <x-success />
+        <h2 class="section-title">Customers List</h2>
+        <x-success/>
         <a href="{{route('customers.create')}}" class="action-link">Add new customer</a>
         <div class="table-wrapper">
             <table>
@@ -25,6 +25,9 @@
                     <th>
                         Orders
                     </th>
+                    @foreach($products as $product)
+                        <th>{{$product->product_name}}</th>
+                    @endforeach
                 </tr>
                 </thead>
                 <tbody>
@@ -35,7 +38,11 @@
                                 {{$customer->customer_id}}
                             </a>
                         </td>
-                        <td>{{$customer->customer_name}}</td>
+                        <td>
+                            <a href="{{route('customers.show', compact('customer'))}}" class="action-link">
+                                {{$customer->customer_name}}
+                            </a>
+                        </td>
                         <td>
                             @if($customer->customer_address)
                                 {{$customer->customer_address}}
@@ -45,26 +52,40 @@
                         </td>
                         <td>
                             @if($customer->customer_email)
-                                <a class="action-link" href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
+                                <a class="action-link"
+                                   href="mailto:{{$customer->customer_email}}">{{$customer->customer_email}}</a>
                             @else
                                 <em>No email provided</em>
                             @endif
                         </td>
                         <td>
                             @if($customer->customer_phone)
-                                <a class="action-link" href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
+                                <a class="action-link"
+                                   href="tel:{{$customer->customer_phone}}">{{$customer->customer_phone}}</a>
                             @else
                                 <em>No phone provided</em>
                             @endif
                         </td>
                         <td>{{$customer->orders_count}}</td>
+                        @foreach($products as $product)
+                            @php
+                                $product = $product->setCurrentCustomer($customer);
+                            @endphp
+                            <td>
+                                £{{$product->price}}
+                            </td>
+                        @endforeach
+                        <td>
+                            <a class="action-link" href="{{route('customers.edit', compact('customer'))}}">Edit
+                                Details</a>
+                            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit prices</a>
+                        </td>
                     </tr>
                 @empty
                     <tr style="text-align: center">
                         <td>No customers found!</td>
                     </tr>
                 @endforelse
-
                 </tbody>
             </table>
         </div>

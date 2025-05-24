@@ -36,11 +36,13 @@ class CustomerController extends Controller
      */
     public function index(): View
     {
+        // TODO optimise
+        $products = Product::all();
         $customers = Customer::query()
             ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
             ->withCount('orders')
             ->get();
-        return view('customers.index', compact('customers'));
+        return view('customers.index', compact('customers', 'products'));
     }
 
     /*
