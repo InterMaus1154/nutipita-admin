@@ -11,7 +11,7 @@
                 <thead>
                 <tr>
                     <th>
-                        ID
+                        ID #
                     </th>
                     <th>
                         Customer
@@ -41,7 +41,7 @@
                     <tr>
                         <td>
                             <a class="action-link" href="{{route('orders.show', compact('order'))}}">
-                                {{$order->order_id}}
+                                #{{$order->order_id}}
                             </a>
                         </td>
                         <td>

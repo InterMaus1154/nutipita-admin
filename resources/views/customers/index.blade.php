@@ -22,12 +22,12 @@
                     <th>
                         Phone
                     </th>
-                    <th>
-                        Orders
-                    </th>
                     @foreach($products as $product)
                         <th>{{$product->product_name}}</th>
                     @endforeach
+                    <th>
+                        Total Orders
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -66,7 +66,6 @@
                                 <em>No phone provided</em>
                             @endif
                         </td>
-                        <td>{{$customer->orders_count}}</td>
                         @foreach($products as $product)
                             @php
                                 $product = $product->setCurrentCustomer($customer);
@@ -76,9 +75,12 @@
                             </td>
                         @endforeach
                         <td>
+                            {{$customer->orders_count}}</td>
+                        <td>
                             <a class="action-link" href="{{route('customers.edit', compact('customer'))}}">Edit
                                 Details</a>
-                            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit prices</a>
+                            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit
+                                prices</a>
                         </td>
                     </tr>
                 @empty
