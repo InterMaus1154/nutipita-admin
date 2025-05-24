@@ -91,7 +91,7 @@ class CustomerController extends Controller
     {
         try {
             $customer->update($request->validated());
-            return redirect()->route('customers.show', compact('customer'))
+            return redirect()->route('customers.index')
                 ->with('success', 'Customer successfully updated!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());;
@@ -100,63 +100,12 @@ class CustomerController extends Controller
     }
 
     /*
-     * Show create custom prices for customer form
-     */
-    public function createCustomPrice(Customer $customer): View|RedirectResponse
-    {
-        $products = Product::whereDoesntHave('customPrices', function ($q) use ($customer) {
-            return $q->where('customer_id', $customer->customer_id);
-        })->get();
-        // if there are no products, where this customer doesn't have a custom price, show edit form instead
-        if ($products->isEmpty()) {
-            return redirect()->route('customers.edit.custom-price', compact('customer'));
-        }
-        return view('customers.create-custom-price', compact('customer', 'products'));
-    }
-
-    /*
-     * Store custom prices for a customer
-     */
-    public function storeCustomPrice(Request $request, Customer $customer): RedirectResponse
-    {
-        foreach ($request->array('products') as $key => $value) {
-
-            // ignore null values
-            // ignore values that are same as default price
-            if (!$this->isProductPriceValid(Product::find($key)->product_unit_price, $value)) {
-                continue;
-            }
-
-            try {
-                CustomerProductPrice::create([
-                    'customer_id' => $customer->customer_id,
-                    'product_id' => $key,
-                    'customer_product_price' => $value
-                ]);
-            } catch (Throwable $e) {
-                Log::error($e->getMessage());;
-                return redirect()->route('customers.edit.custom-price', status: 500)->withErrors(['error' => $e->getMessage()]);
-            }
-        };
-        return redirect()
-            ->route('customers.show', compact('customer'))
-            ->with('success', 'Custom prices successfully added!');
-    }
-
-    /*
      * Show edit custom prices form
      */
     public function editCustomPrice(Customer $customer): View|RedirectResponse
     {
-        if (!$customer->customPrices()->exists()) {
-            return redirect()->route('customers.create.custom-price', compact('customer'));
-        }
-
         $products = Product::query()
             ->select(['product_id', 'product_name', 'product_unit_price'])
-            ->whereHas('customPrices', function ($query) use ($customer) {
-                return $query->where('customer_id', $customer->customer_id);
-            })
             ->get()
             ->map(function ($product) use ($customer) {
                 // set customer for each product to show custom prices for current customer
@@ -167,7 +116,7 @@ class CustomerController extends Controller
     }
 
     /*
-     * Update custom prices
+     * Update or add custom prices
      */
     public function updateCustomPrice(Request $request, Customer $customer)
     {
@@ -176,15 +125,20 @@ class CustomerController extends Controller
             if (!$this->isProductPriceValid($product->price, $value)) continue;
 
             try {
-                CustomerProductPrice::query()
-                    ->where('customer_id', $customer->customer_id)
-                    ->where('product_id', $product->product_id)
-                    ->update([
-                        'customer_product_price' => $value
-                    ]);
+                CustomerProductPrice::updateOrCreate(
+                        [
+                            'customer_id' => $customer->customer_id,
+                            'product_id' => $product->product_id
+                        ],
+                        [
+                            'customer_product_price' => $value,
+                            'product_id' => $product->product_id,
+                            'customer_id' => $customer->customer_id
+                        ]
+                    );
             } catch (Throwable $e) {
                 Log::error($e->getMessage());;
-                return redirect()->route('customers.edit.custom-price', status: 500)->withErrors(['error' => $e->getMessage()]);
+                return redirect()->route('customers.edit.custom-price', compact('customer'))->withErrors(['server_error' => $e->getMessage()]);
             }
         }
         return redirect()
@@ -199,7 +153,7 @@ class CustomerController extends Controller
     {
         if ($customPrice->customer_id !== $customer->customer_id) {
             return redirect()->route('customers.show')
-                ->withErrors(['owenership_error' => 'This custom price doesnt belong to this customer!']);
+                ->withErrors(['ownership_error' => 'This custom price doesnt belong to this customer!']);
         }
 
         $result = DB::transaction(function () use ($customPrice, $customer) {
@@ -215,7 +169,7 @@ class CustomerController extends Controller
         if ($result instanceof \Exception) {
             Log::error($result->getMessage());
             return redirect()
-                ->route('customers.show', compact('customer'), status: 500)
+                ->route('customers.show', compact('customer'))
                 ->withErrors(['error' => $result->getMessage()]);
         }
         return $result;

@@ -45,7 +45,7 @@
         </div>
         {{--custom prices section--}}
         <h2 class="section-title">Custom prices</h2>
-        <a href="{{route('customers.create.custom-price', compact('customer'))}}" class="action-link">Add custom
+        <a href="{{route('customers.edit.custom-price', compact('customer'))}}" class="action-link">Add custom
             prices
         </a>
         @livewire('customer-custom-prices', ['customer' => $customer])

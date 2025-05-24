@@ -43,16 +43,10 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // update a customer
         Route::put('/update/{customer}', 'update')->name('customers.update');
 
-        // show create custom price form for a customer
-        Route::get('/create/customPrice/{customer}', 'createCustomPrice')->name('customers.create.custom-price');
-
-        // store custom prices
-        Route::post('/store/customPrice/{customer}', 'storeCustomPrice')->name('customers.store.custom-price');
-
-        // show edit custom price form
+        // show edit/create custom price form
         Route::get('/edit/customPrice/{customer}', 'editCustomPrice')->name('customers.edit.custom-price');
 
-        // update custom prices
+        // update or add custom prices
         Route::put('/update/customPrice/{customer}', 'updateCustomPrice')->name('customers.update.custom-price');
 
         // remove a custom price
