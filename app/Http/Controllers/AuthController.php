@@ -33,7 +33,7 @@ class AuthController extends Controller
         // check if user exists
         // and password matches
         if (!$user || !Hash::check($request->validated('password'), $user->password)) {
-            return redirect(status: 401)
+            return redirect()
                 ->route('auth.view.login')
                 ->withErrors(
                     ['auth_error' => 'Invalid credentials!']
