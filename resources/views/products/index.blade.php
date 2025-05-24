@@ -59,6 +59,9 @@
                                 <em>No specified pack quantity</em>
                             @endif
                         </td>
+                        <td>
+                            <a class="action-link" href="{{route('products.edit', compact('product'))}}">Edit</a>
+                        </td>
                     </tr>
                 @empty
                     <tr style="text-align: center">
