@@ -142,7 +142,7 @@ class CustomerController extends Controller
             }
         }
         return redirect()
-            ->route('customers.show', compact('customer'))
+            ->route('customers.index')
             ->with('success', 'Custom prices successfully updated!');
     }
 
