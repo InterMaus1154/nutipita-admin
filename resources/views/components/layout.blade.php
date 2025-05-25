@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,9 +12,10 @@
 </head>
 <body class="min-h-screen bg-white dark:bg-zinc-800">
 <x-sidebar />
-<main>
-{{--    {{$slot}}--}}
-</main>
+<x-header />
+<flux:main>
+    {{$slot}}
+</flux:main>
 @fluxScripts
 </body>
 </html>

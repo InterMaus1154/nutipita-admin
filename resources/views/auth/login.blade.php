@@ -14,11 +14,13 @@
 <div class="min-h-screen flex justify-center items-center">
     <div class="flex gap-4 flex-col border border-gray-300 rounded-lg p-10">
         <flux:heading size="xl" class="text-center">Login</flux:heading>
-        <flux:error></flux:error>
+        <x-error />
         <div class="space-y-6">
             <form method="POST" action="{{route('auth.login')}}" class="space-y-6">
                 @csrf
-                <flux:input name="username" label="Username" type="text" placeholder="Your username" value="{{old('username', '')}}"/>
+                <flux:input name="username" label="Username" type="text"
+                            placeholder="Your username"
+                            value="{{old('username', '')}}"/>
                 <flux:field>
                     <div class="mb-3 flex justify-between">
                         <flux:label>Password</flux:label>

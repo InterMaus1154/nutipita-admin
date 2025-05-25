@@ -37,7 +37,7 @@ class AuthController extends Controller
                 ->route('auth.view.login')
                 ->withErrors(
                     ['auth_error' => 'Invalid credentials!']
-                )->withInput(['username']);
+                )->withInput();
         }
 
         auth()->login($user);
