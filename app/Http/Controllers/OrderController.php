@@ -127,11 +127,27 @@ class OrderController extends Controller
                 'order_due_at' => $request->validated('order_due_at')
             ]);
             $orderProducts = collect($order->products)->keyBy('product_id');
-            foreach ($request->array('products') as $product_id => $quantity){
-                if($quantity <= 0){
-                    if($orderProducts->has($product_id)){
+            foreach ($request->array('products') as $product_id => $quantity) {
+                if ($quantity <= 0) {
+                    if ($orderProducts->has($product_id)) {
                         $order->products()->detach($product_id);
+                    } else {
+                        continue;
                     }
+                } else {
+                    $price = Product::find($product_id)->setCurrentCustomer($order->customer)->price;
+                    if ($orderProducts->has($product_id)) {
+                        $order->products()->updateExistingPivot($product_id, [
+                            'product_qty' => $quantity,
+                            'order_product_unit_price' => $price
+                        ]);
+                    } else {
+                        $order->products()->attach($product_id, [
+                            'product_qty' => $quantity,
+                            'order_product_unit_price' => $price
+                        ]);
+                    }
+
                 }
             }
             DB::commit();
