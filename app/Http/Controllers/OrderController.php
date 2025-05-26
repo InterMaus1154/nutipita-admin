@@ -91,10 +91,22 @@ class OrderController extends Controller
         }
     }
 
+    /*
+     * Show order details page
+     */
     public function show(Order $order)
     {
         $order->loadCount('products')
             ->loadMissing('customer:customer_id,customer_name', 'products.customPrices');
         return view('orders.show', compact('order'));
+    }
+
+    /*
+     * Show edit order form
+     */
+    public function edit(Order $order)
+    {
+        $order->loadMissing('customer:customer_id,customer_name', 'products');
+        return view('orders.edit', compact('order'));
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->enum('order_status',
                 array_map(fn($value) => $value->name, \App\Enums\OrderStatus::cases()));
             $table->date('order_placed_at');
-            $table->date('order_due_at')->nullable();
+            $table->date('order_due_at');
             $table->timestamps();
         });
 

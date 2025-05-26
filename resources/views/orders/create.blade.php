@@ -11,7 +11,7 @@
                        value="{{old('order_placed_at', now()->toDateString())}}">
             </div>
             <div class="input-wrapper">
-                <label for="order_due_at">Order Due At (optional)</label>
+                <label for="order_due_at">Order Due At</label>
                 <input type="date" id="order_due_at" name="order_due_at" value="{{old('order_due_at', '')}}">
             </div>
             {{--livewire component for selecting customer with custom product prices--}}
