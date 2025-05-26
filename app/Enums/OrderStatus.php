@@ -9,7 +9,7 @@ enum OrderStatus: string
     case G_DELIVERED = "delivered";
     case G_PAID = "paid";
     case G_DELIVERED_AND_PAID = "delivered & paid";
-    case R_DUE_PAYMENT = "due_payment";
+    case R_DUE_PAYMENT = "payment due";
     case R_CANCELLED = "cancelled";
     case R_INVALIDATED = "invalidated";
     case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED_ORDER_STATUS_FROM_ENUM";

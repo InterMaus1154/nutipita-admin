@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -107,6 +108,16 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         $order->loadMissing('customer:customer_id,customer_name', 'products');
-        return view('orders.edit', compact('order'));
+        // TODO optimise products
+        $products = Product::all()->map(fn($product) => $product->setCurrentCustomer($order->customer));
+        return view('orders.edit', compact('order', 'products'));
+    }
+
+    /*
+     * Update an order
+     */
+    public function update(UpdateOrderRequest $request, Order $order)
+    {
+
     }
 }
