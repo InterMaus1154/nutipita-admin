@@ -20,7 +20,7 @@ class OrderController extends Controller
      */
     public function index(): View
     {
-        $products = Product::select(['product_id','product_name'])->get();
+        $products = Product::select(['product_id', 'product_name'])->get();
         $orders = Order::query()
             ->with('customer:customer_id,customer_name', 'products')
             ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at'])
@@ -118,6 +118,33 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        $order->loadMissing('products');
+        DB::beginTransaction();
+        try {
+            $order->update([
+                'order_status' => $request->validated('order_status'),
+                'order_placed_at' => $request->validated('order_placed_at'),
+                'order_due_at' => $request->validated('order_due_at')
+            ]);
+            $orderProducts = collect($order->products)->keyBy('product_id');
+            foreach ($request->array('products') as $product_id => $quantity){
+                if($quantity <= 0){
+                    if($orderProducts->has($product_id)){
+                        $order->products()->detach($product_id);
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()
+                ->route('orders.index')
+                ->with('success', 'Order updated successfully');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return redirect()
+                ->route('orders.edit', compact('order'))
+                ->withErrors(['order_update' => 'Error at updating order. No changes made']);
 
+        }
     }
 }

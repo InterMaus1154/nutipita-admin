@@ -1,6 +1,7 @@
 <x-layout>
     <section class="page-section">
         <h2 class="section-title">Order #{{$order->order_id}}</h2>
+        <x-success />
         <a class="action-link" href="{{route('orders.edit', compact('order'))}}">Edit Order</a>
         <div class="table-wrapper">
             <table>

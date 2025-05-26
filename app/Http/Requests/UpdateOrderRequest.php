@@ -28,7 +28,9 @@ class UpdateOrderRequest extends FormRequest
             'order_due_at' => 'required|date|after_or_equal:order_placed_at',
             'order_status' => ['required', \Illuminate\Validation\Rule::in(array_map(function ($status) {
                 return $status->name;
-            }, OrderStatus::cases()))]
+            }, OrderStatus::cases()))],
+            'products' => 'required|array',
+            'products.*' => 'required|integer'
         ];
     }
 }

@@ -7,6 +7,7 @@
             </a>
         </h3>
         <x-error/>
+        <x-success />
         <form action="{{route('orders.update', compact('order'))}}" method="POST">
             @csrf
             @method('PUT')
