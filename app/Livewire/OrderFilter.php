@@ -11,13 +11,15 @@ class OrderFilter extends Component
     public ?int $customer_id;
     public ?string $due_from;
     public ?string $due_to;
+    public ?string $status;
 
     public function updated()
     {
         $this->dispatch('update-filter', [
             'customer_id' => $this->customer_id ?? null,
             'due_from' => $this->due_from ?? null,
-            'due_to' => $this->due_to ?? null
+            'due_to' => $this->due_to ?? null,
+            'status' => $this->status ?? null
         ]);
     }
 

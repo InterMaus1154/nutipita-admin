@@ -18,5 +18,14 @@
             <input type="date" id="due_to" wire:model.live="due_to">
         </div>
     </div>
+    <div class="input-wrapper">
+        <label for="order_status">Status</label>
+        <select id="order_status" wire:model.live="status">
+            <option value="">---Select status---</option>
+            @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+            @endforeach
+        </select>
+    </div>
     <button wire:click="clearFilter">Clear filter</button>
 </div>
