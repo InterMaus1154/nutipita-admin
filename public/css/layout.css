@@ -98,3 +98,20 @@ table {
 .filter-wrapper h3 {
     color: var(--primary-red);
 }
+
+.index-order-cards {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-order-cards .index-order-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: .25rem;
+    padding: .75rem;
+    border: 1px solid var(--bright-red);
+    border-radius: .25rem;
+}

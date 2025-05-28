@@ -51,4 +51,27 @@ class Order extends Model
         return ucfirst(OrderStatus::fromName($this->order_status));
     }
 
+    /*
+     * Custom methods
+     */
+
+    /**
+     * Return the sum of provided product for the order
+     * @param Product|int $product
+     * @return int
+     */
+    public function getTotalOfProduct(Product|int $product): int
+    {
+
+        // if product model is supplied, get id
+        $product_id = $product instanceof Product ? $product->product_id : $product;
+
+        if ($this->products->where('product_id', $product_id)) {
+            return $this->products->where('product_id', $product_id)->sum(function ($product) {
+                return $product->pivot->product_qty;
+            });
+        }
+        return 0;
+    }
+
 }
