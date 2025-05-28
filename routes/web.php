@@ -22,6 +22,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     // main dashboard
     Route::get('/', [AdminController::class, 'showDashboard'])->name('admin.view.dashboard');
 
+    // create today order total pdf
+    Route::get('/today-order-pdf', [AdminController::class, 'createOrderTotalPdf'])->name('today.order.pdf');
+
     // routes with customers
     Route::group(['prefix' => 'customers', 'controller' => CustomerController::class], function () {
 

@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use function Spatie\LaravelPdf\Support\pdf;
 
 class AdminController extends Controller
 {
-    /**
-     * Show main dashboard
-     */
-    public function showDashboard()
+    private function getTodaysOrdersData(): array
     {
         $products = Product::select(['product_id', 'product_name'])->get();
         $orders = Order::with('products')->where('order_due_at', now()->toDateString())->get();
@@ -25,11 +23,32 @@ class AdminController extends Controller
         foreach ($orders as $order) {
             foreach ($order->products as $product) {
                 $total = $order->getTotalOfProduct($product);
-                isset($productTotals[$product->product_id]) ?
-                    $productTotals[$product->product_id] += $total : $productTotals[$product->product_id] = $total;
+                isset($productTotals[$product->product_name]) ?
+                    $productTotals[$product->product_name] += $total : $productTotals[$product->product_name] = $total;
             }
         }
 
-        return view('admin.index', compact('orders', 'products', 'totalDayIncome', 'productTotals'));
+        $totalDayPita = 0;
+        foreach ($productTotals as $total){
+            $totalDayPita += $total;
+        }
+
+        return compact('orders', 'products', 'totalDayIncome', 'productTotals', 'totalDayPita');
+    }
+
+    /**
+     * Show main dashboard
+     */
+    public function showDashboard()
+    {
+        return view('admin.index', $this->getTodaysOrdersData());
+    }
+
+    public function createOrderTotalPdf()
+    {
+        return pdf()
+            ->view('pdf.order-total', $this->getTodaysOrdersData())
+            ->name('order-total-'.now()->toDateString())
+            ->download();
     }
 }

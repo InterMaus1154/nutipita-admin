@@ -4,15 +4,20 @@
         @if($orders->isEmpty())
             <em>No due orders for today!</em>
         @else
+            <a href="{{route('today.order.pdf')}}" class="action-link">Download order PDF</a>
             <div class="index-order-cards">
                 <div class="index-order-card">
                     <span class="index-order-card-title">Daily Income</span>
                     <span class="index-order-card-value">£{{$totalDayIncome}}</span>
                 </div>
-                @foreach($products as $product)
+                <div class="index-order-card">
+                    <span class="index-order-card-title">Total pita</span>
+                    <span class="index-order-card-value">{{$totalDayPita}}</span>
+                </div>
+                @foreach($productTotals as $key => $value)
                     <div class="index-order-card">
-                        <div class="index-order-card-title">Total of {{$product->product_name}}</div>
-                        <div class="index-order-card-value">{{$productTotals[$product->product_id]}}</div>
+                        <div class="index-order-card-title">Total of {{$key}}</div>
+                        <div class="index-order-card-value">{{$value}}</div>
                     </div>
                 @endforeach
             </div>
