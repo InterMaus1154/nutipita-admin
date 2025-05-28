@@ -2,9 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 class ProductsTest extends TestCase
@@ -40,7 +44,6 @@ class ProductsTest extends TestCase
     {
         $validData = [
             'product_name' => 'Test Product',
-            'product_unit_price' => 0.25
         ];
 
         $response = $this->post(route('products.store'), $validData);
@@ -51,7 +54,6 @@ class ProductsTest extends TestCase
     {
         $invalidData = [
             'product_name' => '', // required
-            'product_unit_price' => 'invalid', // must be decimal
             'product_weight_g' => 'not-a-number', // must be numeric
             'product_qty_per_pack' => 'also-wrong', // must be numeric
         ];
@@ -60,9 +62,27 @@ class ProductsTest extends TestCase
 
         $response->assertSessionHasErrors([
             'product_name',
-            'product_unit_price',
             'product_weight_g',
             'product_qty_per_pack',
         ]);
+    }
+
+    public function test_product_price_without_customer_status_400()
+    {
+        try {
+            $product = Product::factory()->create();
+            $product->price;
+        } catch (HttpException $e) {
+            $this->assertEquals(400, $e->getStatusCode());
+        }
+
+    }
+
+    public function test_product_price_with_customer_returns_ok_and_0_as_default()
+    {
+        $customer = Customer::factory()->create();
+        $product = Product::factory()->create();
+        $product->setCurrentCustomer($customer);
+        $this->assertEquals(0, $product->price);
     }
 }
