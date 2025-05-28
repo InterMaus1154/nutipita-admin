@@ -8,9 +8,15 @@
             @endforeach
         </select>
     </div>
-    <div class="input-wrapper">
-        <label for="due_from">Due from:</label>
-        <input type="date" id="due_from" wire:model.live="due_from">
+    <div style="display: flex; gap: 1rem;">
+        <div class="input-wrapper">
+            <label for="due_from">Due from:</label>
+            <input type="date" id="due_from" wire:model.live="due_from">
+        </div>
+        <div class="input-wrapper">
+            <label for="due_to">Due to:</label>
+            <input type="date" id="due_to" wire:model.live="due_to">
+        </div>
     </div>
     <button wire:click="clearFilter">Clear filter</button>
 </div>
