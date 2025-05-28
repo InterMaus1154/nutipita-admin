@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -20,13 +22,7 @@ class OrderController extends Controller
      */
     public function index(): View
     {
-        $products = Product::select(['product_id', 'product_name'])->get();
-        $orders = Order::query()
-            ->with('customer:customer_id,customer_name', 'products')
-            ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at'])
-            ->orderByDesc('created_at')
-            ->get();
-        return view('orders.index', compact('orders', 'products'));
+        return view('orders.index');
     }
 
     /*
