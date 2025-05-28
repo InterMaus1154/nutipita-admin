@@ -26,9 +26,16 @@ class OrderList extends Component
     {
         $this->query = Order::query();
 
-        $this->query->when($filters['customer_id'], function ($builder) use ($filters) {
-            return $builder->where('customer_id', $filters['customer_id']);
-        });
+        $this->query
+            ->when($filters['customer_id'], function ($builder) use ($filters) {
+                return $builder->where('customer_id', $filters['customer_id']);
+            })
+            ->when($filters['due_from'], function($builder) use($filters){
+                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
+            })
+            ->when($filters['due_to'], function($builder) use($filters){
+                return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
+            });
 
         $this->loadOrders();
     }

@@ -8,4 +8,9 @@
             @endforeach
         </select>
     </div>
+    <div class="input-wrapper">
+        <label for="due_from">Due from:</label>
+        <input type="date" id="due_from" wire:model.live="due_from">
+    </div>
+    <button wire:click="clearFilter">Clear filter</button>
 </div>
