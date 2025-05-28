@@ -9,13 +9,13 @@
                 Customer
             </th>
             <th>
+                Due At
+            </th>
+            <th>
                 Status
             </th>
             <th>
                 Placed At
-            </th>
-            <th>
-                Due At
             </th>
             @foreach($products as $product)
                 <th>{{$product->product_name}}</th>
@@ -42,13 +42,13 @@
                     </a>
                 </td>
                 <td>
+                    {{$order->order_due_at}}
+                </td>
+                <td>
                     {{$order->status}}
                 </td>
                 <td>
                     {{$order->order_placed_at}}
-                </td>
-                <td>
-                    {{$order->order_due_at ?? "No due date"}}
                 </td>
                 @foreach($products as $product)
                     @php
