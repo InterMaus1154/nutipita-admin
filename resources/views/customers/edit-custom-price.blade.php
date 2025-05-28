@@ -1,6 +1,7 @@
 <x-layout>
     <div class="form-wrapper">
         <h2 class="form-title">Prices for {{$customer->customer_name}}</h2>
+        <h3>0 or empty will be deleted</h3>
         <x-error/>
         <form action="{{route('customers.update.custom-price', compact('customer'))}}" method="POST">
             @csrf

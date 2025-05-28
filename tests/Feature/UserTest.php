@@ -5,10 +5,16 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
+    public function setUp(): void
+    {
+        Artisan::call('db:seed');
+    }
+
     /**
      * Test unauthenticated user, should return 401
      */
@@ -23,7 +29,7 @@ class UserTest extends TestCase
      */
     public function test_authenticated_user_on_dashboard_expect_200_admin_index()
     {
-        $user = User::first();
+        $user = User::factory()->create();
         $this->actingAs($user);
         $response = $this->get('/');
         $response->assertStatus(200)->assertViewIs('admin.index');

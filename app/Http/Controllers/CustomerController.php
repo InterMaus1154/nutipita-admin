@@ -38,7 +38,7 @@ class CustomerController extends Controller
     {
         $products = Product::query()
             ->with('customPrices')
-            ->select(['product_id','product_name'])
+            ->select(['product_id', 'product_name'])
             ->get();
         $customers = Customer::query()
             ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
@@ -124,23 +124,33 @@ class CustomerController extends Controller
      */
     public function updateCustomPrice(Request $request, Customer $customer)
     {
-        foreach ($request->array('products') as $key => $value) {
-            $product = Product::find($key)->setCurrentCustomer($customer);
-            if (!$this->isProductPriceValid(0, $value)) continue;
+        foreach ($request->array('products') as $product_id => $price) {
+            $product = Product::find($product_id)->setCurrentCustomer($customer);
+            if (!$this->isProductPriceValid(0, $price)) {
+                // if price is 0 or empty, delete the custom price
+                $customPrice = CustomerProductPrice::query()
+                    ->where('product_id', $product_id)
+                    ->where('customer_id', $customer->customer_id)
+                    ->first();
+                if ($customPrice) {
+                    $customPrice->delete();
+                }
+                continue;
+            }
 
             DB::beginTransaction();
             try {
                 CustomerProductPrice::updateOrCreate(
-                        [
-                            'customer_id' => $customer->customer_id,
-                            'product_id' => $product->product_id
-                        ],
-                        [
-                            'customer_product_price' => $value,
-                            'product_id' => $product->product_id,
-                            'customer_id' => $customer->customer_id
-                        ]
-                    );
+                    [
+                        'customer_id' => $customer->customer_id,
+                        'product_id' => $product->product_id
+                    ],
+                    [
+                        'customer_product_price' => $price,
+                        'product_id' => $product->product_id,
+                        'customer_id' => $customer->customer_id
+                    ]
+                );
                 DB::commit();
             } catch (Throwable $e) {
                 DB::rollBack();
@@ -153,32 +163,4 @@ class CustomerController extends Controller
             ->with('success', 'Custom prices successfully updated!');
     }
 
-    /*
-     * Remove a custom price
-     */
-    public function deleteCustomPrice(Customer $customer, CustomerProductPrice $customPrice): RedirectResponse
-    {
-        if ($customPrice->customer_id !== $customer->customer_id) {
-            return redirect()->route('customers.show')
-                ->withErrors(['ownership_error' => 'This custom price doesnt belong to this customer!']);
-        }
-
-        $result = DB::transaction(function () use ($customPrice, $customer) {
-            try {
-                $customPrice->delete();
-                return redirect()->route('customers.show', compact('customer'))
-                    ->with('success', 'Custom price deleted!');
-            } catch (\Exception $e) {
-                return $e;
-            }
-        }, 3);
-
-        if ($result instanceof \Exception) {
-            Log::error($result->getMessage());
-            return redirect()
-                ->route('customers.show', compact('customer'))
-                ->withErrors(['error' => $result->getMessage()]);
-        }
-        return $result;
-    }
 }

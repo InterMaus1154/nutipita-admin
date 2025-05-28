@@ -2,7 +2,7 @@
     <section class="page-section">
         <h2 class="section-title">Orders</h2>
         <x-success/>
-        <div class="order-filter">
+        <div class="filter-wrapper">
             <h3>Filter & Sort</h3>
         </div>
         <a href="{{route('orders.create')}}" class="action-link">Add new order</a>
