@@ -69,7 +69,7 @@
                     {{$order->total_pita}}
                 </td>
                 <td>
-                    £{{$order->total_price}}
+                    {{$order->total_price_format}}
                 </td>
                 <td>
                     <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>

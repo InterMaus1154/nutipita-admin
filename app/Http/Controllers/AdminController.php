@@ -29,7 +29,7 @@ class AdminController extends Controller
         }
 
         $totalDayPita = 0;
-        foreach ($productTotals as $total){
+        foreach ($productTotals as $total) {
             $totalDayPita += $total;
         }
 
@@ -48,7 +48,7 @@ class AdminController extends Controller
     {
         return pdf()
             ->view('pdf.order-total', $this->getTodaysOrdersData())
-            ->name('order-total-'.now()->toDateString())
+            ->name('order-total-' . now()->toDateString())
             ->download();
     }
 }

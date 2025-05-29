@@ -41,9 +41,14 @@ class Order extends Model
 
     public function getTotalPriceAttribute()
     {
-        return number_format($this->products->sum(function ($product) {
+        return $this->products->sum(function ($product) {
             return $product->pivot->product_qty * $product->pivot->order_product_unit_price;
-        }), 2);
+        });
+    }
+
+    public function getTotalPriceFormatAttribute(): string
+    {
+        return "£".number_format($this->total_price, 2);
     }
 
     public function getStatusAttribute()
