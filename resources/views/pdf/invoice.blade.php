@@ -111,7 +111,7 @@
             font-weight: normal;
         }
 
-        th {
+        thead th {
             font-weight: normal;
             padding: .5rem;
             text-align: left;
@@ -122,26 +122,36 @@
             padding: 1rem .5rem;
         }
 
-        th:first-child,
-        td:first-child {
+        thead th:first-child,
+        tbody td:first-child {
             width: 30px;
         }
 
-        th:nth-child(2),
-        td:nth-child(2) {
+        thead th:nth-child(2),
+        tbody td:nth-child(2) {
             width: auto;
         }
 
-        th:last-child,
-        td:last-child {
+        thead th:last-child,
+        tbody td:last-child {
             width: 100px;
             text-align: right;
         }
 
-        .product-data-desc{
-             color: #9e9e9e;
-             font-size: .9rem;
-         }
+        .product-data-desc {
+            color: #9e9e9e;
+            font-size: .9rem;
+        }
+
+        tfoot {
+            width: 100%;
+            background-color: #eee;
+            border-bottom: 1px solid black;
+        }
+
+        tfoot td:first-child{
+
+        }
     }
 
 </style>
@@ -232,20 +242,42 @@
                     <tr>
                         <td>{{$index+1}}</td>
                         <td class="product-data">
-                            <span class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span><br>
+                            <span
+                                class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span>
+                            <br>
                             <span class="product-data-desc">Pcs x Unit Price </span>
                         </td>
-                        <td class="product-amount">
-                            <span class="product-data-name">£{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}</span><br>
-                            <span class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
+                        <td class="product-data">
+                            <span
+                                class="product-data-name">£{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}</span>
+                            <br>
+                            <span
+                                class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="2" style="width: 25%">Bank Details</td>
+                    <td style="text-align: right">
+                        <strong style="font-size: 1.5rem;">
+                            <span style="display: inline-block; margin-right: .5rem;">Total:</span> £{{$order->total_price}}
+                        </strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        Lloyds bank
+                        <br>
+                        <span style="white-space: nowrap; margin-block: .5rem; display: inline-block;">Sort Code: 30 99 50</span>
+                        <br>
+                        <span style="white-space: nowrap">Account Number: 7226993</span>
+                    </td>
+                    <td></td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </main>
-    <footer>
-
-    </footer>
 </div>
