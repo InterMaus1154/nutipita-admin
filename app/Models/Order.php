@@ -29,6 +29,11 @@ class Order extends Model
             ->withTimestamps();
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'order_id', 'order_id');
+    }
+
     /*
      * Define custom attributes
      */
@@ -78,5 +83,7 @@ class Order extends Model
         }
         return 0;
     }
+
+
 
 }

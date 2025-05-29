@@ -7,6 +7,7 @@ use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\InvoiceController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -98,5 +99,10 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // update order
         Route::put('/update/{order}', 'update')->name('orders.update');
+    });
+
+    // invoice routes
+    Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
+        Route::get('/test-invoice', 'test')->name('invoices.test');
     });
 });
