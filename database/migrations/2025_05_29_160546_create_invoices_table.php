@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->increments('invoice_id')->primary();
             $table->unsignedInteger('order_id');
             $table->foreign('order_id')->references('order_id')->on('orders');
-            $table->string('invoice_id')->unique();
+            $table->string('invoice_number')->unique();
             $table->date('invoice_issue_date');
             $table->timestamps();
         });

@@ -26,4 +26,13 @@ class Customer extends Model
         return $this->hasMany(CustomerProductPrice::class, 'customer_id', 'customer_id');
     }
 
+    /*
+     * Define attributes
+     */
+
+    public function getShortAddressAttribute()
+    {
+        return $this->customer_address_1.", ".$this->customer_city.", ".$this->customer_postcode;
+    }
+
 }

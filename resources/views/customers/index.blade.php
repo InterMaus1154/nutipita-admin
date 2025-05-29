@@ -44,11 +44,7 @@
                             </a>
                         </td>
                         <td>
-                            @if($customer->customer_address)
-                                {{$customer->customer_address}}
-                            @else
-                                <em>No address provided</em>
-                            @endif
+                            {{$customer->short_address}}
                         </td>
                         <td>
                             @if($customer->customer_email)

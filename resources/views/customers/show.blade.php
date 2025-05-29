@@ -9,14 +9,28 @@
             <table>
                 <tbody>
                 <tr>
-                    <td>Address</td>
+                    <td>Address Line 1</td>
                     <td>
-                        @if($customer->customer_address)
-                            {{$customer->customer_address}}
+                        {{$customer->customer_address_1}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address Line 2</td>
+                    <td>
+                        @if($customer->customer_address_2)
+                            {{$customer->customer_address_2}}
                         @else
-                            <em>No address provided</em>
+                            <em>Not provided</em>
                         @endif
                     </td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>{{$customer->customer_city}}</td>
+                </tr>
+                <tr>
+                    <td>Postcode</td>
+                    <td>{{$customer->customer_postcode}}</td>
                 </tr>
                 <tr>
                     <td>Email</td>
@@ -49,7 +63,8 @@
         {{--custom orders section--}}
         <h2 class="section-title">Customer Orders</h2>
         <a href="{{route('orders.create', ['customer_id' => $customer->customer_id])}}" class="action-link">Add new
-            order</a>
+            order
+        </a>
         @if(collect($customer->orders)->isEmpty())
             <em>This customer hasn't placed an order yet!</em>
         @else

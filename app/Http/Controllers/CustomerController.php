@@ -41,7 +41,6 @@ class CustomerController extends Controller
             ->select(['product_id', 'product_name'])
             ->get();
         $customers = Customer::query()
-            ->select('customer_id', 'customer_name', 'customer_address', 'created_at', 'customer_email', 'customer_phone')
             ->withCount('orders')
             ->get();
         return view('customers.index', compact('customers', 'products'));
@@ -99,7 +98,7 @@ class CustomerController extends Controller
                 ->with('success', 'Customer successfully updated!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());;
-            return redirect()->route('customers.edit')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('customers.edit', compact('customer'))->withErrors(['error' => $e->getMessage()]);
         }
     }
 

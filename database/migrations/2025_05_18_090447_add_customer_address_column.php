@@ -11,7 +11,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('customer_address', 300)->nullable();
+            $table->string('customer_address_1', 300);
+            $table->string('customer_address_2', 300)->nullable();
+            $table->string('customer_postcode', 10);
+            $table->string('customer_city', 100);
+            $table->string('customer_country', 200);
         });
     }
 
