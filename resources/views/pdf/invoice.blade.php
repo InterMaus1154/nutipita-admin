@@ -1,5 +1,5 @@
 <style>
-    *{
+    * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -18,18 +18,18 @@
 
     header {
         background-color: #323332;
-        padding: 2rem 1rem;
+        padding: 1.75rem 1.5rem;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         color: #fff;
     }
 
-    .logo-wrapper{
-        max-width: 150px;
+    .logo-wrapper {
+        max-width: 200px;
     }
 
-    img{
+    img {
         max-width: 100%;
     }
 
@@ -40,21 +40,108 @@
         letter-spacing: 1px;
     }
 
-    .company-data{
+    .company-data {
         display: flex;
         gap: 1rem;
         flex-direction: column;
         text-align: right;
         align-items: flex-end;
 
-        strong{
+        strong {
             font-size: 1.5rem;
         }
 
-        p{
+        p {
             font-size: .9rem;
             line-height: 1.4;
         }
+    }
+
+    /*end of header*/
+
+    /*start of main body content*/
+    main {
+        padding: 1.75rem 1.5rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .invoice-body-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .customer-data {
+        display: flex;
+        flex-direction: column;
+        gap: .125rem;
+        align-items: flex-start;
+        text-align: left;
+
+        strong {
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: .9rem;
+        }
+    }
+
+    .invoice-details {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    .invoice-details .invoice-detail {
+        display: flex;
+        justify-content: space-between;
+        gap: 4rem;
+        font-size: .9rem;
+    }
+
+    .invoice-items table {
+        width: 100%;
+        border-collapse: collapse;
+
+        thead {
+            background-color: #eee;
+            font-weight: normal;
+        }
+
+        th {
+            font-weight: normal;
+            padding: .5rem;
+            text-align: left;
+            border-bottom: 1px solid #000;
+        }
+
+        td {
+            padding: 1rem .5rem;
+        }
+
+        th:first-child,
+        td:first-child {
+            width: 30px;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: auto;
+        }
+
+        th:last-child,
+        td:last-child {
+            width: 100px;
+            text-align: right;
+        }
+
+        .product-data-desc{
+             color: #9e9e9e;
+             font-size: .9rem;
+         }
     }
 
 </style>
@@ -89,7 +176,74 @@
         </div>
     </header>
     <main>
-
+        <div class="invoice-body-header">
+            <div class="customer-data">
+                <strong>
+                    {{$customer->customer_name}}
+                </strong>
+                <p>
+                    {{$customer->customer_address_1}}
+                </p>
+                @if($customer->customer_address_2)
+                    <p>
+                        {{$customer->customer_address_2}}
+                    </p>
+                @endif
+                <p>
+                    {{$customer->customer_city}}
+                </p>
+                <p>
+                    {{$customer->customer_postcode}}
+                </p>
+                <p>
+                    {{$customer->customer_country}}
+                </p>
+            </div>
+            <div class="invoice-details">
+                <div class="invoice-detail">
+                    <span>Invoice#</span>
+                    <span>{{$invoiceNumber}}</span>
+                </div>
+                <div class="invoice-detail">
+                    <span>Invoice Date</span>
+                    <span>---invoice date---</span>
+                </div>
+                <div class="invoice-detail">
+                    <span>Terms</span>
+                    <span>Due on Receipt</span>
+                </div>
+                <div class="invoice-detail">
+                    <span>Due Date</span>
+                    <span>---due date---</span>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-items">
+            <table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ITEM & DESCRIPTION</th>
+                    <th>AMOUNT</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($products as $index => $product)
+                    <tr>
+                        <td>{{$index+1}}</td>
+                        <td class="product-data">
+                            <span class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span><br>
+                            <span class="product-data-desc">Pcs x Unit Price </span>
+                        </td>
+                        <td class="product-amount">
+                            <span class="product-data-name">£{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}</span><br>
+                            <span class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </main>
     <footer>
 
