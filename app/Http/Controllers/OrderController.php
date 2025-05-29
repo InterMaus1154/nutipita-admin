@@ -148,7 +148,7 @@ class OrderController extends Controller
             }
             DB::commit();
             return redirect()
-                ->route('orders.index')
+                ->back()
                 ->with('success', 'Order updated successfully');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
