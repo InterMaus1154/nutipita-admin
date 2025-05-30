@@ -57,6 +57,14 @@
         }
     }
 
+    .company-data-cell p {
+        margin: 8px 0;
+    }
+
+    .company-data-cell strong {
+        font-size: 26px;
+    }
+
     /*end of header*/
 
     /*start of main body content*/
@@ -148,10 +156,38 @@
             background-color: #eee;
             border-bottom: 1px solid black;
         }
+    }
 
-        tfoot td:first-child{
+    .invoice-items table thead, .invoice-items table tfoot {
+        background-color: #eee;
+    }
 
-        }
+    .header-table td {
+        width: 33.33%;
+        vertical-align: middle;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    /*table for main header with customer and invoice data*/
+    .body-header-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .body-header-table td {
+        width: 50%;
+        vertical-align: middle;
     }
 
 </style>
@@ -160,77 +196,86 @@
         @php
             $logo = public_path('images/logo.png');
         @endphp
-        <div class="logo-wrapper">
-            @inlinedImage($logo)
-        </div>
-        <div class="invoice-middle">
-            INVOICE
-        </div>
-        <div class="company-data">
-            <strong>Nuti Pita Limited</strong>
-            <p>
-                Unit 13, Langhedge Industrial Estate
-                <br>
-                London Enfield N18 2TQ
-                <br>
-                United Kingdom
-            </p>
-            <p>
-                +44 7754 22632
-                <br>
-                nutipita.co.uk
-            </p>
-            <p>
-                VAT: 486 4163 64
-            </p>
-        </div>
+        <table class="header-table" style="width: 100%; table-layout: fixed; border-collapse: collapse">
+            <tr>
+                <!-- Logo -->
+                <td class="text-left">
+                    <img src="{{ $logo }}" alt="Logo" style="max-width: 200px">
+                </td>
+                <!-- Invoice Title -->
+                <td class="text-center">
+                    <div style="font-size: 26px; font-weight: bold;">INVOICE</div>
+                </td>
+                <!-- Company Data -->
+                <td class="text-right company-data-cell">
+                    <strong>Nuti Pita Limited</strong>
+                    <p>
+                        Unit 13, Langhedge Industrial Estate<br>
+                        London Enfield N18 2TQ<br>
+                        United Kingdom
+                    </p>
+                    <p>
+                        +44 7754 22632<br>
+                        nutipita.co.uk
+                    </p>
+                    <p>
+                        VAT: 486 4163 64
+                    </p>
+                </td>
+            </tr>
+        </table>
+
     </header>
     <main>
-        <div class="invoice-body-header">
-            <div class="customer-data">
-                <strong>
-                    {{$customer->customer_name}}
-                </strong>
-                <p>
-                    {{$customer->customer_address_1}}
-                </p>
-                @if($customer->customer_address_2)
+        <table class="body-header-table">
+            <tr>
+                {{--customer data--}}
+                <td class="text-left">
+                    <strong>
+                        {{$customer->customer_name}}
+                    </strong>
                     <p>
-                        {{$customer->customer_address_2}}
+                        {{$customer->customer_address_1}}
                     </p>
-                @endif
-                <p>
-                    {{$customer->customer_city}}
-                </p>
-                <p>
-                    {{$customer->customer_postcode}}
-                </p>
-                <p>
-                    {{$customer->customer_country}}
-                </p>
-            </div>
-            <div class="invoice-details">
-                <div class="invoice-detail">
-                    <span>Invoice#</span>
-                    <span>{{$invoice->invoice_number}}</span>
-                </div>
-                <div class="invoice-detail">
-                    <span>Invoice Date</span>
-                    <span>{{$invoice->invoice_issue_date}}</span>
-                </div>
-                <div class="invoice-detail">
-                    <span>Terms</span>
-                    <span>Due on Receipt</span>
-                </div>
-                <div class="invoice-detail">
-                    <span>Due Date</span>
-                    <span>{{\Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString()}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="invoice-items">
+                    @if($customer->customer_address_2)
+                        <p>
+                            {{$customer->customer_address_2}}
+                        </p>
+                    @endif
+                    <p>
+                        {{$customer->customer_city}}
+                    </p>
+                    <p>
+                        {{$customer->customer_postcode}}
+                    </p>
+                    <p>
+                        {{$customer->customer_country}}
+                    </p>
+                </td>
+                {{--invoice data--}}
+                <td class="text-right">
+                    <div class="invoice-detail">
+                        <span>Invoice#</span>
+                        <span>{{$invoice->invoice_number}}</span>
+                    </div>
+                    <div class="invoice-detail">
+                        <span>Invoice Date</span>
+                        <span>{{$invoice->invoice_issue_date}}</span>
+                    </div>
+                    <div class="invoice-detail">
+                        <span>Terms</span>
+                        <span>Due on Receipt</span>
+                    </div>
+                    <div class="invoice-detail">
+                        <span>Due Date</span>
+                        <span>{{\Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString()}}</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="invoice-items" style="margin-top: 18px;">
             <table>
-                <thead>
+                <thead style="background-color: #eee">
                 <tr>
                     <th>#</th>
                     <th>ITEM & DESCRIPTION</th>
@@ -262,7 +307,8 @@
                     <td colspan="2" style="width: 25%">Bank Details</td>
                     <td style="text-align: right">
                         <strong style="font-size: 1.5rem;">
-                            <span style="display: inline-block; margin-right: .5rem;">Total:</span> £{{$order->total_price}}
+                            <span style="display: inline-block; margin-right: .5rem;">Total:</span>
+                            £{{$order->total_price}}
                         </strong>
                     </td>
                 </tr>
@@ -270,7 +316,8 @@
                     <td colspan="2">
                         Lloyds bank
                         <br>
-                        <span style="white-space: nowrap; margin-block: .5rem; display: inline-block;">Sort Code: 30 99 50</span>
+                        <span
+                            style="white-space: nowrap; margin-block: .5rem; display: inline-block;">Sort Code: 30 99 50</span>
                         <br>
                         <span style="white-space: nowrap">Account Number: 7226993</span>
                     </td>

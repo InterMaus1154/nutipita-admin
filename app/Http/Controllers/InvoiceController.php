@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
-use function Spatie\LaravelPdf\Support\pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
 
 class InvoiceController extends Controller
 {
@@ -26,9 +27,8 @@ class InvoiceController extends Controller
         });
         $invoiceNumber = $invoice->invoice_number;
         $invoiceName = 'INV-' . $invoiceNumber . '-' . now()->toDateString();
-        return pdf()
-            ->format('a4')
-            ->view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
-            ->name($invoiceName);
+        return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
+            ->setPaper('a4', 'portrait')
+            ->stream($invoiceName);
     }
 }
