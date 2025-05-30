@@ -29,9 +29,9 @@ class Order extends Model
             ->withTimestamps();
     }
 
-    public function invoices()
+    public function invoice()
     {
-        return $this->hasMany(Invoice::class, 'order_id', 'order_id');
+        return $this->hasOne(Invoice::class, 'order_id', 'order_id');
     }
 
     /*
@@ -53,7 +53,7 @@ class Order extends Model
 
     public function getTotalPriceFormatAttribute(): string
     {
-        return "£".number_format($this->total_price, 2);
+        return "£" . number_format($this->total_price, 2);
     }
 
     public function getStatusAttribute()
@@ -83,7 +83,6 @@ class Order extends Model
         }
         return 0;
     }
-
 
 
 }

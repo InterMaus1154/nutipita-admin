@@ -73,6 +73,7 @@
                 </td>
                 <td>
                     <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>
+                    <a href="{{route('invoices.create', compact('order'))}}" class="action-link">Generate Invoice</a>
                 </td>
             </tr>
         @empty

@@ -212,11 +212,11 @@
             <div class="invoice-details">
                 <div class="invoice-detail">
                     <span>Invoice#</span>
-                    <span>{{$invoiceNumber}}</span>
+                    <span>{{$invoice->invoice_number}}</span>
                 </div>
                 <div class="invoice-detail">
                     <span>Invoice Date</span>
-                    <span>---invoice date---</span>
+                    <span>{{$invoice->invoice_issue_date}}</span>
                 </div>
                 <div class="invoice-detail">
                     <span>Terms</span>
@@ -224,7 +224,7 @@
                 </div>
                 <div class="invoice-detail">
                     <span>Due Date</span>
-                    <span>---due date---</span>
+                    <span>{{\Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString()}}</span>
                 </div>
             </div>
         </div>

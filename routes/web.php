@@ -103,6 +103,6 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
     // invoice routes
     Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
-        Route::get('/test-invoice', 'test')->name('invoices.test');
+        Route::get('/createInvoice/{order}', 'createInvoice')->name('invoices.create');
     });
 });

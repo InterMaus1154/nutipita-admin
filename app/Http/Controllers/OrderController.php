@@ -62,7 +62,7 @@ class OrderController extends Controller
             $customer = Customer::find($customer_id);
             // create order for customer
             $order = $customer->orders()->create([
-                'order_status' => OrderStatus::Y_PENDING->name,
+                'order_status' => OrderStatus::Y_CONFIRMED->name,
                 'order_placed_at' => $order_placed_at,
                 'order_due_at' => $order_due_at
             ]);
@@ -145,6 +145,9 @@ class OrderController extends Controller
                     }
 
                 }
+            }
+            if ($order->invoice) {
+                $order->invoice()->delete();
             }
             DB::commit();
             return redirect()

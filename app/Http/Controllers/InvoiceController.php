@@ -2,28 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Spatie\Browsershot\Browsershot;
 use function Spatie\LaravelPdf\Support\pdf;
 
 class InvoiceController extends Controller
 {
-    public function test()
+    public function createInvoice(Order $order)
     {
-        $order = Order::with('customer', 'products')->first();
+        $order->loadMissing('customer', 'products', 'invoice');
+        if ($order->invoice) {
+            $invoice = $order->invoice;
+        } else {
+            $invoice = $order->invoice()->create([
+                'invoice_number' => Invoice::generateInvoiceNumber(),
+                'invoice_issue_date' => now()->toDateString()
+            ]);
+        }
         $customer = $order->customer;
         $products = $order->products->map(function (Product $product) use ($customer) {
             return $product->setCurrentCustomer($customer);
         });
-        $invoice = $order->invoices()->first();
         $invoiceNumber = $invoice->invoice_number;
-        $invoiceName = "#" . $order->order_id . "-" . $invoiceNumber . '-' . $order->order_due_at;
-//        return view('pdf.invoice');
+        $invoiceName = 'INV-' . $invoiceNumber . '-' . now()->toDateString();
         return pdf()
             ->format('a4')
-            ->view('pdf.invoice', compact('order', 'invoiceNumber', 'customer', 'products'))
+            ->view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
             ->name($invoiceName);
     }
 }

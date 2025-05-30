@@ -23,7 +23,13 @@ class Invoice extends Model
     public static function generateInvoiceNumber(): string
     {
         $latestInvoice = Invoice::latest('invoice_id')->first();
-        $nextNumber = $latestInvoice ? ((int)substr($latestInvoice->invoice_number, 4)) + 1 : 1;
+        if ($latestInvoice) {
+            $oldNumber = (int)$latestInvoice->invoice_number;
+            $nextNumber = $oldNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
         return str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }
