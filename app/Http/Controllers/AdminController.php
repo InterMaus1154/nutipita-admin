@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use function Spatie\LaravelPdf\Support\pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -46,9 +46,7 @@ class AdminController extends Controller
 
     public function createOrderTotalPdf()
     {
-        return pdf()
-            ->view('pdf.order-total', $this->getTodaysOrdersData())
-            ->name('order-total-' . now()->toDateString())
-            ->download();
+        return Pdf::loadView('pdf.order-total', $this->getTodaysOrdersData())
+            ->download('order-total-' . now()->toDateString());
     }
 }

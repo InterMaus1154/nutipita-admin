@@ -10,12 +10,6 @@
         font-family: 'Roboto', sans-serif;
     }
 
-    .invoice-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
     header {
         background-color: #323332;
         padding: 1.75rem 1.5rem;
@@ -25,36 +19,8 @@
         color: #fff;
     }
 
-    .logo-wrapper {
-        max-width: 200px;
-    }
-
     img {
         max-width: 100%;
-    }
-
-    .invoice-middle {
-        text-transform: uppercase;
-        color: #fff;
-        font-size: 2rem;
-        letter-spacing: 1px;
-    }
-
-    .company-data {
-        display: flex;
-        gap: 1rem;
-        flex-direction: column;
-        text-align: right;
-        align-items: flex-end;
-
-        strong {
-            font-size: 1.5rem;
-        }
-
-        p {
-            font-size: .9rem;
-            line-height: 1.4;
-        }
     }
 
     .company-data-cell p {
@@ -70,96 +36,6 @@
     /*start of main body content*/
     main {
         padding: 1.75rem 1.5rem;
-
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .invoice-body-header {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .customer-data {
-        display: flex;
-        flex-direction: column;
-        gap: .125rem;
-        align-items: flex-start;
-        text-align: left;
-
-        strong {
-            font-size: 1.5rem;
-        }
-
-        p {
-            font-size: .9rem;
-        }
-    }
-
-    .invoice-details {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-    }
-
-    .invoice-details .invoice-detail {
-        display: flex;
-        justify-content: space-between;
-        gap: 4rem;
-        font-size: .9rem;
-    }
-
-    .invoice-items table {
-        width: 100%;
-        border-collapse: collapse;
-
-        thead {
-            background-color: #eee;
-            font-weight: normal;
-        }
-
-        thead th {
-            font-weight: normal;
-            padding: .5rem;
-            text-align: left;
-            border-bottom: 1px solid #000;
-        }
-
-        td {
-            padding: 1rem .5rem;
-        }
-
-        thead th:first-child,
-        tbody td:first-child {
-            width: 30px;
-        }
-
-        thead th:nth-child(2),
-        tbody td:nth-child(2) {
-            width: auto;
-        }
-
-        thead th:last-child,
-        tbody td:last-child {
-            width: 100px;
-            text-align: right;
-        }
-
-        .product-data-desc {
-            color: #9e9e9e;
-            font-size: .9rem;
-        }
-
-        tfoot {
-            width: 100%;
-            background-color: #eee;
-            border-bottom: 1px solid black;
-        }
-    }
-
-    .invoice-items table thead, .invoice-items table tfoot {
-        background-color: #eee;
     }
 
     .header-table td {
@@ -188,6 +64,101 @@
     .body-header-table td {
         width: 50%;
         vertical-align: middle;
+    }
+
+    .body-header-table .customer-data strong {
+        font-size: 1.125rem;
+        margin-bottom: 4px;
+    }
+
+    .body-header-table .customer-data p {
+        margin-bottom: 4px;
+    }
+
+    .body-header-table .invoice-detail {
+        margin-bottom: 4px;
+    }
+
+    .body-header-table .invoice-detail span:first-child {
+        margin-right: 8px;
+    }
+
+    .invoice-detail-table{
+        width: 100%;
+    }
+
+    .invoice-detail-table td{
+        text-align: right;
+    }
+
+    /*table for invoice items*/
+    .invoice-items table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .invoice-items table thead {
+        background-color: #eee;
+    }
+
+    .col-index {
+        width: 5%;
+        text-align: left;
+    }
+
+    .col-description {
+        width: 75%;
+        text-align: left;
+    }
+
+    .col-amount {
+        width: 20%;
+        text-align: right;
+    }
+
+    .product-data-desc {
+        color: #6e6e6e;
+        font-size: .9rem;
+    }
+
+    .invoice-items table thead, .invoice-items table tfoot {
+        background-color: #eee;
+    }
+
+    .invoice-items tfoot td {
+        padding-top: 1rem;
+    }
+
+    .invoice-items .footer-left {
+        width: 50%;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .invoice-items .footer-left span {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .invoice-items .footer-right {
+        width: 50%;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    .invoice-items thead th {
+        border-top: 1px solid #000;
+    }
+
+    .invoice-items tbody td, .invoice-items thead th {
+        padding: 0.75rem 0.5rem;
+        vertical-align: top;
+    }
+
+    .invoice-items tfoot td {
+        border-bottom: 1px solid #000;
+        padding: 0.5rem;
     }
 
 </style>
@@ -230,7 +201,7 @@
         <table class="body-header-table">
             <tr>
                 {{--customer data--}}
-                <td class="text-left">
+                <td class="text-left customer-data">
                     <strong>
                         {{$customer->customer_name}}
                     </strong>
@@ -254,45 +225,48 @@
                 </td>
                 {{--invoice data--}}
                 <td class="text-right">
-                    <div class="invoice-detail">
-                        <span>Invoice#</span>
-                        <span>{{$invoice->invoice_number}}</span>
-                    </div>
-                    <div class="invoice-detail">
-                        <span>Invoice Date</span>
-                        <span>{{$invoice->invoice_issue_date}}</span>
-                    </div>
-                    <div class="invoice-detail">
-                        <span>Terms</span>
-                        <span>Due on Receipt</span>
-                    </div>
-                    <div class="invoice-detail">
-                        <span>Due Date</span>
-                        <span>{{\Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString()}}</span>
-                    </div>
+                    <table class="invoice-detail-table">
+                        <tr>
+                            <td><strong>Invoice#</strong></td>
+                            <td>{{$invoice->invoice_number}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Invoice Date</strong></td>
+                            <td>{{$invoice->invoice_issue_date}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Terms</strong></td>
+                            <td>Due on Receipt</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Due Date</strong></td>
+                            <td>{{ \Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString() }}</td>
+                        </tr>
+                    </table>
+
                 </td>
             </tr>
         </table>
         <div class="invoice-items" style="margin-top: 18px;">
             <table>
-                <thead style="background-color: #eee">
+                <thead>
                 <tr>
-                    <th>#</th>
-                    <th>ITEM & DESCRIPTION</th>
-                    <th>AMOUNT</th>
+                    <th class="col-index">#</th>
+                    <th class="col-description text-left">ITEM & DESCRIPTION</th>
+                    <th class="col-amount text-right">AMOUNT</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($products as $index => $product)
                     <tr>
-                        <td>{{$index+1}}</td>
-                        <td class="product-data">
+                        <td class="col-index">{{$index+1}}</td>
+                        <td class="col-description">
                             <span
                                 class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span>
                             <br>
                             <span class="product-data-desc">Pcs x Unit Price </span>
                         </td>
-                        <td class="product-data">
+                        <td class="col-amount">
                             <span
                                 class="product-data-name">£{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}</span>
                             <br>
@@ -304,24 +278,18 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="2" style="width: 25%">Bank Details</td>
-                    <td style="text-align: right">
-                        <strong style="font-size: 1.5rem;">
-                            <span style="display: inline-block; margin-right: .5rem;">Total:</span>
+                    <td colspan="2" class="footer-left">
+                        <span>Bank Details</span>
+                        <span>Lloyds bank</span>
+                        <span>Sort Code: 30 99 50</span>
+                        <span>Account Number: 7226993</span>
+                    </td>
+                    <td class="footer-right text-right">
+                        <strong style="font-size: 1.25rem;">
+                            <span>Total:</span>
                             £{{$order->total_price}}
                         </strong>
                     </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        Lloyds bank
-                        <br>
-                        <span
-                            style="white-space: nowrap; margin-block: .5rem; display: inline-block;">Sort Code: 30 99 50</span>
-                        <br>
-                        <span style="white-space: nowrap">Account Number: 7226993</span>
-                    </td>
-                    <td></td>
                 </tr>
                 </tfoot>
             </table>

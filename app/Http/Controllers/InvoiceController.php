@@ -27,6 +27,7 @@ class InvoiceController extends Controller
         });
         $invoiceNumber = $invoice->invoice_number;
         $invoiceName = 'INV-' . $invoiceNumber . '-' . now()->toDateString();
+//        return view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'));
         return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
             ->setPaper('a4', 'portrait')
             ->stream($invoiceName);
