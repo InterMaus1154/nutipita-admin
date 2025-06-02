@@ -40,7 +40,7 @@ class StandingOrderController extends Controller
         DB::beginTransaction();
         try {
             $startDate = $request->date('start_from');
-            // only make it active, if the start date is from today, or before today
+            // only make it active, if the start date is from today, or was (already active) before today
             $isActive = false;
             if ($startDate->isToday() || $startDate->isPast()) {
                 $isActive = true;
@@ -64,24 +64,34 @@ class StandingOrderController extends Controller
 
             $daysData = [];
             foreach ($dayNums as $day) {
+                // prepare data for bulk database insert
                 $daysData[] = ['day' => $day];
             }
+
+            // bulk insert days for the order
+            // only inserted that have more than 0 products
             $days = $order->days()->createMany($daysData)->keyBy('day');
+            //
             foreach ($request->array('products') as $dayNum => $products) {
-                if(!isset($days[$dayNum])){
+                // check if that day is available
+                // not available, if previously excluded - having 0 products
+                if (!isset($days[$dayNum])) {
                     continue;
                 }
                 $day = $days[$dayNum];
                 $productData = [];
                 foreach ($products as $product_id => $qty) {
-                    if((int)$qty > 0){
+                    // product with more than 0 quantity only
+                    if ((int)$qty > 0) {
+                        // prepare data for bulk insert
                         $productData[] = [
                             'product_id' => $product_id,
                             'product_qty' => $qty
                         ];
                     }
                 }
-                if(!empty($productData)){
+                // if non-empty, bulk insert the products for the specific day
+                if (!empty($productData)) {
                     $day->products()->createMany($productData);
                 }
             }
@@ -97,5 +107,15 @@ class StandingOrderController extends Controller
                 ->route('standing-orders.create')
                 ->withErrors(['create_error' => 'Error at creating standing order', 'e' => $e->getMessage()]);
         }
+    }
+
+    /*
+     * Show order detail page
+     */
+    public function show(StandingOrder $order): View
+    {
+        $products = Product::select(['product_id', 'product_name'])->orderBy('product_id')->get();
+        $order->loadMissing('customer:customer_id,customer_name', 'days', 'days.products');
+        return view('standing_orders.show', compact('order', 'products'));
     }
 }

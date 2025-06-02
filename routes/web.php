@@ -118,5 +118,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // store new standing order
         Route::post('/', 'store')->name('standing-orders.store');
+
+        // show details page
+        Route::get('/show/{order}', 'show')->name('standing-orders.show');
     });
 });

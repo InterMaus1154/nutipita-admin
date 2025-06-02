@@ -25,12 +25,12 @@
                 @forelse($orders as $order)
                     <tr>
                         <td>
-                            <a class="action-link" href="">
-                                #{{$order->order_id}}
+                            <a class="action-link" href="{{route('standing-orders.show', compact('order'))}}">
+                                #{{$order->standing_order_id}}
                             </a>
                         </td>
                         <td>
-                            <a href="" class="action-link">
+                            <a href="{{route('customers.show', ['customer' => $order->customer])}}" class="action-link">
                                 {{$order->customer->customer_name}}
                             </a>
                         </td>
