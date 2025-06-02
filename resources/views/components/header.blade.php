@@ -9,6 +9,9 @@
                 <a href="{{route('orders.index')}}">Orders</a>
             </li>
             <li>
+                <a href="{{route('standing-orders.index')}}">Standing Orders</a>
+            </li>
+            <li>
                 <a href="{{route('products.index')}}">Products</a>
             </li>
             <li>

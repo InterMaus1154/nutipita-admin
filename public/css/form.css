@@ -10,6 +10,10 @@
     border-radius: .25rem;
 }
 
+.form-wrapper.standing-order-form{
+    width: 100%;
+}
+
 .form-title{
     color: var(--primary-red);
 }
@@ -24,6 +28,7 @@ form {
 .input-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: .5rem;
 }
 
@@ -36,6 +41,14 @@ form {
     font-family: 'Roboto', sans-serif;
 }
 
+.input-wrapper input[type="text"],
+.input-wrapper input[type="email"],
+.input-wrapper input[type="number"],
+.input-wrapper input[type="date"],
+select{
+    min-width: 50%;
+}
+
 .form-submit-button {
     padding: .5rem .2rem;
     cursor: pointer;
@@ -45,4 +58,20 @@ form {
     border: 0;
     font-weight: bold;
     font-size: 1.25rem;
+}
+
+.days-wrapper{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.day-wrapper{
+    border: 1px solid black;
+    border-radius: .25rem;
+    padding: 1rem;
+}
+
+.day-wrapper h4{
+    text-align: center;
 }

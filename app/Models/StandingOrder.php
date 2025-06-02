@@ -9,8 +9,13 @@ class StandingOrder extends Model
     protected $primaryKey = 'standing_order_id';
     protected $guarded = [];
 
-    public function standingOrderDays()
+    public function days()
     {
         return $this->hasMany(StandingOrderDay::class, 'standing_order_id', 'standing_order_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
 }

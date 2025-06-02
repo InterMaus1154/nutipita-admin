@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\StandingOrderController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -104,5 +105,18 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     // invoice routes
     Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
         Route::get('/createInvoice/{order}', 'createInvoice')->name('invoices.create');
+    });
+
+    // standing order routes
+    Route::group(['prefix' => 'standingOrders', 'controller' => StandingOrderController::class], function () {
+
+        // index page
+        Route::get('/', 'index')->name('standing-orders.index');
+
+        // create form
+        Route::get('/create', 'create')->name('standing-orders.create');
+
+        // store new standing order
+        Route::post('/', 'store')->name('standing-orders.store');
     });
 });
