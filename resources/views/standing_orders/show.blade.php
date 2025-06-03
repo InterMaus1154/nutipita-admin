@@ -40,26 +40,26 @@
                             $day = $order->days->where('day', $i)->first();
                             // check if the day exists
                             if($day){
-                                $orderProducts = $day->products->sortBy('product_id');
+                                $dayProducts = $day->products->sortBy('product_id');
                             }
                         @endphp
-                        {{--If there is no day = no products for that day--}}
-                        {{--Show everything as 0 for the day --}}
-                        @unless($day)
-                            @for($j = 0; $j < $products->count(); $j++)
-                                <td>0</td>
-                            @endfor
-                        @endunless
                         @if($day)
                             @foreach($products as $product)
                                 @php
                                     $qty = 0;
-                                    if($orderProducts->contains(fn($v) => $v->product_id == $product->product_id)){
-                                        $qty =  $orderProducts->where('product_id', $product->product_id)->first()->product_qty;
+                                    // if the day contains the current product
+                                    if($dayProducts->contains(fn($v) => $v->product_id == $product->product_id)){
+                                        $qty =  $dayProducts->where('product_id', $product->product_id)->first()->product_qty;
                                     }
                                 @endphp
                                 <td>{{$qty}}</td>
                             @endforeach
+                        @else
+                            {{--If there is no day = no products for that day--}}
+                            {{--Show everything as 0 for the day --}}
+                            @for($j = 0; $j < $products->count(); $j++)
+                                <td>0</td>
+                            @endfor
                         @endif
                     </tr>
                 @endfor

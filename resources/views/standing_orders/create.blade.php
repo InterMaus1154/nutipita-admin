@@ -19,6 +19,7 @@
                        value="{{old('start_from', now()->toDateString())}}">
             </div>
             <div class="days-wrapper">
+                {{--count the days from 0 to 7--}}
                 @for($i = 0; $i<7;$i++)
                     <div class="day-wrapper">
                         <h4>{{\Illuminate\Support\Carbon::create()->startOfWeek()->addDays($i)->dayName}}</h4>
