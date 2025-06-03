@@ -156,7 +156,6 @@ class StandingOrderController extends Controller
             }
 
             // get days that to be deleted (all products are now zero)
-            $daysToDelete = [];
             $existingOrderDayNums = $orderDays->keys()->toArray();
             $daysToDelete = array_diff($existingOrderDayNums, $dayNums);
 
@@ -167,6 +166,34 @@ class StandingOrderController extends Controller
                     $product->delete();
                 }
                 $day->delete();
+            }
+
+            // create or update new days and products
+            foreach ($productData as $dayNum => $products) {
+                // fetch or create new day
+                $day = $order->days->where('day', $dayNum)->first() ?? $order->days()->create([
+                    'day' => $dayNum
+                ]);
+                $day->loadMissing('products');
+
+                foreach ($products as $product_id => $qty) {
+                    if ($qty > 0) {
+                        // if quantity bigger than 0, create or update a product for the day
+                        $day->products()->updateOrCreate([
+                            'product_id' => $product_id
+                        ],
+                            [
+                                'product_id' => $product_id,
+                                'product_qty' => $qty
+                            ]);
+                    } else {
+                        // if quantity less than 0, delete that product (if exists)
+                        $product = $day->products->where('product_id', $product_id)->first();
+                        if ($product) {
+                            $product->delete();
+                        }
+                    }
+                }
             }
 
             DB::commit();

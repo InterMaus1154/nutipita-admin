@@ -15,33 +15,29 @@ class DatabaseSeeder extends Seeder
     {
         Product::create([
             'product_name' => 'White normal',
-            'product_unit_price' => 0.25,
             'product_weight_g' => 100,
             'product_qty_per_pack' => 5
         ]);
 
         Product::create([
             'product_name' => 'White medium',
-            'product_unit_price' => 0.15,
             'product_weight_g' => 60,
             'product_qty_per_pack' => 15
         ]);
 
         Product::create([
             'product_name' => 'Brown normal',
-            'product_unit_price' => 0.25,
             'product_weight_g' => 100,
             'product_qty_per_pack' => 5
         ]);
 
         Product::create([
             'product_name' => 'Brown medium',
-            'product_unit_price' => 0.15,
             'product_weight_g' => 60,
             'product_qty_per_pack' => 15
         ]);
 
-        Customer::factory(5)->create();
+//        Customer::factory(2)->create();
     }
 
     /**
@@ -55,6 +51,7 @@ class DatabaseSeeder extends Seeder
                 'password' => 'test'
             ]);
 
+            $this->createData();
 
         }
     }
