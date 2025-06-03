@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('customer_id')->references('customer_id')->on('customers');
             $table->boolean('is_active');
             $table->date('start_from');
+            $table->boolean('is_forced')->nullable();
             $table->timestamps();
         });
     }

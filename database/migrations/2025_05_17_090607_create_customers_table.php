@@ -16,6 +16,11 @@ return new class extends Migration {
             $table->string('customer_name', 250)->unique()->index();
             $table->string('customer_email', 250)->nullable();
             $table->string('customer_phone', 20)->nullable();
+            $table->string('customer_address_1', 300);
+            $table->string('customer_address_2', 300)->nullable();
+            $table->string('customer_postcode', 10);
+            $table->string('customer_city', 100);
+            $table->string('customer_country', 200);
             $table->timestamps();
         });
 
