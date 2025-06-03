@@ -127,4 +127,60 @@ class StandingOrderController extends Controller
         $order->loadMissing('days', 'days.products', 'customer');
         return view('standing_orders.edit', compact('order', 'products'));
     }
+
+    /*
+     * Update order
+     */
+    public function update(StandingOrderRequest $request, StandingOrder $order)
+    {
+        DB::beginTransaction();
+        try {
+            // first update order details
+            $order->update([
+                'start_from' => $request->date('start_from')->toDateString(),
+                'is_active' => $request->boolean('is_active')
+            ]);
+
+            $orderDays = collect($order->days)->keyBy('day');
+
+            $productData = $request->array('products');
+            // collect days that has products with more than 0 quantity
+            $dayNums = [];
+            foreach ($productData as $dayNum => $products) {
+                foreach ($products as $quantity) {
+                    if ((int)$quantity > 0) {
+                        $dayNums[] = $dayNum;
+                        break;
+                    }
+                }
+            }
+
+            // get days that to be deleted (all products are now zero)
+            $daysToDelete = [];
+            $existingOrderDayNums = $orderDays->keys()->toArray();
+            $daysToDelete = array_diff($existingOrderDayNums, $dayNums);
+
+            // delete the days first with their products
+            foreach ($daysToDelete as $dayNum) {
+                $day = $order->days->where('day', $dayNum)->first();
+                foreach ($day->products as $product) {
+                    $product->delete();
+                }
+                $day->delete();
+            }
+
+            DB::commit();
+            return redirect()
+                ->route('standing-orders.index')
+                ->with('success', 'Standing order successfully updated');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return redirect()
+                ->route('standing-orders.edit', compact('order'))
+                ->withErrors(['update_error' => 'Error at updating standing order', 'e' => $e->getMessage()]);
+        }
+
+
+    }
 }

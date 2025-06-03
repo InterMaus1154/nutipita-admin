@@ -2,13 +2,16 @@
     <div class="form-wrapper standing-order-form">
         <h2 class="form-title">Edit Standing Order #{{$order->standing_order_id}}</h2>
         <x-error/>
-        <form action="{{route('standing-orders.store')}}" method="POST">
+        <form action="{{route('standing-orders.update', compact('order'))}}" method="POST">
             @csrf
+            @method('PUT')
             <div class="input-wrapper">
-                <label for="customer_id">Customer</label>
-                <select name="customer_id" id="customer_id" disabled>
-                    <option value="{{$order->customer->customer_id}}">{{$order->customer->customer_name}}</option>
-                </select>
+                <h3>Customer: {{$order->customer->customer_name}}</h3>
+                <input type="hidden" name="customer_id" value="{{$order->customer->customer_id}}">
+            </div>
+            <div class="input-wrapper">
+                <label for="is_active">Is Active?</label>
+                <input type="checkbox" name="is_active" @checked($order->is_active) id="is_active" value="{{$order->is_active}}">
             </div>
             <div class="input-wrapper">
                 <label for="start_from">Start From</label>
@@ -53,12 +56,12 @@
                             @foreach($products as $product)
                                 <div class="input-wrapper">
                                     <label
-                                            for="products[{{$i}}][{{$product->product_id}}]">{{$product->product_name}}</label>
+                                        for="products[{{$i}}][{{$product->product_id}}]">{{$product->product_name}}</label>
                                     <input
-                                            type="number"
-                                            value="0"
-                                            id="products[{{$i}}][{{$product->product_id}}]"
-                                            name="products[{{$i}}][{{$product->product_id}}]"
+                                        type="number"
+                                        value="0"
+                                        id="products[{{$i}}][{{$product->product_id}}]"
+                                        name="products[{{$i}}][{{$product->product_id}}]"
                                     >
                                 </div>
                             @endforeach
@@ -66,7 +69,7 @@
                     </div>
                 @endfor
             </div>
-            <input type="submit" class="form-submit-button" value="Add">
+            <input type="submit" class="form-submit-button" value="Update">
         </form>
     </div>
 </x-layout>
