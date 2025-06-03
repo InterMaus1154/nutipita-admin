@@ -28,9 +28,12 @@ class CreateOrderFromStanding extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
+        // correct number for today's day
         $today = now()->isoFormat('E') - 1;
+
+        // fetch active orders for today
         $standingOrders = StandingOrder::query()
             ->where('is_active', true)
             ->whereHas('days', function ($q) use ($today) {
@@ -38,21 +41,36 @@ class CreateOrderFromStanding extends Command
             })
             ->with('days', 'days.products', 'customer')
             ->get();
+
         // create normal order from standing orders
         foreach ($standingOrders as $standingOrder) {
             DB::beginTransaction();
+
+            // current day from the order
             $day = $standingOrder->days->where('day', $today)->first();
+
+            // all products from the day
             $dayProducts = $day->products;
+
+            // get customer
+            $customer = $standingOrder->customer;
+
             try {
+                // create an order record
                 $order = Order::create([
                     'customer_id' => $standingOrder->customer_id,
-                    'placed_at' => now()->toDateString(),
-                    'due_at' => now()->toDateString(),
-                    OrderStatus::Y_CONFIRMED->name,
+                    'order_placed_at' => now()->toDateString(),
+                    'order_due_at' => now()->toDateString(),
+                    'order_status' => OrderStatus::Y_CONFIRMED->name,
                     'is_standing' => true
                 ]);
                 foreach ($dayProducts as $product) {
-
+                    $product->setCurrentCustomer($customer);
+                    $order->products()->create([
+                        'product_id' => $product->product_id,
+                        'product_qty' => $product->product_qty,
+                        'order_product_unit_price' => $product->price
+                    ]);
                 }
                 DB::commit();
                 Log::info("Standing order successfully created as order " . $order->order_id);
