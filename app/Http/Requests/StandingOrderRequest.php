@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreStandingOrderRequest extends FormRequest
+class StandingOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,8 @@ class StoreStandingOrderRequest extends FormRequest
         return [
             'customer_id' => ['required', Rule::exists('customers', 'customer_id')],
             'start_from' => 'required|date',
-            'products' => 'required|array'
+            'products' => 'required|array',
+            'is_active' => 'nullable|boolean'
         ];
     }
 

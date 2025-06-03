@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStandingOrderRequest;
+use App\Http\Requests\StandingOrderRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\StandingOrder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -35,7 +34,7 @@ class StandingOrderController extends Controller
     /*
      * Store new standing order
      */
-    public function store(StoreStandingOrderRequest $request)
+    public function store(StandingOrderRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -117,5 +116,15 @@ class StandingOrderController extends Controller
         $products = Product::select(['product_id', 'product_name'])->orderBy('product_id')->get();
         $order->loadMissing('customer:customer_id,customer_name', 'days', 'days.products');
         return view('standing_orders.show', compact('order', 'products'));
+    }
+
+    /*
+     * Show edit page
+     */
+    public function edit(StandingOrder $order): View
+    {
+        $products = Product::select(['product_id', 'product_name'])->get();
+        $order->loadMissing('days', 'days.products', 'customer');
+        return view('standing_orders.edit', compact('order', 'products'));
     }
 }

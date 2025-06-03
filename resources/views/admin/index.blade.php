@@ -4,7 +4,7 @@
         @if($orders->isEmpty())
             <em>No due orders for today!</em>
         @else
-            <a href="{{route('today.order.pdf')}}" class="action-link">Download order PDF</a>
+            <a href="{{route('today.order.pdf')}}" class="action-link">Download total order PDF</a>
             <div class="index-order-cards">
                 <div class="index-order-card">
                     <span class="index-order-card-title">Daily Income</span>

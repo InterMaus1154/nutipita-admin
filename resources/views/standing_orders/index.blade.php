@@ -41,7 +41,7 @@
                             {{$order->is_active ? "Active" : "Inactive"}}
                         </td>
                         <td>
-                            <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>
+                            <a href="{{route('standing-orders.edit', compact('order'))}}" class="action-link">Edit</a>
                         </td>
                     </tr>
                 @empty

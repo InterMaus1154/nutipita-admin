@@ -121,5 +121,11 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // show details page
         Route::get('/show/{order}', 'show')->name('standing-orders.show');
+
+        // show edit page
+        Route::get('/edit/{order}', 'edit')->name('standing-orders.edit');
+
+        // update standing order
+        Route::put('/update/{order}', 'update')->name('standing-orders.update');
     });
 });
