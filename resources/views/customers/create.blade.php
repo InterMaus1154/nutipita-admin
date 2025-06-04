@@ -19,12 +19,12 @@
             <input type="text" id="customer_address_2" name="customer_address_2" value="{{old('customer_address_2', '')}}" />
         </div>
         <div class="input-wrapper">
-            <label for="customer_postcode">Customer Postcode</label>
-            <input type="text" id="customer_postcode" name="customer_postcode" value="{{old('customer_postcode', '')}}" />
-        </div>
-        <div class="input-wrapper">
             <label for="customer_city">Customer City</label>
             <input type="text" id="customer_city" name="customer_city" value="{{old('customer_city', '')}}" />
+        </div>
+        <div class="input-wrapper">
+            <label for="customer_postcode">Customer Postcode</label>
+            <input type="text" id="customer_postcode" name="customer_postcode" value="{{old('customer_postcode', '')}}" />
         </div>
         <div class="input-wrapper">
             <label for="customer_country">Customer Country</label>
