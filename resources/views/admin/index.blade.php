@@ -16,7 +16,7 @@
                 </div>
                 @foreach($productTotals as $key => $value)
                     <div class="index-order-card">
-                        <div class="index-order-card-title">Total of {{$key}}</div>
+                        <div class="index-order-card-title">{{$key}}</div>
                         <div class="index-order-card-value">{{$value}}</div>
                     </div>
                 @endforeach

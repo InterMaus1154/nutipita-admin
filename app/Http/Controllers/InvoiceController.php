@@ -30,6 +30,6 @@ class InvoiceController extends Controller
 //        return view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'));
         return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
             ->setPaper('a4', 'portrait')
-            ->stream($invoiceName);
+            ->stream($invoiceName.".pdf");
     }
 }

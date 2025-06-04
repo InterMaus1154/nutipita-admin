@@ -47,6 +47,6 @@ class AdminController extends Controller
     public function createOrderTotalPdf()
     {
         return Pdf::loadView('pdf.order-total', $this->getTodaysOrdersData())
-            ->download('order-total-' . now()->toDateString());
+            ->download('order-total-' . now()->toDateString().".pdf");
     }
 }
