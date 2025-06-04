@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -61,6 +63,14 @@ class Order extends Model
         return ucfirst(OrderStatus::fromName($this->order_status));
     }
 
+    public function getPlacedAtAttribute()
+    {
+        $date = Carbon::parse($this->order_placed_at);
+        return Str::limit($date->dayName, 3, '').'/'.$date->format('d/m/Y');
+    }
+
+
+
     /*
      * Custom methods
      */
@@ -83,6 +93,10 @@ class Order extends Model
         }
         return 0;
     }
+
+    /*
+     * Other
+     */
 
 
 }

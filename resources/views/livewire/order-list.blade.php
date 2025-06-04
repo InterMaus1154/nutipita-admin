@@ -1,3 +1,4 @@
+@use(Illuminate\Support\Carbon)
 <div class="table-wrapper">
     <table>
         <thead>
@@ -42,10 +43,10 @@
                     </a>
                 </td>
                 <td>
-                    {{$order->order_placed_at}}
+                    {{dayDate($order->order_placed_at)}}
                 </td>
                 <td>
-                    {{$order->order_due_at}}
+                    {{dayDate($order->order_due_at)}}
                 </td>
                 <td>
                     {{$order->status}}
@@ -72,7 +73,7 @@
                     {{$order->total_price_format}}
                 </td>
                 <td>
-                    <a href="{{route('orders.edit', compact('order'))}}" class="action-link">Edit</a>
+                    <a href="{{route('orders.edit', compact('order'))}}" class="action-link" style="margin-bottom: 8px">Edit</a>
                     <a href="{{route('invoices.create', compact('order'))}}" class="action-link">Generate Invoice</a>
                 </td>
             </tr>
