@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -29,11 +30,6 @@ class Order extends Model
         return $this->belongsToMany(Product::class, 'order_product', 'order_id', 'product_id')
             ->withPivot('product_qty', 'order_product_unit_price')
             ->withTimestamps();
-    }
-
-    public function invoice()
-    {
-        return $this->hasOne(Invoice::class, 'order_id', 'order_id');
     }
 
     /*
@@ -66,7 +62,7 @@ class Order extends Model
     public function getPlacedAtAttribute()
     {
         $date = Carbon::parse($this->order_placed_at);
-        return Str::limit($date->dayName, 3, '').'/'.$date->format('d/m/Y');
+        return Str::limit($date->dayName, 3, '') . '/' . $date->format('d/m/Y');
     }
 
 
@@ -97,6 +93,12 @@ class Order extends Model
     /*
      * Other
      */
-
+    public function scopeNonCancelled(Builder $builder)
+    {
+        return $builder->whereNotIn('order_status', [
+            OrderStatus::R_CANCELLED->name,
+            OrderStatus::R_INVALIDATED->name
+        ]);
+    }
 
 }

@@ -12,9 +12,9 @@ class Invoice extends Model
     /*
      * Define relationships
      */
-    public function order()
+    public function customer()
     {
-        return $this->belongsTo(Order::class, 'order_id', 'order_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
 
     /*

@@ -1,0 +1,6 @@
+<x-layout>
+    <section class="page-section">
+        <h2 class="section-title">Invoices</h2>
+        <a href="{{route('invoices.create')}}" class="action-link">Create New Invoice</a>
+    </section>
+</x-layout>

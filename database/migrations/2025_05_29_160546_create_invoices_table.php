@@ -12,10 +12,15 @@ return new class extends Migration {
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('invoice_id')->primary();
-            $table->unsignedInteger('order_id');
-            $table->foreign('order_id')->references('order_id')->on('orders');
-            $table->string('invoice_number')->unique();
+            $table->string('invoice_number')->index()->unique();
+            $table->unsignedInteger('customer_id');
+            $table->foreign('customer_id')->references('customer_id')->on('customers');
             $table->date('invoice_issue_date');
+            $table->date('invoice_due_date');
+            $table->date('invoice_from');
+            $table->date('invoice_to');
+            $table->string('invoice_path', 300);
+            $table->enum('invoice_status', ['paid', 'due'])->default('due');
             $table->timestamps();
         });
     }

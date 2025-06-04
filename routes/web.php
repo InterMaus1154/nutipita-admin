@@ -104,7 +104,17 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
     // invoice routes
     Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
-        Route::get('/createInvoice/{order}', 'createInvoice')->name('invoices.create');
+//        Route::get('/createInvoice/{order}', 'createInvoice')->name('invoices.create');
+
+        // invoice list
+        Route::get('/', 'index')->name('invoices.index');
+
+        // create form
+        Route::get('/create', 'create')->name('invoices.create');
+
+        // store invoices
+        Route::post('/', 'store')->name('invoices.store');
+
     });
 
     // standing order routes

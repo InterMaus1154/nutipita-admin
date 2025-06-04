@@ -1,5 +1,5 @@
 <header>
-    <h1>Nuti Pita</h1>
+    <h1>Nuti Pita: Order Management</h1>
     <nav>
         <ul>
             <li>
@@ -16,6 +16,12 @@
             </li>
             <li>
                 <a href="{{route('customers.index')}}">Customers</a>
+            </li>
+            <li>
+                <a href="{{route('invoices.index')}}">Invoices</a>
+            </li>
+            <li>
+                <a href="">Money</a>
             </li>
             <li>
                 <form method="POST" action="{{route('auth.logout')}}">

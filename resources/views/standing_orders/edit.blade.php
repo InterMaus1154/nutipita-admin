@@ -11,12 +11,12 @@
             </div>
             <div class="input-wrapper">
                 <label for="is_active">Is Active?</label>
-                <input type="checkbox" name="is_active" @checked($order->is_active) id="is_active" value="{{$order->is_active}}">
+                <input type="checkbox" name="is_active" @checked($order->is_active) id="is_active" value="1">
             </div>
             <div class="input-wrapper">
                 <label for="start_from">Start From</label>
                 <input type="date" id="start_from" name="start_from"
-                       value="{{old('start_from', now()->toDateString())}}">
+                       value="{{$order->start_from}}">
             </div>
             <div class="days-wrapper">
                 {{--count the days from 0 to 7--}}

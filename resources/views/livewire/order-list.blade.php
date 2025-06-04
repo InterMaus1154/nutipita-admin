@@ -32,7 +32,9 @@
         </thead>
         <tbody>
         @forelse($orders as $order)
-            <tr>
+            <tr @class([
+                    'green-row-bg' => $order->is_standing
+                ])>
                 <td>
                     <a class="action-link" href="{{route('orders.show', compact('order'))}}">
                         #{{$order->order_id}}

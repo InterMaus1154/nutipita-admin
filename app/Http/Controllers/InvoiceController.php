@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Dompdf\Options;
 
 class InvoiceController extends Controller
 {
@@ -30,6 +30,16 @@ class InvoiceController extends Controller
 //        return view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'));
         return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
             ->setPaper('a4', 'portrait')
-            ->stream($invoiceName.".pdf");
+            ->stream($invoiceName . ".pdf");
+    }
+
+    public function index()
+    {
+        return view('invoices.index');
+    }
+
+    public function create()
+    {
+        return view('invoices.create');
     }
 }

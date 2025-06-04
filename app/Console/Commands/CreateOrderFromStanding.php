@@ -60,15 +60,14 @@ class CreateOrderFromStanding extends Command
                 $order = Order::create([
                     'customer_id' => $standingOrder->customer_id,
                     'order_placed_at' => now()->toDateString(),
-                    'order_due_at' => now()->toDateString(),
+                    'order_due_at' => now()->addDay()->toDateString(),
                     'order_status' => OrderStatus::Y_CONFIRMED->name,
                     'is_standing' => true
                 ]);
-                foreach ($dayProducts as $product) {
-                    $product->setCurrentCustomer($customer);
-                    $order->products()->create([
-                        'product_id' => $product->product_id,
-                        'product_qty' => $product->product_qty,
+                foreach ($dayProducts as $dayProduct) {
+                    $product = $dayProduct->product->setCurrentCustomer($customer);
+                    $order->products()->attach($product->product_id,[
+                        'product_qty' => $dayProduct->product_qty,
                         'order_product_unit_price' => $product->price
                     ]);
                 }
