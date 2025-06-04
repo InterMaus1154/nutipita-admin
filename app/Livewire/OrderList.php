@@ -21,6 +21,18 @@ class OrderList extends Component
         $this->loadOrders();
     }
 
+    public function delete(int $order_id)
+    {
+        $order = Order::find($order_id);
+        if ($order) {
+            $order->products()->detach();
+            $order->delete();
+        }
+
+        $this->query = Order::query();
+        $this->loadOrders();
+    }
+
     #[On('update-filter')]
     public function applyFilter(array $filters)
     {

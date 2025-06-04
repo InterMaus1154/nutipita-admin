@@ -16,11 +16,11 @@
                 </tr>
                 <tr>
                     <td>Placed At</td>
-                    <td>{{$order->order_placed_at}}</td>
+                    <td>{{dayDate($order->order_placed_at)}}</td>
                 </tr>
                 <tr>
                     <td>Due At</td>
-                    <td>{{$order->order_due_at ?? "No specified due date"}}</td>
+                    <td>{{dayDate($order->order_due_at)}}</td>
                 </tr>
                 <tr>
                     <td>Status</td>

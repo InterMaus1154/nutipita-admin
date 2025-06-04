@@ -12,7 +12,7 @@ class AdminController extends Controller
     private function getTodaysOrdersData(): array
     {
         $products = Product::select(['product_id', 'product_name'])->get();
-        $orders = Order::with('products')->where('order_due_at', now()->toDateString())->get();
+        $orders = Order::with('products')->where('order_due_at', now()->addDay()->toDateString())->get();
 
         // calculate total income for the day
         $totalDayIncome = $orders->sum('total_price');

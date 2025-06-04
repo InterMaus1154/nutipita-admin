@@ -1,4 +1,5 @@
 @use(Illuminate\Support\Carbon)
+@use(Illuminate\Support\Facades\Request)
 <div class="table-wrapper">
     <table>
         <thead>
@@ -73,7 +74,18 @@
                     {{$order->total_price_format}}
                 </td>
                 <td>
-                    <a href="{{route('orders.edit', compact('order'))}}" class="action-link" style="margin-bottom: 8px">Edit</a>
+                    <a href="{{route('orders.edit', compact('order'))}}" class="action-link" style="margin-bottom: 8px">
+                        Edit
+                    </a>
+                    @if(Request::is('orders'))
+                        <a wire:confirm="Are you sure you want to delete this order?"
+                           wire:click="delete({{$order->order_id}})"
+                           href="#"
+                           class="action-link"
+                           style="margin-bottom: 8px">
+                            Delete
+                        </a>
+                    @endif
                     <a href="{{route('invoices.create', compact('order'))}}" class="action-link">Generate Invoice</a>
                 </td>
             </tr>

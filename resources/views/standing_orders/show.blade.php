@@ -15,11 +15,11 @@
                 </tr>
                 <tr>
                     <td>Starts From</td>
-                    <td>{{$order->start_from}}</td>
+                    <td>{{dayDate($order->start_from)}}</td>
                 </tr>
                 <tr>
                     <td>Created At</td>
-                    <td>{{Carbon::parse($order->created_at)->toDateString()}}</td>
+                    <td>{{dayDate(Carbon::parse($order->created_at)->toDateString())}}</td>
                 </tr>
             </table>
         </div>

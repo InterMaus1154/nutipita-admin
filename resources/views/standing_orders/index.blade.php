@@ -35,7 +35,7 @@
                             </a>
                         </td>
                         <td>
-                            {{$order->start_from}}
+                            {{dayDate($order->start_from)}}
                         </td>
                         <td>
                             {{$order->is_active ? "Active" : "Inactive"}}
