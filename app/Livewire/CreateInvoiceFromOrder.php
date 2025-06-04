@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 
-class CreateInvoiceFilter extends Component
+class CreateInvoiceFromOrder extends Component
 {
     public $customers;
     public $products;
@@ -33,13 +33,19 @@ class CreateInvoiceFilter extends Component
     public function submit(InvoiceService $invoiceService)
     {
         $this->validate([
-            'customer_id' => 'required'
+            'customer_id' => 'required',
+            'due_from' => 'required',
+            'due_to' => 'required'
         ], [
             'customer_id.required' => 'Select a customer first!'
         ]);
 
-        $invoice = $invoiceService->generateInvoice($this->orders);
-        $invoice->download('test.pdf');
+        $invoice = $invoiceService->generateInvoice(
+            customer: $this->customer_id,
+            invoiceFrom: $this->due_from,
+            invoiceTo: $this->due_to);
+        $invoicePdf = $invoiceService->generateInvoiceDocument($this->orders, $invoice);
+        $invoicePdf->save($invoice->invoice_path, 'local');
 
     }
 
@@ -69,7 +75,7 @@ class CreateInvoiceFilter extends Component
 
     public function render(): View
     {
-        return view('livewire.create-invoice-filter', [
+        return view('livewire.create-invoice-from-order', [
             'orders' => $this->orders
         ]);
     }

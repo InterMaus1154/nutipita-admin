@@ -233,13 +233,13 @@
                             <td>
                                 <strong>Invoice#</strong>
                             </td>
-                            <td></td>
+                            <td>{{$invoice->invoice_number}}</td>
                         </tr>
                         <tr>
                             <td>
                                 <strong>Invoice Date</strong>
                             </td>
-                            <td></td>
+                            <td>{{$invoice->invoice_issue_date}}</td>
                         </tr>
                         <tr>
                             <td>
@@ -251,7 +251,7 @@
                             <td>
                                 <strong>Due Date</strong>
                             </td>
-                            <td></td>
+                            <td>{{$invoice->invoice_due_date}}</td>
                         </tr>
                     </table>
 
@@ -269,10 +269,11 @@
                 </thead>
                 <tbody>
                 {{--if it is coming from a bulk invoice generation--}}
+                @php($i = 1)
                 @if(isset($fromBulk))
-                    @foreach($products as $index => $product)
+                    @foreach($products as $product)
                         <tr>
-                            <td class="col-index">{{$index+1}}</td>
+                            <td class="col-index">{{$i}}</td>
                             <td class="col-description">
                             <span
                                 class="product-data-name">{{$product['product_name']}} {{$product['product_weight_g']}}g</span>
@@ -287,11 +288,12 @@
                                     class="product-data-desc">{{$product['total_quantity']}} x £{{$product['unit_price']}}</span>
                             </td>
                         </tr>
+                        @php($i++)
                     @endforeach
                 @else
                     @foreach($products as $index => $product)
                         <tr>
-                            <td class="col-index">{{$index+1}}</td>
+                            <td class="col-index">{{$i}}</td>
                             <td class="col-description">
                             <span
                                 class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span>
@@ -306,6 +308,7 @@
                                     class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
                             </td>
                         </tr>
+                        @php($i++)
                     @endforeach
                 @endif
                 </tbody>

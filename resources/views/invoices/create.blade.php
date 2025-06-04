@@ -1,3 +1,3 @@
 <x-layout>
-    @livewire('create-invoice-filter')
+    @livewire('create-invoice-from-order')
 </x-layout>
