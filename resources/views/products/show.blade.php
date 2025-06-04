@@ -8,22 +8,6 @@
             <table>
                 <tbody>
                 <tr>
-                    <td>
-                        Unit price:
-                    </td>
-                    <td>£{{$product->product_unit_price}}</td>
-                </tr>
-                <tr>
-                    <td>Pack Price:</td>
-                    <td>
-                        @if($product->product_qty_per_pack)
-                            £{{$product->product_qty_per_pack * $product->product_unit_price}}
-                        @else
-                            <em>No pack price without qty</em>
-                        @endif
-                    </td>
-                </tr>
-                <tr>
                     <td>Product Weight (g);</td>
                     <td>@if($product->product_weight_g)
                             {{$product->product_weight_g}}g
