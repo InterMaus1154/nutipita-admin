@@ -14,7 +14,7 @@
 
 </style>
 
-<h1>Order total {{now()->toDateString()}}</h1>
+<h1>Order total {{dayDate(now())}}</h1>
 <div class="product-list">
     @foreach($productTotals as $key => $value)
         <div class="product-box">
