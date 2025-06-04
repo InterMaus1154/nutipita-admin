@@ -3,7 +3,7 @@
         <h2 class="form-title">Create New Invoices</h2>
         <x-error />
         <x-success />
-        <form method="POST" action="{{route('invoices.store')}}">
+        <form method="POST" wire:submit="submit">
             @csrf
             <div class="input-wrapper">
                 <label for="customer_id">Customer</label>

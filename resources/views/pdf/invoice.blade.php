@@ -83,11 +83,11 @@
         margin-right: 8px;
     }
 
-    .invoice-detail-table{
+    .invoice-detail-table {
         width: 100%;
     }
 
-    .invoice-detail-table td{
+    .invoice-detail-table td {
         text-align: right;
     }
 
@@ -181,12 +181,15 @@
                 <td class="text-right company-data-cell">
                     <strong>Nuti Pita Limited</strong>
                     <p>
-                        Unit 13, Langhedge Industrial Estate<br>
-                        London Enfield N18 2TQ<br>
+                        Unit 13, Langhedge Industrial Estate
+                        <br>
+                        London Enfield N18 2TQ
+                        <br>
                         United Kingdom
                     </p>
                     <p>
-                        +44 7754 22632<br>
+                        +44 7754 22632
+                        <br>
                         nutipita.co.uk
                     </p>
                     <p>
@@ -227,20 +230,28 @@
                 <td class="text-right">
                     <table class="invoice-detail-table">
                         <tr>
-                            <td><strong>Invoice#</strong></td>
-                            <td>{{$invoice->invoice_number}}</td>
+                            <td>
+                                <strong>Invoice#</strong>
+                            </td>
+                            <td></td>
                         </tr>
                         <tr>
-                            <td><strong>Invoice Date</strong></td>
-                            <td>{{$invoice->invoice_issue_date}}</td>
+                            <td>
+                                <strong>Invoice Date</strong>
+                            </td>
+                            <td></td>
                         </tr>
                         <tr>
-                            <td><strong>Terms</strong></td>
+                            <td>
+                                <strong>Terms</strong>
+                            </td>
                             <td>Due on Receipt</td>
                         </tr>
                         <tr>
-                            <td><strong>Due Date</strong></td>
-                            <td>{{ \Illuminate\Support\Carbon::parse($invoice->invoice_issue_date)->addDay()->toDateString() }}</td>
+                            <td>
+                                <strong>Due Date</strong>
+                            </td>
+                            <td></td>
                         </tr>
                     </table>
 
@@ -257,24 +268,46 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($products as $index => $product)
-                    <tr>
-                        <td class="col-index">{{$index+1}}</td>
-                        <td class="col-description">
+                {{--if it is coming from a bulk invoice generation--}}
+                @if(isset($fromBulk))
+                    @foreach($products as $index => $product)
+                        <tr>
+                            <td class="col-index">{{$index+1}}</td>
+                            <td class="col-description">
+                            <span
+                                class="product-data-name">{{$product['product_name']}} {{$product['product_weight_g']}}g</span>
+                                <br>
+                                <span class="product-data-desc">Pcs x Unit Price </span>
+                            </td>
+                            <td class="col-amount">
+                            <span
+                                class="product-data-name">£{{$product['total_quantity'] * $product['unit_price']}}</span>
+                                <br>
+                                <span
+                                    class="product-data-desc">{{$product['total_quantity']}} x £{{$product['unit_price']}}</span>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    @foreach($products as $index => $product)
+                        <tr>
+                            <td class="col-index">{{$index+1}}</td>
+                            <td class="col-description">
                             <span
                                 class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span>
-                            <br>
-                            <span class="product-data-desc">Pcs x Unit Price </span>
-                        </td>
-                        <td class="col-amount">
+                                <br>
+                                <span class="product-data-desc">Pcs x Unit Price </span>
+                            </td>
+                            <td class="col-amount">
                             <span
                                 class="product-data-name">£{{$product->pivot->product_qty * $product->pivot->order_product_unit_price}}</span>
-                            <br>
-                            <span
-                                class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
-                        </td>
-                    </tr>
-                @endforeach
+                                <br>
+                                <span
+                                    class="product-data-desc">{{$product->pivot->product_qty}} x £{{$product->price}}</span>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
                 </tbody>
                 <tfoot>
                 <tr>
@@ -287,7 +320,7 @@
                     <td class="footer-right text-right">
                         <strong style="font-size: 1.25rem;">
                             <span>Total:</span>
-                            £{{$order->total_price}}
+                            £{{$totalPrice}}
                         </strong>
                     </td>
                 </tr>
