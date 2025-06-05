@@ -6,32 +6,31 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
-    public function createInvoice(Order $order)
+    public function createSingleInvoice(Order $order, InvoiceService $invoiceService)
     {
-        $order->loadMissing('customer', 'products', 'invoice');
-        if ($order->invoice) {
-            $invoice = $order->invoice;
-        } else {
-            $invoice = $order->invoice()->create([
-                'invoice_number' => Invoice::generateInvoiceNumber(),
-                'invoice_issue_date' => now()->toDateString()
-            ]);
-        }
+        $order->loadMissing('customer', 'products');
         $customer = $order->customer;
-        $products = $order->products->map(function (Product $product) use ($customer) {
-            return $product->setCurrentCustomer($customer);
-        });
-        $invoiceNumber = $invoice->invoice_number;
-        $invoiceName = 'INV-' . $invoiceNumber . '-' . now()->toDateString();
-//        return view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'));
-        return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
-            ->setPaper('a4', 'portrait')
-            ->stream($invoiceName . ".pdf");
+        DB::beginTransaction();
+        try {
+            $invoice = $invoiceService->generateInvoice(customer: $customer, invoiceFrom: $order->order_due_at, invoiceTo: $order->order_due_at);
+            $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
+            $pdf->save($invoice->invoice_path, 'local');
+            DB::commit();
+            return redirect()->route('invoices.download', compact('invoice'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return redirect()->back()->withErrors(['invoice_error' => 'Error at creating invoice. Check log for more info']);
+        }
+
     }
 
     public function index()

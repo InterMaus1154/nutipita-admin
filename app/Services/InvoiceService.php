@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class InvoiceService
 {
@@ -67,7 +67,7 @@ class InvoiceService
         $totalPrice = 0;
         $allProducts = collect();
         $customer = $invoice->customer;
-        foreach ($orders as $order) {
+        foreach ($orders as $order) {;
             $totalPrice += $order->total_price;
             $allProducts = $allProducts->merge($order->products);
         }
@@ -102,7 +102,7 @@ class InvoiceService
     public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice)
     {
         $totalPrice = 0;
-        foreach ($products as $product){
+        foreach ($products as $product) {
             $totalPrice += $product['unit_price'] * $product['total_quantity'];
         }
 

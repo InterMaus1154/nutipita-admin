@@ -88,7 +88,7 @@
                             Delete
                         </a>
                     @endif
-                    <a href="{{route('invoices.create', compact('order'))}}" class="action-link table">Generate Invoice</a>
+                    <a href="{{route('invoices.create-single', compact('order'))}}" class="action-link table">Generate Invoice</a>
                 </td>
             </tr>
         @empty
