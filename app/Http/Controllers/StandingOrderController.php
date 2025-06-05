@@ -133,13 +133,18 @@ class StandingOrderController extends Controller
      */
     public function update(StandingOrderRequest $request, StandingOrder $order)
     {
+
+        // if order is deactivated by user, flag it, so doesn't get reactivated by schedule
+        if ($order->is_active && !$request->boolean('is_active')) {
+            $order->is_forced = true;
+        }
+
         DB::beginTransaction();
         try {
             // first update order details
-            $order->update([
-                'start_from' => $request->date('start_from')->toDateString(),
-                'is_active' => $request->boolean('is_active')
-            ]);
+            $order->is_active = $request->boolean('is_active');
+            $order->start_from = $request->date('start_from')->toDateString();
+            $order->save();
 
             $orderDays = collect($order->days)->keyBy('day');
 
