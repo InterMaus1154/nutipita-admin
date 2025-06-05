@@ -24,10 +24,13 @@
                 <td>
                     <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link">Download</a>
                     @if($invoice->invoice_status == "due")
-                        <a class="action-link" style="margin-top: 4px">Mark Paid
+                        <a href="#" class="action-link" style="margin-top: 4px"
+                           wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                         </a>
                     @else
-                        <a class="action-link" style="margin-top: 4px">Mark Due/a>
+                        <a href="#" class="action-link" style="margin-top: 4px"
+                           wire:click="markDue({{$invoice->invoice_id}})">Mark Due
+                        </a>
                     @endif
 
                 </td>
