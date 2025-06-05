@@ -48,11 +48,21 @@ class InvoiceService
     }
 
     /**
+     * @param mixed $data
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    private function generateInvoicePdf(mixed $data): \Barryvdh\DomPDF\PDF
+    {
+        return Pdf::loadView('pdf.invoice', $data)
+            ->setPaper('a4', 'portrait');
+    }
+
+    /**
      * @param Collection $orders
      * @param Invoice $invoice
      * @return \Barryvdh\DomPDF\PDF
      */
-    public function generateInvoiceDocument(Collection $orders, Invoice $invoice): \Barryvdh\DomPDF\PDF
+    public function generateInvoiceDocumentFromOrders(Collection $orders, Invoice $invoice): \Barryvdh\DomPDF\PDF
     {
         $totalPrice = 0;
         $allProducts = collect();
@@ -74,13 +84,35 @@ class InvoiceService
                     'unit_price' => $unit_price
                 ];
             });
-        return Pdf::loadView('pdf.invoice', [
+
+        return $this->generateInvoicePdf([
             'fromBulk' => true,
             'customer' => $customer,
             'products' => $groupedProducts,
             'totalPrice' => $totalPrice,
             'invoice' => $invoice
-        ])
-            ->setPaper('a4', 'portrait');
+        ]);
+    }
+
+    /**
+     * @param array $products
+     * @param Invoice $invoice
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice)
+    {
+        $totalPrice = 0;
+        foreach ($products as $product){
+            $totalPrice += $product['unit_price'] * $product['total_quantity'];
+        }
+
+        $customer = $invoice->loadMissing('customer')->customer;
+        return $this->generateInvoicePdf([
+            'fromBulk' => true,
+            'totalPrice' => $totalPrice,
+            'customer' => $customer,
+            'products' => $products,
+            'invoice' => $invoice
+        ]);
     }
 }

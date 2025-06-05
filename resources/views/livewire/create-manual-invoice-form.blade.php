@@ -1,5 +1,12 @@
 <div>
     <div class="form-wrapper">
+        <x-error />
+        <x-success />
+        @if(session()->has('invoice'))
+            <a href="{{route('invoices.download', ['invoice' => session()->get('invoice')])}}" class="action-link">
+                Download invoice
+            </a>
+        @endif
         <form method="POST" wire:submit="save">
             @csrf
             <h3>Invoice Info</h3>

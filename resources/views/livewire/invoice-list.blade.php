@@ -19,8 +19,8 @@
                 <td>{{dayDate($invoice->invoice_issue_date)}}</td>
                 <td>{{dayDate($invoice->invoice_due_date)}}</td>
                 <td>{{ucfirst($invoice->invoice_status)}}</td>
-                <td>{{$invoice->invoice_from ?? "-"}}</td>
-                <td>{{$invoice->invoice_to ?? "-"}}</td>
+                <td>{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : "-"}}</td>
+                <td>{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : "-"}}</td>
                 <td>
                     <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link table">Download</a>
                     @if($invoice->invoice_status == "due")
