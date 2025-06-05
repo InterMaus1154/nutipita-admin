@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Product;
+use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -44,9 +46,20 @@ class CreateManualInvoiceForm extends Component
         $this->invoice_number = Invoice::generateInvoiceNumber();
     }
 
-    public function save()
+    public function save(InvoiceService $invoiceService)
     {
-
+        try{
+            $invoice = $invoiceService->generateInvoice(
+                customer: $this->customer_id,
+                invoiceFrom: $this->due_from,
+                invoiceTo: $this->due_to,
+                invoiceNumber: $this->invoice_number,
+                issueDate: $this->invoice_issue_date,
+                dueDate: $this->invoice_due_date);
+        }catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at creating invoice. Check log for more info!');
+        }
     }
 
 
