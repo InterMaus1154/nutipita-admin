@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->foreign('customer_id')->references('customer_id')->on('customers');
             $table->date('invoice_issue_date');
             $table->date('invoice_due_date');
-            $table->date('invoice_from');
-            $table->date('invoice_to');
+            $table->date('invoice_from')->nullable();
+            $table->date('invoice_to')->nullable();
             $table->string('invoice_path', 300);
             $table->string('invoice_name', 150);
             $table->enum('invoice_status', ['paid', 'due'])->default('due');

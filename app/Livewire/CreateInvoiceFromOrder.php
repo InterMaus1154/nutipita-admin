@@ -6,7 +6,6 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -34,8 +33,8 @@ class CreateInvoiceFromOrder extends Component
     {
         $this->validate([
             'customer_id' => 'required',
-            'due_from' => 'required',
-            'due_to' => 'required'
+            'due_from' => 'nullable',
+            'due_to' => 'nullable'
         ], [
             'customer_id.required' => 'Select a customer first!'
         ]);
