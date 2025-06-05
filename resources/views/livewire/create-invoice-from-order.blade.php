@@ -1,6 +1,6 @@
 <div>
     <div class="form-wrapper">
-        <h2 class="form-title">Create New Invoices</h2>
+        <h2 class="form-title">Create New Invoice</h2>
         <x-error />
         <x-success />
         @if(session()->has('invoice'))

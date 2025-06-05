@@ -39,9 +39,20 @@ class InvoiceController extends Controller
         return view('invoices.index');
     }
 
+    /*
+     * Create invoice from orders form
+     */
     public function create()
     {
         return view('invoices.create');
+    }
+
+    /*
+     * Create a manual invoice
+     */
+    public function createManual()
+    {
+        return view('invoices.create-manual');
     }
 
     /*
