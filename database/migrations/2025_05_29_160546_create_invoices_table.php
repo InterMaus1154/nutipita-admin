@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('invoice_number')->index()->unique();
             $table->unsignedInteger('customer_id');
             $table->foreign('customer_id')->references('customer_id')->on('customers');
+            $table->unsignedInteger('order_id')->nullable();
+            $table->foreign('order_id')->references('order_id')->on('orders');
             $table->date('invoice_issue_date');
             $table->date('invoice_due_date');
             $table->date('invoice_from')->nullable();

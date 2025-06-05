@@ -16,11 +16,18 @@ class InvoiceController extends Controller
 {
     public function createSingleInvoice(Order $order, InvoiceService $invoiceService)
     {
+        // check if the order already has an invoice
+        if ($order->invoice()->exists()) {
+            return redirect()->route('invoices.download', ['invoice' => $order->invoice()->first()]);
+        }
         $order->loadMissing('customer', 'products');
         $customer = $order->customer;
         DB::beginTransaction();
         try {
             $invoice = $invoiceService->generateInvoice(customer: $customer, invoiceFrom: $order->order_due_at, invoiceTo: $order->order_due_at);
+            // save the current order for the invoice
+            $invoice->order_id = $order->order_id;
+            $invoice->save();
             $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
             $pdf->save($invoice->invoice_path, 'local');
             DB::commit();

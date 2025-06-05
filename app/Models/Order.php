@@ -32,6 +32,11 @@ class Order extends Model
             ->withTimestamps();
     }
 
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'order_id', 'order_id');
+    }
+
     /*
      * Define custom attributes
      */
