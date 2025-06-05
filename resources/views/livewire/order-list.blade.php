@@ -11,10 +11,10 @@
                 Customer
             </th>
             <th>
-                Placed At
+                Placed Date
             </th>
             <th>
-                Due At
+                Due Date
             </th>
             <th>
                 Status

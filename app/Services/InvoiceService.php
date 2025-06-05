@@ -10,9 +10,17 @@ use Illuminate\Database\Eloquent\Collection;
 class InvoiceService
 {
 
-    public function generateInvoice(Customer|int|string $customer,
-                                    string              $invoiceFrom, string $invoiceTo,
-                                    ?string             $invoiceNumber = null, ?string $issueDate = null, ?string $dueDate = null, ?string $invoiceStatus = 'due'): Invoice
+    /**
+     * @param Customer|int|string $customer
+     * @param string|null $invoiceFrom
+     * @param string|null $invoiceTo
+     * @param string|null $invoiceNumber
+     * @param string|null $issueDate
+     * @param string|null $dueDate
+     * @param string|null $invoiceStatus
+     * @return Invoice
+     */
+    public function generateInvoice(Customer|int|string $customer, ?string $invoiceFrom = null, ?string $invoiceTo = null, ?string $invoiceNumber = null, ?string $issueDate = null, ?string $dueDate = null, ?string $invoiceStatus = 'due'): Invoice
     {
         // if id is provided
         if (is_int($customer) || is_string($customer)) {
@@ -25,7 +33,7 @@ class InvoiceService
         }
 
         $invoiceNum = $invoiceNumber ?? Invoice::generateInvoiceNumber();
-        $invoiceName = 'INV-'. $invoiceNum . '.pdf';
+        $invoiceName = 'INV-' . $invoiceNum . '.pdf';
 
         return $customer->invoices()->create([
             'invoice_number' => $invoiceNum,
