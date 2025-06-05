@@ -28,6 +28,14 @@ class InvoiceList extends Component
         ]);
     }
 
+    /*
+     * Delete an invoice
+     */
+    public function delete(Invoice $invoice)
+    {
+        $invoice->delete();
+    }
+
     public function render()
     {
         $invoices = Invoice::with('customer:customer_id,customer_name')->orderByDesc('invoice_number')->get();

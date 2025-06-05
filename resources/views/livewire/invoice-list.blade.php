@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($invoices as $invoice)
+        @forelse($invoices as $invoice)
             <tr>
                 <td>INV-{{$invoice->invoice_number}}</td>
                 <td>{{$invoice->customer->customer_name}}</td>
@@ -24,18 +24,24 @@
                 <td>
                     <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link">Download</a>
                     @if($invoice->invoice_status == "due")
-                        <a href="#" class="action-link" style="margin-top: 4px"
+                        <a href="#" class="action-link table"
                            wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                         </a>
                     @else
-                        <a href="#" class="action-link" style="margin-top: 4px"
+                        <a href="#" class="action-link table"
                            wire:click="markDue({{$invoice->invoice_id}})">Mark Due
                         </a>
                     @endif
-
+                    <a href="#" class="action-link table"
+                       wire:click="delete({{$invoice->invoice_id}})"
+                       wire:confirm="Are you sure to delete this invoice?"
+                    >Delete
+                    </a>
                 </td>
             </tr>
-        @endforeach
+        @empty
+            <td>No invoices yet!</td>
+        @endforelse
         </tbody>
     </table>
 </div>
