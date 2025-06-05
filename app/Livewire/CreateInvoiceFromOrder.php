@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -45,14 +46,22 @@ class CreateInvoiceFromOrder extends Component
             'customer_id.required' => 'Select a customer first!'
         ]);
 
-        $invoice = $invoiceService->generateInvoice(
-            customer: $this->customer_id,
-            invoiceFrom: $this->due_from,
-            invoiceTo: $this->due_to,
-            issueDate: $this->invoice_issue_date,
-            dueDate: $this->invoice_due_date);
-        $invoicePdf = $invoiceService->generateInvoiceDocument($this->orders, $invoice);
-        $invoicePdf->save($invoice->invoice_path, 'local');
+        try {
+            $invoice = $invoiceService->generateInvoice(
+                customer: $this->customer_id,
+                invoiceFrom: $this->due_from,
+                invoiceTo: $this->due_to,
+                issueDate: $this->invoice_issue_date,
+                dueDate: $this->invoice_due_date);
+            $invoicePdf = $invoiceService->generateInvoiceDocument($this->orders, $invoice);
+            $invoicePdf->save($invoice->invoice_path, 'local');
+            session()->flash('success', 'Invoice created successfully!');
+            session()->flash('invoice', $invoice);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at creating invoice. Check log for more info!');
+        }
+
 
     }
 

@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -41,5 +42,14 @@ class InvoiceController extends Controller
     public function create()
     {
         return view('invoices.create');
+    }
+
+    /*
+     * Download a PDF from an invoice
+     */
+    public function download(Invoice $invoice)
+    {
+        $path = Storage::disk('local')->path($invoice->invoice_path);
+        return response()->download($path);
     }
 }

@@ -115,6 +115,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // store invoices
         Route::post('/', 'store')->name('invoices.store');
 
+        // download an invoice
+        Route::get('/download/{invoice}', 'download')->name('invoices.download');
+
     });
 
     // standing order routes
