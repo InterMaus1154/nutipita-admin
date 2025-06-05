@@ -53,6 +53,11 @@ img {
     }
 }
 
+.action-link.table{
+    display: inline-block;
+    margin-right: 4px;
+}
+
 button.action-link{
     background: none;
     border: 0;

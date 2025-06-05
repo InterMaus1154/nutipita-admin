@@ -22,7 +22,7 @@
                 <td>{{$invoice->invoice_from ?? "-"}}</td>
                 <td>{{$invoice->invoice_to ?? "-"}}</td>
                 <td>
-                    <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link">Download</a>
+                    <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link table">Download</a>
                     @if($invoice->invoice_status == "due")
                         <a href="#" class="action-link table"
                            wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
@@ -40,7 +40,9 @@
                 </td>
             </tr>
         @empty
-            <td>No invoices yet!</td>
+            <tr>
+                <td>No invoices yet!</td>
+            </tr>
         @endforelse
         </tbody>
     </table>
