@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -15,10 +16,14 @@ class OrderList extends Component
     public Collection $orders;
     private Builder $query;
 
+    public bool $isOnIndex = true;
+
     public function mount()
     {
         $this->query = Order::query();
         $this->loadOrders();
+
+        $this->isOnIndex = Route::is('orders.index');
     }
 
     public function delete(int $order_id)
@@ -69,7 +74,8 @@ class OrderList extends Component
         $products = Product::select(['product_id', 'product_name'])->get();
         return view('livewire.order-list', [
             'products' => $products,
-            'orders' => $this->orders
+            'orders' => $this->orders,
+            'onOrderIndex' => $this->isOnIndex
         ]);
     }
 }
