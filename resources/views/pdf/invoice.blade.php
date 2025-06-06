@@ -1,3 +1,4 @@
+@use(Illuminate\Support\Carbon)
 <style>
     * {
         box-sizing: border-box;
@@ -239,7 +240,7 @@
                             <td>
                                 <strong>Invoice Date</strong>
                             </td>
-                            <td>{{$invoice->invoice_issue_date}}</td>
+                            <td>{{Carbon::parse($invoice->invoice_issue_date)->format('d/m/Y')}}</td>
                         </tr>
                         <tr>
                             <td>
@@ -251,7 +252,7 @@
                             <td>
                                 <strong>Due Date</strong>
                             </td>
-                            <td>{{$invoice->invoice_due_date}}</td>
+                            <td>{{Carbon::parse($invoice->invoice_due_date)->format('d/m/Y')}}</td>
                         </tr>
                     </table>
 
