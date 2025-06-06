@@ -73,9 +73,9 @@
                         <td>
                             {{$customer->orders_count}}</td>
                         <td>
-                            <a class="action-link" href="{{route('customers.edit', compact('customer'))}}">Edit
+                            <a class="action-link table" href="{{route('customers.edit', compact('customer'))}}">Edit
                                 Details</a>
-                            <a class="action-link" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit
+                            <a class="action-link table" href="{{route('customers.edit.custom-price', compact('customer'))}}">Edit
                                 prices</a>
                         </td>
                     </tr>

@@ -35,6 +35,47 @@ header nav ul li .form-submit-button {
     text-decoration: underline;
 }
 
+header button {
+    display: none;
+}
+
+@media (max-width: 1000px) {
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header button {
+        display: block;
+        width: 25px;
+        background: none;
+        outline: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    header nav {
+        display: none;
+    }
+
+    nav.nav-visible {
+        display: block;
+        flex-basis: 100%;
+        order: 3;
+    }
+
+    nav.nav-visible ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    nav.nav-visible ul li, nav.nav-visible ul li a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
 /*main content*/
 main {
     padding: 1rem;
@@ -75,12 +116,12 @@ table {
         text-align: center;
     }
 
-    tr.green-row-bg{
-        background-color: #bbf7d0
-    }
-
     tr:nth-child(even) {
         background-color: #e5e7eb;
+    }
+
+    tr.green-row-bg, tr:nth-child(even).green-row-bg {
+        background-color: #bbf7d0
     }
 
 }
@@ -111,7 +152,7 @@ table {
     flex-wrap: wrap;
 }
 
-.index-order-cards .index-order-card{
+.index-order-cards .index-order-card {
     display: flex;
     flex-direction: column;
     align-items: center;

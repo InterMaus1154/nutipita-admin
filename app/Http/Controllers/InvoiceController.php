@@ -6,31 +6,38 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
-    public function createInvoice(Order $order)
+    public function createSingleInvoice(Order $order, InvoiceService $invoiceService)
     {
-        $order->loadMissing('customer', 'products', 'invoice');
-        if ($order->invoice) {
-            $invoice = $order->invoice;
-        } else {
-            $invoice = $order->invoice()->create([
-                'invoice_number' => Invoice::generateInvoiceNumber(),
-                'invoice_issue_date' => now()->toDateString()
-            ]);
+        // check if the order already has an invoice
+        if ($order->invoice()->exists()) {
+            return redirect()->route('invoices.download', ['invoice' => $order->invoice()->first()]);
         }
+        $order->loadMissing('customer', 'products');
         $customer = $order->customer;
-        $products = $order->products->map(function (Product $product) use ($customer) {
-            return $product->setCurrentCustomer($customer);
-        });
-        $invoiceNumber = $invoice->invoice_number;
-        $invoiceName = 'INV-' . $invoiceNumber . '-' . now()->toDateString();
-//        return view('pdf.invoice', compact('order', 'invoice', 'customer', 'products'));
-        return Pdf::loadView('pdf.invoice', compact('order', 'invoice', 'customer', 'products'))
-            ->setPaper('a4', 'portrait')
-            ->stream($invoiceName . ".pdf");
+        DB::beginTransaction();
+        try {
+            $invoice = $invoiceService->generateInvoice(customer: $customer, invoiceFrom: $order->order_due_at, invoiceTo: $order->order_due_at);
+            // save the current order for the invoice
+            $invoice->order_id = $order->order_id;
+            $invoice->save();
+            $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
+            $pdf->save($invoice->invoice_path, 'local');
+            DB::commit();
+            return redirect()->route('invoices.download', compact('invoice'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return redirect()->back()->withErrors(['invoice_error' => 'Error at creating invoice. Check log for more info']);
+        }
+
     }
 
     public function index()
@@ -38,8 +45,28 @@ class InvoiceController extends Controller
         return view('invoices.index');
     }
 
+    /*
+     * Create invoice from orders form
+     */
     public function create()
     {
         return view('invoices.create');
+    }
+
+    /*
+     * Create a manual invoice
+     */
+    public function createManual()
+    {
+        return view('invoices.create-manual');
+    }
+
+    /*
+     * Download a PDF from an invoice
+     */
+    public function download(Invoice $invoice)
+    {
+        $path = Storage::disk('local')->path($invoice->invoice_path);
+        return response()->download($path);
     }
 }

@@ -31,4 +31,7 @@
             </li>
         </ul>
     </nav>
+    <button class="nav-button">
+        <img src="{{asset('images/hamburger.png')}}" alt="">
+    </button>
 </header>

@@ -5,14 +5,22 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class InvoiceService
 {
 
-    public function generateInvoice(Customer|int|string $customer,
-                                    string              $invoiceFrom, string $invoiceTo,
-                                    ?string             $invoiceNumber = null, ?string $issueDate = null, ?string $dueDate = null, ?string $invoiceStatus = 'due'): Invoice
+    /**
+     * @param Customer|int|string $customer
+     * @param string|null $invoiceFrom
+     * @param string|null $invoiceTo
+     * @param string|null $invoiceNumber
+     * @param string|null $issueDate
+     * @param string|null $dueDate
+     * @param string|null $invoiceStatus
+     * @return Invoice
+     */
+    public function generateInvoice(Customer|int|string $customer, ?string $invoiceFrom = null, ?string $invoiceTo = null, ?string $invoiceNumber = null, ?string $issueDate = null, ?string $dueDate = null, ?string $invoiceStatus = 'due'): Invoice
     {
         // if id is provided
         if (is_int($customer) || is_string($customer)) {
@@ -25,7 +33,7 @@ class InvoiceService
         }
 
         $invoiceNum = $invoiceNumber ?? Invoice::generateInvoiceNumber();
-        $invoiceName = 'INV-'. $invoiceNum . '.pdf';
+        $invoiceName = 'INV-' . $invoiceNum . '.pdf';
 
         return $customer->invoices()->create([
             'invoice_number' => $invoiceNum,
@@ -40,16 +48,26 @@ class InvoiceService
     }
 
     /**
+     * @param mixed $data
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    private function generateInvoicePdf(mixed $data): \Barryvdh\DomPDF\PDF
+    {
+        return Pdf::loadView('pdf.invoice', $data)
+            ->setPaper('a4', 'portrait');
+    }
+
+    /**
      * @param Collection $orders
      * @param Invoice $invoice
      * @return \Barryvdh\DomPDF\PDF
      */
-    public function generateInvoiceDocument(Collection $orders, Invoice $invoice): \Barryvdh\DomPDF\PDF
+    public function generateInvoiceDocumentFromOrders(Collection $orders, Invoice $invoice): \Barryvdh\DomPDF\PDF
     {
         $totalPrice = 0;
         $allProducts = collect();
         $customer = $invoice->customer;
-        foreach ($orders as $order) {
+        foreach ($orders as $order) {;
             $totalPrice += $order->total_price;
             $allProducts = $allProducts->merge($order->products);
         }
@@ -66,13 +84,35 @@ class InvoiceService
                     'unit_price' => $unit_price
                 ];
             });
-        return Pdf::loadView('pdf.invoice', [
+
+        return $this->generateInvoicePdf([
             'fromBulk' => true,
             'customer' => $customer,
             'products' => $groupedProducts,
             'totalPrice' => $totalPrice,
             'invoice' => $invoice
-        ])
-            ->setPaper('a4', 'portrait');
+        ]);
+    }
+
+    /**
+     * @param array $products
+     * @param Invoice $invoice
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice)
+    {
+        $totalPrice = 0;
+        foreach ($products as $product) {
+            $totalPrice += $product['unit_price'] * $product['total_quantity'];
+        }
+
+        $customer = $invoice->loadMissing('customer')->customer;
+        return $this->generateInvoicePdf([
+            'fromBulk' => true,
+            'totalPrice' => $totalPrice,
+            'customer' => $customer,
+            'products' => $products,
+            'invoice' => $invoice
+        ]);
     }
 }

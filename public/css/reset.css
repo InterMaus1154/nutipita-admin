@@ -51,6 +51,12 @@ img {
     &:hover {
         text-decoration: none;
     }
+    cursor: pointer;
+}
+
+.action-link.table{
+    display: inline-block;
+    margin-right: 4px;
 }
 
 button.action-link{

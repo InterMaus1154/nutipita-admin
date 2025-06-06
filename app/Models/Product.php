@@ -15,9 +15,13 @@ class Product extends Model
 
     protected ?Customer $currentCustomer = null;
 
-    public function setCurrentCustomer(Customer $customer)
+    public function setCurrentCustomer(Customer|int|string $customer)
     {
-        $this->currentCustomer = $customer;
+        if (is_int($customer) || is_string($customer)) {
+            $this->currentCustomer = Customer::find($customer);
+        } else {
+            $this->currentCustomer = $customer;
+        }
         return $this;
     }
 

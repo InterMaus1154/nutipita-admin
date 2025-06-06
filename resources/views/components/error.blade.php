@@ -5,3 +5,8 @@
         @endforeach
     </div>
 @endif
+@if(session()->has('error'))
+    <div class="response-holder">
+        <p class="response-text error">{{session()->get('error')}}</p>
+    </div>
+@endif
