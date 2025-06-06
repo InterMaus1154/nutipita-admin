@@ -44,29 +44,31 @@ class CreateManualInvoiceForm extends Component
         $this->invoice_due_date = now()->addDay()->toDateString();
         $this->invoice_number = Invoice::generateInvoiceNumber();
 
-        $this->loadOrderData();
     }
 
     public function updated()
     {
-        $this->loadOrderData();
+        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
+            $this->loadOrderData();
+        } else {
+            $this->orders = [];
+        }
+
     }
 
     public function loadOrderData()
     {
-        if ((isset($this->due_from) || isset($this->due_to)) && isset($this->customer_id)) {
-            $this->orders = Order::query()
-                ->with('customer:customer_id,customer_name', 'products')
-                ->where('customer_id', $this->customer_id)
-                ->when($this->due_from, function ($builder) {
-                    return $builder->whereDate('order_due_at', '>=', $this->due_from);
-                })
-                ->when($this->due_to, function ($builder) {
-                    return $builder->whereDate('order_due_at', '<=', $this->due_to);
-                })
-                ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
-                ->get();
-        }
+        $this->orders = Order::query()
+            ->with('customer:customer_id,customer_name', 'products')
+            ->where('customer_id', $this->customer_id)
+            ->when($this->due_from, function ($builder) {
+                return $builder->whereDate('order_due_at', '>=', $this->due_from);
+            })
+            ->when($this->due_to, function ($builder) {
+                return $builder->whereDate('order_due_at', '<=', $this->due_to);
+            })
+            ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
+            ->get();
 
     }
 

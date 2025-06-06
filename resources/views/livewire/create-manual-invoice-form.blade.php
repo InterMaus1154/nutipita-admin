@@ -46,7 +46,7 @@
                     <input type="date" id="due_to" name="due_to" wire:model.live="due_to">
                 </div>
             </div>
-            @if($orders)
+            @if(!empty($orders))
                 @include('livewire.order-list')
             @endif
             <h3>Product Info</h3>
