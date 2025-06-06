@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
 use Illuminate\Support\Facades\DB;
@@ -15,26 +16,22 @@ class CreateManualInvoiceForm extends Component
 {
     public $customers;
     public $products;
+    public $orders;
 
     // ---
     // Form fields
     // ---
-    #[Validate('required|date')]
     public string $invoice_issue_date;
-    #[Validate('required|date')]
     public string $invoice_due_date;
-    #[Validate('required|integer')]
     public $customer_id = null;
-    #[Validate('nullable|date')]
     public $due_from;
-    #[Validate('nullable|date')]
     public $due_to;
     public array $invoiceProducts = [];
-    #[Validate('required|string|unique:invoices,invoice_number')]
     public string $invoice_number;
     // ---
     // End Form fields
     // ---
+
 
     public function mount()
     {
@@ -42,13 +39,48 @@ class CreateManualInvoiceForm extends Component
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
         $this->products = Product::select(['product_id', 'product_name'])->get();
 
+
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
         $this->invoice_number = Invoice::generateInvoiceNumber();
+
+        $this->loadOrderData();
+    }
+
+    public function updated()
+    {
+        $this->loadOrderData();
+    }
+
+    public function loadOrderData()
+    {
+        if ((isset($this->due_from) || isset($this->due_to)) && isset($this->customer_id)) {
+            $this->orders = Order::query()
+                ->with('customer:customer_id,customer_name', 'products')
+                ->where('customer_id', $this->customer_id)
+                ->when($this->due_from, function ($builder) {
+                    return $builder->whereDate('order_due_at', '>=', $this->due_from);
+                })
+                ->when($this->due_to, function ($builder) {
+                    return $builder->whereDate('order_due_at', '<=', $this->due_to);
+                })
+                ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
+                ->get();
+        }
+
     }
 
     public function save(InvoiceService $invoiceService)
     {
+        $this->validate([
+            'customer_id' => 'required|integer',
+            'invoice_due_date' => 'required|date',
+            'invoice_issue_date' => 'required|date',
+            'due_from' => 'nullable|date',
+            'due_to' => 'nullable|date',
+            'invoice_number' => 'required|string|unique:invoices,invoice_number'
+        ]);
+
         DB::beginTransaction();
         try {
             // create invoice record
@@ -65,7 +97,7 @@ class CreateManualInvoiceForm extends Component
                 ->filter(function ($qty) {
                     return $qty > 0;
                 });
-            if($selectedProducts->isEmpty()){
+            if ($selectedProducts->isEmpty()) {
                 session()->flash('error', 'All products are empty!');
                 return;
             }
@@ -95,7 +127,8 @@ class CreateManualInvoiceForm extends Component
 
     public function render()
     {
-
-        return view('livewire.create-manual-invoice-form');
+        return view('livewire.create-manual-invoice-form', [
+            'orders' => $this->orders
+        ]);
     }
 }

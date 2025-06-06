@@ -46,8 +46,11 @@
                     <input type="date" id="due_to" name="due_to" wire:model.live="due_to">
                 </div>
             </div>
+            @if($orders)
+                @include('livewire.order-list')
+            @endif
             <h3>Product Info</h3>
-            @if(isset($customer_id))
+            @if(!empty($customer_id))
                 @foreach($products as $product)
                     @php($product->setCurrentCustomer($customer_id))
                     <div class="input-wrapper">

@@ -51,6 +51,7 @@ img {
     &:hover {
         text-decoration: none;
     }
+    cursor: pointer;
 }
 
 .action-link.table{
