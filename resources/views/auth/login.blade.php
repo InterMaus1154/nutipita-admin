@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{asset('css/reset.css')}}">
     <link rel="stylesheet" href="{{asset('css/login.css')}}">
     <link rel="stylesheet" href="{{asset('css/form.css')}}">
+    <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
+    <meta name="robots" content="noindex" >
     <title>Login</title>
 </head>
 <body>
