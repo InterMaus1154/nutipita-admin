@@ -67,10 +67,14 @@ class InvoiceService
         $totalPrice = 0;
         $allProducts = collect();
         $customer = $invoice->customer;
-        foreach ($orders as $order) {;
+        foreach ($orders as $order) {
             $totalPrice += $order->total_price;
             $allProducts = $allProducts->merge($order->products);
         }
+
+        $invoice->update([
+            'invoice_total' => $totalPrice
+        ]);
 
         $groupedProducts = $allProducts
             ->groupBy('product_id')
@@ -105,6 +109,9 @@ class InvoiceService
         foreach ($products as $product) {
             $totalPrice += $product['unit_price'] * $product['total_quantity'];
         }
+        $invoice->update([
+            'invoice_total' => $totalPrice
+        ]);
 
         $customer = $invoice->loadMissing('customer')->customer;
         return $this->generateInvoicePdf([
