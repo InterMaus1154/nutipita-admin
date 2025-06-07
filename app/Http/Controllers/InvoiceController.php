@@ -69,4 +69,13 @@ class InvoiceController extends Controller
         $path = Storage::disk('local')->path($invoice->invoice_path);
         return response()->download($path);
     }
+
+    /*
+     * View a PDF in browser
+     */
+    public function viewInline(Invoice $invoice)
+    {
+        $path = Storage::disk('local')->path($invoice->invoice_path);
+        return response()->file($path);
+    }
 }

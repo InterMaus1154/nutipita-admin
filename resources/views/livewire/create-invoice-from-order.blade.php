@@ -7,6 +7,7 @@
             <a href="{{route('invoices.download', ['invoice' => session()->get('invoice')])}}" class="action-link">
                 Download invoice
             </a>
+            <a href="{{route('invoices.view-inline', ['invoice' => session()->get('invoice')])}}" class="action-link">View</a>
         @endif
         <form method="POST" wire:submit="submit">
             @csrf

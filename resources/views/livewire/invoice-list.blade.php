@@ -25,20 +25,22 @@
                 <td>£{{$invoice->invoice_total}}</td>
                 <td>
                     <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link table">Download</a>
+                    <a href="{{route('invoices.view-inline', compact('invoice'))}}" class="action-link table">View</a>
                     @if($invoice->invoice_status == "due")
-                        <a href="#" class="action-link table"
+                        <a class="action-link table"
                            wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                         </a>
                     @else
-                        <a href="#" class="action-link table"
+                        <a class="action-link table"
                            wire:click="markDue({{$invoice->invoice_id}})">Mark Due
                         </a>
                     @endif
-                    <a href="#" class="action-link table"
+                    <a class="action-link table"
                        wire:click="delete({{$invoice->invoice_id}})"
                        wire:confirm="Are you sure to delete this invoice?"
                     >Delete
                     </a>
+
                 </td>
             </tr>
         @empty

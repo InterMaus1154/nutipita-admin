@@ -115,6 +115,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // download an invoice
         Route::get('/download/{invoice}', 'download')->name('invoices.download');
 
+        // view a pdf in browser
+        Route::get('/viewInline/{invoice}', 'viewInline')->name('invoices.view-inline');
+
         // create manual invoice form
         Route::get('/createManual', 'createManual')->name('invoices.create-manual');
 
