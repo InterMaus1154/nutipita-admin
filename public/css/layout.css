@@ -162,3 +162,21 @@ table {
     border: 1px solid var(--bright-red);
     border-radius: .25rem;
 }
+
+.box-wrapper{
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.box-wrapper .box{
+    padding: 1rem;
+    border: 1px solid var(--primary-red);
+    border-radius: .25rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}

@@ -21,7 +21,7 @@
                 <a href="{{route('invoices.index')}}">Invoices</a>
             </li>
             <li>
-                <a href="">Money</a>
+                <a href="{{route('money.index')}}">Money</a>
             </li>
             <li>
                 <form method="POST" action="{{route('auth.logout')}}">

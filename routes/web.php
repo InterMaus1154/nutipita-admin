@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StandingOrderController;
+use App\Http\Controllers\MoneyController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -147,4 +148,7 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // update standing order
         Route::put('/update/{order}', 'update')->name('standing-orders.update');
     });
+
+    // money route for income filtering
+    Route::get('/money', MoneyController::class)->name('money.index');
 });
