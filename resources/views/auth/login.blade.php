@@ -1,13 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{asset('css/reset.css')}}">
-    <link rel="stylesheet" href="{{asset('css/login.css')}}">
-    <link rel="stylesheet" href="{{asset('css/form.css')}}">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet"/>
     <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
-    <meta name="robots" content="noindex" >
+    <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
+    <meta name="robots" content="noindex">
+    @fluxAppearance
+    @vite(['resources/css/app.css'])
     <title>Login</title>
 </head>
 <body>
@@ -32,5 +34,7 @@
         </form>
     </div>
 </div>
+@fluxScripts
+@livewireScripts
 </body>
 </html>
