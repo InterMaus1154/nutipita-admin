@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{{asset('css/form.css')}}">
     <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
     <meta name="robots" content="noindex" >
+    @vite(['resources/css/app.css'])
+    @fluxAppearance
     <title>Login</title>
 </head>
 <body>
@@ -32,5 +34,6 @@
         </form>
     </div>
 </div>
+@fluxScripts
 </body>
 </html>
