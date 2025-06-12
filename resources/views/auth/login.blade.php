@@ -12,8 +12,8 @@
     @livewireScripts
     <title>Login</title>
 </head>
-<body>
-<div class="bg-white dark:bg-zinc-800 min-h-screen flex justify-center items-center">
+<body class="bg-white dark:bg-zinc-800">
+<div class="min-h-screen flex justify-center items-center">
     <div class="mt-7 bg-white border border-gray-200 rounded-xl shadow-2xs dark:bg-neutral-900 dark:border-neutral-700">
         <div class="p-4 sm:p-7">
             <div class="text-center">

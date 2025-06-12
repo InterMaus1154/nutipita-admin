@@ -1,4 +1,4 @@
-<x-layout>
+<x-flux-layout>
     <section class="page-section">
         <h2 class="section-title">Today Orders</h2>
         @if($orders->isEmpty())
@@ -24,4 +24,4 @@
             @include('livewire.order-list')
         @endif
     </section>
-</x-layout>
+</x-flux-layout>
