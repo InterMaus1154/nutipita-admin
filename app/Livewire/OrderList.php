@@ -44,16 +44,16 @@ class OrderList extends Component
         $this->query = Order::query();
 
         $this->query
-            ->when($filters['customer_id'], function ($builder) use ($filters) {
+            ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('customer_id', $filters['customer_id']);
             })
-            ->when($filters['due_from'], function ($builder) use ($filters) {
+            ->when(!empty($filters['due_from']), function ($builder) use ($filters) {
                 return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
             })
-            ->when($filters['due_to'], function ($builder) use ($filters) {
+            ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
                 return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
             })
-            ->when($filters['status'], function ($builder) use ($filters) {
+            ->when(!empty($filters['status']), function ($builder) use ($filters) {
                 return $builder->where('order_status', $filters['status']);
             });
 
@@ -64,7 +64,6 @@ class OrderList extends Component
     {
         $this->orders = $this->query
             ->with('customer:customer_id,customer_name', 'products')
-            ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
             ->orderByDesc('order_placed_at')
             ->get();
     }
