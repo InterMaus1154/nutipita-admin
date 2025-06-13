@@ -25,13 +25,10 @@ class MoneyFilter extends Component
 
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
 
-        $this->due_from = now()->startOfWeek()->format('Y-m-d');
-        $this->due_to = now()->endOfWeek()->format('Y-m-d');
-
         $this->totalIncome = 0;
         $this->orderCount = 0;
 
-        $this->loadOrderData();
+        $this->setWeek();
     }
 
     public function updated(): void
@@ -73,8 +70,8 @@ class MoneyFilter extends Component
 
     public function setWeek(): void
     {
-        $this->due_from = now()->startOfWeek()->format('Y-m-d');
-        $this->due_to = now()->endOfWeek()->format('Y-m-d');
+        $this->due_from = now()->startOfWeek()->subDay()->format('Y-m-d');
+        $this->due_to = now()->endOfWeek()->subDay()->format('Y-m-d');
         $this->loadOrderData();
     }
 
