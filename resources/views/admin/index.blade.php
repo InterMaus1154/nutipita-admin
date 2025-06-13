@@ -1,27 +1,27 @@
 <x-flux-layout>
-    <section class="page-section">
-        <h2 class="section-title">Today Orders</h2>
+    <x-page-section>
+        <x-page-heading title="Today Orders"/>
         @if($orders->isEmpty())
             <em>No due orders for today!</em>
         @else
-            <a href="{{route('today.order.pdf')}}" class="action-link">Download total order PDF</a>
-            <div class="index-order-cards">
-                <div class="index-order-card">
-                    <span class="index-order-card-title">Daily Income</span>
-                    <span class="index-order-card-value">£{{$totalDayIncome}}</span>
+            <flux:link href="{{route('today.order.pdf')}}">Download total order PDF</flux:link>
+            <div class="flex gap-6 flex-wrap">
+                <div class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+                    <span>Daily Income</span>
+                    <span>£{{$totalDayIncome}}</span>
                 </div>
-                <div class="index-order-card">
-                    <span class="index-order-card-title">Total pita</span>
-                    <span class="index-order-card-value">{{$totalDayPita}}</span>
+                <div class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+                    <span>Total pita</span>
+                    <span>{{$totalDayPita}}</span>
                 </div>
                 @foreach($productTotals as $key => $value)
-                    <div class="index-order-card">
-                        <div class="index-order-card-title">{{$key}}</div>
-                        <div class="index-order-card-value">{{$value}}</div>
+                    <div class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+                        <div>{{$key}}</div>
+                        <div>{{$value}}</div>
                     </div>
                 @endforeach
             </div>
             @include('livewire.order-list')
         @endif
-    </section>
+    </x-page-section>
 </x-flux-layout>
