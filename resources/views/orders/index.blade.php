@@ -1,7 +1,7 @@
 <x-flux-layout>
-    <section>
+    <section class="flex flex-col gap-4">
         <flux:heading size="xl">Orders</flux:heading>
-        <flux:separator variant="subtle" class="my-4"/>
+        <flux:separator variant="subtle"/>
         <flux:link href="{{route('orders.create')}}" class="action-link">Add new order</flux:link>
         <x-success/>
         <x-error />
