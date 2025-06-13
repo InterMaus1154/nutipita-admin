@@ -1,7 +1,8 @@
 <x-flux-layout>
-    <section class="page-section">
-        <h2 class="section-title">Orders</h2>
-        <a href="{{route('orders.create')}}" class="action-link">Add new order</a>
+    <section>
+        <flux:heading size="xl">Orders</flux:heading>
+        <flux:separator variant="subtle" class="my-4"/>
+        <flux:link href="{{route('orders.create')}}" class="action-link">Add new order</flux:link>
         <x-success/>
         <x-error />
         <livewire:order-filter />

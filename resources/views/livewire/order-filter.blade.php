@@ -1,4 +1,4 @@
-<div class="filter-wrapper">
+<div class="flex flex-col gap-4 items-start">
     <div class="input-wrapper">
         <label for="customer_id">Customer</label>
         <select id="customer_id" wire:model.live="customer_id">
@@ -27,5 +27,5 @@
             @endforeach
         </select>
     </div>
-    <button wire:click="clearFilter">Clear filter</button>
+    <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
 </div>
