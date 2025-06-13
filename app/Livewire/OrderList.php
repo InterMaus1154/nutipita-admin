@@ -67,7 +67,7 @@ class OrderList extends Component
 
         $orders = $query->with('customer:customer_id,customer_name', 'products')
             ->orderByDesc('order_placed_at')
-            ->paginate(2);
+            ->paginate(15);
 
         $products = Product::select(['product_id', 'product_name'])->get();
         return view('livewire.order-list', [

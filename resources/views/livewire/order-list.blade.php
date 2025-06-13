@@ -97,6 +97,7 @@
                                 </td>
                                 <td>{{$order->total_price_format}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-1.5">
+                                    <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                                     <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
 {{--                                    @if(isset($onOrderIndex) && $onOrderIndex)--}}
 {{--                                        <flux:link wire:confirm="Are you sure you want to delete this order?"--}}
@@ -117,7 +118,9 @@
             </div>
         </div>
     </div>
-    <div>
-        {{$orders->links('vendor.pagination.tailwind')}}
-    </div>
+    @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
+        <div>
+            {{$orders->links('vendor.pagination.tailwind')}}
+        </div>
+    @endif
 </div>
