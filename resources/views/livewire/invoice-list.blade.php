@@ -1,53 +1,88 @@
-<div class="table-wrapper">
-    <table>
-        <thead>
-        <tr>
-            <th>Invoice#</th>
-            <th>Customer</th>
-            <th>Invoice Issue Date</th>
-            <th>Invoice Due Date</th>
-            <th>Invoice Status</th>
-            <th>Orders From</th>
-            <th>Orders To</th>
-            <th>Invoice Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        @forelse($invoices as $invoice)
-            <tr>
-                <td>INV-{{$invoice->invoice_number}}</td>
-                <td>{{$invoice->customer->customer_name}}</td>
-                <td>{{dayDate($invoice->invoice_issue_date)}}</td>
-                <td>{{dayDate($invoice->invoice_due_date)}}</td>
-                <td>{{ucfirst($invoice->invoice_status)}}</td>
-                <td>{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : "-"}}</td>
-                <td>{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : "-"}}</td>
-                <td>£{{$invoice->invoice_total}}</td>
-                <td>
-                    <a href="{{route('invoices.download', compact('invoice'))}}" class="action-link table">Download</a>
-                    <a href="{{route('invoices.view-inline', compact('invoice'))}}" class="action-link table">View</a>
-                    @if($invoice->invoice_status == "due")
-                        <a class="action-link table"
-                           wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
-                        </a>
-                    @else
-                        <a class="action-link table"
-                           wire:click="markDue({{$invoice->invoice_id}})">Mark Due
-                        </a>
-                    @endif
-                    <a class="action-link table"
-                       wire:click="delete({{$invoice->invoice_id}})"
-                       wire:confirm="Are you sure to delete this invoice?"
-                    >Delete
-                    </a>
-
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td>No invoices yet!</td>
-            </tr>
-        @endforelse
-        </tbody>
-    </table>
+<div class="space-y-4">
+    <div class="flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+            <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                        <thead>
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Invoice#
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Customer
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Issue Date
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Due Date
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Status
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Orders From
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Orders To
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Invoice Total - £
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($invoices as $invoice)
+                            <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    INV-{{$invoice->invoice_number}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    <flux:link
+                                        href="{{route('customers.show', ['customer' => $invoice->customer])}}">{{$invoice->customer->customer_name}}</flux:link>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{dayDate($invoice->invoice_issue_date)}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{dayDate($invoice->invoice_due_date)}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 italic">{{ucfirst($invoice->invoice_status)}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : "-"}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : "-"}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">£{{$invoice->invoice_total}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 space-x-1.5">
+                                    <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF</flux:link>
+                                    <flux:link href="{{route('invoices.download', compact('invoice'))}}">Download</flux:link>
+                                    @if($invoice->invoice_status == "due")
+                                        <flux:link class="cursor-pointer"
+                                           wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
+                                        </flux:link>
+                                    @else
+                                        <flux:link class="cursor-pointer"
+                                           wire:click="markDue({{$invoice->invoice_id}})">Mark Due
+                                        </flux:link>
+                                    @endif
+                                    <flux:link class="cursor-pointer"
+                                       wire:click="delete({{$invoice->invoice_id}})"
+                                       wire:confirm="Are you sure to delete this invoice?"
+                                    >Delete
+                                    </flux:link>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

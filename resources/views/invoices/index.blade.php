@@ -1,10 +1,10 @@
-<x-layout>
-    <section class="page-section">
-        <h2 class="section-title">Invoices</h2>
-        <a href="{{route('invoices.create')}}" class="action-link">Create New Invoice From Order</a>
-        <a href="{{route('invoices.create-manual')}}" class="action-link">Create Manual Invoice</a>
+<x-flux-layout>
+    <x-page-section>
+        <x-page-heading title="Invoices"/>
         <x-success />
         <x-error />
+        <flux:link href="{{route('invoices.create')}}">Create New Invoice From Order</flux:link>
+        <flux:link href="{{route('invoices.create-manual')}}">Create Manual Invoice</flux:link>
         @livewire('invoice-list')
-    </section>
-</x-layout>
+    </x-page-section>
+</x-flux-layout>
