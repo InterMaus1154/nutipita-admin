@@ -1,6 +1,7 @@
-<x-layout>
-    <section class="page-section">
-        <h2 class="section-title">Customers List</h2>
+<x-flux-layout>
+    <x-page-section>
+        <x-page-heading title="Customers"/>
+        <x-error />
         <x-success/>
         <a href="{{route('customers.create')}}" class="action-link">Add new customer</a>
         <div class="table-wrapper">
@@ -87,5 +88,5 @@
                 </tbody>
             </table>
         </div>
-    </section>
-</x-layout>
+    </x-page-section>
+</x-flux-layout>
