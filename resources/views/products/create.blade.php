@@ -1,26 +1,27 @@
-<x-layout>
-    <div class="form-wrapper">
-        <h2 class="form-title">Add new product</h2>
+<x-flux-layout>
+    <x-page-section>
+        <x-page-heading title="Add new product" />
         <x-error />
-        <form action="{{route('products.store')}}" method="POST">
+        <x-success />
+        <form action="{{route('products.store')}}" method="POST" class="flex flex-col gap-4">
             @csrf
             {{--Product name--}}
-            <div class="input-wrapper">
-                <label for="product_name">Product Name</label>
-                <input type="text" id="product_name" name="product_name" value="{{old('product_name', '')}}" />
+            <div class="max-w-sm">
+                <label for="product_name" class="block text-sm font-medium mb-2 dark:text-white">Product Name</label>
+                <input type="text" id="product_name" name="product_name" value="{{old('product_name', '')}}" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
             {{--Product weight--}}
-            <div class="input-wrapper">
-                <label for="product_weight_g">Product unit weight (gramm) (optional)</label>
-                <input type="number" id="product_weight_g" name="product_weight_g" value="{{old('product_weight_g', '')}}" />
+            <div class="max-w-sm">
+                <label for="product_weight_g" class="block text-sm font-medium mb-2 dark:text-white">Product unit weight (gramm) (optional)</label>
+                <input type="number" id="product_weight_g" name="product_weight_g" value="{{old('product_weight_g', '')}}" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
             {{--Product qty per pack--}}
-            <div class="input-wrapper">
-                <label for="product_qty_per_pack">Product quantity per pack (optional)</label>
-                <input type="number" id="product_qty_per_pack" name="product_qty_per_pack" value="{{old('product_qty_per_pack', '')}}" />
+            <div class="max-w-sm">
+                <label for="product_qty_per_pack" class="block text-sm font-medium mb-2 dark:text-white">Product quantity per pack (optional)</label>
+                <input type="number" id="product_qty_per_pack" name="product_qty_per_pack" value="{{old('product_qty_per_pack', '')}}" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
-            <input type="submit" value="Add" class="form-submit-button">
+            <flux:button variant="primary" type="submit">Add</flux:button>
         </form>
-    </div>
-</x-layout>
+    </x-page-section>
+</x-flux-layout>
 <?php
