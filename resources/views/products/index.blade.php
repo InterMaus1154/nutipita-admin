@@ -4,59 +4,6 @@
         <x-success/>
         <x-error/>
         <flux:link href="{{route('products.create')}}">Add new product</flux:link>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Unit Weight
-                    </th>
-                    <th>
-                        Qty / pack
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                @forelse($products as $product)
-                    <tr>
-                        <td>
-                            <a class="action-link" href="{{route('products.show', compact('product'))}}">
-                                {{$product->product_id}}
-                            </a>
-                        </td>
-                        <td>{{$product->product_name}}</td>
-                        <td>
-                            @if($product->product_weight_g)
-                                {{$product->product_weight_g}}g
-                            @else
-                                <em>No specified weight</em>
-                            @endif
-                        </td>
-                        <td>
-                            @if($product->product_qty_per_pack)
-                                {{$product->product_qty_per_pack}}pcs
-                            @else
-                                <em>No specified pack quantity</em>
-                            @endif
-                        </td>
-                        <td>
-                            <a class="action-link" href="{{route('products.edit', compact('product'))}}">Edit</a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr style="text-align: center">
-                        <td>No products found!</td>
-                    </tr>
-                @endforelse
-                </tbody>
-            </table>
-        </div>
         <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
