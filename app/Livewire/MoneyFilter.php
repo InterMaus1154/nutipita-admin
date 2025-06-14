@@ -62,8 +62,8 @@ class MoneyFilter extends Component
 
     public function setToday(): void
     {
-        $this->due_from = now()->toDateString();
-        $this->due_to = now()->toDateString();
+        $this->due_from = now()->addDay()->toDateString();
+        $this->due_to = now()->addDay()->toDateString();
 
         $this->loadOrderData();
     }

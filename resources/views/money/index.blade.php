@@ -1,6 +1,6 @@
-<x-layout>
-    <section class="page-section">
-        <h2 class="section-title">Income</h2>
+<x-flux-layout>
+    <x-page-section>
+        <x-page-heading title="Income" />
         @livewire('money-filter')
-    </section>
-</x-layout>
+    </x-page-section>
+</x-flux-layout>
