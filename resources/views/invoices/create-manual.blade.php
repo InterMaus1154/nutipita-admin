@@ -1,6 +1,8 @@
-<x-layout>
-    <section class="page-section">
-        <h2 class="section-title">Create Manual Invoice</h2>
+<x-flux-layout>
+    <x-page-section class="page-section">
+        <x-error />
+        <x-success />
+        <x-page-heading title="Create Manual Invoice" />
         @livewire('create-manual-invoice-form')
-    </section>
-</x-layout>
+    </x-page-section>
+</x-flux-layout>
