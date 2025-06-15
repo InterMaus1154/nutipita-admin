@@ -50,11 +50,11 @@
                                 <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         <flux:link
-                                            href="{{route('customers.index', compact('customer'))}}">{{$customer->customer_id}}</flux:link>
+                                            href="{{route('customers.show', compact('customer'))}}">{{$customer->customer_id}}</flux:link>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         <flux:link
-                                            href="{{route('customers.index', compact('customer'))}}">{{$customer->customer_name}}</flux:link>
+                                            href="{{route('customers.show', compact('customer'))}}">{{$customer->customer_name}}</flux:link>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         {{$customer->short_address}}
