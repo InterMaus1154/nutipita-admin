@@ -1,6 +1,6 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="'{{$product->product_name}}' details"/>
+        <x-page-heading title="Product '{{$product->product_name}}' details"/>
         <x-success/>
         <x-error />
         <flux:link href="{{route('products.edit', compact('product'))}}">Update product</flux:link>

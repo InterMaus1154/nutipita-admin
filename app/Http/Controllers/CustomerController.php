@@ -75,8 +75,10 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer): View
     {
-        $customer->loadMissing('customPrices', 'customPrices.product', 'orders', 'orders.products');
-        return view('customers.show', compact('customer'));
+        $products = Product::select(['product_id', 'product_name'])->get();
+        $customer->loadMissing('customPrices', 'customPrices.product');
+        $orders = $customer->orders()->orderByDesc('order_id')->with('products')->paginate(15);
+        return view('customers.show', compact('customer', 'products', 'orders'));
     }
 
     /*
