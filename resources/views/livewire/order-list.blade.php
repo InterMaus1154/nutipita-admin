@@ -120,7 +120,7 @@
     </div>
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
-            {{$orders->links('vendor.pagination.tailwind')}}
+            {{$orders->links()}}
         </div>
     @endif
 </div>
