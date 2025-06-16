@@ -1,7 +1,9 @@
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Place New Order"/>
-        <flux:badge icon="exclamation-circle">0 amount products will be ignored</flux:badge>
+        <div class="flex items-start">
+            <flux:badge icon="exclamation-circle">0 amount products will be ignored</flux:badge>
+        </div>
         <x-error/>
         <x-success />
         <h3 class="font-bold">Order Details</h3>
