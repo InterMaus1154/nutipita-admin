@@ -25,6 +25,8 @@ class OrderList extends Component
 
     public bool $isOnIndex = true;
 
+    protected $paginationTheme = 'tailwind';
+
     public function mount()
     {
         $this->isOnIndex = Route::is('orders.index');
