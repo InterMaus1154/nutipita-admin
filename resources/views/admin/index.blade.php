@@ -2,7 +2,7 @@
     <x-page-section>
         <x-page-heading title="Today Orders"/>
         <flux:link href="{{route('orders.create', ['order_placed_at' => now()->toDateString(), 'order_due_at' => now()->addDay()->toDateString()])}}">Place
-            New Order
+            New Order for Today
         </flux:link>
         @if($orders->isEmpty())
             <em>No due orders for today!</em>
