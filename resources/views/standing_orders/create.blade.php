@@ -7,7 +7,8 @@
             @csrf
             <div class="max-w-sm">
                 <label for="customer_id" class="block text-sm font-medium mb-2 dark:text-white">Customer</label>
-                <select name="customer_id" id="customer_id" class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600">
+                <select name="customer_id" id="customer_id"
+                        class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600">
                     <option value="">---Select customer---</option>
                     @foreach($customers as $customer)
                         <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
@@ -23,7 +24,8 @@
             <div class="flex gap-8 flex-wrap my-2">
                 {{--count the days from 0 to 7--}}
                 @for($i = 0; $i<7;$i++)
-                    <div class="flex flex-col gap-4 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400">
+                    <div
+                        class="flex flex-col gap-4 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400">
                         <h4 class="font-bold">{{\Illuminate\Support\Carbon::create()->startOfWeek()->addDays($i)->dayName}}</h4>
                         @foreach($products as $product)
                             <div class="max-w-sm">
