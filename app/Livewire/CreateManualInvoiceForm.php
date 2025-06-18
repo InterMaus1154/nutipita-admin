@@ -11,12 +11,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class CreateManualInvoiceForm extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'tailwind';
+
     public $customers;
     public $products;
-    public $orders;
 
     // ---
     // Form fields
@@ -24,13 +28,19 @@ class CreateManualInvoiceForm extends Component
     public string $invoice_issue_date;
     public string $invoice_due_date;
     public $customer_id = null;
-    public $due_from;
-    public $due_to;
+    public $due_from = null;
+    public $due_to = null;
     public array $invoiceProducts = [];
     public string $invoice_number;
     // ---
     // End Form fields
     // ---
+
+    public $filters = [
+        'customer_id' => null,
+        'due_from' => null,
+        'due_to' => null
+    ];
 
 
     public function mount()
@@ -46,15 +56,22 @@ class CreateManualInvoiceForm extends Component
 
     }
 
-    public function updated()
+    public function updating($name)
     {
-        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
-            $this->loadOrderData();
-        } else {
-            $this->orders = [];
+        if (in_array($name, ['customer_id', 'due_from', 'due_to'])) {
+            $this->resetPage();
         }
-
     }
+
+//    public function updated()
+//    {
+//        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
+//            $this->loadOrderData();
+//        } else {
+//            $this->orders = [];
+//        }
+//
+//    }
 
     public function loadOrderData()
     {
@@ -129,8 +146,25 @@ class CreateManualInvoiceForm extends Component
 
     public function render()
     {
+        $orders = collect();
+        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
+            $orders = Order::query()
+                ->with('customer:customer_id,customer_name', 'products')
+                ->where('customer_id', $this->customer_id)
+                ->when($this->due_from, function ($builder) {
+                    return $builder->whereDate('order_due_at', '>=', $this->due_from);
+                })
+                ->when($this->due_to, function ($builder) {
+                    return $builder->whereDate('order_due_at', '<=', $this->due_to);
+                })
+                ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
+                ->orderByDesc('order_id')
+                ->paginate(15);
+        }
+
+
         return view('livewire.create-manual-invoice-form', [
-            'orders' => $this->orders
+            'orders' => $orders
         ]);
     }
 }
