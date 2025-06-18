@@ -1,31 +1,5 @@
 <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}" class="flex items-center justify-between">
-    <div class="flex justify-between flex-1 sm:hidden">
-        @if ($paginator->onFirstPage())
-            <span
-                class="min-h-9.5 min-w-9.5 flex justify-center items-center px-4 py-2 -ml-px text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 transition ease-in-out duration-150 underline">
-                    {!! __('pagination.previous') !!}
-                </span>
-        @else
-            <a href="{{ $paginator->previousPageUrl() }}"
-               class="min-h-9.5 min-w-9.5 flex justify-center items-center px-4 py-2 -ml-px text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 transition ease-in-out duration-150 underline">
-                {!! __('pagination.previous') !!}
-            </a>
-        @endif
-
-        @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}"
-               class="min-h-9.5 min-w-9.5 flex justify-center items-center px-4 py-2 -ml-px text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 transition ease-in-out duration-150 underline">
-                {!! __('pagination.next') !!}
-            </a>
-        @else
-            <span
-                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md dark:text-gray-600 dark:bg-gray-800 dark:border-gray-600">
-                    {!! __('pagination.next') !!}
-                </span>
-        @endif
-    </div>
-
-    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+    <div class="flex-1 flex items-center justify-between">
         <div>
             <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
                 {!! __('Showing') !!}
