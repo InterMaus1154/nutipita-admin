@@ -1,7 +1,9 @@
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Prices for {{$customer->customer_name}}"/>
-        <flux:badge icon="exclamation-circle">0 or empty will be deleted</flux:badge>
+        <div class="flex items-start">
+            <flux:badge icon="exclamation-circle">0 or empty will be deleted</flux:badge>
+        </div>
         <x-error/>
         <x-success/>
         <form action="{{route('customers.update.custom-price', compact('customer'))}}" method="POST"
