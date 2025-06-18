@@ -36,13 +36,6 @@ class CreateManualInvoiceForm extends Component
     // End Form fields
     // ---
 
-    public $filters = [
-        'customer_id' => null,
-        'due_from' => null,
-        'due_to' => null
-    ];
-
-
     public function mount()
     {
         // init that don't change throughout cycle
@@ -58,37 +51,16 @@ class CreateManualInvoiceForm extends Component
 
     public function updating($name)
     {
+        // reset pagination if the filter variables are changed
         if (in_array($name, ['customer_id', 'due_from', 'due_to'])) {
             $this->resetPage();
         }
     }
 
-//    public function updated()
-//    {
-//        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
-//            $this->loadOrderData();
-//        } else {
-//            $this->orders = [];
-//        }
-//
-//    }
 
-    public function loadOrderData()
-    {
-        $this->orders = Order::query()
-            ->with('customer:customer_id,customer_name', 'products')
-            ->where('customer_id', $this->customer_id)
-            ->when($this->due_from, function ($builder) {
-                return $builder->whereDate('order_due_at', '>=', $this->due_from);
-            })
-            ->when($this->due_to, function ($builder) {
-                return $builder->whereDate('order_due_at', '<=', $this->due_to);
-            })
-            ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
-            ->get();
-
-    }
-
+    /*
+     * Save an invoice (submit form)
+     */
     public function save(InvoiceService $invoiceService)
     {
         $this->validate([
@@ -147,6 +119,8 @@ class CreateManualInvoiceForm extends Component
     public function render()
     {
         $orders = collect();
+
+        // to show orders, customer and at least one due date must be non-empty
         if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
             $orders = Order::query()
                 ->with('customer:customer_id,customer_name', 'products')
@@ -161,7 +135,6 @@ class CreateManualInvoiceForm extends Component
                 ->orderByDesc('order_id')
                 ->paginate(15);
         }
-
 
         return view('livewire.create-manual-invoice-form', [
             'orders' => $orders
