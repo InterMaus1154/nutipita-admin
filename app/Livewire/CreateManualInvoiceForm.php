@@ -119,10 +119,12 @@ class CreateManualInvoiceForm extends Component
     public function render()
     {
         $orders = collect();
+        $totalPita = 0;
+        $productTotals = collect();
 
         // to show orders, customer and at least one due date must be non-empty
         if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
-            $orders = Order::query()
+            $orderQuery = Order::query()
                 ->with('customer:customer_id,customer_name', 'products')
                 ->where('customer_id', $this->customer_id)
                 ->when($this->due_from, function ($builder) {
@@ -132,12 +134,30 @@ class CreateManualInvoiceForm extends Component
                     return $builder->whereDate('order_due_at', '<=', $this->due_to);
                 })
                 ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
-                ->orderByDesc('order_id')
-                ->paginate(15);
+                ->orderByDesc('order_id');
+
+            $orders = $orderQuery->paginate(15);
+
+            // calculate order totals
+            foreach ($orderQuery->get() as $order){
+                $totalPita += $order->total_pita;
+
+                foreach ($this->products as $product) {
+                    if(isset($productTotals[$product->product_name])){
+                        $productTotals[$product->product_name] += $order->getTotalOfProduct($product);
+                    }else{
+                        $productTotals[$product->product_name] = $order->getTotalOfProduct($product);
+                    }
+
+                }
+            }
+
         }
 
         return view('livewire.create-manual-invoice-form', [
-            'orders' => $orders
+            'orders' => $orders,
+            'totalPita' => $totalPita,
+            'productTotals' => $productTotals
         ]);
     }
 }

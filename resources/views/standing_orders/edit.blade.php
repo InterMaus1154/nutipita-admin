@@ -80,7 +80,7 @@
                     </div>
                 @endfor
             </div>
-            <input type="submit" class="form-submit-button" value="Update">
+            <flux:button variant="primary" type="submit">Update</flux:button>
         </form>
     </x-page-section>
 </x-flux-layout>
