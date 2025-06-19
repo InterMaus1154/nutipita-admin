@@ -30,8 +30,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         {{daydate($order->start_from)}}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 italic">
-                                        {{$order->is_active ? "Active" : "Inactive"}}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        @if($order->is_active)
+                                            <flux:badge color="green">Active</flux:badge>
+                                        @else
+                                            <flux:badge color="rose">Inactive</flux:badge>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 space-x-1.5">
                                         <flux:link href="{{route('standing-orders.show', compact('order'))}}">View</flux:link>
