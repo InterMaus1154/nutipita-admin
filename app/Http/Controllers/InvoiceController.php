@@ -78,4 +78,5 @@ class InvoiceController extends Controller
         $path = Storage::disk('local')->path($invoice->invoice_path);
         return response()->file($path);
     }
+
 }

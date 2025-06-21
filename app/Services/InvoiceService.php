@@ -103,7 +103,7 @@ class InvoiceService
      * @param Invoice $invoice
      * @return \Barryvdh\DomPDF\PDF
      */
-    public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice)
+    public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice): \Barryvdh\DomPDF\PDF
     {
         $totalPrice = 0;
         foreach ($products as $product) {

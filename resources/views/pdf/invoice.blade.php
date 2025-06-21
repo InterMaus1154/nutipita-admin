@@ -176,7 +176,7 @@
                 </td>
                 <!-- Invoice Title -->
                 <td class="text-center">
-                    <div style="font-size: 26px; font-weight: bold;">INVOICE</div>
+                    <div style="font-size: 40px; font-weight: bold;">INVOICE</div>
                 </td>
                 <!-- Company Data -->
                 <td class="text-right company-data-cell">
@@ -317,7 +317,7 @@
                 <tr>
                     <td colspan="2" class="footer-left">
                         <span>Bank Details</span>
-                        <span>Lloyds bank</span>
+                        <span>Nuti Pita Limited</span>
                         <span>Sort Code: 30 99 50</span>
                         <span>Account Number: 7226993</span>
                     </td>
