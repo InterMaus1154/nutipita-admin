@@ -10,7 +10,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="flex gap-4">
+        <div class="flex gap-6">
             <div class="max-w-sm">
                 <label for="due_from" class="block text-sm font-medium mb-2 dark:text-white">Due from:</label>
                 <input type="date" id="due_from" wire:model.live="due_from"
