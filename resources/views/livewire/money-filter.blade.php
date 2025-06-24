@@ -33,12 +33,12 @@
     </div>
     <div class="flex gap-4 flex-wrap">
         <div
-            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
             <span>Total Orders</span>
             <span>{{$orderCount}}</span>
         </div>
         <div
-            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
             <span>Total Income</span>
             <span>£{{$totalIncome}}</span>
         </div>
