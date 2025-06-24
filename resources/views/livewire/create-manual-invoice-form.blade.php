@@ -29,14 +29,16 @@
         <div class="flex gap-6">
             <div class="max-w-sm">
                 <label for="invoice_issue_date" class="block text-sm font-medium mb-2 dark:text-white">Invoice Issue
-                    Date*</label>
+                    Date*
+                </label>
                 <input type="date" id="invoice_issue_date" name="invoice_issue_date"
                        value="{{now()->toDateString()}}" wire:model="invoice_issue_date"
                        class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
             <div class="max-w-sm">
                 <label for="invoice_due_date" class="block text-sm font-medium mb-2 dark:text-white">Invoice Due
-                    Date*</label>
+                    Date*
+                </label>
                 <input type="date" id="invoice_due_date" name="invoice_due_date"
                        value="{{now()->addDay()->toDateString()}}" wire:model="invoice_due_date"
                        class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
@@ -60,13 +62,13 @@
             <h3 class="font-bold">Order Total Info</h3>
             <div class="flex gap-4 flex-wrap">
                 <div
-                    class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+                    class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
                     <span>Total Pitas</span>
                     <span>{{$totalPita}}</span>
                 </div>
                 @foreach($productTotals as $productName => $productTotal)
                     <div
-                        class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 text-center items-center text-xl">
+                        class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
                         <span>{{$productName}}</span>
                         <span>{{$productTotal}}</span>
                     </div>
