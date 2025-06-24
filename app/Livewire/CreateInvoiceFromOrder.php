@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class CreateInvoiceFromOrder extends Component
 {
+    use WithPagination;
+
     public $customers;
     public $products;
 
@@ -22,7 +25,7 @@ class CreateInvoiceFromOrder extends Component
     public string $invoice_issue_date;
     public string $invoice_due_date;
 
-    public $orders = [];
+    public $ordersAll = [];
 
     public function mount(): void
     {
@@ -51,11 +54,15 @@ class CreateInvoiceFromOrder extends Component
         try {
             $invoice = $invoiceService->generateInvoice(
                 customer: $this->customer_id,
-                invoiceFrom: $this->due_from,
-                invoiceTo: $this->due_to,
+                invoiceFrom: $this->due_from ?? null,
+                invoiceTo: $this->due_to ?? null,
+                /*
+                 * [2025-06-24 11:24:35] production.ERROR: SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect date value: '' for column `nutipita_prod_db`.`invoices`.`invoice_from` at row 1 (Connection: mysql, SQL: insert into `invoices` (`invoice_number`, `invoice_issue_date`, `invoice_due_date`, `invoice_from`, `invoice_to`, `invoice_status`, `invoice_name`, `invoice_path`, `customer_id`, `updated_at`, `created_at`) values (0008, 2025-06-24, 2025-06-25, , ?, due, INV-0008.pdf, invoices/INV-0008.pdf, 101, 2025-06-24 11:24:35, 2025-06-24 11:24:35))
+
+                 */
                 issueDate: $this->invoice_issue_date,
                 dueDate: $this->invoice_due_date);
-            $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders($this->orders, $invoice);
+            $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders(collect($this->ordersAll), $invoice);
             $invoicePdf->save($invoice->invoice_path, 'local');
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
@@ -71,15 +78,20 @@ class CreateInvoiceFromOrder extends Component
 
     public function updated()
     {
-        // reload order info on each updated field
-        $this->loadOrderData();
+        $this->resetPage();
     }
 
     private function loadOrderData()
     {
+
+    }
+
+    public function render(): View
+    {
+        $orders = collect();
         // get orders for the selected customer
         if (isset($this->customer_id)) {
-            $this->orders = Order::query()
+            $orderQuery = Order::query()
                 ->with('products', 'customer:customer_id,customer_name')
                 ->nonCancelled()
                 ->where('customer_id', $this->customer_id)
@@ -88,15 +100,14 @@ class CreateInvoiceFromOrder extends Component
                 })
                 ->when($this->due_to, function ($q) {
                     return $q->wheredate('order_due_at', '<=', $this->due_to);
-                })
-                ->get();
+                });
+            // for invoice generation, it needs all the data, but we don't need to display all
+            $this->ordersAll = $orderQuery->get();
+            $orders = $orderQuery->paginate(15);
         }
-    }
 
-    public function render(): View
-    {
         return view('livewire.create-invoice-from-order', [
-            'orders' => $this->orders
+            'orders' => $orders
         ]);
     }
 }

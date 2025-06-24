@@ -12,7 +12,7 @@
     <div class="space-y-4 my-4">
         <div class="flex gap-1 items-center">
             <flux:icon.exclamation-triangle class="text-red-400 text-lg"/>
-            <p class="text-red-400 text-lg">{{$error}}</p>
+            <p class="text-red-400 text-lg">{{session()->get('error')}}</p>
         </div>
     </div>
 @endif
