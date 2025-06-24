@@ -120,7 +120,9 @@ class OrderController extends Controller
             $order->update([
                 'order_status' => $request->validated('order_status'),
                 'order_placed_at' => $request->validated('order_placed_at'),
-                'order_due_at' => $request->validated('order_due_at')
+                'order_due_at' => $request->validated('order_due_at'),
+                // once an order is updated, it is no longer a standing order
+                'is_standing' => false
             ]);
             $orderProducts = collect($order->products)->keyBy('product_id');
             foreach ($request->array('products') as $product_id => $quantity) {
