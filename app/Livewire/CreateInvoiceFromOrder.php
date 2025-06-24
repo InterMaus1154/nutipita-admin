@@ -56,10 +56,6 @@ class CreateInvoiceFromOrder extends Component
                 customer: $this->customer_id,
                 invoiceFrom: $this->due_from ?? null,
                 invoiceTo: $this->due_to ?? null,
-                /*
-                 * [2025-06-24 11:24:35] production.ERROR: SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect date value: '' for column `nutipita_prod_db`.`invoices`.`invoice_from` at row 1 (Connection: mysql, SQL: insert into `invoices` (`invoice_number`, `invoice_issue_date`, `invoice_due_date`, `invoice_from`, `invoice_to`, `invoice_status`, `invoice_name`, `invoice_path`, `customer_id`, `updated_at`, `created_at`) values (0008, 2025-06-24, 2025-06-25, , ?, due, INV-0008.pdf, invoices/INV-0008.pdf, 101, 2025-06-24 11:24:35, 2025-06-24 11:24:35))
-
-                 */
                 issueDate: $this->invoice_issue_date,
                 dueDate: $this->invoice_due_date);
             $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders(collect($this->ordersAll), $invoice);
