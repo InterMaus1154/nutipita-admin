@@ -68,18 +68,11 @@ class CreateInvoiceFromOrder extends Component
             Log::error($e->getMessage());
             session()->flash('error', 'Error at creating invoice. Check log for more info!');
         }
-
-
     }
 
-    public function updated()
+    public function updated(): void
     {
         $this->resetPage();
-    }
-
-    private function loadOrderData()
-    {
-
     }
 
     public function render(): View
