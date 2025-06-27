@@ -1,6 +1,12 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
-<div class="space-y-4">
+<div
+    class="space-y-4">
+    @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
+        <div>
+            {{$orders->links()}}
+        </div>
+    @endif
     <div class="flex flex-col">
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
@@ -99,12 +105,14 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-1.5">
                                     <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                                     <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
-{{--                                    @if(isset($onOrderIndex) && $onOrderIndex)--}}
-{{--                                        <flux:link wire:confirm="Are you sure you want to delete this order?"--}}
-{{--                                            wire:click="delete({{$order->order_id}})"--}}
-{{--                                        >Delete</flux:link>--}}
-{{--                                    @endif--}}
-                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}">Generate Invoice</flux:link>
+                                    {{--                                    @if(isset($onOrderIndex) && $onOrderIndex)--}}
+                                    {{--                                        <flux:link wire:confirm="Are you sure you want to delete this order?"--}}
+                                    {{--                                            wire:click="delete({{$order->order_id}})"--}}
+                                    {{--                                        >Delete</flux:link>--}}
+                                    {{--                                    @endif--}}
+                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}">Generate
+                                        Invoice
+                                    </flux:link>
                                 </td>
                             </tr>
                         @empty

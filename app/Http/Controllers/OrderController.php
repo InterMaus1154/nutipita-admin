@@ -148,12 +148,13 @@ class OrderController extends Controller
 
                 }
             }
+            // if order had an invoice, delete it, as it is no longer "valid"
             if ($order->invoice) {
                 $order->invoice()->delete();
             }
             DB::commit();
             return redirect()
-                ->back()
+                ->route('orders.index')
                 ->with('success', 'Order updated successfully');
         } catch (\Exception $e) {
             Log::error($e->getMessage());

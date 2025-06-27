@@ -10,11 +10,11 @@
     <flux:navlist variant="outline">
         <flux:navlist.item icon="home" href="{{route('admin.view.dashboard')}}" :current="Route::is('admin.view.dashboard')">Home</flux:navlist.item>
         <flux:navlist.item icon="building-storefront" href="{{route('orders.index')}}" :current="Route::is('orders.*')">Orders</flux:navlist.item>
+        <flux:navlist.item icon="banknotes" href="{{route('invoices.index')}}" :current="Route::is('invoices.*')">Invoices</flux:navlist.item>
+        <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" :current="Route::is('money.*')">Income</flux:navlist.item>
         <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" :current="Route::is('standing-orders.*')">Standing Orders</flux:navlist.item>
         <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" :current="Route::is('customers.*')">Customers</flux:navlist.item>
         <flux:navlist.item icon="cake" href="{{route('products.index')}}" :current="Route::is('products.*')">Products</flux:navlist.item>
-        <flux:navlist.item icon="banknotes" href="{{route('invoices.index')}}" :current="Route::is('invoices.*')">Invoices</flux:navlist.item>
-        <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" :current="Route::is('money.*')">Income</flux:navlist.item>
     </flux:navlist>
 
     <flux:spacer/>

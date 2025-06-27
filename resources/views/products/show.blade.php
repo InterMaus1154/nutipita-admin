@@ -3,7 +3,7 @@
         <x-page-heading title="Product '{{$product->product_name}}' details"/>
         <x-success/>
         <x-error />
-        <flux:link href="{{route('products.edit', compact('product'))}}">Update product</flux:link>
+        <flux:link href="{{route('products.edit', compact('product'))}}">Edit product</flux:link>
         <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 inline-block align-middle">
