@@ -1,4 +1,6 @@
 <div class="flex flex-col gap-4">
+    <x-error/>
+    <x-success/>
     @if(session()->has('invoice'))
         <div class="flex gap-4">
             <flux:link href="{{route('invoices.download', ['invoice' => session()->get('invoice')])}}">
