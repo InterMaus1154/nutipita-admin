@@ -78,7 +78,7 @@ class OrderList extends Component
             'products' => $products,
             'orders' => $orders,
             'onOrderIndex' => $this->isOnIndex,
-            'shouldHaveSummaries' => true,
+            'withSummaries' => true,
             'withIncome' => true,
             'ordersAll' => $query->nonCancelled()->get()
         ]);

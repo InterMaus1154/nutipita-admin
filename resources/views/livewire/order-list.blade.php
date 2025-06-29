@@ -1,7 +1,7 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
-@props(['shouldHaveSummaries' => false, 'withIncome' => false, 'products'])
+@props(['withSummaries' => false, 'withIncome' => false, 'products'])
 <div
     class="space-y-4">
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
@@ -11,7 +11,7 @@
     @endif
     {{--condition to render summary boxes or not--}}
     {{--render only if set to true, and there is a full eloquent collection orders, not paginated version--}}
-    @if($shouldHaveSummaries && (isset($ordersAll) || $orders instanceof EloquentCollection))
+    @if($withSummaries && (isset($ordersAll) || $orders instanceof EloquentCollection))
         @php
             $summaryOrders = $ordersAll ?? $orders;
             $totalIncome = 0;
