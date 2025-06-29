@@ -20,7 +20,7 @@
                 <h1 class="block text-2xl font-bold text-gray-800 dark:text-white ">Sign in</h1>
             </div>
             <div class="space-y-4">
-                <x-error />
+                <x-error/>
             </div>
             <div class="mt-5">
                 <!-- Form -->
