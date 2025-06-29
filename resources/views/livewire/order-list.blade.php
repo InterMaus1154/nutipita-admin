@@ -1,10 +1,44 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
+@use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
+@props(['shouldHaveSummaries' => false, 'withIncome' => false, 'products'])
 <div
     class="space-y-4">
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
             {{$orders->links()}}
+        </div>
+    @endif
+    {{--condition to render summary boxes or not--}}
+    {{--render only if set to true, and there is a full eloquent collection orders, not paginated version--}}
+    @if($shouldHaveSummaries && (isset($ordersAll) || $orders instanceof EloquentCollection))
+        @php
+            $summaryOrders = $ordersAll ?? $orders;
+            $totalIncome = 0;
+            $productTotals = [];
+            foreach ($summaryOrders as $order) {
+
+                // calculate total income for all orders
+                $totalIncome += $order->total_price;
+
+                // calculate product quantity total for each product
+                foreach ($products as $product) {
+                    if(isset($productTotals[$product->product_name])){
+                        $productTotals[$product->product_name] += $order->getTotalOfProduct($product);
+                    }else{
+                        $productTotals[$product->product_name] = $order->getTotalOfProduct($product);
+                    }
+                }
+            }
+        @endphp
+        <div class="flex gap-6 flex-wrap">
+            <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="$ordersAll->count()"/>
+            @if($withIncome)
+                <x-data-box dataBoxHeader="Total Income" :dataBoxValue="'£'. $totalIncome"/>
+            @endif
+            @foreach($productTotals as $productName => $productQty)
+                <x-data-box :dataBoxHeader="$productName" :dataBoxValue="$productQty"/>
+            @endforeach
         </div>
     @endif
     <div class="flex flex-col">

@@ -5,6 +5,6 @@
         <x-success/>
         <x-error />
         <livewire:order-filter />
-        <livewire:order-list />
+        <livewire:order-list/>
     </x-page-section>
 </x-flux-layout>

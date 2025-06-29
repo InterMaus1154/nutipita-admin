@@ -87,7 +87,9 @@ class Order extends Model
         // if product model is supplied, get id
         $product_id = $product instanceof Product ? $product->product_id : $product;
 
+        // check if order has the product
         if ($this->products->where('product_id', $product_id)) {
+            // sum the quantity
             return $this->products->where('product_id', $product_id)->sum(function ($product) {
                 return $product->pivot->product_qty;
             });

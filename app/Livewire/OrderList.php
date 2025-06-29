@@ -50,6 +50,7 @@ class OrderList extends Component
         $this->resetPage();
         $this->filters = $filters;
     }
+
     public function render()
     {
         $filters = $this->filters;
@@ -65,17 +66,22 @@ class OrderList extends Component
             })
             ->when(!empty($filters['status']), function ($builder) use ($filters) {
                 return $builder->where('order_status', $filters['status']);
-            });
+            })
+            ->with('customer:customer_id,customer_name', 'products')
+            ->orderByDesc('order_placed_at');
 
-        $orders = $query->with('customer:customer_id,customer_name', 'products')
-            ->orderByDesc('order_placed_at')
+        $orders = (clone $query)
             ->paginate(15);
 
         $products = Product::select(['product_id', 'product_name'])->get();
         return view('livewire.order-list', [
             'products' => $products,
             'orders' => $orders,
-            'onOrderIndex' => $this->isOnIndex
+            'onOrderIndex' => $this->isOnIndex,
+            'shouldHaveSummaries' => true,
+            'withIncome' => true,
+            'ordersAll' => $query->nonCancelled()->get()
         ]);
     }
 }
+
