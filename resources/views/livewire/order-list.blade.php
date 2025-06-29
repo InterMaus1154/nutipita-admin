@@ -3,7 +3,7 @@
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @props(['withSummaries' => false, 'withIncome' => false, 'products'])
 <div
-    class="space-y-4">
+        class="space-y-4">
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
             {{$orders->links()}}
@@ -100,7 +100,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     <flux:link
-                                        href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+                                            href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     {{dayDate($order->order_placed_at)}}
