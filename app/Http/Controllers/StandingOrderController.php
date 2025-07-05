@@ -17,8 +17,7 @@ class StandingOrderController extends Controller
      */
     public function index(): View
     {
-        $orders = StandingOrder::with('customer')->select(['standing_order_id', 'customer_id', 'is_active', 'start_from'])->get();
-        return view('standing_orders.index', compact('orders'));
+        return view('standing_orders.index');
     }
 
     /*
