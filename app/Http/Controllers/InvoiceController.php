@@ -67,7 +67,7 @@ class InvoiceController extends Controller
     public function download(Invoice $invoice)
     {
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        return response()->download($path);
+        return response()->download($path, 'INV-'.$invoice->invoice_number);
     }
 
     /*
@@ -76,7 +76,10 @@ class InvoiceController extends Controller
     public function viewInline(Invoice $invoice)
     {
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        return response()->file($path);
+        $filename = 'INV-'.$invoice->invoice_number;
+        return response()->file($path, [
+            'Content-Disposition' => 'inline; filename="'.$filename.'.pdf',
+        ]);
     }
 
 }

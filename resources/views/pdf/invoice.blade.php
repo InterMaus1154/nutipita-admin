@@ -1,168 +1,170 @@
 @use(Illuminate\Support\Carbon)
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-        margin: 0;
-        font-family: 'Roboto', sans-serif;
-    }
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
 
-    header {
-        background-color: #323332;
-        padding: 1.75rem 1.5rem;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        color: #fff;
-    }
+        header {
+            background-color: #323332;
+            padding: 1.75rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            color: #fff;
+        }
 
-    img {
-        max-width: 100%;
-    }
+        img {
+            max-width: 100%;
+        }
 
-    .company-data-cell p {
-        margin: 8px 0;
-    }
+        .company-data-cell p {
+            margin: 8px 0;
+        }
 
-    .company-data-cell strong {
-        font-size: 26px;
-    }
+        .company-data-cell strong {
+            font-size: 26px;
+        }
 
-    /*end of header*/
+        /*end of header*/
 
-    /*start of main body content*/
-    main {
-        padding: 1.75rem 1.5rem;
-    }
+        /*start of main body content*/
+        main {
+            padding: 1.75rem 1.5rem;
+        }
 
-    .header-table td {
-        width: 33.33%;
-        vertical-align: middle;
-    }
+        .header-table td {
+            width: 33.33%;
+            vertical-align: middle;
+        }
 
-    .text-left {
-        text-align: left;
-    }
+        .text-left {
+            text-align: left;
+        }
 
-    .text-center {
-        text-align: center;
-    }
+        .text-center {
+            text-align: center;
+        }
 
-    .text-right {
-        text-align: right;
-    }
+        .text-right {
+            text-align: right;
+        }
 
-    /*table for main header with customer and invoice data*/
-    .body-header-table {
-        width: 100%;
-        table-layout: fixed;
-    }
+        /*table for main header with customer and invoice data*/
+        .body-header-table {
+            width: 100%;
+            table-layout: fixed;
+        }
 
-    .body-header-table td {
-        width: 50%;
-        vertical-align: middle;
-    }
+        .body-header-table td {
+            width: 50%;
+            vertical-align: middle;
+        }
 
-    .body-header-table .customer-data strong {
-        font-size: 1.125rem;
-        margin-bottom: 4px;
-    }
+        .body-header-table .customer-data strong {
+            font-size: 1.125rem;
+            margin-bottom: 4px;
+        }
 
-    .body-header-table .customer-data p {
-        margin-bottom: 4px;
-    }
+        .body-header-table .customer-data p {
+            margin-bottom: 4px;
+        }
 
-    .body-header-table .invoice-detail {
-        margin-bottom: 4px;
-    }
+        .body-header-table .invoice-detail {
+            margin-bottom: 4px;
+        }
 
-    .body-header-table .invoice-detail span:first-child {
-        margin-right: 8px;
-    }
+        .body-header-table .invoice-detail span:first-child {
+            margin-right: 8px;
+        }
 
-    .invoice-detail-table {
-        width: 100%;
-    }
+        .invoice-detail-table {
+            width: 100%;
+        }
 
-    .invoice-detail-table td {
-        text-align: right;
-    }
+        .invoice-detail-table td {
+            text-align: right;
+        }
 
-    /*table for invoice items*/
-    .invoice-items table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
+        /*table for invoice items*/
+        .invoice-items table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
 
-    .invoice-items table thead {
-        background-color: #eee;
-    }
+        .invoice-items table thead {
+            background-color: #eee;
+        }
 
-    .col-index {
-        width: 5%;
-        text-align: left;
-    }
+        .col-index {
+            width: 5%;
+            text-align: left;
+        }
 
-    .col-description {
-        width: 75%;
-        text-align: left;
-    }
+        .col-description {
+            width: 75%;
+            text-align: left;
+        }
 
-    .col-amount {
-        width: 20%;
-        text-align: right;
-    }
+        .col-amount {
+            width: 20%;
+            text-align: right;
+        }
 
-    .product-data-desc {
-        color: #6e6e6e;
-        font-size: .9rem;
-    }
+        .product-data-desc {
+            color: #6e6e6e;
+            font-size: .9rem;
+        }
 
-    .invoice-items table thead, .invoice-items table tfoot {
-        background-color: #eee;
-    }
+        .invoice-items table thead, .invoice-items table tfoot {
+            background-color: #eee;
+        }
 
-    .invoice-items tfoot td {
-        padding-top: 1rem;
-    }
+        .invoice-items tfoot td {
+            padding-top: 1rem;
+        }
 
-    .invoice-items .footer-left {
-        width: 50%;
-        text-align: left;
-        vertical-align: top;
-    }
+        .invoice-items .footer-left {
+            width: 50%;
+            text-align: left;
+            vertical-align: top;
+        }
 
-    .invoice-items .footer-left span {
-        display: block;
-        margin-bottom: 4px;
-    }
+        .invoice-items .footer-left span {
+            display: block;
+            margin-bottom: 4px;
+        }
 
-    .invoice-items .footer-right {
-        width: 50%;
-        text-align: right;
-        vertical-align: top;
-    }
+        .invoice-items .footer-right {
+            width: 50%;
+            text-align: right;
+            vertical-align: top;
+        }
 
-    .invoice-items thead th {
-        border-top: 1px solid #000;
-    }
+        .invoice-items thead th {
+            border-top: 1px solid #000;
+        }
 
-    .invoice-items tbody td, .invoice-items thead th {
-        padding: 0.75rem 0.5rem;
-        vertical-align: top;
-    }
+        .invoice-items tbody td, .invoice-items thead th {
+            padding: 0.75rem 0.5rem;
+            vertical-align: top;
+        }
 
-    .invoice-items tfoot td {
-        border-bottom: 1px solid #000;
-        padding: 0.5rem;
-    }
+        .invoice-items tfoot td {
+            border-bottom: 1px solid #000;
+            padding: 0.5rem;
+        }
 
-</style>
+    </style>
+</head>
 <div class="invoice-wrapper">
     <header>
         @php
