@@ -37,6 +37,9 @@
             @endforeach
         </select>
     </div>
-
+    <div class="max-w-sm">
+        <label for="hide_order" class="block text-sm font-medium mb-2 dark:text-white">Hide cancelled & invalidated from the list</label>
+        <input type="checkbox" checked wire:model.live="cancelled_order_hidden" class="py-2.5 sm:py-3 px-4 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+    </div>
     <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
 </div>

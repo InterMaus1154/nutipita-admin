@@ -21,6 +21,7 @@ class OrderList extends Component
         'due_from' => null,
         'due_to' => null,
         'status' => null,
+        'cancelled_order_hidden' => true
     ];
 
     public bool $isOnIndex = true;
@@ -55,6 +56,9 @@ class OrderList extends Component
     {
         $filters = $this->filters;
         $query = Order::query()
+            ->when($filters['cancelled_order_hidden'], function($builder){
+                return $builder->nonCancelled();
+            })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('customer_id', $filters['customer_id']);
             })
@@ -68,7 +72,8 @@ class OrderList extends Component
                 return $builder->where('order_status', $filters['status']);
             })
             ->with('customer:customer_id,customer_name', 'products')
-            ->orderByDesc('order_placed_at');
+            ->orderByDesc('order_placed_at')
+            ->orderByDesc('order_id');
 
         $orders = (clone $query)
             ->paginate(15);

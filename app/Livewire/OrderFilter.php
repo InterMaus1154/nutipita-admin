@@ -12,6 +12,7 @@ class OrderFilter extends Component
     public ?string $due_from = null;
     public ?string $due_to = null;
     public ?string $status = null;
+    public bool $cancelled_order_hidden = true;
 
     public function updated()
     {
@@ -24,7 +25,8 @@ class OrderFilter extends Component
             'customer_id' => $this->customer_id,
             'due_from' => $this->due_from,
             'due_to' => $this->due_to,
-            'status' => $this->status
+            'status' => $this->status,
+            'cancelled_order_hidden' => $this->cancelled_order_hidden
         ]);
     }
 
