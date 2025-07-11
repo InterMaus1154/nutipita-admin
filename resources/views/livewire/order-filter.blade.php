@@ -25,6 +25,7 @@
             <flux:button wire:click="setMonth">Month</flux:button>
             <flux:button wire:click="setWeek">Week</flux:button>
             <flux:button wire:click="setToday">Today</flux:button>
+            <flux:button wire:click="setYesterday">Yesterday</flux:button>
         </flux:button.group>
     </div>
     <div class="max-w-sm">
@@ -36,5 +37,6 @@
             @endforeach
         </select>
     </div>
+
     <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
 </div>

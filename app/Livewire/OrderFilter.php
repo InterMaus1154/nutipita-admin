@@ -63,6 +63,13 @@ class OrderFilter extends Component
         $this->dispatchEvent();
     }
 
+    public function setYesterday()
+    {
+        $this->due_from = now()->toDateString();
+        $this->due_to = now()->toDateString();
+        $this->dispatchEvent();
+    }
+
     public function render()
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
