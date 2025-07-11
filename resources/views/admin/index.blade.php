@@ -1,6 +1,7 @@
+@use(Carbon\Carbon)
 <x-flux-layout>
     <x-page-section>
-        @php($week = now()->weekOfYear())
+        @php($week = now()->startOfWeek(Carbon::SUNDAY)->weekOfYear())
         <x-page-heading title="Today Orders - Week {{$week}}"/>
         <flux:link href="{{route('orders.create', ['order_placed_at' => now()->toDateString(), 'order_due_at' => now()->addDay()->toDateString()])}}">Place
             New Order for Today

@@ -15,11 +15,14 @@
         @php
             $summaryOrders = $ordersAll ?? $orders;
             $totalIncome = 0;
+            $totalPita = 0;
             $productTotals = [];
             foreach ($summaryOrders as $order) {
 
                 // calculate total income for all orders
                 $totalIncome += $order->total_price;
+
+                $totalPita += $order->total_pita;
 
                 // calculate product quantity total for each product
                 foreach ($products as $product) {
@@ -33,11 +36,14 @@
         @endphp
         <div class="flex gap-6 flex-wrap">
             <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="$ordersAll->count()"/>
+            <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="$totalPita" />
             @if($withIncome)
                 <x-data-box dataBoxHeader="Total Income" :dataBoxValue="'£'. $totalIncome"/>
             @endif
             @foreach($productTotals as $productName => $productQty)
-                <x-data-box :dataBoxHeader="$productName" :dataBoxValue="$productQty"/>
+                @unless(empty($productQty))
+                    <x-data-box :dataBoxHeader="$productName" :dataBoxValue="$productQty"/>
+                @endunless
             @endforeach
         </div>
     @endif
