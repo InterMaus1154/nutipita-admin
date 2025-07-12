@@ -15,9 +15,10 @@ return new class extends Migration {
             $table->unsignedInteger('product_id');
             $table->foreign('order_id')->references('order_id')->on('orders');
             $table->foreign('product_id')->references('product_id')->on('products');
-            $table->decimal('order_product_unit_price');
+            $table->decimal('order_product_unit_price', 10, 4);
 
             $table->integer('product_qty');
+            $table->primary(['order_id', 'product_id']);
 
             $table->timestamps();
         });

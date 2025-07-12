@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedInteger('product_id');
             $table->foreign('customer_id')->references('customer_id')->on('customers')->onDelete('set null');
             $table->foreign('product_id')->references('product_id')->on('products');
-            $table->decimal('customer_product_price');
+            $table->decimal('customer_product_price', 10, 4);
 
             $table->unique(['customer_id', 'product_id']);
             $table->timestamps();
