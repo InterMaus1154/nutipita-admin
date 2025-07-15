@@ -55,25 +55,34 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{dayDate($invoice->invoice_issue_date)}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{dayDate($invoice->invoice_due_date)}}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 italic">{{ucfirst($invoice->invoice_status)}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 font-bold">
+                                    @if($invoice->invoice_status === "paid")
+                                        <flux:badge color="green">Paid</flux:badge>
+                                    @else
+                                        <flux:badge color="yellow">Due</flux:badge>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : "-"}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : "-"}}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">£{{$invoice->invoice_total}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    £{{$invoice->invoice_total}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200 space-x-1.5">
-                                    <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF</flux:link>
-                                    <flux:link href="{{route('invoices.download', compact('invoice'))}}">Download</flux:link>
+                                    <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
+                                    </flux:link>
+                                    <flux:link href="{{route('invoices.download', compact('invoice'))}}">Download
+                                    </flux:link>
                                     @if($invoice->invoice_status == "due")
                                         <flux:link class="cursor-pointer"
-                                           wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
+                                                   wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                                         </flux:link>
                                     @else
                                         <flux:link class="cursor-pointer"
-                                           wire:click="markDue({{$invoice->invoice_id}})">Mark Due
+                                                   wire:click="markDue({{$invoice->invoice_id}})">Mark Due
                                         </flux:link>
                                     @endif
                                     <flux:link class="cursor-pointer"
-                                       wire:click="delete({{$invoice->invoice_id}})"
-                                       wire:confirm="Are you sure to delete this invoice?"
+                                               wire:click="delete({{$invoice->invoice_id}})"
+                                               wire:confirm="Are you sure to delete this invoice?"
                                     >Delete
                                     </flux:link>
                                 </td>
