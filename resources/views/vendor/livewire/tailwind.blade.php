@@ -39,7 +39,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
                 </span>
             </div>
 
-            <div class="flex-1 flex items-center justify-between">
+            <div class="flex-1 flex items-center justify-between flex-wrap gap-4">
                 <div>
                     <p class="text-sm text-gray-700 leading-5 dark:text-gray-400">
                         <span>{!! __('Showing') !!}</span>

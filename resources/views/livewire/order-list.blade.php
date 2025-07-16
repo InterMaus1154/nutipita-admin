@@ -4,7 +4,7 @@
 @props(['withSummaries' => false, 'withIncome' => false, 'products'])
 <div
     class="space-y-4">
-    @if(\Illuminate\Support\Facades\Route::is('orders.index'))
+    @if(isset($onOrderIndex) && $onOrderIndex)
         <flux:button id="showSummaryBtn">Show Summaries</flux:button>
     @endif
     <div class="hidden" id="summaryContainer">
