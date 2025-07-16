@@ -56,7 +56,16 @@
             </div>
         </div>
     </div>
+    <flux:button class="!fixed bottom-0 right-0" id="infoBtn">
+        <flux:icon.information-circle />
+    </flux:button>
 </div>
+<script>
+    const infoBtn = document.querySelector("#infoBtn");
+    infoBtn.addEventListener("click", ()=>{
+       alert("Szerbusz!");
+    });
+</script>
 @fluxScripts
 </body>
 </html>
