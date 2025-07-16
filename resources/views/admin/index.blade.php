@@ -11,7 +11,7 @@
         @else
             <flux:link href="{{route('today.order.pdf')}}">Download total order PDF</flux:link>
             <div class="flex gap-6 flex-wrap">
-                <x-data-box dataBoxHeader="Daily Income" :dataBoxValue="'£'.$totalDayIncome"/>
+                <x-data-box dataBoxHeader="Daily Income" :dataBoxValue="'£'.number_format($totalDayIncome, 3)"/>
                 <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="$totalDayPita"/>
                 @foreach($productTotals as $key => $value)
                     <x-data-box :dataBoxHeader="$key" :dataBoxValue="$value"/>
