@@ -80,7 +80,9 @@
                                             $product = $product->setCurrentCustomer($customer);
                                         @endphp
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                            {{$product->price === 0 ? "" : "£".$product->price}}
+                                            @if($product->price > 0)
+                                                @formatMoneyPound($product->price)
+                                            @endif
                                         </td>
                                     @endforeach
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">

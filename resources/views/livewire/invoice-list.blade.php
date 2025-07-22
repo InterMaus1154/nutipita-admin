@@ -59,7 +59,7 @@
                     {{$invoice->invoice_to ? dayDate($invoice->invoice_to) : "-"}}
                 </x-table.data>
                 <x-table.data>
-                    £@money($invoice->invoice_total)
+                    @formatMoneyPound($invoice->invoice_total)
                 </x-table.data>
                 <x-table.data>
                     <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
