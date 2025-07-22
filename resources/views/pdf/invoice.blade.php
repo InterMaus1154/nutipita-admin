@@ -320,8 +320,8 @@
                     <td colspan="2" class="footer-left">
                         <span>Bank Details</span>
                         <span>Nuti Pita Limited</span>
-                        <span>Sort Code: 30 99 50</span>
-                        <span>Account Number: 7226993</span>
+                        <span>Sort Code: 30-99-50</span>
+                        <span>Account Number: 72269963</span>
                     </td>
                     <td class="footer-right text-right">
                         <strong style="font-size: 1.25rem;">
