@@ -78,3 +78,4 @@ if (!function_exists('formatMoneyCurrency')) {
         return '£' . formatMoney($amount);
     }
 }
+

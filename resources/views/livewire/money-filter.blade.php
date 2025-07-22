@@ -33,6 +33,6 @@
     </div>
     <div class="flex gap-4 flex-wrap">
         <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="number_format($orderCount)"/>
-        <x-data-box dataBoxHeader="Total Income" :dataBoxValue=" '£'.number_format($totalIncome, 3)"/>
+        <x-data-box dataBoxHeader="Total Income" :dataBoxValue=" formatMoneyCurrency($totalIncome)"/>
     </div>
 </div>
