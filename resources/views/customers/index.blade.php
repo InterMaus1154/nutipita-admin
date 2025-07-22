@@ -57,7 +57,8 @@
                                             href="{{route('customers.show', compact('customer'))}}">{{$customer->customer_name}}</flux:link>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                        {{$customer->short_address}}
+                                        {{$customer->customer_address_1}}, {{$customer->customer_address_2}}<br>
+                                        {{$customer->customer_city}}, {{$customer->customer_postcode}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
                                         @if($customer->customer_email)
