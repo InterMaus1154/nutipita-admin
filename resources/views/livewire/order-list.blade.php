@@ -37,7 +37,7 @@
                 <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="number_format($ordersAll->count())"/>
                 <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="number_format($totalPita)"/>
                 @if($withIncome)
-                    <x-data-box dataBoxHeader="Total Income" :dataBoxValue="'£'. number_format($totalIncome, 3)"/>
+                    <x-data-box dataBoxHeader="Total Income" :dataBoxValue="formatMoneyCurrency($totalIncome)"/>
                 @endif
                 @foreach($productTotals as $productName => $productQty)
                     @unless(empty($productQty))
@@ -120,9 +120,9 @@
                         <x-table.data>
                             @if($orderProduct)
                                 {{number_format($orderProduct->pivot->product_qty)}} x
-                                £@money($orderProduct->pivot->order_product_unit_price)
+                                @formatMoneyPound($orderProduct->pivot->order_product_unit_price)
                                 <br>
-                                £@money($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
+                                @formatMoneyPound($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
                             @else
                                 0
                             @endif
@@ -132,7 +132,7 @@
                         {{number_format($order->total_pita)}}
                     </x-table.data>
                     <x-table.data>
-                        £@money($order->total_price)
+                        @formatMoneyPound($order->total_price)
                     </x-table.data>
                     <x-table.data>
                         <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
