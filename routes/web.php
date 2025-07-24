@@ -151,4 +151,6 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
     // money route for income filtering
     Route::get('/money', MoneyController::class)->name('money.index');
+
+    require __DIR__.'/errors.php';
 });
