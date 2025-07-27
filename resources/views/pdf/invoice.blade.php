@@ -288,7 +288,7 @@
                                 class="product-data-name">@formatMoneyPound($product['total_quantity'] * $product['unit_price'])</span>
                                 <br>
                                 <span
-                                    class="product-data-desc">{{number_format($product['total_quantity'])}} x @formatMoneyPound($product['unit_price'])</span>
+                                    class="product-data-desc">{{number_format($product['total_quantity'])}} x £{{force3Digit($product['unit_price'])}} </span>
                             </td>
                         </tr>
                         @php($i++)
@@ -310,7 +310,7 @@
                             </span>
                                 <br>
                                 <span
-                                    class="product-data-desc">{{number_format($product->pivot->product_qty)}} x @formatMoneyPound($product->price)</span>
+                                    class="product-data-desc">{{number_format($product->pivot->product_qty)}} x £{{force3Digit($product->price)}}</span>
                             </td>
                         </tr>
                         @php($i++)

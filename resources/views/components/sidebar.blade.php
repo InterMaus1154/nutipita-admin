@@ -1,7 +1,7 @@
 @use(Illuminate\Support\Facades\Route)
 <flux:sidebar sticky stashable
               class="bg-zinc-50 dark:bg-zinc-900 border-r rtl:border-r-0 rtl:border-l border-zinc-200 dark:border-zinc-700">
-    <flux:sidebar.toggle class="lg:hidden" icon="x-mark"/>
+    <flux:sidebar.toggle class="lg:hidden" id="toggleSidebarButton" icon="x-mark"/>
 
     <flux:brand href="{{route('admin.view.dashboard')}}" logo="{{asset('images/icon_96x96.png?v=3')}}" name="Nuti Pita" class="px-2 dark:hidden"/>
     <flux:brand href="{{route('admin.view.dashboard')}}" logo="{{asset('images/icon_96x96.png?v=3')}}" name="Nuti Pita"
@@ -35,7 +35,7 @@
 <flux:header class="lg:hidden">
     <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left"/>
     <flux:spacer/>
-    <flux:dropdown position="top" alignt="start">
+    <flux:dropdown position="top" alignt="start" class="lg:hidden">
         <flux:profile avatar="{{asset('images/icon_96x96.png?v=3')}}"/>
         <flux:menu>
             <flux:menu.item icon="arrow-right-start-on-rectangle" class="w-full">

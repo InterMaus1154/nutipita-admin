@@ -120,7 +120,7 @@
                         <x-table.data>
                             @if($orderProduct)
                                 {{number_format($orderProduct->pivot->product_qty)}} x
-                                @formatMoneyPound($orderProduct->pivot->order_product_unit_price)
+                                £{{force3Digit($orderProduct->pivot->order_product_unit_price)}}
                                 <br>
                                 @formatMoneyPound($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
                             @else
