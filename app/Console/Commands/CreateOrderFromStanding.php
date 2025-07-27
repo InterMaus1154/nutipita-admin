@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\StandingOrder;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -36,8 +37,10 @@ class CreateOrderFromStanding extends Command
         // fetch active orders for today
         $standingOrders = StandingOrder::query()
             ->where('is_active', true)
-            ->whereHas('days', function ($q) use ($today) {
-                return $q->where('day', $today);
+            ->whereHas('days', function (Builder $q) use ($today) {
+                return $q->where('day', $today)->whereHas('products', function (Builder $q) {
+                    $q->where('product_qty', '>', 0);
+                });
             })
             ->with('days', 'days.products', 'customer')
             ->get();
