@@ -78,7 +78,9 @@ class InvoiceController extends Controller
         $path = Storage::disk('local')->path($invoice->invoice_path);
         $filename = 'INV-'.$invoice->invoice_number;
         return response()->file($path, [
+            'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$filename.'.pdf',
+            'Cache-Control' => 'no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0'
         ]);
     }
 }

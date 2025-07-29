@@ -1,5 +1,6 @@
 @use(Illuminate\Support\Carbon)
 <head>
+    <title>INV - {{$invoice->invoice_number}}</title>
     <style>
         * {
             box-sizing: border-box;
