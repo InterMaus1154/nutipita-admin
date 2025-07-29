@@ -76,10 +76,10 @@ class InvoiceController extends Controller
     public function viewInline(Invoice $invoice)
     {
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        $filename = 'INV-'.$invoice->invoice_number;
+        $filename = 'INV-'.$invoice->invoice_number.'.pdf';
         return response()->file($path, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$filename.'.pdf',
+            'Content-Disposition' => "inline; filename=$filename",
             'Cache-Control' => 'no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0'
         ]);
     }
