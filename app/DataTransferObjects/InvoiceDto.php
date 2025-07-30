@@ -22,11 +22,17 @@ class InvoiceDto
             try {
                 $customerModel = Customer::findOrFail($customer);
             } catch (ModelNotFoundException $e) {
-                return redirect()->route('errors.404')->with('error_message', 'Customer not found!');
+                throw new NotFoundHttpException('Customer not found within invoice dto', $e);
             }
         }
 
+        try {
+            if ($invoiceIssueDate instanceof Carbon) {
 
+            }
+        } catch (\Exception $e) {
+
+        }
 
 
         return new InvoiceDto($customerModel);
@@ -35,5 +41,33 @@ class InvoiceDto
     public function customer(): Customer
     {
         return $this->customer;
+    }
+
+    /**
+     * Helper function to parse dates into Carbon instances
+     * @param Carbon|string|null $inputDate
+     * @param string $fieldName
+     * @param bool $nullable
+     * @return Carbon|mixed|void
+     */
+    private function parseDate(Carbon|string|null $inputDate, string $fieldName, bool $nullable = false)
+    {
+
+        // if Carbon by default, simply return it
+        if($inputDate instanceof Carbon){
+            return $inputDate;
+        }
+
+        // if null is provided AND null is allowed, return null
+        if($inputDate === null && $nullable){
+            return null;
+        }
+
+        try{
+            return Carbon::parse($inputDate);
+        }catch(\Exception $e){
+            // if invalid format is provided, which cannot be converted
+            throw new \InvalidArgumentException("Invalid date format for {$fieldName}");
+        }
     }
 }

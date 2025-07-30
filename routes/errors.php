@@ -16,4 +16,9 @@ Route::prefix('error')->group(function () {
     Route::get('404', function(){
         return response()->view('errors.404', [], 404);
     })->name('errors.404');
+
+    // general 400 request
+    Route::get('400', function(){
+        return response()->view('errors.400', [], 400);
+    })->name('errors.400');
 });
