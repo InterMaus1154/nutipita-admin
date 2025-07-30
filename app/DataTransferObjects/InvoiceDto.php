@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Carbon\Carbon;
+use App\Models\Order;
 
 class InvoiceDto
 {
@@ -18,7 +19,8 @@ class InvoiceDto
                                  private readonly Carbon|null   $invoiceOrdersTo,
                                  private readonly InvoiceStatus $invoiceStatus,
                                  private readonly string        $invoiceNumber,
-                                 private readonly string        $invoiceName
+                                 private readonly string        $invoiceName,
+                                 private readonly int|null      $orderId
 
     )
     {
@@ -33,15 +35,18 @@ class InvoiceDto
      * @param Carbon|string|null $invoiceOrdersTo
      * @param InvoiceStatus|string $invoiceStatus
      * @param string|null $invoiceNumber
+     * @param string|int|null $orderId - single order to which the invoice might belong
      * @return InvoiceDto
      */
-    public static function from(Customer|int|string  $customer,
-                                Carbon|string|null   $invoiceIssueDate,
-                                Carbon|string|null   $invoiceDueDate,
-                                Carbon|string        $invoiceOrdersFrom = null,
-                                Carbon|string|null   $invoiceOrdersTo = null,
-                                InvoiceStatus|string $invoiceStatus = InvoiceStatus::DUE,
-                                string|null          $invoiceNumber = null): InvoiceDto
+    public static function from(Customer|int|string   $customer,
+                                Carbon|string|null    $invoiceIssueDate,
+                                Carbon|string|null    $invoiceDueDate,
+                                Carbon|string         $invoiceOrdersFrom = null,
+                                Carbon|string|null    $invoiceOrdersTo = null,
+                                InvoiceStatus|string  $invoiceStatus = InvoiceStatus::DUE,
+                                string|null           $invoiceNumber = null,
+                                Order|string|int|null $orderId = null
+    ): InvoiceDto
     {
         // check what type of customer is provided
         // resolve string and int into a model
@@ -90,6 +95,11 @@ class InvoiceDto
             }
         }
 
+        // get order id from Order model
+        if ($orderId instanceof Order) {
+            $orderId = (int)$orderId->order_id;
+        }
+
         return new InvoiceDto(
             customer: $customerModel,
             invoiceIssueDate: $invoiceIssueDate,
@@ -98,7 +108,8 @@ class InvoiceDto
             invoiceOrdersTo: $invoiceOrdersTo,
             invoiceStatus: $invoiceStatus,
             invoiceNumber: $invoiceNumber,
-            invoiceName: $invoiceName);
+            invoiceName: $invoiceName,
+            orderId: $orderId);
     }
 
     /**

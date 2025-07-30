@@ -8,13 +8,20 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
-    public function createSingleInvoice(Order $order, InvoiceService $invoiceService)
+    /**
+     * Create an invoice for a single order - from order list
+     * @param Order $order
+     * @param InvoiceService $invoiceService
+     * @return RedirectResponse
+     */
+    public function createSingleInvoice(Order $order, InvoiceService $invoiceService): RedirectResponse
     {
         // check if the order already has an invoice
         if ($order->invoice()->exists()) {
