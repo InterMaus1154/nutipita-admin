@@ -10,6 +10,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Carbon\Carbon;
 use App\Models\Order;
 
+/**
+ * Data transfer object for invoice details
+ */
 final readonly class InvoiceDto
 {
     private function __construct(private Customer      $customer,
@@ -35,7 +38,7 @@ final readonly class InvoiceDto
      * @param Carbon|string|null $invoiceOrdersTo
      * @param InvoiceStatus|string $invoiceStatus
      * @param string|null $invoiceNumber
-     * @param Order|string|int|null $orderId - single order to which the invoice might belong
+     * @param Order|string|int|null $order - single order to which the invoice might belong
      * @return InvoiceDto
      */
     public static function from(Customer|int|string   $customer,
