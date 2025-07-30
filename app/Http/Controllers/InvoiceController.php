@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTransferObjects\InvoiceDto;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -28,13 +29,15 @@ class InvoiceController extends Controller
             return redirect()->route('invoices.download', ['invoice' => $order->invoice()->first()]);
         }
         $order->loadMissing('customer', 'products');
-        $customer = $order->customer;
         DB::beginTransaction();
         try {
-            $invoice = $invoiceService->generateInvoice(customer: $customer, invoiceFrom: $order->order_due_at, invoiceTo: $order->order_due_at);
-            // save the current order for the invoice
-            $invoice->order_id = $order->order_id;
-            $invoice->save();
+            $invoiceDto = InvoiceDto::from(
+                customer: $order->customer,
+                invoiceOrdersFrom: $order->order_due_at,
+                invoiceOrdersTo: $order->order_due_at,
+                order: $order
+            );
+            $invoice = $invoiceService->generateInvoice($invoiceDto);
             $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
             $pdf->save($invoice->invoice_path, 'local');
             DB::commit();
@@ -73,9 +76,9 @@ class InvoiceController extends Controller
      */
     public function download(Invoice $invoice)
     {
-        $filename = 'INV-'.$invoice->invoice_number.'pdf';
+        $filename = 'INV-' . $invoice->invoice_number . 'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        return response()->download($path, 'INV-'.$invoice->invoice_number.'.pdf', [
+        return response()->download($path, 'INV-' . $invoice->invoice_number . '.pdf', [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => "attachment; filename=$filename"
         ]);
@@ -87,7 +90,7 @@ class InvoiceController extends Controller
     public function viewInline(Invoice $invoice)
     {
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        $filename = 'INV-'.$invoice->invoice_number.'.pdf';
+        $filename = 'INV-' . $invoice->invoice_number . '.pdf';
         return response()->file($path, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=$filename",

@@ -2,48 +2,32 @@
 
 namespace App\Services;
 
+use App\DataTransferObjects\InvoiceDto;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class InvoiceService
 {
 
     /**
-     * @param Customer|int|string $customer
-     * @param string|null $invoiceFrom
-     * @param string|null $invoiceTo
-     * @param string|null $invoiceNumber
-     * @param string|null $issueDate
-     * @param string|null $dueDate
-     * @param string|null $invoiceStatus
+     * @param InvoiceDto $invoiceDto
      * @return Invoice
      */
-    public function generateInvoice(Customer|int|string $customer, ?string $invoiceFrom = null, ?string $invoiceTo = null, ?string $invoiceNumber = null, ?string $issueDate = null, ?string $dueDate = null, ?string $invoiceStatus = 'due'): Invoice
+    public function generateInvoice(InvoiceDto $invoiceDto): Invoice
     {
-        // if id is provided
-        if (is_int($customer) || is_string($customer)) {
-            $customer = Customer::find($customer);
-        }
-
-        // check if the invoice number is provided and if it is a non-duplicate
-        if (isset($invoiceNumber) && Invoice::where('invoice_number', $invoiceNumber)->exists()) {
-            abort(400, "Invoice number is already taken!");
-        }
-
-        $invoiceNum = $invoiceNumber ?? Invoice::generateInvoiceNumber();
-        $invoiceName = 'INV-' . $invoiceNum . '.pdf';
-
-        return $customer->invoices()->create([
-            'invoice_number' => $invoiceNum,
-            'invoice_issue_date' => $issueDate ?? now()->toDateString(),
-            'invoice_due_date' => $dueDate ?? now()->addDay()->toDateString(),
-            'invoice_from' => $invoiceFrom,
-            'invoice_to' => $invoiceTo,
-            'invoice_status' => $invoiceStatus,
-            'invoice_name' => $invoiceName,
-            'invoice_path' => 'invoices/' . $invoiceName
+        return $invoiceDto->customer()->invoices()->create([
+            'invoice_number' => $invoiceDto->invoiceNumber(),
+            'invoice_issue_date' => $invoiceDto->invoiceIssueDate()->toDateString(),
+            'invoice_due_date' => $invoiceDto->invoiceDueDate()->toDateString(),
+            'invoice_from' => $invoiceDto->invoiceOrdersFrom()?->toDateString(),
+            'invoice_to' => $invoiceDto->invoiceOrdersTo()?->toDateString(),
+            'invoice_status' => $invoiceDto->invoiceStatus()->value,
+            'invoice_name' => $invoiceDto->invoiceName(),
+            'invoice_path' => 'invoices/' . $invoiceDto->invoiceName(),
+            'order_id' => $invoiceDto->orderId()
         ]);
     }
 

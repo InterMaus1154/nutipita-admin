@@ -10,17 +10,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Carbon\Carbon;
 use App\Models\Order;
 
-class InvoiceDto
+final readonly class InvoiceDto
 {
-    private function __construct(private readonly Customer      $customer,
-                                 private readonly Carbon        $invoiceIssueDate,
-                                 private readonly Carbon        $invoiceDueDate,
-                                 private readonly Carbon|null   $invoiceOrdersFrom,
-                                 private readonly Carbon|null   $invoiceOrdersTo,
-                                 private readonly InvoiceStatus $invoiceStatus,
-                                 private readonly string        $invoiceNumber,
-                                 private readonly string        $invoiceName,
-                                 private readonly int|null      $orderId
+    private function __construct(private Customer      $customer,
+                                 private Carbon        $invoiceIssueDate,
+                                 private Carbon        $invoiceDueDate,
+                                 private Carbon|null   $invoiceOrdersFrom,
+                                 private Carbon|null   $invoiceOrdersTo,
+                                 private InvoiceStatus $invoiceStatus,
+                                 private string        $invoiceNumber,
+                                 private string        $invoiceName,
+                                 private int|null      $orderId
 
     )
     {
@@ -35,24 +35,24 @@ class InvoiceDto
      * @param Carbon|string|null $invoiceOrdersTo
      * @param InvoiceStatus|string $invoiceStatus
      * @param string|null $invoiceNumber
-     * @param string|int|null $orderId - single order to which the invoice might belong
+     * @param Order|string|int|null $orderId - single order to which the invoice might belong
      * @return InvoiceDto
      */
     public static function from(Customer|int|string   $customer,
-                                Carbon|string|null    $invoiceIssueDate,
-                                Carbon|string|null    $invoiceDueDate,
+                                Carbon|string|null    $invoiceIssueDate = null,
+                                Carbon|string|null    $invoiceDueDate = null,
                                 Carbon|string         $invoiceOrdersFrom = null,
                                 Carbon|string|null    $invoiceOrdersTo = null,
                                 InvoiceStatus|string  $invoiceStatus = InvoiceStatus::DUE,
                                 string|null           $invoiceNumber = null,
-                                Order|string|int|null $orderId = null
+                                Order|string|int|null $order = null
     ): InvoiceDto
     {
         // check what type of customer is provided
         // resolve string and int into a model
         if (is_int($customer) || is_string($customer)) {
             try {
-                $customerModel = Customer::findOrFail($customer);
+                $customer = Customer::findOrFail($customer);
             } catch (ModelNotFoundException $e) {
                 throw new NotFoundHttpException('Customer not found within invoice dto', $e);
             }
@@ -96,12 +96,12 @@ class InvoiceDto
         }
 
         // get order id from Order model
-        if ($orderId instanceof Order) {
-            $orderId = (int)$orderId->order_id;
+        if ($order instanceof Order) {
+            $order = (int)$order->order_id;
         }
 
         return new InvoiceDto(
-            customer: $customerModel,
+            customer: $customer,
             invoiceIssueDate: $invoiceIssueDate,
             invoiceDueDate: $invoiceDueDate,
             invoiceOrdersFrom: $invoiceOrdersFrom,
@@ -109,7 +109,7 @@ class InvoiceDto
             invoiceStatus: $invoiceStatus,
             invoiceNumber: $invoiceNumber,
             invoiceName: $invoiceName,
-            orderId: $orderId);
+            orderId: $order);
     }
 
     /**

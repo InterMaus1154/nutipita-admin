@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\DataTransferObjects\InvoiceDto;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -12,6 +13,9 @@ use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * Create an invoice from multiple orders for a customer
+ */
 class CreateInvoiceFromOrder extends Component
 {
     use WithPagination;
@@ -52,12 +56,14 @@ class CreateInvoiceFromOrder extends Component
 
         DB::beginTransaction();
         try {
-            $invoice = $invoiceService->generateInvoice(
+            $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
-                invoiceFrom: $this->due_from ?? null,
-                invoiceTo: $this->due_to ?? null,
-                issueDate: $this->invoice_issue_date,
-                dueDate: $this->invoice_due_date);
+                invoiceIssueDate: $this->invoice_issue_date,
+                invoiceDueDate: $this->invoice_due_date,
+                invoiceOrdersFrom: $this->due_from,
+                invoiceOrdersTo: $this->due_to
+            );
+            $invoice = $invoiceService->generateInvoice($invoiceDto);
             $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders(collect($this->ordersAll), $invoice);
             $invoicePdf->save($invoice->invoice_path, 'local');
             session()->flash('success', 'Invoice created successfully!');

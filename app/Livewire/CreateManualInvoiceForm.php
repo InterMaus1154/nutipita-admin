@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\DataTransferObjects\InvoiceDto;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -75,19 +76,22 @@ class CreateManualInvoiceForm extends Component
         DB::beginTransaction();
         try {
             // create invoice record
-            $invoice = $invoiceService->generateInvoice(
+            $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
-                invoiceFrom: $this->due_from,
-                invoiceTo: $this->due_to,
-                invoiceNumber: $this->invoice_number,
-                issueDate: $this->invoice_issue_date,
-                dueDate: $this->invoice_due_date);
+                invoiceIssueDate: $this->invoice_issue_date,
+                invoiceDueDate: $this->invoice_due_date,
+                invoiceOrdersFrom: $this->due_from,
+                invoiceOrdersTo: $this->due_to,
+                invoiceNumber: $this->invoice_number
+            );
+            $invoice = $invoiceService->generateInvoice($invoiceDto);
 
             // prepare products
             $selectedProducts = collect($this->invoiceProducts)
                 ->filter(function ($qty) {
                     return $qty > 0;
                 });
+            // do not create invoice if all products are empty (0 qty)
             if ($selectedProducts->isEmpty()) {
                 session()->flash('error', 'All products are empty!');
                 return;
@@ -103,6 +107,8 @@ class CreateManualInvoiceForm extends Component
                     'total_quantity' => $qty
                 ];
             })->values()->all();
+
+            // generate invoice pdf
             $pdf = $invoiceService->generateInvoiceDocumentFromProducts($selectedProducts, $invoice);
             $pdf->save($invoice->invoice_path, 'local');
             session()->flash('success', 'Invoice created successfully!');
