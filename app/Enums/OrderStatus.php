@@ -14,6 +14,11 @@ enum OrderStatus: string
     case R_INVALIDATED = "invalidated";
     case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED_ORDER_STATUS_FROM_ENUM";
 
+    /**
+     * Returns an enum value if there is a matching case
+     * @param string $name
+     * @return string
+     */
     public static function fromName(string $name): string
     {
         foreach (self::cases() as $case) {
