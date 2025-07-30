@@ -226,5 +226,15 @@ class InvoiceDto
         return $this->invoiceName;
     }
 
+    /**
+     * The id of the order to which this invoice might belong.
+     * Only in case of single invoice generation from a single order
+     * @return int|null
+     */
+    public function orderId(): int|null
+    {
+        return $this->orderId;
+    }
+
 
 }
