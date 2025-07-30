@@ -47,6 +47,7 @@
             </div>
         @endif
     </div>
+    {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
             {{$orders->links()}}
@@ -122,7 +123,8 @@
                                 {{number_format($orderProduct->pivot->product_qty)}} x
                                 £{{force3Digit($orderProduct->pivot->order_product_unit_price)}}
                                 <br>
-                                @formatMoneyPound($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
+                                @formatMoneyPound($orderProduct->pivot->product_qty *
+                                $orderProduct->pivot->order_product_unit_price)
                             @else
                                 0
                             @endif
@@ -137,14 +139,15 @@
                     <x-table.data>
                         <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                         <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
-                        {{--                                    @if(isset($onOrderIndex) && $onOrderIndex)--}}
-                        {{--                                        <flux:link wire:confirm="Are you sure you want to delete this order?"--}}
-                        {{--                                            wire:click="delete({{$order->order_id}})"--}}
-                        {{--                                        >Delete</flux:link>--}}
-                        {{--                                    @endif--}}
-                        <flux:link href="{{route('invoices.create-single', compact('order'))}}">Generate
-                            Invoice
-                        </flux:link>
+                        @unless($order->invoice)
+                            <flux:link href="{{route('invoices.create-single', compact('order'))}}">
+                                Generate Invoice
+                            </flux:link>
+                        @else
+                            <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">Download Invoice</flux:link>
+                        @endunless
+
+
                     </x-table.data>
                 </x-table.row>
             @empty
@@ -154,12 +157,16 @@
             @endforelse
         </x-table.body>
     </x-table.table>
+    {{--bottom pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
             {{$orders->links()}}
         </div>
     @endif
     <script>
+        /*
+            Control the visibility of summary boxes
+         */
         const showSummaryBtn = document.querySelector("#showSummaryBtn");
         const summaryContainer = document.querySelector("#summaryContainer");
 
@@ -167,7 +174,7 @@
             summaryContainer.classList.toggle("hidden");
             if (summaryContainer.classList.contains('hidden')) {
                 showSummaryBtn.innerText = "Show Summaries";
-            }else{
+            } else {
                 showSummaryBtn.innerText = "Hide Summaries";
             }
         });

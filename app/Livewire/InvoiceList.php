@@ -41,6 +41,7 @@ class InvoiceList extends Component
             Storage::disk('local')->delete($invoice->invoice_path);
             $invoice->delete();
             DB::commit();
+            session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
         }catch (\Exception $e){
             DB::rollBack();
             Log::error($e->getMessage());

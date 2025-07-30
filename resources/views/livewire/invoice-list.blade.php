@@ -1,4 +1,6 @@
 <div class="space-y-4">
+    <x-success />
+    <x-error />
     <x-table.table>
         <x-table.head>
                 <x-table.header>
@@ -77,7 +79,7 @@
                     @endif
                     <flux:link class="cursor-pointer"
                                wire:click="delete({{$invoice->invoice_id}})"
-                               wire:confirm="Are you sure to delete this invoice?"
+                               wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}?"
                     >Delete
                     </flux:link>
                 </x-table.data>
