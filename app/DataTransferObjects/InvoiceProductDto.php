@@ -22,7 +22,7 @@ final readonly class InvoiceProductDto
     public static function from(Invoice|int|string $invoice,
                                 Product|int|string $product,
                                 int                $productQty,
-                                float              $productUnitPrice): InvoiceProductDto
+                                float|string              $productUnitPrice): InvoiceProductDto
     {
         $invoice = ModelResolver::resolve($invoice, Invoice::class);
         $product = ModelResolver::resolve($product, Product::class);
@@ -34,6 +34,10 @@ final readonly class InvoiceProductDto
 
         if ($productQty < 1) {
             throw new \InvalidArgumentException("Product quantity cannot be less than 1!", 422);
+        }
+
+        if(is_string($productUnitPrice)){
+            $productUnitPrice = (float)$productUnitPrice;
         }
 
         return new InvoiceProductDto(

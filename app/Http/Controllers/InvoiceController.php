@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\InvoiceDto;
+use App\DataTransferObjects\InvoiceProductDto;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -31,15 +32,34 @@ class InvoiceController extends Controller
         $order->loadMissing('customer', 'products');
         DB::beginTransaction();
         try {
+            // create invoice
             $invoiceDto = InvoiceDto::from(
                 customer: $order->customer,
                 invoiceOrdersFrom: $order->order_due_at,
                 invoiceOrdersTo: $order->order_due_at,
                 order: $order
             );
+
             $invoice = $invoiceService->generateInvoice($invoiceDto);
-            $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
+
+            // generate DTOs from order products
+            $invoiceProductDTOs = $invoiceService->generateInvoiceProductDTOs($invoice, $order->products);
+
+            // create invoice product records from dto
+            $invoiceProductDTOs->each(function (InvoiceProductDto $invoiceProductDto) {
+                $invoiceProductDto->invoice()->products()->create([
+                    'product_id' => $invoiceProductDto->product()->product_id,
+                    'product_qty' => $invoiceProductDto->productQty(),
+                    'product_unit_price' => $invoiceProductDto->productUnitPrice()
+                ]);
+            });
+
+            $pdf = $invoiceService->generateInvoicePdfFromDtos($invoiceProductDTOs);
             $pdf->save($invoice->invoice_path, 'local');
+
+            // generate invoice pdf
+//            $pdf = $invoiceService->generateInvoiceDocumentFromOrders(collect([$order]), $invoice);
+//            $pdf->save($invoice->invoice_path, 'local');
             DB::commit();
             return redirect()->route('invoices.download', compact('invoice'));
         } catch (\Exception $e) {
