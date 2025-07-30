@@ -79,7 +79,7 @@
                     @endif
                     <flux:link class="cursor-pointer"
                                wire:click="delete({{$invoice->invoice_id}})"
-                               wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}?"
+                               wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"
                     >Delete
                     </flux:link>
                 </x-table.data>
