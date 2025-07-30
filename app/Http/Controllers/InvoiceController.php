@@ -66,8 +66,12 @@ class InvoiceController extends Controller
      */
     public function download(Invoice $invoice)
     {
+        $filename = 'INV-'.$invoice->invoice_number.'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
-        return response()->download($path, 'INV-'.$invoice->invoice_number.'.pdf');
+        return response()->download($path, 'INV-'.$invoice->invoice_number.'.pdf', [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => "attachment; filename=$filename"
+        ]);
     }
 
     /*
