@@ -8,13 +8,12 @@ use App\Helpers\Format;
 if (!function_exists('dayDate')) {
     /**
      * Returns date in dayName/day/month/year format
-     * @param mixed $date
+     * @param Carbon|string $dateInput
      * @return string
      */
-    function dayDate(mixed $date): string
+    function dayDate(Carbon|string $dateInput): string
     {
-        $parsedDate = Carbon::parse($date);
-        return Str::limit($parsedDate->dayName, 3, '') . '/' . $parsedDate->format('d/m/Y');
+        return Format::dayDate($dateInput);
     }
 }
 

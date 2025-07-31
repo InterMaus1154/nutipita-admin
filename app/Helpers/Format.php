@@ -3,13 +3,19 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 final class Format
 {
-
-    public static function dayDate($input)
+    /**
+     * Returns date in dayName/day/month/year format
+     * @param Carbon|string $dateInput
+     * @return string
+     */
+    public static function dayDate(Carbon|string $dateInput): string
     {
-
+        $date = self::dateToCarbon($dateInput, "Day Date", false);
+        return Str::limit($date->dayName, 3, ''). '/' . $date->format('d/m/Y');
     }
 
     /**
