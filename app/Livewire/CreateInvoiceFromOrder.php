@@ -44,6 +44,11 @@ class CreateInvoiceFromOrder extends Component
     // generate invoice
     public function submit(InvoiceService $invoiceService)
     {
+        if(collect($this->ordersAll)->isEmpty()){
+            session()->flash('error', 'Invoice cannot be created with 0 orders!');
+            return;
+        }
+
         $this->validate([
             'customer_id' => 'required',
             'due_from' => 'nullable',
@@ -56,6 +61,7 @@ class CreateInvoiceFromOrder extends Component
 
         DB::beginTransaction();
         try {
+            // create invoice record
             $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
                 invoiceIssueDate: $this->invoice_issue_date,
@@ -64,6 +70,9 @@ class CreateInvoiceFromOrder extends Component
                 invoiceOrdersTo: $this->due_to
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
+
+
+
             $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders(collect($this->ordersAll), $invoice);
             $invoicePdf->save($invoice->invoice_path, 'local');
             session()->flash('success', 'Invoice created successfully!');
