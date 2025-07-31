@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\DataTransferObjects\InvoiceDto;
+use App\DataTransferObjects\InvoiceProductDto;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -44,7 +46,7 @@ class CreateInvoiceFromOrder extends Component
     // generate invoice
     public function submit(InvoiceService $invoiceService)
     {
-        if(collect($this->ordersAll)->isEmpty()){
+        if (collect($this->ordersAll)->isEmpty()) {
             session()->flash('error', 'Invoice cannot be created with 0 orders!');
             return;
         }
@@ -71,10 +73,31 @@ class CreateInvoiceFromOrder extends Component
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
 
+            // extract products from orders
+            $products = collect();
+            foreach ($this->ordersAll as $order) {
+                $order->loadMissing('products');
+                $products = $products->merge($order->products);
+            }
+            // group products by product ids, then create invoice product dtos
+            $invoiceProductDtos = $products
+                ->groupBy('product_id')
+                ->map(function (Collection $items, int $productId) use (&$invoice) {
+                    $unitPrice = $items->first()->setCurrentCustomer($this->customer_id)->price;
+                    $totalQty = $items->sum('pivot.product_qty');
+                    return InvoiceProductDto::from(
+                        invoice: $invoice,
+                        product: $productId,
+                        productQty: $totalQty,
+                        productUnitPrice: $unitPrice
+                    );
+                });
 
+            // create invoice pdf
+            $invoiceService
+                ->generateInvoicePdfFromDtos($invoiceProductDtos)
+                ->save($invoice->invoice_path, 'local');
 
-            $invoicePdf = $invoiceService->generateInvoiceDocumentFromOrders(collect($this->ordersAll), $invoice);
-            $invoicePdf->save($invoice->invoice_path, 'local');
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
             DB::commit();
