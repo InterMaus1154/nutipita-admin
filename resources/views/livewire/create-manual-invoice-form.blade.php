@@ -60,20 +60,22 @@
             </div>
         </div>
         @if($orders->isNotEmpty())
-            @include('livewire.order-list')
+            @include('livewire.order-list', compact('orders'))
             <h3 class="font-bold">Order Total Info</h3>
             <div class="flex gap-4 flex-wrap">
                 <div
                     class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
                     <span>Total Pitas</span>
-                    <span>{{$totalPita}}</span>
+                    <span>@amountFormat($totalPita)</span>
                 </div>
                 @foreach($productTotals as $productName => $productTotal)
-                    <div
-                        class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
-                        <span>{{$productName}}</span>
-                        <span>{{$productTotal}}</span>
-                    </div>
+                    @if($productTotal > 0)
+                        <div
+                            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
+                            <span>{{$productName}}</span>
+                            <span>@amountFormat($productTotal)</span>
+                        </div>
+                    @endif
                 @endforeach
             </div>
         @endif

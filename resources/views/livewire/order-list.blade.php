@@ -2,55 +2,12 @@
 @use(Illuminate\Support\Facades\Request)
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @props(['withSummaries' => false, 'withIncome' => false, 'products'])
-<div
-    class="space-y-4">
-    @if(isset($onOrderIndex) && $onOrderIndex)
-        <flux:button id="showSummaryBtn">Show Summaries</flux:button>
-    @endif
-    <div class="hidden" id="summaryContainer">
-        {{--condition to render summary boxes or not--}}
-        {{--render only if set to true, and there is a full eloquent collection orders, not paginated version--}}
-        @if($withSummaries && (isset($ordersAll) || $orders instanceof EloquentCollection))
-            @php
-                $summaryOrders = $ordersAll ?? $orders;
-                $totalIncome = 0;
-                $totalPita = 0;
-                $productTotals = [];
-                foreach ($summaryOrders as $order) {
-
-                    // calculate total income for all orders
-                    $totalIncome += $order->total_price;
-
-                    $totalPita += $order->total_pita;
-
-                    // calculate product quantity total for each product
-                    foreach ($products as $product) {
-                        if(isset($productTotals[$product->product_name])){
-                            $productTotals[$product->product_name] += $order->getTotalOfProduct($product);
-                        }else{
-                            $productTotals[$product->product_name] = $order->getTotalOfProduct($product);
-                        }
-                    }
-                }
-            @endphp
-            <div class="flex gap-6 flex-wrap">
-                <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="numberFormat($ordersAll->count())"/>
-                <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="numberFormat($totalPita)"/>
-                @if($withIncome)
-                    <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>
-                @endif
-                @foreach($productTotals as $productName => $productQty)
-                    @unless(empty($productQty))
-                        <x-data-box :dataBoxHeader="$productName" :dataBoxValue="numberFormat($productQty)"/>
-                    @endunless
-                @endforeach
-            </div>
-        @endif
-    </div>
+<div class="space-y-4">
+    <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"/>
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
-            {{$orders->links()}}
+            {{$orders->links(data: ['scrollTo' => false])}}
         </div>
     @endif
     <x-table.table>
@@ -144,7 +101,9 @@
                                 Generate Invoice
                             </flux:link>
                         @else
-                            <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">Download Invoice</flux:link>
+                            <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">Download
+                                Invoice
+                            </flux:link>
                         @endunless
 
 
@@ -160,23 +119,8 @@
     {{--bottom pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
-            {{$orders->links()}}
+            {{$orders->links(data: ['scrollTo' => false])}}
         </div>
     @endif
-    <script>
-        /*
-            Control the visibility of summary boxes
-         */
-        const showSummaryBtn = document.querySelector("#showSummaryBtn");
-        const summaryContainer = document.querySelector("#summaryContainer");
 
-        showSummaryBtn.addEventListener("click", () => {
-            summaryContainer.classList.toggle("hidden");
-            if (summaryContainer.classList.contains('hidden')) {
-                showSummaryBtn.innerText = "Show Summaries";
-            } else {
-                showSummaryBtn.innerText = "Hide Summaries";
-            }
-        });
-    </script>
 </div>

@@ -28,8 +28,15 @@ class OrderList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    public function mount()
+    public function mount(array $filters = [])
     {
+        $this->filters = array_merge([
+            'customer_id' => null,
+            'due_from' => null,
+            'due_to' => null,
+            'status' => null,
+            'cancelled_order_hidden' => true
+        ], $filters);
         $this->isOnIndex = Route::is('orders.index');
     }
 
@@ -49,7 +56,7 @@ class OrderList extends Component
     public function applyFilter(array $filters)
     {
         $this->resetPage();
-        $this->filters = $filters;
+        $this->filters = array_merge($this->filters, $filters);
     }
 
     public function render()
@@ -85,7 +92,7 @@ class OrderList extends Component
             'onOrderIndex' => $this->isOnIndex,
             'withSummaries' => true,
             'withIncome' => true,
-            'ordersAll' => $query->nonCancelled()->get()
+            'ordersAll' => $query->nonCancelled()->get() // cancelled or invalidated orders will not contribute to the summaries
         ]);
     }
 }

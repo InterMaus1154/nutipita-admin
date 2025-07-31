@@ -78,7 +78,7 @@
         @if(collect($customer->orders)->isEmpty())
             <em>This customer hasn't placed an order yet!</em>
         @else
-            @include('livewire.order-list')
+            <livewire:order-list :filters="['customer_id' => $customer->customer_id, 'cancelled_order_hidden' => false]" />
         @endif
     </x-page-section>
 </x-flux-layout>
