@@ -93,6 +93,8 @@ class CreateInvoiceFromOrder extends Component
                     );
                 });
 
+            $invoiceService->generateInvoiceProductRecords($invoiceProductDtos);
+
             // create invoice pdf
             $invoiceService
                 ->generateInvoicePdfFromDtos($invoiceProductDtos)

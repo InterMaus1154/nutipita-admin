@@ -43,72 +43,6 @@ class InvoiceService
     }
 
     /**
-     * @param Collection $orders
-     * @param Invoice $invoice
-     * @return \Barryvdh\DomPDF\PDF
-     */
-    public function generateInvoiceDocumentFromOrders(Collection $orders, Invoice $invoice): \Barryvdh\DomPDF\PDF
-    {
-        $totalPrice = 0;
-        $allProducts = collect();
-        $customer = $invoice->customer;
-        foreach ($orders as $order) {
-            $totalPrice += $order->total_price;
-            $allProducts = $allProducts->merge($order->products);
-        }
-
-        $invoice->update([
-            'invoice_total' => $totalPrice
-        ]);
-
-        $groupedProducts = $allProducts
-            ->groupBy('product_id')
-            ->map(function ($items, $productId) use ($customer) {
-                $unit_price = $items->first()->setCurrentCustomer($customer)->price;
-                return [
-                    'product_id' => $productId,
-                    'product_weight_g' => $items->first()->product_weight_g,
-                    'product_name' => $items->first()->product_name,
-                    'total_quantity' => $items->sum('pivot.product_qty'),
-                    'unit_price' => $unit_price
-                ];
-            });
-
-        return $this->generateInvoicePdf([
-            'fromBulk' => true,
-            'customer' => $customer,
-            'products' => $groupedProducts,
-            'totalPrice' => $totalPrice,
-            'invoice' => $invoice
-        ]);
-    }
-
-    /**
-     * @param array $products
-     * @param Invoice $invoice
-     * @return \Barryvdh\DomPDF\PDF
-     */
-    public function generateInvoiceDocumentFromProducts(array $products, Invoice $invoice): \Barryvdh\DomPDF\PDF
-    {
-        $totalPrice = 0;
-        foreach ($products as $product) {
-            $totalPrice += $product['unit_price'] * $product['total_quantity'];
-        }
-        $invoice->update([
-            'invoice_total' => $totalPrice
-        ]);
-
-        $customer = $invoice->loadMissing('customer')->customer;
-        return $this->generateInvoicePdf([
-            'fromBulk' => true,
-            'totalPrice' => $totalPrice,
-            'customer' => $customer,
-            'products' => $products,
-            'invoice' => $invoice
-        ]);
-    }
-
-    /**
      * Returns a collection of InvoiceProductDto
      * $products is a type of Collection of Product models
      * @param Invoice $invoice
@@ -128,14 +62,6 @@ class InvoiceService
         }
         return $invoiceProductDtos;
     }
-
-//return [
-//'product_id' => $productId,
-//'product_weight_g' => $items->first()->product_weight_g,
-//'product_name' => $items->first()->product_name,
-//'total_quantity' => $items->sum('pivot.product_qty'),
-//'unit_price' => $unit_price
-//];
 
     /**
      * Generate invoice_products record from a collection of invoice product dtos
