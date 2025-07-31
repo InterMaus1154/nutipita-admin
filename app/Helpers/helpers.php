@@ -1,8 +1,9 @@
 <?php
 // custom helpers
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Helpers\Format;
 
 if (!function_exists('dayDate')) {
     /**
@@ -14,6 +15,20 @@ if (!function_exists('dayDate')) {
     {
         $parsedDate = Carbon::parse($date);
         return Str::limit($parsedDate->dayName, 3, '') . '/' . $parsedDate->format('d/m/Y');
+    }
+}
+
+if (!function_exists('dateToCarbon')) {
+    /**
+     * Takes an input, and tries to return as a Carbon date instance
+     * @param Carbon|string|null $inputDate
+     * @param string $fieldName
+     * @param bool $nullable
+     * @return Carbon|null
+     */
+    function dateToCarbon(Carbon|string|null $inputDate, string $fieldName, bool $nullable = false): Carbon|null
+    {
+        return Format::dateToCarbon($inputDate, $fieldName, $nullable);
     }
 }
 

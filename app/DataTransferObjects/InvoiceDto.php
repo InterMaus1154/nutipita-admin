@@ -3,6 +3,7 @@
 namespace App\DataTransferObjects;
 
 use App\Enums\InvoiceStatus;
+use App\Helpers\Format;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -62,8 +63,8 @@ final readonly class InvoiceDto
         }
 
         // parse date to Carbon instances
-        $invoiceIssueDate = self::parseDate($invoiceIssueDate, 'Invoice issue date', true);
-        $invoiceDueDate = self::parseDate($invoiceDueDate, 'Invoice due date', true);
+        $invoiceIssueDate = Format::dateToCarbon($invoiceIssueDate, 'Invoice issue date', true);
+        $invoiceDueDate = Format::dateToCarbon($invoiceDueDate, 'Invoice due date', true);
 
         // set default issue date to today
         if (is_null($invoiceIssueDate)) {
@@ -75,8 +76,8 @@ final readonly class InvoiceDto
             $invoiceDueDate = now()->addDay();
         }
 
-        $invoiceOrdersFrom = self::parseDate($invoiceOrdersFrom, 'Invoice orders from', true);
-        $invoiceOrdersTo = self::parseDate($invoiceOrdersTo, 'Invoice orders to', true);
+        $invoiceOrdersFrom = Format::dateToCarbon($invoiceOrdersFrom, 'Invoice orders from', true);
+        $invoiceOrdersTo = Format::dateToCarbon($invoiceOrdersTo, 'Invoice orders to', true);
 
         // if provided invoice number is null, generate the next available number
         if (is_null($invoiceNumber)) {
@@ -115,38 +116,9 @@ final readonly class InvoiceDto
             orderId: $order);
     }
 
-    /**
-     * Parse date into Carbon instances
-     * @param Carbon|string|null $inputDate
-     * @param string $fieldName
-     * @param bool $nullable
-     * @return Carbon|null
-     */
-    private static function parseDate(Carbon|string|null $inputDate, string $fieldName, bool $nullable = false): Carbon|null
-    {
-
-        // if Carbon by default, simply return it
-        if ($inputDate instanceof Carbon) {
-            return $inputDate;
-        }
-
-        // if null is provided AND null is allowed, return null
-        if (is_null($inputDate) && $nullable) {
-            return null;
-        }
-
-        try {
-            return Carbon::parse($inputDate);
-        } catch (\Exception $e) {
-            // if invalid format is provided, which cannot be converted
-            throw new \InvalidArgumentException("Invalid date format for {$fieldName}", 422);
-        }
-    }
-
     /*
      * Make private properties accessible via function call
      */
-
     /**
      * Customer, to which the invoice belongs to.
      * Returns a customer model instance
