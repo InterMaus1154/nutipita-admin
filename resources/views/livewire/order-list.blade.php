@@ -4,7 +4,7 @@
 @props(['withSummaryData' => true, 'products'])
 <div class="space-y-4">
     @if($withSummaryData)
-        <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"/>
+        <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true" :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)

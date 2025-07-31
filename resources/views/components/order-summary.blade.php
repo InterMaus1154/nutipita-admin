@@ -1,7 +1,9 @@
 @props(['products', 'orders', 'withIncome'])
 <div class="space-y-4">
     <flux:button id="showSummaryBtn">Show Summaries</flux:button>
-    <div class="hidden" id="summaryContainer">
+    <div @class([
+    'hidden' => !$visibleByDefault
+]) id="summaryContainer">
         {{--condition to render summary boxes or not--}}
         {{--render only if set to true, and there is a full eloquent collection orders, not paginated version--}}
         @php
@@ -26,11 +28,12 @@
             }
         @endphp
         <div class="flex gap-6 flex-wrap">
-            <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="amountFormat(collect($orders)->count())"/>
-            <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="amountFormat($totalPita)"/>
             @if($withIncome)
                 <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>
             @endif
+            <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="amountFormat(collect($orders)->count())"/>
+            <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="amountFormat($totalPita)"/>
+
             @foreach($productTotals as $productName => $productQty)
                 @unless(empty($productQty))
                     <x-data-box :dataBoxHeader="$productName" :dataBoxValue="amountFormat($productQty)"/>
@@ -45,6 +48,12 @@
              */
             const showSummaryBtn = document.querySelector("#showSummaryBtn");
             const summaryContainer = document.querySelector("#summaryContainer");
+
+            if (summaryContainer.classList.contains('hidden')) {
+                showSummaryBtn.innerText = "Show Summaries";
+            } else {
+                showSummaryBtn.innerText = "Hide Summaries";
+            }
 
             showSummaryBtn.addEventListener("click", () => {
                 summaryContainer.classList.toggle("hidden");

@@ -14,8 +14,6 @@ class AdminController extends Controller
         $products = Product::select(['product_id', 'product_name'])->get();
         $orders = Order::nonCancelled()->with('products')->where('order_due_at', now()->addDay()->toDateString())->get();
 
-        $dueDate = now()->addDay()->toDateString();
-
         // calculate total income for the day
         $totalDayIncome = $orders->sum('total_price');
 
@@ -35,7 +33,7 @@ class AdminController extends Controller
             $totalDayPita += $total;
         }
 
-        return compact('orders', 'products', 'totalDayIncome', 'productTotals', 'totalDayPita', 'dueDate');
+        return compact('orders', 'products', 'totalDayIncome', 'productTotals', 'totalDayPita');
     }
 
     /**
@@ -43,7 +41,8 @@ class AdminController extends Controller
      */
     public function showDashboard()
     {
-        return view('admin.index', $this->getTodaysOrdersData());
+        $dueDate = now()->addDay()->toDateString();
+        return view('admin.index', array_merge($this->getTodaysOrdersData(), compact('dueDate')));
     }
 
     public function createOrderTotalPdf()

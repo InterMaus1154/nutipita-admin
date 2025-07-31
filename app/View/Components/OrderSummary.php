@@ -13,7 +13,7 @@ class OrderSummary extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $orders, public bool $withIncome = false, public $products = null)
+    public function __construct(public $orders, public bool $withIncome = false, public $products = null, public bool $visibleByDefault = false)
     {
         if(is_null($this->products)){
             $this->products = Product::select(['product_id', 'product_name'])->get();
