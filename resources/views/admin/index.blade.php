@@ -11,10 +11,10 @@
         @else
             <flux:link href="{{route('today.order.pdf')}}">Download total order PDF</flux:link>
             <div class="flex gap-6 flex-wrap">
-                <x-data-box dataBoxHeader="Daily Income" :dataBoxValue="formatMoneyCurrency($totalDayIncome)"/>
-                <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="number_format($totalDayPita)"/>
+                <x-data-box dataBoxHeader="Daily Income" :dataBoxValue="moneyFormat($totalDayIncome)"/>
+                <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="amountFormat($totalDayPita)"/>
                 @foreach($productTotals as $key => $value)
-                    <x-data-box :dataBoxHeader="$key" :dataBoxValue="number_format($value)"/>
+                    <x-data-box :dataBoxHeader="$key" :dataBoxValue="amountFormat($value)"/>
                 @endforeach
             </div>
             @include('livewire.order-list')

@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="flex gap-4 flex-wrap">
-        <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="number_format($orderCount)"/>
-        <x-data-box dataBoxHeader="Total Income" :dataBoxValue=" formatMoneyCurrency($totalIncome)"/>
+        <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="numberFormat($orderCount, 0)"/>
+        <x-data-box dataBoxHeader="Total Income" :dataBoxValue=" moneyFormat($totalIncome)"/>
     </div>
 </div>

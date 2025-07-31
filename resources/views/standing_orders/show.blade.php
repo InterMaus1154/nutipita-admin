@@ -70,7 +70,7 @@
                                                     $qty =  $dayProducts->where('product_id', $product->product_id)->first()->product_qty;
                                                 }
                                             @endphp
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$qty}}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">@amountFormat($qty)</td>
                                         @endforeach
                                     @else
                                         {{--If there is no day = no products for that day--}}

@@ -84,7 +84,8 @@
                 <div class="max-w-sm">
                     <label
                         for="invoiceProducts[{{$product->product_id}}]"
-                        class="block text-sm font-medium mb-2 dark:text-white">{{$product->product_name}} {{$product->price}}</label>
+                        class="block text-sm font-medium mb-2 dark:text-white">
+                        {{$product->product_name}} @unitPriceFormat($product->price)</label>
                     <input type="number" placeholder="Quantity" value="0"
                            id="invoiceProducts[{{$product->product_id}}]"
                            name="invoiceProducts[{{$product->product_id}}]"

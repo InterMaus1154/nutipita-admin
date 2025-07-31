@@ -286,10 +286,10 @@
                             </td>
                             <td class="col-amount">
                             <span
-                                class="product-data-name">@formatMoneyPound($product['total_quantity'] * $product['unit_price'])</span>
+                                class="product-data-name">@moneyFormat($product['total_quantity'] * $product['unit_price'])</span>
                                 <br>
                                 <span
-                                    class="product-data-desc">{{number_format($product['total_quantity'])}} x £{{force3Digit($product['unit_price'])}} </span>
+                                    class="product-data-desc">{{number_format($product['total_quantity'])}} x @unitPriceFormat($product['unit_price']) </span>
                             </td>
                         </tr>
                         @php($i++)
@@ -307,11 +307,11 @@
                             <td class="col-amount">
                             <span
                                 class="product-data-name">
-                                @formatMoneyPound($product->pivot->product_qty * $product->pivot->order_product_unit_price)
+                                @moneyFormat($product->pivot->product_qty * $product->pivot->order_product_unit_price)
                             </span>
                                 <br>
                                 <span
-                                    class="product-data-desc">{{number_format($product->pivot->product_qty)}} x £{{force3Digit($product->price)}}</span>
+                                    class="product-data-desc">{{number_format($product->pivot->product_qty)}} x @unitPriceFormat($product->price)</span>
                             </td>
                         </tr>
                         @php($i++)
@@ -329,7 +329,7 @@
                     <td class="footer-right text-right">
                         <strong style="font-size: 1.25rem;">
                             <span>Total:</span>
-                            @formatMoneyPound($totalPrice)
+                            @moneyFormat($totalPrice)
                         </strong>
                     </td>
                 </tr>

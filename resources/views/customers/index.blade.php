@@ -62,7 +62,7 @@
                             @endphp
                             <x-table.data>
                                 @if($product->price > 0)
-                                    @formatMoneyPound($product->price)
+                                    @unitPriceFormat($product->price)
                                 @endif
                             </x-table.data>
                         @endforeach

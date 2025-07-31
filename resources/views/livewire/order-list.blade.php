@@ -34,14 +34,14 @@
                 }
             @endphp
             <div class="flex gap-6 flex-wrap">
-                <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="number_format($ordersAll->count())"/>
-                <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="number_format($totalPita)"/>
+                <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="numberFormat($ordersAll->count())"/>
+                <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="numberFormat($totalPita)"/>
                 @if($withIncome)
-                    <x-data-box dataBoxHeader="Total Income" :dataBoxValue="formatMoneyCurrency($totalIncome)"/>
+                    <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>
                 @endif
                 @foreach($productTotals as $productName => $productQty)
                     @unless(empty($productQty))
-                        <x-data-box :dataBoxHeader="$productName" :dataBoxValue="number_format($productQty)"/>
+                        <x-data-box :dataBoxHeader="$productName" :dataBoxValue="numberFormat($productQty)"/>
                     @endunless
                 @endforeach
             </div>
@@ -120,10 +120,10 @@
                         @endphp
                         <x-table.data>
                             @if($orderProduct)
-                                {{number_format($orderProduct->pivot->product_qty)}} x
-                                £{{force3Digit($orderProduct->pivot->order_product_unit_price)}}
+                                @amountFormat($orderProduct->pivot->product_qty) x
+                                @unitPriceFormat($orderProduct->pivot->order_product_unit_price)
                                 <br>
-                                @formatMoneyPound($orderProduct->pivot->product_qty *
+                                @moneyFormat($orderProduct->pivot->product_qty *
                                 $orderProduct->pivot->order_product_unit_price)
                             @else
                                 0
@@ -131,10 +131,10 @@
                         </x-table.data>
                     @endforeach
                     <x-table.data>
-                        {{number_format($order->total_pita)}}
+                        @amountFormat($order->total_pita)
                     </x-table.data>
                     <x-table.data>
-                        @formatMoneyPound($order->total_price)
+                        @moneyFormat($order->total_price)
                     </x-table.data>
                     <x-table.data>
                         <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
