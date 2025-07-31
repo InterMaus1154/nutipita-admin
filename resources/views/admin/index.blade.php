@@ -17,7 +17,7 @@
                     <x-data-box :dataBoxHeader="$key" :dataBoxValue="amountFormat($value)"/>
                 @endforeach
             </div>
-            @include('livewire.order-list')
+            <livewire:order-list :withSummaryData="false" :filters="['due_from'=>$dueDate, 'due_to' => $dueDate]"/>
         @endif
     </x-page-section>
 </x-flux-layout>

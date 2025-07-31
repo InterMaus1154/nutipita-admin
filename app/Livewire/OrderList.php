@@ -25,11 +25,13 @@ class OrderList extends Component
     ];
 
     public bool $isOnIndex = true;
+    public bool $withSummaryData = true;
 
     protected $paginationTheme = 'tailwind';
 
-    public function mount(array $filters = [])
+    public function mount(bool $withSummaryData = true, array $filters = [])
     {
+        $this->withSummaryData = $withSummaryData;
         $this->filters = array_merge([
             'customer_id' => null,
             'due_from' => null,
