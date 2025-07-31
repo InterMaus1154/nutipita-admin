@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\DataTransferObjects\InvoiceDto;
+use App\DataTransferObjects\InvoiceProductDto;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -96,21 +97,28 @@ class CreateManualInvoiceForm extends Component
                 session()->flash('error', 'All products are empty!');
                 return;
             }
-            $selectedProducts = $selectedProducts->map(function ($qty, $productId) {
+
+            // create dtos from products
+            $invoiceProductDtos = collect();
+
+            collect($selectedProducts)->each(function (int $qty, int $productId) use (&$invoiceProductDtos, $invoice) {
                 $product = Product::find($productId);
                 $product->setCurrentCustomer($this->customer_id);
-                return [
-                    'product_id' => $productId,
-                    'product_name' => $product->product_name,
-                    'product_weight_g' => $product->product_weight_g,
-                    'unit_price' => $product->price,
-                    'total_quantity' => $qty
-                ];
-            })->values()->all();
+                $invoiceProductDtos->add(InvoiceProductDto::from(
+                    invoice: $invoice,
+                    product: $product,
+                    productQty: $qty,
+                    productUnitPrice: $product->price
+                ));
+            });
 
-            // generate invoice pdf
-            $pdf = $invoiceService->generateInvoiceDocumentFromProducts($selectedProducts, $invoice);
-            $pdf->save($invoice->invoice_path, 'local');
+            $invoiceService->generateInvoiceProductRecords($invoiceProductDtos);
+
+            // generate and save invoice pdf
+            $invoiceService
+                ->generateInvoicePdfFromDtos($invoiceProductDtos)
+                ->save($invoice->invoice_path, 'local');
+
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
             DB::commit();
@@ -131,6 +139,7 @@ class CreateManualInvoiceForm extends Component
         // to show orders, customer and at least one due date must be non-empty
         if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
             $orderQuery = Order::query()
+                ->nonCancelled()
                 ->with('customer:customer_id,customer_name', 'products')
                 ->where('customer_id', $this->customer_id)
                 ->when($this->due_from, function ($builder) {
@@ -145,13 +154,13 @@ class CreateManualInvoiceForm extends Component
             $orders = $orderQuery->paginate(15);
 
             // calculate order totals
-            foreach ($orderQuery->get() as $order){
+            foreach ($orderQuery->get() as $order) {
                 $totalPita += $order->total_pita;
 
                 foreach ($this->products as $product) {
-                    if(isset($productTotals[$product->product_name])){
+                    if (isset($productTotals[$product->product_name])) {
                         $productTotals[$product->product_name] += $order->getTotalOfProduct($product);
-                    }else{
+                    } else {
                         $productTotals[$product->product_name] = $order->getTotalOfProduct($product);
                     }
 

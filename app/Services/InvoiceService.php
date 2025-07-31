@@ -110,6 +110,7 @@ class InvoiceService
 
     /**
      * Returns a collection of InvoiceProductDto
+     * $products is a type of Collection of Product models
      * @param Invoice $invoice
      * @param $products
      * @return Collection
@@ -136,31 +137,47 @@ class InvoiceService
 //'unit_price' => $unit_price
 //];
 
+    /**
+     * Generate invoice_products record from a collection of invoice product dtos
+     * @param Collection $invoiceProductDTOs
+     * @return void
+     */
+    public function generateInvoiceProductRecords(Collection $invoiceProductDTOs): void
+    {
+        // create invoice product records from dto
+        $invoiceProductDTOs->each(function (InvoiceProductDto $invoiceProductDto) {
+            $invoiceProductDto->invoice()->products()->create([
+                'product_id' => $invoiceProductDto->product()->product_id,
+                'product_qty' => $invoiceProductDto->productQty(),
+                'product_unit_price' => $invoiceProductDto->productUnitPrice()
+            ]);
+        });
+    }
 
     public function generateInvoicePdfFromDtos(Collection $invoiceProductDtos)
     {
         $invoiceTotal = 0;
         $productTotals = [];
-        $invoiceProductDtos->each(function(InvoiceProductDto $invoiceProductDto)use(&$invoiceTotal, &$productTotals){
+        $invoiceProductDtos->each(function (InvoiceProductDto $invoiceProductDto) use (&$invoiceTotal, &$productTotals) {
             // calculate total price
             $invoiceTotal += ($invoiceProductDto->productQty() * $invoiceProductDto->productUnitPrice());
 
             // check if product already exists
-            if(!isset($productTotals[$invoiceProductDto->product()->product_id])){
+            if (!isset($productTotals[$invoiceProductDto->product()->product_id])) {
                 // if product doesn't exist yet
                 $productTotals[$invoiceProductDto->product()->product_id]['total_quantity'] = $invoiceProductDto->productQty();
                 $productTotals[$invoiceProductDto->product()->product_id]['unit_price'] = $invoiceProductDto->productUnitPrice();
                 $productTotals[$invoiceProductDto->product()->product_id]['product_id'] = $invoiceProductDto->product()->product_id;
                 $productTotals[$invoiceProductDto->product()->product_id]['product_name'] = $invoiceProductDto->product()->product_name;
                 $productTotals[$invoiceProductDto->product()->product_id]['product_weight_g'] = $invoiceProductDto->product()->product_weight_g;
-            }else{
+            } else {
                 $productTotals[$invoiceProductDto->product()->product_id]['total_quantity'] += $invoiceProductDto->productQty();
             }
         });
 
-        // update total on invoice
+        // update total on invoice record
         $invoiceProductDtos->first()->invoice()->update([
-           'invoice_total' => $invoiceTotal
+            'invoice_total' => $invoiceTotal
         ]);
 
         return $this->generateInvoicePdf([
@@ -170,7 +187,6 @@ class InvoiceService
             'totalPrice' => $invoiceTotal,
             'invoice' => $invoiceProductDtos->first()->invoice()
         ]);
-
     }
 
 }
