@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ModelResolver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,11 +18,7 @@ class Product extends Model
 
     public function setCurrentCustomer(Customer|int|string $customer)
     {
-        if (is_int($customer) || is_string($customer)) {
-            $this->currentCustomer = Customer::find($customer);
-        } else {
-            $this->currentCustomer = $customer;
-        }
+        $this->currentCustomer = ModelResolver::resolve($customer, Customer::class);
         return $this;
     }
 
