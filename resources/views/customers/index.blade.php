@@ -7,7 +7,10 @@
         <x-table.table>
             <x-table.head>
                 <x-table.header>
-                    Name
+                    Business Name
+                </x-table.header>
+                <x-table.header>
+                    Business Owner
                 </x-table.header>
                 <x-table.header>
                     Address
@@ -35,6 +38,9 @@
                         <x-table.data>
                             <flux:link
                                 href="{{route('customers.show', compact('customer'))}}">{{$customer->customer_name}}</flux:link>
+                        </x-table.data>
+                        <x-table.data>
+                            {{$customer->customer_business_owner_name}}
                         </x-table.data>
                         <x-table.data>
                             {{$customer->customer_address_1}}, {{$customer->customer_address_2}}<br>

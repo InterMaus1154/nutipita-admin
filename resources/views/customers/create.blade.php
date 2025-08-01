@@ -11,6 +11,11 @@
                 <label for="customer_name" class="block text-sm font-medium mb-2 dark:text-white">Business Name</label>
                 <input type="text" id="customer_name" name="customer_name" value="{{old('customer_name', '')}}" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
+            {{--business owner name--}}
+            <x-form.form-wrapper>
+                <x-form.form-label id="customer_business_owner_name" text="Business Owner"/>
+                <x-form.form-input type="text" id="customer_business_owner_name" name="customer_business_owner_name" value="{{old('customer_business_owner_name', '')}}" placeholder="Business Owner Name"/>
+            </x-form.form-wrapper>
             {{--Customer address--}}
             <div class="max-w-sm">
                 <label for="customer_address_1" class="block text-sm font-medium mb-2 dark:text-white">Address Line 1</label>

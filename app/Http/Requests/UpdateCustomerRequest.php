@@ -33,7 +33,8 @@ class UpdateCustomerRequest extends FormRequest
             'customer_address_2' => 'nullable|string|max:300',
             'customer_postcode' => 'required|string|max:10',
             'customer_city' => 'required|string|max:100',
-            'customer_country' => 'required|string|max:200'
+            'customer_country' => 'required|string|max:200',
+            'customer_business_owner_name' => 'required|string|max:150'
         ];
     }
 }
