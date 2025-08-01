@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
@@ -23,10 +23,11 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
     // main dashboard
-    Route::get('/', [AdminController::class, 'showDashboard'])->name('admin.view.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('admin.view.dashboard');
+    Route::get('/', fn()=>redirect()->route('admin.view.dashboard'));
 
     // create today order total pdf
-    Route::get('/today-order-pdf', [AdminController::class, 'createOrderTotalPdf'])->name('today.order.pdf');
+    Route::get('/today-order-pdf', [DashboardController::class, 'createOrderTotalPdf'])->name('today.order.pdf');
 
     // routes with customers
     Route::group(['prefix' => 'customers', 'controller' => CustomerController::class], function () {

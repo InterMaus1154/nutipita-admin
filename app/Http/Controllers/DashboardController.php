@@ -7,7 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class AdminController extends Controller
+class DashboardController extends Controller
 {
     private function getTodaysOrdersData(): array
     {
