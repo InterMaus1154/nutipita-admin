@@ -24,7 +24,10 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
     // main dashboard
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('admin.view.dashboard');
-    Route::get('/', fn()=>redirect()->route('admin.view.dashboard'));
+    Route::get('/', fn() => redirect()->route('admin.view.dashboard'));
+
+    Route::get('/dashboard/index', fn() => redirect()->route('admin.view.dashboard'))
+        ->name('dashboard.index');
 
     // create today order total pdf
     Route::get('/today-order-pdf', [DashboardController::class, 'createOrderTotalPdf'])->name('today.order.pdf');
@@ -153,5 +156,5 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     // money route for income filtering
     Route::get('/money', MoneyController::class)->name('money.index');
 
-    require __DIR__.'/errors.php';
+    require __DIR__ . '/errors.php';
 });
