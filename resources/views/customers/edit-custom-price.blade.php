@@ -13,7 +13,11 @@
             @foreach($products as $product)
                 <div class="max-w-sm">
                     <label for="products[{{$product->product_id}}]"
-                           class="block text-sm font-medium mb-2 dark:text-white">{{$product->product_name}}</label>
+                           class="block text-sm font-medium mb-2 dark:text-white">{{$product->product_name}}
+                        <flux:badge>
+                            {{$product->product_weight_g}}g
+                        </flux:badge>
+                        </label>
                     <input type="number"
                            id="products[{{$product->product_id}}]"
                            name="products[{{$product->product_id}}]"

@@ -20,7 +20,7 @@
                 </x-table.header>
                 {{--render products for product unit prices/customer--}}
                 @foreach($products as $product)
-                    <x-table.header>{{$product->product_name}}</x-table.header>
+                    <x-table.header>{{$product->product_name}} {{$product->product_weight_g}}g</x-table.header>
                 @endforeach
                 <x-table.header>
                     Total Orders

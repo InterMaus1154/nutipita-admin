@@ -38,7 +38,7 @@ class CustomerController extends Controller
     {
         $products = Product::query()
             ->with('customPrices')
-            ->select(['product_id', 'product_name'])
+            ->select(['product_id', 'product_name', 'product_weight_g'])
             ->get();
         $customers = Customer::query()
             ->withCount('orders')
@@ -113,7 +113,7 @@ class CustomerController extends Controller
     public function editCustomPrice(Customer $customer): View|RedirectResponse
     {
         $products = Product::query()
-            ->select(['product_id', 'product_name'])
+            ->select(['product_id', 'product_name', 'product_weight_g'])
             ->get()
             ->map(function ($product) use ($customer) {
                 // set customer for each product to show custom prices for current customer
