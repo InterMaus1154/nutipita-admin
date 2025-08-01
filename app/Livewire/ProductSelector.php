@@ -23,7 +23,8 @@ class ProductSelector extends Component
             $products = [];
         } else {
             $products = Product::query()
-                ->select(['product_name', 'product_id'])
+                ->select(['product_name', 'product_id', 'product_weight_g'])
+                ->orderByDesc('product_name')
                 ->get()
                 ->map(fn($p) => $p->setCurrentCustomer(Customer::find($this->customer_id)));
         }
