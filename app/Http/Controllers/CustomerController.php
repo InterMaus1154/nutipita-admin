@@ -42,6 +42,7 @@ class CustomerController extends Controller
             ->get();
         $customers = Customer::query()
             ->withCount('orders')
+            ->orderBy('customer_name', 'asc')
             ->get();
         return view('customers.index', compact('customers', 'products'));
     }
