@@ -9,7 +9,7 @@ use Livewire\Component;
 class OrderFilter extends Component
 {
 
-    public ?int $customer_id = null;
+    public int|string|null $customer_id = null;
     public ?string $due_from = null;
     public ?string $due_to = null;
     public ?string $status = null;

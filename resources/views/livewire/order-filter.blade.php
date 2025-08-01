@@ -1,22 +1,22 @@
 <div class="flex flex-col gap-4 items-start">
-    <div class="max-w-sm">
-        <label for="customer_id" class="block text-sm font-medium mb-2 dark:text-white">Customer</label>
-        <select id="customer_id" wire:model.live="customer_id" class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600">
+    <x-form.form-wrapper>
+        <x-form.form-label id="customer_id" text="Customer"/>
+        <x-form.form-select id="customer_id" wireModelLive="customer_id">
             <option value="">---Select customer---</option>
             @foreach($customers as $customer)
                 <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
             @endforeach
-        </select>
-    </div>
+        </x-form.form-select>
+    </x-form.form-wrapper>
     <div class="flex gap-6">
-        <div class="max-w-sm">
-            <label for="due_from" class="block text-sm font-medium mb-2 dark:text-white">Due From</label>
-            <input type="date" id="due_from" wire:model.live="due_from" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Due From">
-        </div>
-        <div class="max-w-sm">
-            <label for="due_to" class="block text-sm font-medium mb-2 dark:text-white">Due From</label>
-            <input type="date" id="due_to" wire:model.live="due_to" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Due To">
-        </div>
+        <x-form.form-wrapper>
+            <x-form.form-label id="due_from" text="Due From"/>
+            <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>
+        </x-form.form-wrapper>
+        <x-form.form-wrapper>
+            <x-form.form-label id="due_to" text="Due To"/>
+            <x-form.form-input type="date" id="due_to" wireModelLive="due_to" placeholder="Due To"/>
+        </x-form.form-wrapper>
     </div>
     <h4 class="font-bold">Due date quick filter:</h4>
     <div class="flex flex-wrap gap-4">
@@ -30,27 +30,27 @@
             <flux:button wire:click="setYesterday">Yesterday</flux:button>
         </flux:button.group>
     </div>
-    <div class="max-w-sm">
-        <label for="month" class="block text-sm font-medium mb-2 dark:text-white">Month (in {{now()->year}})</label>
-        <select id="month" wire:model.live="month" class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600">
+    <x-form.form-wrapper>
+        <x-form.form-label id="month" text="Month (in {{now()->year}})"/>
+        <x-form.form-select id="month" wireModelLive="month">
             <option value="">---Select month---</option>
             @foreach($months as $number => $month)
                 <option value="{{$number}}">{{$month}}</option>
             @endforeach
-        </select>
-    </div>
-    <div class="max-w-sm">
-        <label for="order_status" class="block text-sm font-medium mb-2 dark:text-white">Status</label>
-        <select id="order_status" wire:model.live="status" class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600">
+        </x-form.form-select>
+    </x-form.form-wrapper>
+    <x-form.form-wrapper>
+        <x-form.form-label id="order_status" text="Status"/>
+        <x-form.form-select id="order_status" wireModelLive="status">
             <option value="">---Select status---</option>
             @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
                 <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
             @endforeach
-        </select>
-    </div>
-    <div class="max-w-sm">
-        <label for="hide_order" class="block text-sm font-medium mb-2 dark:text-white">Hide cancelled & invalidated from the list</label>
-        <input type="checkbox" checked wire:model.live="cancelled_order_hidden" class="py-2.5 sm:py-3 px-4 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-    </div>
+        </x-form.form-select>
+    </x-form.form-wrapper>
+    <x-form.form-wrapper>
+        <x-form.form-label id="hide_order" text="Hide Cancelled & Invalidated from the List"/>
+        <x-form.form-input id="hide_order" type="checkbox" wireModelLive="cancelled_order_hidden" noFullWidth="true" checked/>
+    </x-form.form-wrapper>
     <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
 </div>
