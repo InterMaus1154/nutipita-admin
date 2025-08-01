@@ -31,7 +31,7 @@
             </x-table.header>
             @foreach($products as $product)
                 <x-table.header>
-                    {{$product->product_name}}
+                    {{$product->product_name}} {{$product->product_weight_g}}g
                 </x-table.header>
             @endforeach
             <x-table.header>

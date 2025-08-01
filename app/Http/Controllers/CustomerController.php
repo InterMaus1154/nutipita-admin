@@ -39,6 +39,8 @@ class CustomerController extends Controller
         $products = Product::query()
             ->with('customPrices')
             ->select(['product_id', 'product_name', 'product_weight_g'])
+            ->orderByDesc('product_name')
+            ->orderByDesc('product_weight_g')
             ->get();
         $customers = Customer::query()
             ->withCount('orders')
@@ -114,6 +116,7 @@ class CustomerController extends Controller
     {
         $products = Product::query()
             ->select(['product_id', 'product_name', 'product_weight_g'])
+            ->orderByDesc('product_name')
             ->get()
             ->map(function ($product) use ($customer) {
                 // set customer for each product to show custom prices for current customer

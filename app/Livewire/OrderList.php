@@ -88,7 +88,7 @@ class OrderList extends Component
         $orders = (clone $query)
             ->paginate(15);
 
-        $products = Product::select(['product_id', 'product_name'])->get();
+        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         return view('livewire.order-list', [
             'products' => $products,
             'orders' => $orders,
