@@ -21,7 +21,8 @@ class OrderList extends Component
         'due_from' => null,
         'due_to' => null,
         'status' => null,
-        'cancelled_order_hidden' => true
+        'cancelled_order_hidden' => true,
+        'daytime_only' => false
     ];
 
     public bool $isOnIndex = true;
@@ -38,7 +39,8 @@ class OrderList extends Component
             'due_from' => null,
             'due_to' => null,
             'status' => null,
-            'cancelled_order_hidden' => true
+            'cancelled_order_hidden' => true,
+            'daytime_only' => false
         ], $filters);
         $this->isOnIndex = Route::is('orders.index');
     }
@@ -66,8 +68,11 @@ class OrderList extends Component
     {
         $filters = $this->filters;
         $query = Order::query()
-            ->when($filters['cancelled_order_hidden'], function($builder){
+            ->when($filters['cancelled_order_hidden'], function ($builder) {
                 return $builder->nonCancelled();
+            })
+            ->when($filters['daytime_only'], function($builder){
+                return $builder->where('is_daytime', true);
             })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('customer_id', $filters['customer_id']);

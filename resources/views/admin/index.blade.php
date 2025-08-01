@@ -17,7 +17,7 @@
                         Place New Order for Day Time
                     </flux:link>
                     <flux:link>Download total day orders PDF</flux:link>
-                    <flux:badge color="orange">Coming soon...</flux:badge>
+                    <livewire:order-list :withSummaryData="true" :summaryVisibleByDefault="true" :filters="['due_from'=>now()->toDateString(), 'due_to' => now()->toDateString(), 'daytime_only' => true]"/>
                 </div>
                 <flux:separator />
                 {{--night time orders--}}

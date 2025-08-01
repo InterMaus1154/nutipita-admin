@@ -4,8 +4,6 @@
         @foreach($segments as $segment)
             @if($loop->first)
                 <flux:link href="{{route($sectionIdentifier.'.index')}}">{{ucfirst($segment)}}</flux:link>
-            @elseif($loop->last)
-                > {{Str::headline(ucfirst($segment))}}
             @else
                 > {{Str::headline(ucfirst($segment))}}
             @endif
@@ -13,6 +11,8 @@
     </div>
     <div class="flex gap-2">
         <flux:icon.arrow-uturn-left/>
-        <flux:link href="{{url()->previous('/')}}" variant="subtle">Go Back</flux:link>
+        <flux:link href="{{url()->previous('/')}}" variant="subtle">
+            Go Back
+        </flux:link>
     </div>
 </div>

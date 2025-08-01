@@ -4,7 +4,8 @@
 @props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true])
 <div class="space-y-4">
     @if($withSummaryData)
-        <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true" :visibleByDefault="$summaryVisibleByDefault"/>
+        <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
+                         :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
@@ -50,6 +51,9 @@
                     <x-table.data>
                         @if($order->is_standing)
                             <flux:badge color="lime" size="lg">S</flux:badge>
+                        @endif
+                        @if($order->is_daytime)
+                            <flux:badge color="cyan" size="lg">D</flux:badge>
                         @endif
                         <flux:link href="{{route('orders.show', compact('order'))}}">
                             #{{$order->order_id}}</flux:link>

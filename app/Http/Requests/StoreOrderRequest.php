@@ -26,7 +26,8 @@ class StoreOrderRequest extends FormRequest
             'products' => 'required|array',
             'products.*' => 'integer',
             'order_placed_at' => 'required|date',
-            'order_due_at' => 'required|date|after_or_equal:order_placed_at'
+            'order_due_at' => 'required|date|after_or_equal:order_placed_at',
+            'is_daytime' => 'nullable|boolean'
         ];
     }
 

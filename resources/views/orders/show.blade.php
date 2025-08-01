@@ -9,6 +9,11 @@
                 <flux:badge color="lime" size="lg">Standing Order</flux:badge>
             </div>
         @endif
+        @if($order->is_daytime)
+            <div class="flex items-start">
+                <flux:badge color="cyan" size="lg">Daytime Order</flux:badge>
+            </div>
+        @endif
         <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 inline-block align-middle">
