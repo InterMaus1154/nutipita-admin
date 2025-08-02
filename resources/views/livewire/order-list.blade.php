@@ -73,17 +73,16 @@
                     <x-table.data>
                         @dayDate($order->order_due_at)
                     </x-table.data>
-                    <x-table.data>
+                    <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})">
                         @if(str_starts_with($order->order_status, 'Y'))
-                            <flux:badge color="amber">{{$order->status}}</flux:badge>
+                            <flux:badge color="amber">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
                         @elseif(str_starts_with($order->order_status, 'G'))
-                            <flux:badge color="emerald">{{$order->status}}</flux:badge>
+                            <flux:badge color="emerald">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
+                        @elseif(str_starts_with($order->order_status, 'O'))
+                            <flux:badge color="orange">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
                         @else
-                            <flux:badge color="red">{{$order->status}}</flux:badge>
+                            <flux:badge color="red">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
                         @endif
-                        <flux:button size="xs" wire:click="openStatusUpdateModal({{$order->order_id}})" title="Update order status">
-                            <flux:icon.chevron-double-up variant="mini"/>
-                        </flux:button>
                     </x-table.data>
                     @foreach($products as $product)
                         @php

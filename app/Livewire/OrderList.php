@@ -82,11 +82,6 @@ class OrderList extends Component
         $this->isStatusUpdateModalVisible = false;
     }
 
-    public function createPdfSummary()
-    {
-        return $pdf = Pdf::loadView('pdf.order-summary')->stream('order summary.pdf');
-    }
-
     public function getOrderSummaryPdfUrl(): string
     {
         return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);

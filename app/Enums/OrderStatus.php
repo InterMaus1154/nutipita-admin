@@ -9,6 +9,7 @@ enum OrderStatus: string
     case G_DELIVERED = "delivered";
     case G_PAID = "paid";
     case G_DELIVERED_AND_PAID = "delivered & paid";
+    CASE O_DELIVERED_UNPAID = "delivered unpaid";
     case R_DUE_PAYMENT = "payment due";
     case R_CANCELLED = "cancelled";
     case R_INVALIDATED = "invalidated";
