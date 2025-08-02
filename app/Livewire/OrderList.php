@@ -28,7 +28,10 @@ class OrderList extends Component
         'daytime_only' => false
     ];
 
-    public bool $isOnIndex = true;
+    public bool $isStatusUpdateModalVisible = false;
+
+    public ?Order $modalSelectedOrder = null;
+    public ?string $updateOrderStatusName = null;
     public bool $withSummaryData = true;
     public bool $withSummaryPdf = false;
     public bool $summaryVisibleByDefault = false;
@@ -49,11 +52,34 @@ class OrderList extends Component
         ], $filters);
     }
 
+    public function updatedUpdateOrderStatusName($value)
+    {
+        if($this->modalSelectedOrder){
+            $this->modalSelectedOrder->update([
+               'order_status' => $value
+            ]);
+        }
+        $this->modalSelectedOrder = null;
+        $this->isStatusUpdateModalVisible = false;
+    }
+
     #[On('update-filter')]
     public function applyFilter(array $filters)
     {
         $this->resetPage();
         $this->filters = array_merge($this->filters, $filters);
+    }
+
+    public function openStatusUpdateModal(Order $order)
+    {
+        $this->modalSelectedOrder = $order;
+        $this->isStatusUpdateModalVisible = true;
+    }
+
+    public function closeStatusUpdateModal()
+    {
+        $this->modalSelectedOrder = null;
+        $this->isStatusUpdateModalVisible = false;
     }
 
     public function createPdfSummary()

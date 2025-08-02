@@ -38,7 +38,7 @@
                 Total orders: {{$orders->count()}}
             </td>
             <td style="text-align: right; font-size: 1.5rem; font-weight: bold; border: none; padding: 0">
-                For {{$customer->customer_name}}
+                {{$customer->customer_name}}
             </td>
         </tr>
     </table>
