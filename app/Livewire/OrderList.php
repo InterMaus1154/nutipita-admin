@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\On;
@@ -33,6 +34,7 @@ class OrderList extends Component
     public bool $summaryVisibleByDefault = false;
 
     public $ordersAll = [];
+    public $orderIds = [];
 
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], bool $withSummaryPdf = false)
     {
@@ -56,7 +58,12 @@ class OrderList extends Component
 
     public function createPdfSummary()
     {
+        return $pdf = Pdf::loadView('pdf.order-summary')->stream('order summary.pdf');
+    }
 
+    public function getOrderSummaryPdfUrl(): string
+    {
+        return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);
     }
 
     public function render()
@@ -86,6 +93,11 @@ class OrderList extends Component
             ->orderByDesc('order_id');
 
         $this->ordersAll = $query->nonCancelled()->get() ; // cancelled or invalidated orders will not contribute to the summaries
+
+        // only if pdf save is required, otherwise useless data
+        if($this->withSummaryPdf){
+            $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
+        }
 
         $orders = (clone $query)
             ->paginate(15);

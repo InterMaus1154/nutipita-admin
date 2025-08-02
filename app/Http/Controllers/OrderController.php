@@ -8,7 +8,9 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -150,10 +152,6 @@ class OrderController extends Controller
 
                 }
             }
-            // if order had an invoice, delete it, as it is no longer "valid"
-            if ($order->invoice) {
-                $order->invoice()->delete();
-            }
             DB::commit();
             return redirect()
                 ->route('orders.index')
@@ -166,5 +164,41 @@ class OrderController extends Controller
                 ->withErrors(['order_update' => 'Error at updating order. No changes made']);
 
         }
+    }
+
+    /**
+     * Create a summary pdf from the passed in orders
+     * @param Collection $ordersAll
+     * @return \Illuminate\Http\Response
+     */
+    public function createSummaryPdf(Request $request)
+    {
+        // refetch orders
+        $orderIds = $request->array('orderIds');
+        $orders = Order::query()
+            ->orderBy('order_placed_at')
+            ->whereIn('order_id', $orderIds)
+            ->get();
+
+
+        // get all the unique product ids from the order products
+        $productsInOrders = $orders->flatMap(function ($order) {
+            return $order->products->pluck('product_id');
+        })->unique();
+
+        // TODO: optimise by getting data from the already loaderd orders or sth
+        // get the customer for the orders
+        $customer = $orders->first()->customer;
+
+        // get only products that are in the order
+        $products = Product::query()
+            ->whereIn('product_id', $productsInOrders->toArray())
+            ->select('product_name', 'product_weight_g', 'product_id')
+            ->get();
+
+        $periodTotal = $orders->sum('total_price');
+
+        return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal'))
+            ->download("Order_Summary_$customer->customer_name.pdf");
     }
 }

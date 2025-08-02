@@ -7,8 +7,10 @@
         <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                          :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
-    @if($withSummaryPdf)
-        <flux:button variant="primary" class="cursor-pointer" wire:click="createPdfSummary">Download order summary for selected orders (PDF)</flux:button>
+    @if($withSummaryPdf && isset($filters['customer_id']))
+        <flux:link href="{{$this->getOrderSummaryPdfUrl()}}" class="cursor-pointer">
+            Download order summary for selected orders (PDF)
+        </flux:link>
     @endif
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
@@ -63,7 +65,7 @@
                     </x-table.data>
                     <x-table.data>
                         <flux:link
-                            href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+                                href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
                     </x-table.data>
                     <x-table.data>
                         @dayDate($order->order_placed_at)

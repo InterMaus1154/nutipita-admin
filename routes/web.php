@@ -105,6 +105,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
         // update order
         Route::put('/update/{order}', 'update')->name('orders.update');
+
+        // create summary pdf
+        Route::get('/create-summary-pdf', 'createSummaryPdf')->name('orders.create-summary-pdf');
     });
 
     // invoice routes
@@ -132,7 +135,7 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     });
 
     // standing order routes
-    Route::group(['prefix' => 'standingOrders', 'controller' => StandingOrderController::class], function () {
+    Route::group(['prefix' => 'standing-orders', 'controller' => StandingOrderController::class], function () {
 
         // index page
         Route::get('/', 'index')->name('standing-orders.index');
