@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\ModelResolver;
+use App\Models\Scopes\Product\SortByName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,10 @@ class Product extends Model
         return $this;
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new SortByName);
+    }
 
     /*
      * Define relationships

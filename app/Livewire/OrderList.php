@@ -16,6 +16,8 @@ class OrderList extends Component
 
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public $filters = [
         'customer_id' => null,
         'due_from' => null,
@@ -27,11 +29,12 @@ class OrderList extends Component
 
     public bool $isOnIndex = true;
     public bool $withSummaryData = true;
+    public bool $withSummaryPdf = false;
     public bool $summaryVisibleByDefault = false;
 
-    protected $paginationTheme = 'tailwind';
+    public $ordersAll = [];
 
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [])
+    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], bool $withSummaryPdf = false)
     {
         $this->withSummaryData = $withSummaryData;
         $this->filters = array_merge([
@@ -42,26 +45,18 @@ class OrderList extends Component
             'cancelled_order_hidden' => true,
             'daytime_only' => false
         ], $filters);
-        $this->isOnIndex = Route::is('orders.index');
     }
-
-//    public function delete(int $order_id)
-//    {
-//        $order = Order::find($order_id);
-//        if ($order) {
-//            $order->products()->detach();
-//            $order->delete();
-//        }
-//
-//        $this->query = Order::query();
-//        $this->loadOrders();
-//    }
 
     #[On('update-filter')]
     public function applyFilter(array $filters)
     {
         $this->resetPage();
         $this->filters = array_merge($this->filters, $filters);
+    }
+
+    public function createPdfSummary()
+    {
+
     }
 
     public function render()
@@ -90,6 +85,8 @@ class OrderList extends Component
             ->orderByDesc('order_placed_at')
             ->orderByDesc('order_id');
 
+        $this->ordersAll = $query->nonCancelled()->get() ; // cancelled or invalidated orders will not contribute to the summaries
+
         $orders = (clone $query)
             ->paginate(15);
 
@@ -97,10 +94,8 @@ class OrderList extends Component
         return view('livewire.order-list', [
             'products' => $products,
             'orders' => $orders,
-            'onOrderIndex' => $this->isOnIndex,
             'withSummaries' => true,
-            'withIncome' => true,
-            'ordersAll' => $query->nonCancelled()->get() // cancelled or invalidated orders will not contribute to the summaries
+            'withIncome' => true
         ]);
     }
 }

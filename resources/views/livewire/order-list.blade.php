@@ -7,6 +7,9 @@
         <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                          :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
+    @if($withSummaryPdf)
+        <flux:button variant="primary" class="cursor-pointer" wire:click="createPdfSummary">Download order summary for selected orders (PDF)</flux:button>
+    @endif
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
@@ -111,13 +114,11 @@
                                 Invoice
                             </flux:link>
                         @endunless
-
-
                     </x-table.data>
                 </x-table.row>
             @empty
                 <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
-                    <td class="italic text-lg">No orders found!</td>
+                    <td class="italic text-lg">No orders found for the current filters!</td>
                 </tr>
             @endforelse
         </x-table.body>
