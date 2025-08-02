@@ -9,17 +9,17 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
+use App\Traits\HasQuickDueFilter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class CreateManualInvoiceForm extends Component
 {
-    use WithPagination;
-
-    protected $paginationTheme = 'tailwind';
+    use HasQuickDueFilter;
 
     public $customers;
     public $products;
@@ -29,9 +29,8 @@ class CreateManualInvoiceForm extends Component
     // ---
     public string $invoice_issue_date;
     public string $invoice_due_date;
+
     public $customer_id = null;
-    public $due_from = null;
-    public $due_to = null;
     public array $invoiceProducts = [];
     public string $invoice_number;
     // ---
@@ -40,10 +39,11 @@ class CreateManualInvoiceForm extends Component
 
     public function mount()
     {
+        $this->dispatchAble = true;
+
         // init that don't change throughout cycle
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
-        $this->products = Product::select(['product_id', 'product_name'])->get();
-
+        $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
@@ -51,14 +51,20 @@ class CreateManualInvoiceForm extends Component
 
     }
 
-    public function updating($name)
+    public function updated()
     {
-        // reset pagination if the filter variables are changed
-        if (in_array($name, ['customer_id', 'due_from', 'due_to'])) {
-            $this->resetPage();
-        }
+        $this->dispatchEvent();
     }
 
+    public function dispatchEvent()
+    {
+        $this->dispatch('update-filter', [
+            'customer_id' => $this->customer_id,
+            'due_from' => $this->due_from,
+            'due_to' => $this->due_to,
+            'cancelled_order_hidden' => true
+        ]);
+    }
 
     /*
      * Save an invoice (submit form)
@@ -130,49 +136,9 @@ class CreateManualInvoiceForm extends Component
     }
 
 
-    public function render()
+    public
+    function render()
     {
-        $orders = collect();
-        $totalPita = 0;
-        $productTotals = collect();
-
-        // to show orders, customer and at least one due date must be non-empty
-        if (!empty($this->customer_id) && (!empty($this->due_from) || !empty($this->due_to))) {
-            $orderQuery = Order::query()
-                ->nonCancelled()
-                ->with('customer:customer_id,customer_name', 'products')
-                ->where('customer_id', $this->customer_id)
-                ->when($this->due_from, function ($builder) {
-                    return $builder->whereDate('order_due_at', '>=', $this->due_from);
-                })
-                ->when($this->due_to, function ($builder) {
-                    return $builder->whereDate('order_due_at', '<=', $this->due_to);
-                })
-                ->select(['order_status', 'order_placed_at', 'order_due_at', 'customer_id', 'order_id', 'created_at', 'is_standing'])
-                ->orderByDesc('order_id');
-
-            $orders = $orderQuery->paginate(15);
-
-            // calculate order totals
-            foreach ($orderQuery->get() as $order) {
-                $totalPita += $order->total_pita;
-
-                foreach ($this->products as $product) {
-                    if (isset($productTotals[$product->product_name])) {
-                        $productTotals[$product->product_name] += $order->getTotalOfProduct($product);
-                    } else {
-                        $productTotals[$product->product_name] = $order->getTotalOfProduct($product);
-                    }
-
-                }
-            }
-
-        }
-
-        return view('livewire.create-manual-invoice-form', [
-            'orders' => $orders,
-            'totalPita' => $totalPita,
-            'productTotals' => $productTotals
-        ]);
+        return view('livewire.create-manual-invoice-form');
     }
 }

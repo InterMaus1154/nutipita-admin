@@ -59,26 +59,13 @@
                        class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
         </div>
-        @if($orders->isNotEmpty())
-            @include('livewire.order-list', compact('orders'))
-            <h3 class="font-bold">Order Total Info</h3>
-            <div class="flex gap-4 flex-wrap">
-                <div
-                    class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
-                    <span>Total Pitas</span>
-                    <span>@amountFormat($totalPita)</span>
-                </div>
-                @foreach($productTotals as $productName => $productTotal)
-                    @if($productTotal > 0)
-                        <div
-                            class="flex flex-col gap-2 bg-white border border-gray-200 shadow-2xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white text-center items-center text-xl">
-                            <span>{{$productName}}</span>
-                            <span>@amountFormat($productTotal)</span>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
-        @endif
+        <div class="flex flex-wrap gap-4">
+            <flux:button.group>
+                <flux:button wire:click="setWeek">Week</flux:button>
+                <flux:button wire:click="setToday">Today</flux:button>
+                <flux:button wire:click="setYesterday">Yesterday</flux:button>
+            </flux:button.group>
+        </div>
         <h3 class="font-bold">Product Info</h3>
         @if(!empty($customer_id))
             @foreach($products as $product)
@@ -89,7 +76,7 @@
                         <label
                             for="invoiceProducts[{{$product->product_id}}]"
                             class="block text-sm font-medium mb-2 dark:text-white">
-                            {{$product->product_name}}
+                            {{$product->product_name}} {{$product->product_weight_g}}g
                             <flux:badge>@unitPriceFormat($product->price)</flux:badge>
                         </label>
                         <input type="number" placeholder="Quantity" value="0"
@@ -105,4 +92,5 @@
         @endif
         <flux:button variant="primary" type="submit">Generate Invoice</flux:button>
     </form>
+    <livewire:order-list :summaryVisibleByDefault="true"/>
 </div>
