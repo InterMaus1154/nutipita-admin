@@ -38,4 +38,22 @@ trait HasQuickDueFilter
         }
     }
 
+    public function setMonth(): void
+    {
+        $this->due_from = now()->startOfMonth()->toDateString();
+        $this->due_to = now()->endOfMonth()->toDateString();
+        if ($this->dispatchAble && method_exists($this,'dispatchEvent')) {
+            $this->dispatchEvent();
+        }
+    }
+
+    public function setYear()
+    {
+        $this->due_from = now()->startOfYear()->toDateString();
+        $this->due_to = now()->endOfYear()->toDateString();
+        if ($this->dispatchAble && method_exists($this,'dispatchEvent')) {
+            $this->dispatchEvent();
+        }
+    }
+
 }

@@ -39,7 +39,7 @@ class OrderList extends Component
     public $ordersAll = [];
     public $orderIds = [];
 
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], bool $withSummaryPdf = false)
+    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false)
     {
         $this->withSummaryData = $withSummaryData;
         $this->filters = array_merge([
@@ -50,6 +50,7 @@ class OrderList extends Component
             'cancelled_order_hidden' => true,
             'daytime_only' => false
         ], $filters);
+        $this->withSummaryPdf = $withSummaryPdf;
     }
 
     public function updatedUpdateOrderStatusName($value)

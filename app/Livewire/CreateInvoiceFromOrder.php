@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
+use App\Traits\HasQuickDueFilter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +21,7 @@ use Livewire\WithPagination;
  */
 class CreateInvoiceFromOrder extends Component
 {
-    use WithPagination;
+    use WithPagination, HasQuickDueFilter;
 
     public $customers;
     public $products;
@@ -35,12 +36,24 @@ class CreateInvoiceFromOrder extends Component
 
     public function mount(): void
     {
+        $this->dispatchAble = true;
+
         // init that don't change throughout cycle
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
         $this->products = Product::select(['product_id', 'product_name'])->get();
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
+    }
+
+    public function dispatchEvent()
+    {
+        $this->dispatch('update-filter', [
+            'customer_id' => $this->customer_id,
+            'due_from' => $this->due_from,
+            'due_to' => $this->due_to,
+            'cancelled_order_hidden' => true
+        ]);
     }
 
     // generate invoice
@@ -113,11 +126,11 @@ class CreateInvoiceFromOrder extends Component
     public function updated(): void
     {
         $this->resetPage();
+        $this->dispatchEvent();
     }
 
     public function render(): View
     {
-        $orders = collect();
         // get orders for the selected customer
         if (isset($this->customer_id)) {
             $orderQuery = Order::query()
@@ -132,11 +145,8 @@ class CreateInvoiceFromOrder extends Component
                 });
             // for invoice generation, it needs all the data, but we don't need to display all
             $this->ordersAll = $orderQuery->get();
-            $orders = $orderQuery->paginate(15);
         }
 
-        return view('livewire.create-invoice-from-order', [
-            'orders' => $orders
-        ]);
+        return view('livewire.create-invoice-from-order');
     }
 }

@@ -1,7 +1,7 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
-@props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true])
+@props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false])
 <div class="space-y-4">
     @if($withSummaryData)
         <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
