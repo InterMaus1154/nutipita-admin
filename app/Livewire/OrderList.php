@@ -28,17 +28,32 @@ class OrderList extends Component
         'daytime_only' => false
     ];
 
+    /*
+     * Variables for status update modal
+     */
     public bool $isStatusUpdateModalVisible = false;
 
     public ?Order $modalSelectedOrder = null;
     public ?string $updateOrderStatusName = null;
+
+    /*
+     * --- END ---
+     */
+
+    /*
+     * Variables for summary
+     */
     public bool $withSummaryData = true;
     public bool $withSummaryPdf = false;
     public bool $summaryVisibleByDefault = false;
-
-    public $ordersAll = [];
     public $orderIds = [];
+    public $ordersAll = [];
+    /*
+     * End
+     */
 
+
+    // Initial component load
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false)
     {
         $this->withSummaryData = $withSummaryData;
@@ -53,17 +68,7 @@ class OrderList extends Component
         $this->withSummaryPdf = $withSummaryPdf;
     }
 
-    public function updatedUpdateOrderStatusName($value)
-    {
-        if($this->modalSelectedOrder){
-            $this->modalSelectedOrder->update([
-               'order_status' => $value
-            ]);
-        }
-        $this->modalSelectedOrder = null;
-        $this->isStatusUpdateModalVisible = false;
-    }
-
+    // when any filter is received from another component
     #[On('update-filter')]
     public function applyFilter(array $filters)
     {
@@ -71,18 +76,38 @@ class OrderList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
+    /*
+     * Methods for controlling status update modal
+     */
     public function openStatusUpdateModal(Order $order)
     {
         $this->modalSelectedOrder = $order;
         $this->isStatusUpdateModalVisible = true;
+        $this->updateOrderStatusName = $order->order_status;
+
     }
 
     public function closeStatusUpdateModal()
     {
+        $this->reset(['modalSelectedOrder', 'isStatusUpdateModalVisible', 'updateOrderStatusName']);
+    }
+
+    public function updatedUpdateOrderStatusName($value)
+    {
+        if($this->modalSelectedOrder){
+            $this->modalSelectedOrder->update([
+                'order_status' => $value
+            ]);
+        }
         $this->modalSelectedOrder = null;
         $this->isStatusUpdateModalVisible = false;
     }
 
+    /*
+     * --- END ---
+     */
+
+    // returns the route url with an array of order ids, that are to be passed on creating a summary pdf
     public function getOrderSummaryPdfUrl(): string
     {
         return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);
@@ -114,15 +139,18 @@ class OrderList extends Component
             ->orderByDesc('order_placed_at')
             ->orderByDesc('order_id');
 
-        $this->ordersAll = $query->nonCancelled()->get() ; // cancelled or invalidated orders will not contribute to the summaries
+
+        // clone query for pagination only, as it contains everything from the filter
+        $orders = (clone $query)
+            ->paginate(15);
+
+        // cancelled or invalidated orders will not contribute to the summaries, hence the query clone above
+        $this->ordersAll = $query->nonCancelled()->get();
 
         // only if pdf save is required, otherwise useless data
         if($this->withSummaryPdf){
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
         }
-
-        $orders = (clone $query)
-            ->paginate(15);
 
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         return view('livewire.order-list', [
