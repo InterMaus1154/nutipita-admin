@@ -17,7 +17,7 @@
     {{--top pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
-            {{$orders->links(data: ['scrollTo' => false])}}
+            {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
         </div>
     @endif
     <x-table.table>
@@ -133,7 +133,7 @@
     {{--bottom pagination--}}
     @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
         <div>
-            {{$orders->links(data: ['scrollTo' => false])}}
+            {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
         </div>
     @endif
     {{--status update modal--}}
