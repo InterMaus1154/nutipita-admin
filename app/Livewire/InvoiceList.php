@@ -16,6 +16,9 @@ class InvoiceList extends Component
      */
     public function markPaid(Invoice $invoice): void
     {
+        if(!auth()->check()){
+            abort(403);
+        }
         $invoice->update([
             'invoice_status' => 'paid'
         ]);
@@ -26,6 +29,9 @@ class InvoiceList extends Component
      */
     public function markDue(Invoice $invoice): void
     {
+        if(!auth()->check()){
+            abort(403);
+        }
         $invoice->update([
             'invoice_status' => 'due'
         ]);
@@ -36,6 +42,9 @@ class InvoiceList extends Component
      */
     public function delete(Invoice $invoice): void
     {
+        if(!auth()->check()){
+            abort(403);
+        }
         DB::beginTransaction();
         try{
             Storage::disk('local')->delete($invoice->invoice_path);
