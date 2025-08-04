@@ -3,6 +3,8 @@
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false])
 <div class="space-y-4">
+    <x-success />
+    <x-error />
     @if($withSummaryData)
         <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                          :visibleByDefault="$summaryVisibleByDefault"/>
@@ -52,7 +54,7 @@
         </x-table.head>
         <x-table.body>
             @forelse($orders as $order)
-                <x-table.row>
+                <x-table.row wire:key="order-{{$order->order_id}}">
                     <x-table.data>
                         @if($order->is_standing)
                             <flux:badge color="lime" size="lg">S</flux:badge>
@@ -118,6 +120,7 @@
                                 Invoice
                             </flux:link>
                         @endunless
+                        <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})" wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">Delete</flux:link>
                     </x-table.data>
                 </x-table.row>
             @empty

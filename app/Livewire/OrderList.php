@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -94,7 +96,7 @@ class OrderList extends Component
 
     public function updatedUpdateOrderStatusName($value)
     {
-        if($this->modalSelectedOrder){
+        if ($this->modalSelectedOrder) {
             $this->modalSelectedOrder->update([
                 'order_status' => $value
             ]);
@@ -113,6 +115,22 @@ class OrderList extends Component
         return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);
     }
 
+    public function deleteOrder(Order $order)
+    {
+        if (!auth()->check()) {
+            abort(401, 'You are unauthenticated!');
+        }
+
+        try{
+            $order->delete();
+            session()->flash('success', "Order #{$order->order_id} deleted successfully");
+        }catch(\Exception $e){
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at deleting order. Check log');
+            DB::rollBack();
+        }
+    }
+
     public function render()
     {
         $filters = $this->filters;
@@ -120,7 +138,7 @@ class OrderList extends Component
             ->when($filters['cancelled_order_hidden'], function ($builder) {
                 return $builder->nonCancelled();
             })
-            ->when($filters['daytime_only'], function($builder){
+            ->when($filters['daytime_only'], function ($builder) {
                 return $builder->where('is_daytime', true);
             })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
@@ -148,7 +166,7 @@ class OrderList extends Component
         $this->ordersAll = $query->nonCancelled()->get();
 
         // only if pdf save is required, otherwise useless data
-        if($this->withSummaryPdf){
+        if ($this->withSummaryPdf) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
         }
 
