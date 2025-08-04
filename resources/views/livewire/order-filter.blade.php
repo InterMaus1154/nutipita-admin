@@ -52,5 +52,11 @@
         <x-form.form-label id="hide_order" text="Hide Cancelled & Invalidated from the List"/>
         <x-form.form-input id="hide_order" type="checkbox" wireModelLive="cancelled_order_hidden" noFullWidth="true" checked/>
     </x-form.form-wrapper>
+    <x-form.form-wrapper>
+        <x-form.form-label id="daytime_only">
+            <flux:badge color="cyan">Daytime Orders Only</flux:badge>
+        </x-form.form-label>
+        <x-form.form-input id="daytime_only" type="checkbox" wireModelLive="daytime_only" noFullWidth="true"/>
+    </x-form.form-wrapper>
     <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
 </div>

@@ -18,6 +18,7 @@ class OrderFilter extends Component
     public ?string $status = null;
     public ?int $month = null;
     public bool $cancelled_order_hidden = true;
+    public bool $daytime_only = false;
 
     public array $months = [
         '1' => 'January',
@@ -59,7 +60,8 @@ class OrderFilter extends Component
             'due_to' => $this->due_to,
             'status' => $this->status,
             'cancelled_order_hidden' => $this->cancelled_order_hidden,
-            'month' => $this->month
+            'month' => $this->month,
+            'daytime_only' => $this->daytime_only
         ]);
     }
 
