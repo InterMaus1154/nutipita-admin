@@ -1,6 +1,9 @@
 <div class="space-y-4">
     <x-success />
     <x-error />
+    <div>
+        {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
+    </div>
     <x-table.table>
         <x-table.head>
                 <x-table.header>
@@ -87,4 +90,7 @@
         @endforeach
         </x-table.body>
     </x-table.table>
+    <div>
+        {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
+    </div>
 </div>

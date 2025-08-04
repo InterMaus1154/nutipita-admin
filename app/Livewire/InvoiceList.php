@@ -7,9 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class InvoiceList extends Component
 {
+
+    use WithPagination;
+
+    protected $paginationTheme = 'tailwind';
 
     /*
      * Mark an invoice status "paid"
@@ -61,7 +66,7 @@ class InvoiceList extends Component
 
     public function render()
     {
-        $invoices = Invoice::with('customer:customer_id,customer_name')->orderByDesc('invoice_number')->get();
+        $invoices = Invoice::with('customer:customer_id,customer_name')->orderByDesc('invoice_number')->paginate(15);
         return view('livewire.invoice-list', compact('invoices'));
     }
 }

@@ -5,8 +5,9 @@
 <div class="space-y-4">
     @if($orders->isNotEmpty())
         <div class="space-y-4">
-            <x-success />
-            <x-error />
+            <x-success/>
+            <x-error/>
+            {{--order summary--}}
             @if($withSummaryData)
                 <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                                  :visibleByDefault="$summaryVisibleByDefault"/>
@@ -17,11 +18,9 @@
                 </flux:link>
             @endif
             {{--top pagination--}}
-            @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                <div>
-                    {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
-                </div>
-            @endif
+            <div>
+                {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
+            </div>
             <x-table.table>
                 <x-table.head>
                     <x-table.header>
@@ -77,15 +76,24 @@
                             <x-table.data>
                                 @dayDate($order->order_due_at)
                             </x-table.data>
-                            <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})" class="cursor-pointer">
+                            <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})"
+                                          class="cursor-pointer">
                                 @if(str_starts_with($order->order_status, 'Y'))
-                                    <flux:badge color="amber">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
+                                    <flux:badge color="amber">{{$order->status}}
+                                        <flux:icon.chevron-down variant="mini"/>
+                                    </flux:badge>
                                 @elseif(str_starts_with($order->order_status, 'G'))
-                                    <flux:badge color="emerald">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
+                                    <flux:badge color="emerald">{{$order->status}}
+                                        <flux:icon.chevron-down variant="mini"/>
+                                    </flux:badge>
                                 @elseif(str_starts_with($order->order_status, 'O'))
-                                    <flux:badge color="orange">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
+                                    <flux:badge color="orange">{{$order->status}}
+                                        <flux:icon.chevron-down variant="mini"/>
+                                    </flux:badge>
                                 @else
-                                    <flux:badge color="red">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
+                                    <flux:badge color="red">{{$order->status}}
+                                        <flux:icon.chevron-down variant="mini"/>
+                                    </flux:badge>
                                 @endif
                             </x-table.data>
                             @foreach($products as $product)
@@ -118,11 +126,15 @@
                                         Generate Invoice
                                     </flux:link>
                                 @else
-                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">Download
+                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                                        Download
                                         Invoice
                                     </flux:link>
                                 @endunless
-                                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})" wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">Delete</flux:link>
+                                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
+                                           wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
+                                    Delete
+                                </flux:link>
                             </x-table.data>
                         </x-table.row>
                     @empty
@@ -133,11 +145,9 @@
                 </x-table.body>
             </x-table.table>
             {{--bottom pagination--}}
-            @if($orders instanceof \Illuminate\Pagination\Paginator || $orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                <div>
-                    {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
-                </div>
-            @endif
+            <div>
+                {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
+            </div>
             {{--status update modal--}}
             <div @class(['hidden' => !$isStatusUpdateModalVisible,
 'fixed inset-0 z-50 flex items-center justify-center'])>
@@ -158,7 +168,8 @@
                         <x-form.form-label id="order_status_update" text="Select a status"/>
                         <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatusName">
                             @foreach(\App\Enums\OrderStatus::cases() as $status)
-                                <option value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
+                                <option
+                                    value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
                                     {{ucfirst($status->value)}}
                                 </option>
                             @endforeach

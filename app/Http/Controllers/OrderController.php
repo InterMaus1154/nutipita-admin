@@ -149,7 +149,6 @@ class OrderController extends Controller
                             'order_product_unit_price' => $price
                         ]);
                     }
-
                 }
             }
             DB::commit();
