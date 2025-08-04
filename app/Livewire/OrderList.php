@@ -96,13 +96,15 @@ class OrderList extends Component
 
     public function updatedUpdateOrderStatusName($value)
     {
+        if(!auth()->check()){
+            abort(403);
+        }
         if ($this->modalSelectedOrder) {
             $this->modalSelectedOrder->update([
                 'order_status' => $value
             ]);
         }
-        $this->modalSelectedOrder = null;
-        $this->isStatusUpdateModalVisible = false;
+        $this->reset(['modalSelectedOrder', 'isStatusUpdateModalVisible', 'updateOrderStatusName']);
     }
 
     /*

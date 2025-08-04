@@ -75,7 +75,7 @@
                     <x-table.data>
                         @dayDate($order->order_due_at)
                     </x-table.data>
-                    <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})">
+                    <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})" class="cursor-pointer">
                         @if(str_starts_with($order->order_status, 'Y'))
                             <flux:badge color="amber">{{$order->status}}<flux:icon.chevron-down variant="mini"/></flux:badge>
                         @elseif(str_starts_with($order->order_status, 'G'))

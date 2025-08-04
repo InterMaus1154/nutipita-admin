@@ -15,6 +15,7 @@
         <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" :current="Route::is('standing-orders.*')">Standing Orders</flux:navlist.item>
         <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" :current="Route::is('customers.*')">Customers</flux:navlist.item>
         <flux:navlist.item icon="cake" href="{{route('products.index')}}" :current="Route::is('products.*')">Products</flux:navlist.item>
+        <flux:navlist.item icon="cog-6-tooth">Settings</flux:navlist.item>
     </flux:navlist>
 
     <flux:spacer/>
