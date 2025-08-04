@@ -49,7 +49,11 @@
         </x-form.form-select>
     </x-form.form-wrapper>
     <x-form.form-wrapper>
-        <x-form.form-label id="hide_order" text="Hide Cancelled & Invalidated from the List"/>
+        <x-form.form-label id="hide_order">
+            <flux:badge color="red">
+                Hide Cancelled & Invalidated from the List
+            </flux:badge>
+        </x-form.form-label>
         <x-form.form-input id="hide_order" type="checkbox" wireModelLive="cancelled_order_hidden" noFullWidth="true" checked/>
     </x-form.form-wrapper>
     <x-form.form-wrapper>
