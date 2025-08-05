@@ -170,8 +170,17 @@ class OrderList extends Component
             ->when(!empty($filters['status']), function ($builder) use ($filters) {
                 return $builder->where('order_status', $filters['status']);
             })
-            ->with('customer:customer_id,customer_name', 'products')
-            ->orderBy($this->sortField, $this->sortDirection);
+            ->with('customer:customer_id,customer_name', 'products');
+
+
+        // order sorting
+        if($this->sortField === "customer"){
+            $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
+                ->orderBy('customers.customer_name', $this->sortDirection)
+                ->select('orders.*');
+        }else{
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)

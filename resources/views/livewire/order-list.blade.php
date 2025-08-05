@@ -23,28 +23,31 @@
         <x-table.table>
             <x-table.head>
                 <x-table.header wire:click="setSort('order_id')">
-                    <div class="flex items-center cursor-pointer">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
                         #ID
                         <flux:icon.arrows-up-down variant="mini"/>
                     </div>
                 </x-table.header>
-                <x-table.header>
-                    Customer
+                <x-table.header wire:click="setSort('customer')">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
+                        Customer
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
                 <x-table.header wire:click="setSort('order_placed_at')">
-                    <div class="flex items-center cursor-pointer">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
                         Placed Date
                         <flux:icon.arrows-up-down variant="mini"/>
                     </div>
                 </x-table.header>
                 <x-table.header wire:click="setSort('order_due_at')">
-                    <div class="flex items-center cursor-pointer">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
                         Due Date
                         <flux:icon.arrows-up-down variant="mini"/>
                     </div>
                 </x-table.header>
                 <x-table.header wire:click="setSort('order_status')">
-                    <div class="flex items-center cursor-pointer">
+                    <div class="flex items-center justify-center cursor-pointer">
                         Status
                         <flux:icon.arrows-up-down variant="mini"/>
                     </div>
