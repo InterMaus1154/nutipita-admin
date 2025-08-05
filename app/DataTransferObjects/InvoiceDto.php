@@ -81,7 +81,7 @@ final readonly class InvoiceDto
 
         // if provided invoice number is null, generate the next available number
         if (is_null($invoiceNumber)) {
-            $invoiceNumber = Invoice::generateInvoiceNumber();
+            $invoiceNumber = Invoice::getLatestInvoiceNumber();
         } else {
             // check if the provided invoice number is valid - if already exists, invalid
             if (Invoice::where('invoice_number', $invoiceNumber)->exists()) {

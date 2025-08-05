@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -167,8 +168,8 @@ class OrderController extends Controller
 
     /**
      * Create a summary pdf from the passed in orders
-     * @param Collection $ordersAll
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function createSummaryPdf(Request $request)
     {
