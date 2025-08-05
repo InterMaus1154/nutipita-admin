@@ -54,7 +54,7 @@
                     @if($invoice->invoice_status === "paid")
                         <flux:badge color="green">Paid</flux:badge>
                     @else
-                        <flux:badge color="yellow">Due</flux:badge>
+                        <flux:badge color="orange">Unpaid</flux:badge>
                     @endif
                 </x-table.data>
                 <x-table.data>
@@ -77,7 +77,7 @@
                         </flux:link>
                     @else
                         <flux:link class="cursor-pointer"
-                                   wire:click="markDue({{$invoice->invoice_id}})">Mark Due
+                                   wire:click="markDue({{$invoice->invoice_id}})">Mark Unpaid
                         </flux:link>
                     @endif
                     <flux:link class="cursor-pointer"
