@@ -159,7 +159,6 @@ class OrderList extends Component
             ->orderByDesc('order_placed_at')
             ->orderByDesc('order_id');
 
-
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
             ->paginate(15);

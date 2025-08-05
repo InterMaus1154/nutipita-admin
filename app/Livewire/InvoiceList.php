@@ -15,6 +15,7 @@ class InvoiceList extends Component
 {
 
     use WithPagination;
+    protected $paginationTheme = 'tailwind';
 
     public array $filters = [
         'customer_id' => null
@@ -27,7 +28,6 @@ class InvoiceList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
-    protected $paginationTheme = 'tailwind';
 
     /*
      * Mark an invoice status "paid"
@@ -82,13 +82,15 @@ class InvoiceList extends Component
         $filters = $this->filters;
 
         $query = Invoice::query()
-            ->when($filters['customer_id'], function (Builder $builder) use ($filters) {
+            ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
                 return $builder->where('customer_id', $filters['customer_id']);
             })
             ->with('customer:customer_id,customer_name')
             ->orderByDesc('invoice_number');
 
         $invoices = $query->paginate(15);
-        return view('livewire.invoice-list', compact('invoices'));
+        return view('livewire.invoice-list', [
+            'invoices' => $invoices
+        ]);
     }
 }
