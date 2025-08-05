@@ -9,8 +9,7 @@
             <x-error/>
             {{--order summary--}}
             @if($withSummaryData)
-                <x-order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
-                                 :visibleByDefault="$summaryVisibleByDefault"/>
+                <livewire:order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true" :visibleByDefault="$summaryVisibleByDefault"/>
             @endif
             @if($withSummaryPdf && isset($filters['customer_id']))
                 <flux:link href="{{$this->getOrderSummaryPdfUrl()}}" class="cursor-pointer">

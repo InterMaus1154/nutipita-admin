@@ -46,7 +46,7 @@ class OrderController extends Controller
         $order_due_at = $request->validated('order_due_at');
         $is_daytime = $request->boolean('is_daytime');
 
-        $products = collect($request->array('products', []));
+        $products = collect($request->array('products'));
 
         // products with more than 0 quantity
         $products = $products->filter(function ($qty) {
@@ -110,7 +110,7 @@ class OrderController extends Controller
     {
         $order->loadMissing('customer:customer_id,customer_name', 'products');
         // TODO optimise products
-        $products = Product::all()->map(fn($product) => $product->setCurrentCustomer($order->customer));
+        $products = Product::query()->select(['product_id', 'product_name', 'product_weight_g'])->get()->map(fn($product) => $product->setCurrentCustomer($order->customer));
         return view('orders.edit', compact('order', 'products'));
     }
 
