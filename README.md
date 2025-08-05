@@ -18,11 +18,12 @@
 - Recurring orders (per customer, per day, per product)
   - cron jobs, fully automated
 - Filtering
-- Sorting (coming soon)
+- Sorting (asc, desc, clicking on specific columns)
+- Pagination
 - Dedicated page for orders that has to be done on current day
   - separated into day and night time orders
 - Order summaries (total orders, total income, total for each product)
-- 
+- Summary PDF for a customer of selected orders
 
 ### Product Management
 - Basic CRUD operations
@@ -36,7 +37,14 @@
 - Editable invoices (coming soon)
 - Invoice PDF regeneration (coming soon)
 - Send invoice via email based on a template (coming soon)
+- Filtering
+- Pagination
+- Send email to customer directly (planned)
 
 ### Income Filtering
 - dedicated page for income summaries
 - quick filtering for dates (year/month/week/day)
+
+### User Settings (planned)
+- toggle UI theme
+- product priority (in which order they should show up at any place)
