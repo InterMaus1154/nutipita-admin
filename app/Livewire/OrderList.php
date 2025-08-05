@@ -144,7 +144,6 @@ class OrderList extends Component
             $this->sortField = $field;
             $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
         }
-
         $this->resetPage();
     }
 
@@ -159,7 +158,7 @@ class OrderList extends Component
                 return $builder->where('is_daytime', true);
             })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
-                return $builder->where('customer_id', $filters['customer_id']);
+                return $builder->where('orders.customer_id', $filters['customer_id']);
             })
             ->when(!empty($filters['due_from']), function ($builder) use ($filters) {
                 return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
@@ -174,8 +173,6 @@ class OrderList extends Component
 
 
         // order sorting
-
-
         if ($this->sortField === "customer") {
             // sort by customer name
             $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
