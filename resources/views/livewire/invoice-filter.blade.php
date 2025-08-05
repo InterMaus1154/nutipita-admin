@@ -8,4 +8,5 @@
             @endforeach
         </x-form.form-select>
     </x-form.form-wrapper>
+    <flux:button wire:click="clearFilter()" class="cursor-pointer">Clear Filter</flux:button>
 </div>

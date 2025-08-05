@@ -36,6 +36,15 @@ class InvoiceFilter extends Component
         $this->dispatchEvent();
     }
 
+    /**
+     * Reset filter values to default
+     * @return void
+     */
+    public function clearFilter(): void
+    {
+        $this->resetExcept('customers');
+        $this->dispatchEvent();
+    }
 
     public function render()
     {
