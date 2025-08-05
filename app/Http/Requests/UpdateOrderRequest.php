@@ -29,6 +29,7 @@ class UpdateOrderRequest extends FormRequest
             'order_status' => ['required', \Illuminate\Validation\Rule::in(array_map(function ($status) {
                 return $status->name;
             }, OrderStatus::cases()))],
+            'is_daytime' => 'nullable|boolean',
             'products' => 'required|array',
             'products.*' => 'required|integer'
         ];

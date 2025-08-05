@@ -13,13 +13,13 @@
                 Customer
             </x-table.header>
             <x-table.header>
+                Status
+            </x-table.header>
+            <x-table.header>
                 Issue Date
             </x-table.header>
             <x-table.header>
                 Due Date
-            </x-table.header>
-            <x-table.header>
-                Status
             </x-table.header>
             <x-table.header>
                 Orders From
@@ -50,17 +50,17 @@
                             href="{{route('customers.show', ['customer' => $invoice->customer])}}">{{$invoice->customer->customer_name}}</flux:link>
                     </x-table.data>
                     <x-table.data>
-                        @dayDate($invoice->invoice_issue_date)
-                    </x-table.data>
-                    <x-table.data>
-                        @dayDate($invoice->invoice_due_date)
-                    </x-table.data>
-                    <x-table.data>
                         @if($invoice->invoice_status === "paid")
                             <flux:badge color="green">Paid</flux:badge>
                         @else
                             <flux:badge color="orange">Unpaid</flux:badge>
                         @endif
+                    </x-table.data>
+                    <x-table.data>
+                        @dayDate($invoice->invoice_issue_date)
+                    </x-table.data>
+                    <x-table.data>
+                        @dayDate($invoice->invoice_due_date)
                     </x-table.data>
                     <x-table.data>
                         {{$invoice->invoice_from ? dayDate($invoice->invoice_from) : "-"}}

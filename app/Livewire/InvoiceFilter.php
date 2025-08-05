@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class InvoiceFilter extends Component
@@ -31,6 +32,7 @@ class InvoiceFilter extends Component
             'customer_id' => $this->customer_id,
             'invoice_status' => $this->invoice_status
         ]);
+
     }
 
     public function updated()
