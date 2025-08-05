@@ -47,7 +47,7 @@ class CreateManualInvoiceForm extends Component
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
-        $this->invoice_number = Invoice::getLatestInvoiceNumber();
+        $this->invoice_number = Invoice::getNextInvoiceNumber();
 
     }
 

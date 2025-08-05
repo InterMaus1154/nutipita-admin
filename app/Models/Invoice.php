@@ -30,7 +30,7 @@ class Invoice extends Model
     /*
      * Custom methods
      */
-    public static function getLatestInvoiceNumber(string $latestBy = "invoice_number"): string
+    public static function getNextInvoiceNumber(string $latestBy = "invoice_number"): string
     {
         $latestInvoice = Invoice::latest($latestBy)->first();
         if ($latestInvoice) {
