@@ -112,7 +112,7 @@ class StandingOrderController extends Controller
      */
     public function show(StandingOrder $order): View
     {
-        $products = Product::select(['product_id', 'product_name'])->orderBy('product_id')->get();
+        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->orderBy('product_id')->get();
         $order->loadMissing('customer:customer_id,customer_name', 'days', 'days.products');
         return view('standing_orders.show', compact('order', 'products'));
     }
@@ -122,7 +122,7 @@ class StandingOrderController extends Controller
      */
     public function edit(StandingOrder $order): View
     {
-        $products = Product::select(['product_id', 'product_name'])->get();
+        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         $order->loadMissing('days', 'days.products', 'customer');
         return view('standing_orders.edit', compact('order', 'products'));
     }

@@ -15,7 +15,7 @@
 
                     @foreach($productTotals as $productTotal)
                         @unless(empty($productTotal['qty']))
-                            <x-data-box :dataBoxHeader="$productTotal['name']" :dataBoxValue="amountFormat($productTotal['qty'])"/>
+                            <x-data-box :dataBoxHeader="$productTotal['name'].' '.$productTotal['g'].'g'" :dataBoxValue="amountFormat($productTotal['qty'])"/>
                         @endunless
                     @endforeach
                 </div>

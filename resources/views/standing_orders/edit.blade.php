@@ -17,12 +17,13 @@
             {{--------}}
             <div class="max-w-sm">
                 <label class="block text-sm font-medium mb-2 dark:text-white" for="is_active">Is Active?</label>
-                <input type="checkbox" name="is_active" @checked($order->is_active) id="is_active" value="1" >
+                <input type="checkbox" name="is_active" @checked($order->is_active) id="is_active" value="1">
             </div>
             <div class="max-w-sm">
                 <label class="block text-sm font-medium mb-2 dark:text-white" for="start_from">Start From</label>
                 <input type="date" id="start_from" name="start_from"
-                       value="{{$order->start_from}}" class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                       value="{{$order->start_from}}"
+                       class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
             </div>
             <div class="flex gap-8 flex-wrap my-2">
                 {{--count the days from 0 to 7--}}
@@ -50,7 +51,7 @@
                                 <div class="max-w-sm">
                                     <label
                                         class="block text-sm font-medium mb-2 dark:text-white"
-                                        for="products[{{$i}}][{{$product->product_id}}]">{{$product->product_name}}</label>
+                                        for="products[{{$i}}][{{$product->product_id}}]">{{$product->product_name}} {{$product->product_weight_g}}g</label>
                                     <input
                                         type="number"
                                         value="{{$qty}}"

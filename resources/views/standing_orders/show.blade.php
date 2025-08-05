@@ -32,7 +32,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">Created At</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{dayDate(Carbon::parse($order->created_at)->toDateString())}}</td>
                             </tr>
-                        </table>
+                        </table class="divide-y divide-gray-200 dark:divide-neutral-700 border border-zinc-600 border-solid">
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                             <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200"></td>
                                 @foreach($products as $product)
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$product->product_name}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$product->product_name}} {{$product->product_weight_g}}g</td>
                                 @endforeach
                             </tr>
                             @for($i = 0;$i<7;$i++)

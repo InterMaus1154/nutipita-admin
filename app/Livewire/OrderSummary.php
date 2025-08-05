@@ -26,7 +26,7 @@ class OrderSummary extends Component
         $this->orders = $orders;
 
         if (is_null($products)) {
-            $this->products = Product::select(['product_id', 'product_name'])->get();
+            $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         } else {
             $this->products = $products;
         }
@@ -59,6 +59,7 @@ class OrderSummary extends Component
                 }else{
                     $this->productTotals[$product->product_id]['qty'] = $order->getTotalOfProduct($product);
                     $this->productTotals[$product->product_id]['name'] = $product->product_name;
+                    $this->productTotals[$product->product_id]['g'] = $product->product_weight_g;
                 }
             }
         }
