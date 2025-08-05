@@ -1,11 +1,10 @@
-@props(['products', 'orders', 'withIncome'])
 <div class="space-y-4">
     @if($orders->isNotEmpty())
         <div class="space-y-4">
             <flux:button wire:click="toggleSummaries()">Toggle Summaries</flux:button>
             <div @class([
-    'hidden' => !$visible
-]) id="summaryContainer">
+                        'hidden' => !$visible
+                    ])>
                 <div class="flex gap-6 flex-wrap">
                     @if($withIncome)
                         <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>
@@ -15,7 +14,9 @@
 
                     @foreach($productTotals as $productTotal)
                         @unless(empty($productTotal['qty']))
-                            <x-data-box :dataBoxHeader="$productTotal['name'].' '.$productTotal['g'].'g'" :dataBoxValue="amountFormat($productTotal['qty'])"/>
+                            <x-data-box wire:key="$productTotal['name']"
+                                        :dataBoxHeader="$productTotal['name'].' '.$productTotal['g'].'g'"
+                                        :dataBoxValue="amountFormat($productTotal['qty'])"/>
                         @endunless
                     @endforeach
                 </div>

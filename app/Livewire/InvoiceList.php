@@ -15,6 +15,7 @@ class InvoiceList extends Component
 {
 
     use WithPagination;
+
     protected $paginationTheme = 'tailwind';
 
     public array $filters = [
@@ -84,6 +85,9 @@ class InvoiceList extends Component
         $query = Invoice::query()
             ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
                 return $builder->where('customer_id', $filters['customer_id']);
+            })
+            ->when(!empty($filters['invoice_status']), function (Builder $builder) use ($filters) {
+                return $builder->where('invoice_status', $filters['invoice_status']);
             })
             ->with('customer:customer_id,customer_name')
             ->orderByDesc('invoice_number');

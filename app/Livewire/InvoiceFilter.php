@@ -11,6 +11,7 @@ class InvoiceFilter extends Component
 
     // --- Filter data ---
     public ?string $customer_id = null;
+    public ?string $invoice_status = null;
     // ---
 
     public Collection $customers;
@@ -27,7 +28,8 @@ class InvoiceFilter extends Component
     public function dispatchEvent(): void
     {
         $this->dispatch('update-filter', [
-            'customer_id' => $this->customer_id
+            'customer_id' => $this->customer_id,
+            'invoice_status' => $this->invoice_status
         ]);
     }
 
