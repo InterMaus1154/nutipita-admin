@@ -99,7 +99,7 @@ class OrderList extends Component
 
     public function updatedUpdateOrderStatusName($value)
     {
-        if(!auth()->check()){
+        if (!auth()->check()) {
             abort(403);
         }
         if ($this->modalSelectedOrder) {
@@ -126,10 +126,10 @@ class OrderList extends Component
             abort(401, 'You are unauthenticated!');
         }
 
-        try{
+        try {
             $order->delete();
             session()->flash('success', "Order #{$order->order_id} deleted successfully");
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Error at deleting order. Check log');
             DB::rollBack();
@@ -138,9 +138,9 @@ class OrderList extends Component
 
     public function setSort($field)
     {
-        if($this->sortField === $field){
+        if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
-        }else{
+        } else {
             $this->sortField = $field;
             $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
         }
@@ -174,11 +174,28 @@ class OrderList extends Component
 
 
         // order sorting
-        if($this->sortField === "customer"){
+
+
+        if ($this->sortField === "customer") {
+            // sort by customer name
             $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
                 ->orderBy('customers.customer_name', $this->sortDirection)
                 ->select('orders.*');
-        }else{
+        } else if ($this->sortField === "total_pita") {
+            // sort by the amount of total pita in an order
+            $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
+                ->select('orders.*')
+                ->selectRaw('SUM(order_product.product_qty) as total_pita')
+                ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
+                ->orderBy('total_pita', $this->sortDirection);
+        } else if ($this->sortField === "total_price") {
+            // sort by total price of an order
+            $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
+                ->select('orders.*')
+                ->selectRaw('SUM(order_product.product_qty * order_product.order_product_unit_price) as total_price')
+                ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
+                ->orderBy('total_price', $this->sortDirection);
+        } else {
             $query->orderBy($this->sortField, $this->sortDirection);
         }
 

@@ -57,11 +57,17 @@
                         {{$product->product_name}} {{$product->product_weight_g}}g
                     </x-table.header>
                 @endforeach
-                <x-table.header>
-                    Total Pita
+                <x-table.header wire:click="setSort('total_pita')">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
+                        Total Pita
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
-                <x-table.header>
-                    Total £
+                <x-table.header wire:click="setSort('total_price')">
+                    <div class="flex items-center justify-center text-center cursor-pointer">
+                        Total £
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
                 <x-table.header>
                     Actions
