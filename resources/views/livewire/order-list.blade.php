@@ -22,20 +22,32 @@
         </div>
         <x-table.table>
             <x-table.head>
-                <x-table.header>
-                    #ID
+                <x-table.header wire:click="setSort('order_id')">
+                    <div class="flex items-center cursor-pointer">
+                        #ID
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
                 <x-table.header>
                     Customer
                 </x-table.header>
-                <x-table.header>
-                    Placed Date
+                <x-table.header wire:click="setSort('order_placed_at')">
+                    <div class="flex items-center cursor-pointer">
+                        Placed Date
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
-                <x-table.header>
-                    Due Date
+                <x-table.header wire:click="setSort('order_due_at')">
+                    <div class="flex items-center cursor-pointer">
+                        Due Date
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
-                <x-table.header>
-                    Status
+                <x-table.header wire:click="setSort('order_status')">
+                    <div class="flex items-center cursor-pointer">
+                        Status
+                        <flux:icon.arrows-up-down variant="mini"/>
+                    </div>
                 </x-table.header>
                 @foreach($products as $product)
                     <x-table.header>

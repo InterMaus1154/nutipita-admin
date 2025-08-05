@@ -54,6 +54,9 @@ class OrderList extends Component
      * End
      */
 
+    public string $sortField = "order_placed_at";
+    public string $sortDirection = "desc";
+
 
     // Initial component load
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false)
@@ -133,6 +136,18 @@ class OrderList extends Component
         }
     }
 
+    public function setSort($field)
+    {
+        if($this->sortField === $field){
+            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
+        }else{
+            $this->sortField = $field;
+            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
+        }
+
+        $this->resetPage();
+    }
+
     public function render()
     {
         $filters = $this->filters;
@@ -156,8 +171,7 @@ class OrderList extends Component
                 return $builder->where('order_status', $filters['status']);
             })
             ->with('customer:customer_id,customer_name', 'products')
-            ->orderByDesc('order_placed_at')
-            ->orderByDesc('order_id');
+            ->orderBy($this->sortField, $this->sortDirection);
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
