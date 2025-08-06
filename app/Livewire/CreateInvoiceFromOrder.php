@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
@@ -31,6 +32,7 @@ class CreateInvoiceFromOrder extends Component
     public ?string $due_to = null;
     public string $invoice_issue_date;
     public string $invoice_due_date;
+    public string $invoice_number;
 
     public $ordersAll = [];
 
@@ -44,6 +46,7 @@ class CreateInvoiceFromOrder extends Component
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
+        $this->invoice_number = Invoice::getNextInvoiceNumber();
     }
 
     public function dispatchEvent()
@@ -59,20 +62,21 @@ class CreateInvoiceFromOrder extends Component
     // generate invoice
     public function submit(InvoiceService $invoiceService)
     {
-        if (collect($this->ordersAll)->isEmpty()) {
-            session()->flash('error', 'Invoice cannot be created with 0 orders!');
-            return;
-        }
-
         $this->validate([
             'customer_id' => 'required',
             'due_from' => 'nullable',
             'due_to' => 'nullable',
             'invoice_issue_date' => 'required|date',
-            'invoice_due_date' => 'required|date'
+            'invoice_due_date' => 'required|date',
+            'invoice_number' => 'required|unique:invoices,invoice_number'
         ], [
             'customer_id.required' => 'Select a customer first!'
         ]);
+
+        if (collect($this->ordersAll)->isEmpty()) {
+            session()->flash('error', 'Invoice cannot be created with 0 orders!');
+            return;
+        }
 
         DB::beginTransaction();
         try {
@@ -82,7 +86,8 @@ class CreateInvoiceFromOrder extends Component
                 invoiceIssueDate: $this->invoice_issue_date,
                 invoiceDueDate: $this->invoice_due_date,
                 invoiceOrdersFrom: $this->due_from,
-                invoiceOrdersTo: $this->due_to
+                invoiceOrdersTo: $this->due_to,
+                invoiceNumber: $this->invoice_number
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
 

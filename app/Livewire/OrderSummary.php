@@ -46,11 +46,9 @@ class OrderSummary extends Component
     {
         $this->reset(['totalPita', 'productTotals', 'totalIncome']);
 
-        $this->totalIncome = $this->orders->sum(function($order){
-            return $order->total_price;
-        });
         foreach ($this->orders as $order) {
             // calculate total income for all orders
+            $this->totalIncome += $order->total_price;
 
             $this->totalPita += $order->total_pita;
 
