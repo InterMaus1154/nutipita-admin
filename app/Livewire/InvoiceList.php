@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,6 +18,11 @@ class InvoiceList extends Component
     use WithPagination;
 
     protected $paginationTheme = 'tailwind';
+
+    // --- Sorting
+    public string $sortField = "invoice_number";
+    public string $sortDirection = "desc";
+    // ----
 
     public array $filters = [
         'customer_id' => null
@@ -78,19 +84,41 @@ class InvoiceList extends Component
 
     }
 
-    public function render()
+    /**
+     * Change sorted by field
+     * @param string $field
+     * @return void
+     */
+    public function setSort(string $field): void
+    {
+        if($field !== $this->sortField) {
+            $this->sortField = $field;
+        }
+        $this->sortDirection = $this->sortDirection === 'desc' ? 'asc' : 'desc';
+        $this->resetPage();
+    }
+
+    public function render(): View
     {
         $filters = $this->filters;
 
         $query = Invoice::query()
             ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
-                return $builder->where('customer_id', $filters['customer_id']);
+                return $builder->where('invoices.customer_id', $filters['customer_id']);
             })
             ->when(!empty($filters['invoice_status']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoice_status', $filters['invoice_status']);
             })
-            ->with('customer:customer_id,customer_name')
-            ->orderByDesc('invoice_number');
+            ->with('customer:customer_id,customer_name');
+
+        if($this->sortField === 'customer'){
+            $query
+                ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
+                ->orderBy('customers.customer_name', $this->sortDirection)
+                ->select('invoices.*');
+        }else{
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
 
         $invoices = $query->paginate(15);
         return view('livewire.invoice-list', [

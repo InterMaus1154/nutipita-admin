@@ -6,20 +6,35 @@
     </div>
     <x-table.table>
         <x-table.head>
-            <x-table.header>
-                Invoice#
+            <x-table.header wire:click="setSort('invoice_number')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Invoice#
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
-            <x-table.header>
-                Customer
+            <x-table.header wire:click="setSort('customer')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Customer
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
-            <x-table.header>
-                Status
+            <x-table.header wire:click="setSort('invoice_status')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Status
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
-            <x-table.header>
-                Issue Date
+            <x-table.header wire:click="setSort('invoice_issue_date')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Issue Date
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
-            <x-table.header>
-                Due Date
+            <x-table.header wire:click="setSort('invoice_due_date')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Due Date
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
             <x-table.header>
                 Orders From
@@ -27,8 +42,11 @@
             <x-table.header>
                 Orders To
             </x-table.header>
-            <x-table.header>
-                Invoice Total - £
+            <x-table.header wire:click="setSort('invoice_total')">
+                <div class="flex items-center justify-center text-center cursor-pointer">
+                    Invoice Total
+                    <flux:icon.arrows-up-down variant="mini"/>
+                </div>
             </x-table.header>
             <x-table.header>
                 Actions

@@ -136,14 +136,12 @@ class OrderList extends Component
         }
     }
 
-    public function setSort($field)
+    public function setSort($field): void
     {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
-        } else {
+        if ($this->sortField !== $field) {
             $this->sortField = $field;
-            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
         }
+        $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
         $this->resetPage();
     }
 
