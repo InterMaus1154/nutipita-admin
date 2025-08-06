@@ -92,5 +92,5 @@
         @endif
         <flux:button variant="primary" type="submit">Generate Invoice</flux:button>
     </form>
-    <livewire:order-list :summaryVisibleByDefault="true"/>
+    <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true"/>
 </div>
