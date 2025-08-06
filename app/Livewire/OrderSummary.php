@@ -10,7 +10,6 @@ use Livewire\Component;
 
 class OrderSummary extends Component
 {
-    #[Reactive]
     public Collection $orders;
     public Collection|null $products = null;
     public bool $visible = false;

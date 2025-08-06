@@ -59,8 +59,9 @@ class OrderList extends Component
 
 
     // Initial component load
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false)
+    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false): void
     {
+        $this->resetPage();
         $this->withSummaryData = $withSummaryData;
         $this->filters = array_merge([
             'customer_id' => null,
@@ -75,7 +76,7 @@ class OrderList extends Component
 
     // when any filter is received from another component
     #[On('update-filter')]
-    public function applyFilter(array $filters)
+    public function applyFilter(array $filters): void
     {
         $this->resetPage();
         $this->filters = array_merge($this->filters, $filters);
@@ -120,15 +121,17 @@ class OrderList extends Component
         return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);
     }
 
-    public function deleteOrder(Order $order)
+    public function deleteOrder(Order $order): void
     {
         if (!auth()->check()) {
             abort(401, 'You are unauthenticated!');
         }
 
+        DB::beginTransaction();
         try {
             $order->delete();
             session()->flash('success', "Order #{$order->order_id} deleted successfully");
+            DB::commit();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Error at deleting order. Check log');
