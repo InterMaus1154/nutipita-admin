@@ -10,12 +10,12 @@
         <form action="{{route('orders.store')}}" method="POST" class="flex flex-col gap-4">
             @csrf
             <x-form.form-wrapper>
-                <x-form.form-label id="order_placed_at" text="Order Placed At"/>
+                <x-form.form-label id="order_placed_at" text="Order Placed At (default: today)"/>
                 <x-form.form-input type="date" id="order_placed_at" name="order_placed_at" value="{{old('order_placed_at', request('order_placed_at', now()->toDateString()))}}"/>
             </x-form.form-wrapper>
             <x-form.form-wrapper>
-                <x-form.form-label id="order_due_at" text="Order Due At"/>
-                <x-form.form-input type="date" id="order_due_at" name="order_due_at" value="{{old('order_due_at', request('order_due_at', now()->toDateString()))}}"/>
+                <x-form.form-label id="order_due_at" text="Order Due At (default: for tomorrow, made today)"/>
+                <x-form.form-input type="date" id="order_due_at" name="order_due_at" value="{{old('order_due_at', request('order_due_at', now()->addDay()->toDateString()))}}"/>
             </x-form.form-wrapper>
             <x-form.form-wrapper>
                 <x-form.form-label id="is_daytime">
