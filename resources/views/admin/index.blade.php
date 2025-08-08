@@ -24,6 +24,7 @@
                     <div class="flex flex-col gap-4" id="dayTimeOrdersContainer">
                         <flux:link>Download total day orders PDF</flux:link>
                         <livewire:order-list
+                            wire:key="day-orders"
                             :withSummaryData="true"
                             :summaryVisibleByDefault="true"
                             :filters="[
@@ -55,6 +56,7 @@
                             Download total night orders PDF
                         </flux:link>
                         <livewire:order-list
+                            wire:key="night-orders"
                             :withSummaryData="true"
                             :summaryVisibleByDefault="true"
                             :filters="[
