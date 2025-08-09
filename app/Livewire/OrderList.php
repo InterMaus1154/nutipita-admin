@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -54,8 +55,14 @@ class OrderList extends Component
      * End
      */
 
+
+    /*
+     * Sorting variables
+     */
     public string $sortField = "order_placed_at";
     public string $sortDirection = "desc";
+
+    public string $mobileSort = "desc:order_id";
 
 
     // Initial component load
@@ -85,7 +92,7 @@ class OrderList extends Component
     /*
      * Methods for controlling status update modal
      */
-    public function openStatusUpdateModal(Order $order)
+    public function openStatusUpdateModal(Order $order): void
     {
         $this->modalSelectedOrder = $order;
         $this->isStatusUpdateModalVisible = true;
@@ -93,12 +100,17 @@ class OrderList extends Component
 
     }
 
-    public function closeStatusUpdateModal()
+    public function closeStatusUpdateModal(): void
     {
         $this->reset(['modalSelectedOrder', 'isStatusUpdateModalVisible', 'updateOrderStatusName']);
     }
 
-    public function updatedUpdateOrderStatusName($value)
+    /**
+     * Handler of updating order status in modal
+     * @param $value
+     * @return void
+     */
+    public function updatedUpdateOrderStatusName($value): void
     {
         if (!auth()->check()) {
             abort(403);
@@ -139,16 +151,42 @@ class OrderList extends Component
         }
     }
 
-    public function setSort($field): void
+    /**
+     * Set the sorting field and direction
+     * @param string $field
+     * @param string|null $direction
+     * @return void
+     */
+    public function setSort(string $field, ?string $direction = null): void
     {
-        if ($this->sortField !== $field) {
+        // check if direction provided
+        // set both field and direction explicitly
+        if(!is_null($direction)){
             $this->sortField = $field;
+            $this->sortDirection = $direction;
+        }else{
+            if ($this->sortField !== $field) {
+                $this->sortField = $field;
+            }
+            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
         }
-        $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
+
+        // paginator has to be reset to default at every new sorting
         $this->resetPage();
     }
 
-    public function render()
+    /**
+     * Track mobile sorting changes
+     * @param string $value
+     * @return void
+     */
+    public function updatedMobileSort(string $value): void
+    {
+        [$direction, $field] = explode(':', $value);
+        $this->setSort($field, $direction);
+    }
+
+    public function render(): View
     {
         $filters = $this->filters;
         $query = Order::query()
