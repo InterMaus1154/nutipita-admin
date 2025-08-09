@@ -61,11 +61,24 @@
         </div>
         <div class="flex flex-wrap gap-4">
             <flux:button.group>
+                <flux:button wire:click="setYear">Year</flux:button>
+                <flux:button wire:click="setMonth">Month</flux:button>
                 <flux:button wire:click="setWeek">Week</flux:button>
+            </flux:button.group>
+            <flux:button.group>
                 <flux:button wire:click="setToday">Today</flux:button>
                 <flux:button wire:click="setYesterday">Yesterday</flux:button>
             </flux:button.group>
         </div>
+        <x-form.form-wrapper>
+            <x-form.form-label id="order_status" text="Order Status"/>
+            <x-form.form-select id="order_status" wireModelLive="order_status">
+                <option value="">---Select status---</option>
+                @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                    <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+                @endforeach
+            </x-form.form-select>
+        </x-form.form-wrapper>
         <h3 class="font-bold">Product Info</h3>
         @if(!empty($customer_id))
             @foreach($products as $product)

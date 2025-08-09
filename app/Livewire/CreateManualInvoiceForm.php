@@ -37,6 +37,8 @@ class CreateManualInvoiceForm extends Component
     // End Form fields
     // ---
 
+    public ?string $order_status = null;
+
     public function mount()
     {
         $this->dispatchAble = true;
@@ -62,7 +64,8 @@ class CreateManualInvoiceForm extends Component
             'customer_id' => $this->customer_id,
             'due_from' => $this->due_from,
             'due_to' => $this->due_to,
-            'cancelled_order_hidden' => true
+            'cancelled_order_hidden' => true,
+            'status' => $this->order_status
         ]);
     }
 
