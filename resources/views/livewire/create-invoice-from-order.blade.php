@@ -44,6 +44,15 @@
                 <flux:button wire:click="setYesterday">Yesterday</flux:button>
             </flux:button.group>
         </div>
+        <x-form.form-wrapper>
+            <x-form.form-label id="order_status" text="Order Status"/>
+            <x-form.form-select id="order_status" wireModelLive="order_status">
+                <option value="">---Select status---</option>
+                @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                    <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+                @endforeach
+            </x-form.form-select>
+        </x-form.form-wrapper>
         <h3 class="font-bold">Invoice Info</h3>
         <div class="flex gap-6">
             <div class="max-w-sm">

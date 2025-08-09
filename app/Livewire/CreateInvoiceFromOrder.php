@@ -30,6 +30,7 @@ class CreateInvoiceFromOrder extends Component
     public ?int $customer_id = null;
     public ?string $due_from = null;
     public ?string $due_to = null;
+    public ?string $order_status = null;
     public string $invoice_issue_date;
     public string $invoice_due_date;
     public string $invoice_number;
@@ -55,8 +56,14 @@ class CreateInvoiceFromOrder extends Component
             'customer_id' => $this->customer_id,
             'due_from' => $this->due_from,
             'due_to' => $this->due_to,
-            'cancelled_order_hidden' => true
+            'cancelled_order_hidden' => true,
+            'status' => $this->order_status
         ]);
+    }
+
+    public function updatedOrderStatus($value)
+    {
+
     }
 
     // generate invoice
