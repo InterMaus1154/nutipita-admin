@@ -177,7 +177,7 @@
     <div class="flex flex-col gap-4 sm:hidden">
         @foreach($orders as $order)
             {{--card wrapper--}}
-            <div class="flex flex-col gap-8 rounded-sm shadow-sm border-1 border-gray-600 p-4">
+            <div class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-gray-600 p-4">
                 {{--card header--}}
                 <div class="flex gap-4 justify-between">
                     {{--status badges--}}
@@ -244,8 +244,7 @@
                         {{$order->customer->customer_name}}
                     </flux:link>
                     <div class="flex gap-2">
-                        <flux:badge color="indigo">Due:</flux:badge>
-                        <span class="text-xl font-semibold">
+                        <span class="text-base font-semibold">
                             @dayDate($order->order_due_at)
                         </span>
                     </div>
@@ -253,12 +252,12 @@
                 {{--total pita and price info--}}
                 <div class="flex justify-between gap-4 items-center flex-wrap">
                     <div class="flex gap-2">
-                        <flux:badge color="indigo">Total Pita</flux:badge>
-                        <span class="text-xl">@amountFormat($order->total_pita)</span>
+                        <flux:badge color="indigo">Pita:</flux:badge>
+                        <span class="text-base">@amountFormat($order->total_pita)</span>
                     </div>
                     <div class="flex gap-2">
-                        <flux:badge color="indigo">Total Price:</flux:badge>
-                        <span class="text-xl">@moneyFormat($order->total_price)</span>
+                        <flux:badge color="indigo">£:</flux:badge>
+                        <span class="text-base">@moneyFormat($order->total_price)</span>
                     </div>
                 </div>
                 {{--extra info section wrapper--}}
@@ -267,12 +266,12 @@
                     <div class="flex-col gap-4 hidden" id="extra-info-{{$order->order_id}}">
                         <div class="flex gap-2">
                             <flux:badge color="indigo">Placed:</flux:badge>
-                            <span class="text-xl">@dayDate($order->order_placed_at)</span>
+                            <span class="text-base">@dayDate($order->order_placed_at)</span>
                         </div>
                         {{--product wrapper--}}
-                        <div class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-4">
                             @foreach($order->products as $orderProduct)
-                                <div class="text-lg flex gap-4 justify-between items-center">
+                                <div class="text-base flex gap-4 justify-between items-center">
                                     <span>{{$orderProduct->product_name}}</span>
                                     <div class="flex flex-col gap-1 justify-center items-center text-center">
                                         <span>@amountFormat($orderProduct->pivot->product_qty) x @unitPriceFormat($orderProduct->pivot->order_product_unit_price)</span>
