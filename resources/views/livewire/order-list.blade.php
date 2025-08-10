@@ -14,8 +14,6 @@
     <div class="sm:hidden">
         <x-form.form-label id="mobile_sort" text="Sort by"/>
         <x-form.form-select id="mobile_sort" wireModelLive="mobileSort">
-            <option value="desc:order_id">Order Id (desc) [default]</option>
-            <option value="asc:order_id">Order Id (asc)</option>
             <option value="desc:customer">Customer Name (desc)</option>
             <option value="asc:customer">Customer Name (asc)</option>
             <option value="desc:order_placed_at">Placed At (desc)</option>
@@ -45,11 +43,8 @@
     <div class="hidden sm:block">
         <x-table.table>
             <x-table.head>
-                <x-table.header wire:click="setSort('order_id')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
+                <x-table.header>
                         #
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
                 </x-table.header>
                 <x-table.header wire:click="setSort('customer')">
                     <div class="flex items-center justify-center text-center cursor-pointer">

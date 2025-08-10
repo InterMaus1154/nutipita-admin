@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-4 ">
-    <div class="flex gap-8 justify-between flex-wrap sm:grid grid-cols-3">
-        <div class="flex gap-4">
+    <div class="flex gap-8 justify-between flex-wrap sm:grid grid-cols-3 items-center">
+        <div class="flex gap-4 items-center">
             {{--customer filter--}}
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="customer_id" text="Customer"/>
@@ -21,6 +21,12 @@
                     @endforeach
                 </x-form.form-select>
             </x-form.form-wrapper>
+            <div class="flex flex-col gap-8 items-center">
+                <div></div>
+                <flux:button wire:click="clearFilter()">
+                    <flux:icon.arrow-path-rounded-square />
+                </flux:button>
+            </div>
         </div>
         {{--quick due date filters--}}
         <div class="flex flex-col items-center flex-wrap gap-2">

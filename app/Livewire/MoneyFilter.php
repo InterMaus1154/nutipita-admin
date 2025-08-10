@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Traits\HasQuickDueFilter;
+use Carbon\WeekDay;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -11,18 +13,19 @@ use Livewire\Component;
 class MoneyFilter extends Component
 {
 
+    use HasQuickDueFilter;
+
     public $orders;
     public $customers;
     public int $orderCount;
     public float $totalIncome;
 
-    public string $due_from;
-    public string $due_to;
     public ?string $customer_id = null;
 
-    public function mount()
-    {
 
+    public function mount(): void
+    {
+        $this->setAfterChangeMethod('loadOrderData');
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
 
         $this->totalIncome = 0;
@@ -60,34 +63,6 @@ class MoneyFilter extends Component
             });
     }
 
-    public function setToday(): void
-    {
-        $this->due_from = now()->addDay()->toDateString();
-        $this->due_to = now()->addDay()->toDateString();
-
-        $this->loadOrderData();
-    }
-
-    public function setWeek(): void
-    {
-        $this->due_from = now()->startOfWeek()->subDay()->format('Y-m-d');
-        $this->due_to = now()->endOfWeek()->subDay()->format('Y-m-d');
-        $this->loadOrderData();
-    }
-
-    public function setMonth(): void
-    {
-        $this->due_from = now()->startOfMonth()->toDateString();
-        $this->due_to = now()->endOfMonth()->toDateString();
-        $this->loadOrderData();
-    }
-
-    public function setYear()
-    {
-        $this->due_from = now()->startOfYear()->toDateString();
-        $this->due_to = now()->endOfYear()->toDateString();
-        $this->loadOrderData();
-    }
 
     public function render(): View
     {

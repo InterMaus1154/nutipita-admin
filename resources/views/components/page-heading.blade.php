@@ -6,7 +6,7 @@
                 Go Back
             </flux:link>
         </div>
-        <flux:heading size="xl" class="justify-self-center text-center">{{$title}}</flux:heading>
+        <h1 class="justify-self-center text-center text-lg sm:text-4xl font-bold">{{$title}}</h1>
         <div class="justify-self-end text-right">
             {{$slot}}
         </div>

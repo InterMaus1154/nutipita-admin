@@ -9,16 +9,14 @@ use Livewire\Component;
 
 class OrderFilter extends Component
 {
-
     use HasQuickDueFilter;
-
-    protected bool $dispatchAble = true;
 
     public int|string|null $customer_id = null;
     public ?string $status = null;
     public ?int $month = null;
     public bool $cancelled_order_hidden = true;
     public bool $daytime_only = false;
+
 
     public array $months = [
         '1' => 'January',
@@ -40,6 +38,10 @@ class OrderFilter extends Component
         $this->dispatchEvent();
     }
 
+    public function mount()
+    {
+       $this->setWeek();
+    }
 
     /**
      * Toggle
