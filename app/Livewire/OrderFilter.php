@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Customer;
 use App\Traits\HasQuickDueFilter;
 use Carbon\Carbon;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class OrderFilter extends Component
@@ -33,14 +34,15 @@ class OrderFilter extends Component
         '12' => 'December',
     ];
 
-    public function updated()
+    public function updated(): void
     {
         $this->dispatchEvent();
     }
 
-    public function mount()
+    public function mount(): void
     {
-       $this->setWeek();
+        /*set week as default*/
+        $this->setWeek();
     }
 
     /**
@@ -84,7 +86,7 @@ class OrderFilter extends Component
         $this->dispatchEvent();
     }
 
-    public function render()
+    public function render(): View
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
         return view('livewire.order-filter', compact('customers'));
