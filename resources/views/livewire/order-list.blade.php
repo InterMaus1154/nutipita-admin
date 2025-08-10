@@ -50,7 +50,7 @@
             <x-table.head>
                 <x-table.header wire:click="setSort('order_id')">
                     <div class="flex items-center justify-center text-center cursor-pointer">
-                        #ID
+                        #
                         <flux:icon.arrows-up-down variant="mini"/>
                     </div>
                 </x-table.header>
@@ -100,7 +100,10 @@
                 </x-table.header>
             </x-table.head>
             <x-table.body>
-                @forelse($orders as $order)
+                @forelse($orders as $index => $order)
+                    @php
+                        $orderCount = $orders->total() - ($orders->firstItem() + $index) + 1;
+                    @endphp
                     <x-table.row wire:key="order-{{$order->order_id}}">
                         <x-table.data>
                             @if($order->is_standing)
@@ -110,7 +113,8 @@
                                 <flux:badge color="cyan" size="lg">D</flux:badge>
                             @endif
                             <flux:link href="{{route('orders.show', compact('order'))}}">
-                                #{{$order->order_id}}</flux:link>
+                                #{{$orderCount}}
+                            </flux:link>
                         </x-table.data>
                         <x-table.data>
                             <flux:link
