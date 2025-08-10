@@ -40,10 +40,21 @@ class OrderFilter extends Component
         $this->dispatchEvent();
     }
 
+
+    /**
+     * Toggle
+     * @return void
+     */
+    public function toggleDaytime(): void
+    {
+        $this->daytime_only = !$this->daytime_only;
+        $this->dispatchEvent();
+    }
+
     /*
      * Listens for month update
      */
-    public function updatedMonth()
+    public function updatedMonth(): void
     {
         $year = now()->year;
 
@@ -52,7 +63,7 @@ class OrderFilter extends Component
         $this->dispatchEvent();
     }
 
-    public function dispatchEvent()
+    public function dispatchEvent(): void
     {
         $this->dispatch('update-filter', [
             'customer_id' => $this->customer_id,
@@ -65,7 +76,7 @@ class OrderFilter extends Component
         ]);
     }
 
-    public function clearFilter()
+    public function clearFilter(): void
     {
         $this->reset();
         $this->dispatchEvent();

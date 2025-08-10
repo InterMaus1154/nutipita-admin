@@ -194,7 +194,10 @@ class OrderList extends Component
                 return $builder->nonCancelled();
             })
             ->when($filters['daytime_only'], function ($builder) {
-                return $builder->where('is_daytime', true);
+                return $builder->where('orders.is_daytime', true);
+            })
+            ->when(!$filters['daytime_only'], function($builder){
+                return $builder->where('orders.is_daytime', false);
             })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('orders.customer_id', $filters['customer_id']);

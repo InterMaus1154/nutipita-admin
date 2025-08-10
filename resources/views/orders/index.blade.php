@@ -1,8 +1,8 @@
 <x-flux-layout>
-    <x-page-section class="flex flex-col gap-4">
+    <x-page-section class="flex flex-col gap-8">
         <x-page-heading title="Orders">
-            <flux:link href="{{route('orders.create')}}" class="action-link">
-                <flux:icon.plus-circle class="size-12"/>
+            <flux:link href="{{route('orders.create')}}" class="action-link" title="Add new order">
+                <flux:icon.plus-circle class="size-8" />
             </flux:link>
         </x-page-heading>
         <x-success/>
