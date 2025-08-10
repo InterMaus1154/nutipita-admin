@@ -1,27 +1,30 @@
-<div class="flex flex-col gap-4 items-start">
-    <div class="flex gap-8 items-center flex-wrap">
-        {{--customer filter--}}
-        <x-form.form-wrapper>
-            <x-form.form-label id="customer_id" text="Customer"/>
-            <x-form.form-select id="customer_id" wireModelLive="customer_id">
-                <option value="">---Select customer---</option>
-                @foreach($customers as $customer)
-                    <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
-                @endforeach
-            </x-form.form-select>
-        </x-form.form-wrapper>
-        {{--status filter--}}
-        <x-form.form-wrapper>
-            <x-form.form-label id="order_status" text="Status"/>
-            <x-form.form-select id="order_status" wireModelLive="status">
-                <option value="">---Select status---</option>
-                @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
-                    <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
-                @endforeach
-            </x-form.form-select>
-        </x-form.form-wrapper>
+<div class="flex flex-col gap-4 ">
+    <div class="flex gap-8 justify-between flex-wrap sm:grid grid-cols-3">
+        <div class="flex gap-4">
+            {{--customer filter--}}
+            <x-form.form-wrapper center="true">
+                <x-form.form-label id="customer_id" text="Customer"/>
+                <x-form.form-select id="customer_id" wireModelLive="customer_id">
+                    <option value=""></option>
+                    @foreach($customers as $customer)
+                        <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
+                    @endforeach
+                </x-form.form-select>
+            </x-form.form-wrapper>
+            {{--status filter--}}
+            <x-form.form-wrapper center="true">
+                <x-form.form-label id="order_status" text="Status"/>
+                <x-form.form-select id="order_status" wireModelLive="status">
+                    <option value=""></option>
+                    @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                        <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+                    @endforeach
+                </x-form.form-select>
+            </x-form.form-wrapper>
+        </div>
+        {{--quick due date filters--}}
         <div class="flex flex-col items-center flex-wrap gap-2">
-            <h4 class="font-bold">Due date quick filter:</h4>
+            <x-form.form-label id="" text="Due date range"/>
             <div class="flex flex-wrap gap-4">
                 <flux:button.group>
                     <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'" wire:click="setYear">Year</flux:button>
@@ -35,18 +38,19 @@
                 </flux:button>
             </div>
         </div>
-
+        {{--due date inputs--}}
+        <div class="flex gap-6 justify-self-end">
+            <x-form.form-wrapper center="true">
+                <x-form.form-label id="due_from" text="Due From"/>
+                <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>
+            </x-form.form-wrapper>
+            <x-form.form-wrapper center="true">
+                <x-form.form-label id="due_to" text="Due To"/>
+                <x-form.form-input type="date" id="due_to" wireModelLive="due_to" placeholder="Due To"/>
+            </x-form.form-wrapper>
+        </div>
     </div>
-{{--    <div class="flex gap-6">--}}
-{{--        <x-form.form-wrapper>--}}
-{{--            <x-form.form-label id="due_from" text="Due From"/>--}}
-{{--            <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>--}}
-{{--        </x-form.form-wrapper>--}}
-{{--        <x-form.form-wrapper>--}}
-{{--            <x-form.form-label id="due_to" text="Due To"/>--}}
-{{--            <x-form.form-input type="date" id="due_to" wireModelLive="due_to" placeholder="Due To"/>--}}
-{{--        </x-form.form-wrapper>--}}
-{{--    </div>--}}
+
 
 {{--    <x-form.form-wrapper>--}}
 {{--        <x-form.form-label id="month" text="Month (in {{now()->year}})"/>--}}
@@ -66,5 +70,5 @@
 {{--        </x-form.form-label>--}}
 {{--        <x-form.form-input id="hide_order" type="checkbox" wireModelLive="cancelled_order_hidden" noFullWidth="true" checked/>--}}
 {{--    </x-form.form-wrapper>--}}
-    <flux:button class="cursor-pointer" wire:click="clearFilter">Clear filter</flux:button>
+{{--    <flux:button class="cursor-pointer self-start" wire:click="clearFilter">Clear filter</flux:button>--}}
 </div>

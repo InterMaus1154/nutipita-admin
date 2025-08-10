@@ -35,15 +35,12 @@
         <livewire:order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                                 :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
-    @if($withSummaryPdf && isset($filters['customer_id']))
-        <flux:link href="{{$this->getOrderSummaryPdfUrl()}}" class="cursor-pointer">
-            Download order summary for selected orders (PDF)
-        </flux:link>
-    @endif
-    {{--top pagination--}}
-    <div>
-        {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
-    </div>
+    <flux:separator class="m-0"/>
+{{--    @if($withSummaryPdf && isset($filters['customer_id']))--}}
+{{--        <flux:link href="{{$this->getOrderSummaryPdfUrl()}}" class="cursor-pointer">--}}
+{{--            Download order summary for selected orders (PDF)--}}
+{{--        </flux:link>--}}
+{{--    @endif--}}
     {{--table on desktop--}}
     <div class="hidden sm:block">
         <x-table.table>

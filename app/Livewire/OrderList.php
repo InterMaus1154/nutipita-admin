@@ -161,10 +161,10 @@ class OrderList extends Component
     {
         // check if direction provided
         // set both field and direction explicitly
-        if(!is_null($direction)){
+        if (!is_null($direction)) {
             $this->sortField = $field;
             $this->sortDirection = $direction;
-        }else{
+        } else {
             if ($this->sortField !== $field) {
                 $this->sortField = $field;
             }
@@ -195,9 +195,6 @@ class OrderList extends Component
             })
             ->when($filters['daytime_only'], function ($builder) {
                 return $builder->where('orders.is_daytime', true);
-            })
-            ->when(!$filters['daytime_only'], function($builder){
-                return $builder->where('orders.is_daytime', false);
             })
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('orders.customer_id', $filters['customer_id']);
@@ -246,9 +243,12 @@ class OrderList extends Component
         $this->ordersAll = $query->nonCancelled()->get();
 
         // only if pdf save is required, otherwise useless data
-        if ($this->withSummaryPdf) {
+        if ($this->withSummaryPdf && !empty($this->filters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
+            // send an event to the download component with the already made download link
+            $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
         }
+
 
         // dispatch event about order count and night/daytime
         $this->dispatch('order-count-details', [
