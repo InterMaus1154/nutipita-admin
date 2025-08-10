@@ -7,7 +7,7 @@
 * @var \App\Models\Order $order
  */
 @endphp
-<div class="space-y-4" x-data x-init="initComponent()">
+<div class="space-y-4">
     <x-success/>
     <x-error/>
     {{--sorting for mobile--}}
