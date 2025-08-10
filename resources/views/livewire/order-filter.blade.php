@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-8 items-start">
+<div class="flex flex-col gap-4 items-start">
     <div class="flex gap-8 items-center flex-wrap">
         {{--customer filter--}}
         <x-form.form-wrapper>
