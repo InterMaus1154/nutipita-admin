@@ -44,7 +44,7 @@ class OrderController extends Controller
         $customer_id = $request->validated('customer_id');
         $order_placed_at = $request->validated('order_placed_at');
         $order_due_at = $request->validated('order_due_at');
-        $is_daytime = $request->boolean('is_daytime');
+        $is_daytime = $request->input('shift') === "day";
 
         $products = collect($request->array('products'));
 

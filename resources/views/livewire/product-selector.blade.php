@@ -12,8 +12,6 @@
             @endforeach
         </select>
     </div>
-    <h3 class="font-bold">Products & quantities</h3>
-    <h4 class="font-bold">Only products with set custom price will appear!</h4>
     <div class="flex flex-col gap-4 items-start">
         @forelse($products as $product)
             @if($product->price > 0)
