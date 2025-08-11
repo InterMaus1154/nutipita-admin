@@ -11,8 +11,8 @@
                 <x-form.form-wrapper>
                     <x-form.form-label id="shift" text="Shift"/>
                     <x-form.form-select id="shift" name="shift">
-                        <option value="night" selected>Night</option>
-                        <option value="day">Day</option>
+                        <option value="night" {{request('is_daytime') ? '' : 'selected'}}>Night</option>
+                        <option value="day" {{request('is_daytime') ? 'selected' : ''}}>Day</option>
                     </x-form.form-select>
                 </x-form.form-wrapper>
                 <div class="flex gap-4">

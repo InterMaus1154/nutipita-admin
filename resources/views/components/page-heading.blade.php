@@ -1,5 +1,5 @@
 <div class="space-y-4">
-    <div class="grid grid-cols-3 items-center">
+    <div class="flex flex-wrap gap-4 sm:grid grid-cols-3 items-center">
         <div class="flex gap-2 justify-self-start">
             <flux:link href="{{url()->previous('/')}}" variant="subtle" class="!flex gap-2">
                 <flux:icon.arrow-uturn-left/>

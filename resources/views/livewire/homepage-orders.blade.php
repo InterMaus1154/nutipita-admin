@@ -2,9 +2,9 @@
     {{-- Day Time Orders --}}
     @if($is_daytime)
         <div class="flex flex-col gap-4">
-            <div class="flex gap-4">
+            <div class="flex gap-4 items-center justify-center">
                 <flux:icon.sun/>
-                <h3 class="font-bold">Day Time Orders</h3>
+                <h3 class="font-bold text-xl sm:text-2xl">Day Time Orders</h3>
             </div>
             <flux:link
                 href="{{ route('orders.create', [
@@ -37,9 +37,9 @@
     {{-- Night Time Orders --}}
     @if($is_nighttime)
         <div class="flex flex-col gap-4">
-            <div class="flex gap-4">
+            <div class="flex gap-4 items-center justify-center">
                 <flux:icon.moon/>
-                <h3 class="font-bold">Night Time Orders</h3>
+                <h3 class="font-bold text-xl sm:text-2xl">Night Time Orders</h3>
             </div>
             <flux:link
                 href="{{ route('orders.create', [
