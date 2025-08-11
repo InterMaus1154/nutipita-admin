@@ -1,10 +1,12 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
+@use(App\Enums\OrderStatus)
+@use(App\Models\Order)
 @props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false])
 @php
     /**
-* @var \App\Models\Order $order
+* @var Order $order
  */
 @endphp
 <div class="space-y-4">
@@ -105,7 +107,7 @@
                         </x-table.data>
                         <x-table.data>
                             <flux:link
-                                    href="{{route('customers.show', ['customer' => $order->customer])}}">
+                                href="{{route('customers.show', ['customer' => $order->customer])}}">
                                 {{\Illuminate\Support\Str::limit($order->customer->customer_name, 20)}}
                             </flux:link>
                         </x-table.data>
@@ -158,21 +160,24 @@
                             @moneyFormat($order->total_price)
                         </x-table.data>
                         <x-table.data>
-                            <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
-                            <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
+                            <flux:link href="{{route('orders.show', compact('order'))}}" title="View order">
+                                <flux:icon.eye class="!inline"/>
+                            </flux:link>
+                            <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
+                                <flux:icon.pencil-square class="!inline"/>
+                            </flux:link>
                             @unless($order->invoice)
-                                <flux:link href="{{route('invoices.create-single', compact('order'))}}">
-                                    Generate Invoice
+                                <flux:link href="{{route('invoices.create-single', compact('order'))}}" title="Create invoice">
+                                    <flux:icon.clipboard-document-list class="!inline"/>
                                 </flux:link>
                             @else
-                                <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
-                                    Download
-                                    Invoice
+                                <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}" title="Download invoice">
+                                    <flux:icon.clipboard-document-check class="!inline"/>
                                 </flux:link>
                             @endunless
                             <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
-                                       wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
-                                Delete
+                                       wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
+                                <flux:icon.trash class="!inline"/>
                             </flux:link>
                         </x-table.data>
                     </x-table.row>
@@ -228,8 +233,8 @@
                                                           data-order-id="{{$order->order_id}}"/>
                         {{--actual link box--}}
                         <div
-                                class="hidden absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action"
-                                data-order-id="{{$order->order_id}}">
+                            class="hidden absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action"
+                            data-order-id="{{$order->order_id}}">
                             <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                             <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
                             @unless($order->invoice)
@@ -311,7 +316,7 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Modal Content -->
         <div
-                class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4">
+            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>
@@ -322,9 +327,9 @@
             <x-form.form-wrapper>
                 <x-form.form-label id="order_status_update" text="Select a status"/>
                 <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatusName">
-                    @foreach(\App\Enums\OrderStatus::cases() as $status)
+                    @foreach(OrderStatus::cases() as $status)
                         <option
-                                value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
+                            value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
                             {{ucfirst($status->value)}}
                         </option>
                     @endforeach
