@@ -1,9 +1,12 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Customers"/>
+        <x-page-heading title="Customers">
+            <flux:link href="{{route('customers.create')}}">
+                <flux:icon.plus-circle class="size-8"/>
+            </flux:link>
+        </x-page-heading>
         <x-error/>
         <x-success/>
-        <flux:link href="{{route('customers.create')}}">Add new customer</flux:link>
         <x-table.table>
             <x-table.head>
                 <x-table.header>
@@ -25,9 +28,6 @@
                 @foreach($products as $product)
                     <x-table.header>{{$product->product_name}} {{$product->product_weight_g}}g</x-table.header>
                 @endforeach
-                <x-table.header>
-                    Total Orders
-                </x-table.header>
                 <x-table.header>
                     Actions
                 </x-table.header>
@@ -73,12 +73,11 @@
                             </x-table.data>
                         @endforeach
                         <x-table.data>
-                            {{$customer->orders_count}}
-                        </x-table.data>
-                        <x-table.data>
-                            <flux:link href="{{route('customers.show', compact('customer'))}}">View
+                            <flux:link href="{{route('customers.show', compact('customer'))}}">
+                                <flux:icon.eye class="!inline"/>
                             </flux:link>
-                            <flux:link href="{{route('customers.edit', compact('customer'))}}">Edit
+                            <flux:link href="{{route('customers.edit', compact('customer'))}}">
+                                <flux:icon.pencil-square class="!inline"/>
                             </flux:link>
                             <flux:link href="{{route('customers.edit.custom-price', compact('customer'))}}">
                                 Edit Prices

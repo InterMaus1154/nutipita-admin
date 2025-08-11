@@ -18,38 +18,35 @@
                 <x-form.form-select id="order_status" wireModelLive="status">
                     <option value=""></option>
                     @foreach(OrderStatus::cases() as $orderStatus)
-                        <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+                        <option value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>
                     @endforeach
                 </x-form.form-select>
             </x-form.form-wrapper>
-            <div class="flex flex-col gap-8 items-center">
-                <div></div>
-                <flux:button wire:click="clearFilter()">
-                    <flux:icon.brush-cleaning />
-                </flux:button>
-            </div>
         </div>
         {{--quick due date filters--}}
         <div class="flex flex-col items-center flex-wrap gap-2">
             <x-form.form-label text="Due date range"/>
             <div class="flex flex-wrap gap-4">
+                <flux:button wire:click="clearFilter()">
+                    <flux:icon.brush-cleaning/>
+                </flux:button>
                 <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months"/>
                 <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()">
-                    <flux:icon.sun />
+                    <flux:icon.sun/>
                 </flux:button>
             </div>
         </div>
         {{--due date inputs--}}
         <div class="flex gap-6 justify-self-end flex-wrap">
-            <x-form.form-wrapper center="true">
-                <x-form.form-label id="month" text="Month"/>
-                <x-form.form-select id="month" wireModelLive="month">
-                    <option value=""></option>
-                    @foreach($months as $number => $month)
-                        <option value="{{$number}}">{{$month}}</option>
-                    @endforeach
-                </x-form.form-select>
-            </x-form.form-wrapper>
+{{--            <x-form.form-wrapper center="true">--}}
+{{--                <x-form.form-label id="month" text="Month"/>--}}
+{{--                <x-form.form-select id="month" wireModelLive="month">--}}
+{{--                    <option value=""></option>--}}
+{{--                    @foreach($months as $number => $month)--}}
+{{--                        <option value="{{$number}}">{{$month}}</option>--}}
+{{--                    @endforeach--}}
+{{--                </x-form.form-select>--}}
+{{--            </x-form.form-wrapper>--}}
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="due_from" text="Due From"/>
                 <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>

@@ -10,8 +10,8 @@
         <flux:icon.sun class="!inline"/>
     </flux:button>
     @if($is_daytime && $is_nighttime)
-        <flux:link class="cursor-not-allowed" title="Cant add order if no specific shift is selected">
-            <flux:icon.no-symbol class="size-8"/>
+        <flux:link href="{{route('orders.create')}}" class="cursor-pointer" title="Add new order">
+            <flux:icon.plus-circle class="size-8"/>
         </flux:link>
     @elseif($is_daytime)
         <flux:link href="{{route('orders.create',  [

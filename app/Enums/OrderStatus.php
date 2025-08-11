@@ -8,12 +8,12 @@ enum OrderStatus: string
     case Y_CONFIRMED = "confirmed";
     case G_DELIVERED = "delivered";
     case G_PAID = "paid";
-    case G_DELIVERED_AND_PAID = "delivered & paid";
-    CASE O_DELIVERED_UNPAID = "delivered unpaid";
-    case R_DUE_PAYMENT = "payment due";
+    case G_DELIVERED_AND_PAID = "Delivered Paid";
+    CASE O_DELIVERED_UNPAID = "Delivered Unpaid";
+    case R_DUE_PAYMENT = "Payment Due";
     case R_CANCELLED = "cancelled";
     case R_INVALIDATED = "invalidated";
-    case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED_ORDER_STATUS_FROM_ENUM";
+    case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED";
 
     /**
      * Returns an enum value if there is a matching case

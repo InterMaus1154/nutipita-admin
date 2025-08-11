@@ -11,5 +11,5 @@
             {{$slot}}
         </div>
     </div>
-    <flux:separator />
+{{--    <flux:separator variant="subtle"/>--}}
 </div>

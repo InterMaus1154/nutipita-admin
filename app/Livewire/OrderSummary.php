@@ -21,7 +21,7 @@ class OrderSummary extends Component
     public array $productTotals = [];
     public int $totalPita = 0;
 
-    public function mount(Collection $orders, Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false)
+    public function mount(Collection $orders, Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
     {
         $this->orders = $orders;
 

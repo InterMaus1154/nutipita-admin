@@ -1,6 +1,7 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Invoices"/>
+        <x-page-heading title="Invoices">
+        </x-page-heading>
         <x-success />
         <x-error />
         <flux:link href="{{route('invoices.create')}}">Create New Invoice From Order</flux:link>

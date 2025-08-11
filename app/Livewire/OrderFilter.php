@@ -78,7 +78,7 @@ class OrderFilter extends Component
 
     public function render(): View
     {
-        $customers = Customer::select(['customer_id', 'customer_name'])->get();
+        $customers = Customer::select(['customer_id', 'customer_name', 'customer_business_owner_name'])->get();
         return view('livewire.order-filter', compact('customers'));
     }
 }
