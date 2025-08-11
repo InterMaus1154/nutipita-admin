@@ -250,13 +250,6 @@ class OrderList extends Component
         }
 
 
-        // dispatch event about order count and night/daytime
-        $this->dispatch('order-count-details', [
-            'is_daytime_only' => $filters['daytime_only'] === true,
-            'is_nighttime_only' => !$filters['daytime_only'],
-            'has_orders' => $this->ordersAll->isNotEmpty()
-        ]);
-
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         return view('livewire.order-list', [
             'products' => $products,
