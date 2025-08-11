@@ -33,7 +33,7 @@
         <div class="flex flex-col items-center flex-wrap gap-2">
             <x-form.form-label text="Due date range"/>
             <div class="flex flex-wrap gap-4">
-                <x-form.quick-date-buttons :activePeriod="$activePeriod"/>
+                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months"/>
                 <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()">
                     <flux:icon.sun />
                 </flux:button>
@@ -41,6 +41,15 @@
         </div>
         {{--due date inputs--}}
         <div class="flex gap-6 justify-self-end">
+            <x-form.form-wrapper center="true">
+                <x-form.form-label id="month" text="Month"/>
+                <x-form.form-select id="month" wireModelLive="month">
+                    <option value=""></option>
+                    @foreach($months as $number => $month)
+                        <option value="{{$number}}">{{$month}}</option>
+                    @endforeach
+                </x-form.form-select>
+            </x-form.form-wrapper>
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="due_from" text="Due From"/>
                 <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>
@@ -53,15 +62,7 @@
     </div>
 
 
-{{--    <x-form.form-wrapper>--}}
-{{--        <x-form.form-label id="month" text="Month (in {{now()->year}})"/>--}}
-{{--        <x-form.form-select id="month" wireModelLive="month">--}}
-{{--            <option value="">---Select month---</option>--}}
-{{--            @foreach($months as $number => $month)--}}
-{{--                <option value="{{$number}}">{{$month}}</option>--}}
-{{--            @endforeach--}}
-{{--        </x-form.form-select>--}}
-{{--    </x-form.form-wrapper>--}}
+
 
 {{--    <x-form.form-wrapper>--}}
 {{--        <x-form.form-label id="hide_order">--}}

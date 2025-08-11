@@ -243,7 +243,7 @@ class OrderList extends Component
         $this->ordersAll = $query->nonCancelled()->get();
 
         // only if pdf save is required, otherwise useless data
-        if ($this->withSummaryPdf && !empty($this->filters['customer_id'])) {
+        if (!empty($this->filters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);

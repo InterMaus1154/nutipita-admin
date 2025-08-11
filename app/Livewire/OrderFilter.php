@@ -19,20 +19,6 @@ class OrderFilter extends Component
     public bool $daytime_only = false;
 
 
-    public array $months = [
-        '1' => 'January',
-        '2' => 'February',
-        '3' => 'March',
-        '4' => 'April',
-        '5' => 'May',
-        '6' => 'June',
-        '7' => 'July',
-        '8' => 'August',
-        '9' => 'September',
-        '10' => 'October',
-        '11' => 'November',
-        '12' => 'December',
-    ];
 
     public function updated(): void
     {
@@ -58,13 +44,17 @@ class OrderFilter extends Component
     /*
      * Listens for month update
      */
-    public function updatedMonth(): void
+    public function updatedMonth($value): void
     {
-        $year = now()->year;
-
-        $this->due_from = now()->setDate($year, $this->month, 1)->startOfMonth()->toDateString();
-        $this->due_to = now()->setDate($year, $this->month, 1)->endOfMonth()->toDateString();
-        $this->dispatchEvent();
+        if(empty($value)){
+            $this->setMonth();
+        }else{
+            $year = now()->year;
+            $this->due_from = now()->setDate($year, $value, 1)->startOfMonth()->toDateString();
+            $this->due_to = now()->setDate($year, $value, 1)->endOfMonth()->toDateString();
+            $this->activePeriod = "month";
+            $this->dispatchEvent();
+        }
     }
 
     public function dispatchEvent(): void
@@ -82,7 +72,7 @@ class OrderFilter extends Component
 
     public function clearFilter(): void
     {
-        $this->reset();
+        $this->reset(['customer_id', 'daytime_only', 'status', 'month', 'due_from', 'due_to', 'cancelled_order_hidden', 'activePeriod']);
         $this->dispatchEvent();
     }
 

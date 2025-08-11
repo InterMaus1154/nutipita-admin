@@ -39,7 +39,7 @@
         <x-table.table>
             <x-table.head>
                 <x-table.header>
-                        #
+                    #
                 </x-table.header>
                 <x-table.header wire:click="setSort('customer')">
                     <div class="flex items-center justify-center text-center cursor-pointer">
@@ -105,7 +105,7 @@
                         </x-table.data>
                         <x-table.data>
                             <flux:link
-                                href="{{route('customers.show', ['customer' => $order->customer])}}">
+                                    href="{{route('customers.show', ['customer' => $order->customer])}}">
                                 {{\Illuminate\Support\Str::limit($order->customer->customer_name, 20)}}
                             </flux:link>
                         </x-table.data>
@@ -228,8 +228,8 @@
                                                           data-order-id="{{$order->order_id}}"/>
                         {{--actual link box--}}
                         <div
-                            class="hidden absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action"
-                            data-order-id="{{$order->order_id}}">
+                                class="hidden absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action"
+                                data-order-id="{{$order->order_id}}">
                             <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                             <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
                             @unless($order->invoice)
@@ -289,12 +289,12 @@
                                         <span>@moneyFormat($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)</span>
                                     </div>
                                 </div>
-                                <flux:separator />
+                                <flux:separator/>
                             @endforeach
                         </div>
                     </div>
                     <flux:button data-order-id="{{$order->order_id}}" class="openExtraInfoButton">
-                        <flux:icon.chevron-double-down />
+                        <flux:icon.chevron-double-down/>
                     </flux:button>
                 </div>
             </div>
@@ -306,13 +306,12 @@
     </div>
     {{--status update modal--}}
     <div @class(['hidden' => !$isStatusUpdateModalVisible,
-'fixed inset-0 z-50 flex items-center justify-center'])>
+            'fixed inset-0 z-50 flex items-center justify-center'])>
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black opacity-50"></div>
-
         <!-- Modal Content -->
         <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4">
+                class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>
@@ -325,7 +324,7 @@
                 <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatusName">
                     @foreach(\App\Enums\OrderStatus::cases() as $status)
                         <option
-                            value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
+                                value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
                             {{ucfirst($status->value)}}
                         </option>
                     @endforeach

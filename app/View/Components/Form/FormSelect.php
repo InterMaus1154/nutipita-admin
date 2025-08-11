@@ -11,7 +11,7 @@ class FormSelect extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $id, public string|null $wireModelLive = null, public string|null $wireModel = null, public string|null $name = null)
+    public function __construct(public string|null $id = null, public string|null $wireModelLive = null, public string|null $wireModel = null, public string|null $name = null)
     {
         //
     }
