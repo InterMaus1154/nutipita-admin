@@ -1,3 +1,4 @@
+@use(App\Enums\OrderStatus)
 <div class="flex flex-col gap-4 ">
     <div class="flex gap-8 justify-between flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center">
@@ -16,7 +17,7 @@
                 <x-form.form-label id="order_status" text="Status"/>
                 <x-form.form-select id="order_status" wireModelLive="status">
                     <option value=""></option>
-                    @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                    @foreach(OrderStatus::cases() as $orderStatus)
                         <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
                     @endforeach
                 </x-form.form-select>
@@ -24,21 +25,15 @@
             <div class="flex flex-col gap-8 items-center">
                 <div></div>
                 <flux:button wire:click="clearFilter()">
-                    <flux:icon.arrow-path-rounded-square />
+                    <flux:icon.brush-cleaning />
                 </flux:button>
             </div>
         </div>
         {{--quick due date filters--}}
         <div class="flex flex-col items-center flex-wrap gap-2">
-            <x-form.form-label id="" text="Due date range"/>
+            <x-form.form-label text="Due date range"/>
             <div class="flex flex-wrap gap-4">
-                <flux:button.group>
-                    <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'" wire:click="setYear">Year</flux:button>
-                    <flux:button :variant="$activePeriod === 'month' ? 'primary' : 'filled'" wire:click="setMonth">Month</flux:button>
-                    <flux:button :variant="$activePeriod === 'week' ? 'primary' : 'filled'" wire:click="setWeek">Week</flux:button>
-                    <flux:button :variant="$activePeriod === 'today' ? 'primary' : 'filled'" wire:click="setToday">Today</flux:button>
-                    <flux:button :variant="$activePeriod === 'yesterday' ? 'primary' : 'filled'" wire:click="setYesterday">Yesterday</flux:button>
-                </flux:button.group>
+                <x-form.quick-date-buttons :activePeriod="$activePeriod"/>
                 <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()">
                     <flux:icon.sun />
                 </flux:button>

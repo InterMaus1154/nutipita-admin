@@ -11,7 +11,7 @@ class FormLabel extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $id, public string|null $class = null, public string|null $text = null)
+    public function __construct(public string|null $id = null, public string|null $class = null, public string|null $text = null)
     {
         //
     }

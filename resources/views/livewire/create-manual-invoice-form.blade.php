@@ -60,15 +60,7 @@
             </div>
         </div>
         <div class="flex flex-wrap gap-4">
-            <flux:button.group>
-                <flux:button wire:click="setYear">Year</flux:button>
-                <flux:button wire:click="setMonth">Month</flux:button>
-                <flux:button wire:click="setWeek">Week</flux:button>
-            </flux:button.group>
-            <flux:button.group>
-                <flux:button wire:click="setToday">Today</flux:button>
-                <flux:button wire:click="setYesterday">Yesterday</flux:button>
-            </flux:button.group>
+            <x-form.quick-date-buttons :activePeriod="$activePeriod"/>
         </div>
         <x-form.form-wrapper>
             <x-form.form-label id="order_status" text="Order Status"/>
