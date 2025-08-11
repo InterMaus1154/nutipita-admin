@@ -40,7 +40,7 @@
             </div>
         </div>
         {{--due date inputs--}}
-        <div class="flex gap-6 justify-self-end">
+        <div class="flex gap-6 justify-self-end flex-wrap">
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="month" text="Month"/>
                 <x-form.form-select id="month" wireModelLive="month">
@@ -60,17 +60,4 @@
             </x-form.form-wrapper>
         </div>
     </div>
-
-
-
-
-{{--    <x-form.form-wrapper>--}}
-{{--        <x-form.form-label id="hide_order">--}}
-{{--            <flux:badge color="red">--}}
-{{--                Hide Cancelled & Invalidated from the List--}}
-{{--            </flux:badge>--}}
-{{--        </x-form.form-label>--}}
-{{--        <x-form.form-input id="hide_order" type="checkbox" wireModelLive="cancelled_order_hidden" noFullWidth="true" checked/>--}}
-{{--    </x-form.form-wrapper>--}}
-{{--    <flux:button class="cursor-pointer self-start" wire:click="clearFilter">Clear filter</flux:button>--}}
 </div>
