@@ -2,68 +2,80 @@
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Edit Order #{{$order->order_id}}"/>
-        <div class="flex gap-2">
-            <flux:badge>Customer:</flux:badge>
-            <flux:link
-                href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+        <div class="flex gap-2 justify-center">
+            <flux:badge class="px-4 py-2 !text-lg">
+                <flux:link
+                    href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+            </flux:badge>
         </div>
         <x-error/>
         <x-success/>
-        <form action="{{route('orders.update', compact('order'))}}" method="POST" class="flex flex-col gap-4">
+        <form action="{{route('orders.update', compact('order'))}}" method="POST" class="flex flex-col gap-4 mt-6">
             @csrf
             @method('PUT')
-            <x-form.form-wrapper>
-                <x-form.form-label id="order_placed_at" text="Order Placed At"/>
-                <x-form.form-input type="date" id="order_placed_at" name="order_placed_at"
-                                   value="{{$order->order_placed_at}}"/>
-            </x-form.form-wrapper>
-            <x-form.form-wrapper>
-                <x-form.form-label id="order_due_at" text="Order Due At"/>
-                <x-form.form-input type="date" id="order_due_at" name="order_due_at" value="{{$order->order_due_at}}"/>
-            </x-form.form-wrapper>
-            <x-form.form-wrapper>
-                <x-form.form-label id="is_daytime">
-                    <flux:badge color="cyan">Is Daytime?</flux:badge>
-                </x-form.form-label>
-                <input type="checkbox"
-                       id="is_daytime"
-                       name="is_daytime"
-                       value="1"
-                       @checked($order->is_daytime)
-                       class="py-2.5 sm:py-3 px-4 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                >
-
-            </x-form.form-wrapper>
-            <x-form.form-wrapper>
-                <x-form.form-label id="order_status" text="Order Status"/>
-                <x-form.form-select name="order_status" id="order_status">
-                    @foreach(OrderStatus::cases() as $status)
-                        <option
-                            value="{{$status->name}}"
-                            {{$status->name === $order->order_status ? "selected" : ""}}>
-                            {{ucfirst($status->value)}}
-                        </option>
+            <div class="flex flex-col sm:grid grid-cols-3 items-start gap-4">
+                {{--products--}}
+                <div class="flex flex-col gap-4">
+                    @foreach($products as $product)
+                        @php
+                            $orderProduct = $order->products->firstWhere('product_id', $product->product_id);
+                        @endphp
+                        @if($product->price > 0)
+                            <x-form.form-wrapper>
+                                <x-form.form-label id="products[{{$product->product_id}}]">
+                                    {{$product->product_name}} {{$product->product_weight_g}}g
+                                    - @unitPriceFormat($product->price)
+                                </x-form.form-label>
+                                <x-form.form-input type="number" id="products[{{$product->product_id}}]"
+                                                   name="products[{{$product->product_id}}]"
+                                                   value="{{$orderProduct ? $orderProduct->pivot->product_qty : ''}}"
+                                                   placeholder="0"
+                                />
+                            </x-form.form-wrapper>
+                        @endif
                     @endforeach
-                </x-form.form-select>
-            </x-form.form-wrapper>
-            <h3>Products</h3>
-            @foreach($products as $product)
-                @php
-                    $orderProduct = $order->products->firstWhere('product_id', $product->product_id);
-                @endphp
-                @if($product->price > 0)
-                    <x-form.form-wrapper>
-                        <x-form.form-label id="products[{{$product->product_id}}]">
-                            {{$product->product_name}} {{$product->product_weight_g}}g -
-                            <flux:badge>
-                                @unitPriceFormat($product->price)
-                            </flux:badge>
-                        </x-form.form-label>
-                        <x-form.form-input type="number" id="products[{{$product->product_id}}]" name="products[{{$product->product_id}}]" value="{{$orderProduct ? $orderProduct->pivot->product_qty : 0}}"/>
+                </div>
+                {{--statuses--}}
+                <div class="flex gap-4 justify-self-center sm:flex-row flex-col">
+                    {{--shift type--}}
+                    <x-form.form-wrapper center="true">
+                        <x-form.form-label id="shift" text="Shift"/>
+                        <x-form.form-select id="shift" name="shift">
+                            <option value="night" {{!$order->is_daytime ? 'selected' : ''}}>Night</option>
+                            <option value="day" {{$order->is_daytime ? 'selected': ''}}>Day</option>
+                        </x-form.form-select>
                     </x-form.form-wrapper>
-                @endif
+                    {{--order status--}}
+                    <x-form.form-wrapper>
+                        <x-form.form-label id="order_status" text="Order Status"/>
+                        <x-form.form-select name="order_status" id="order_status">
+                            @foreach(OrderStatus::cases() as $status)
+                                <option
+                                    value="{{$status->name}}"
+                                    {{$status->name === $order->order_status ? "selected" : ""}}>
+                                    {{ucfirst($status->value)}}
+                                </option>
+                            @endforeach
+                        </x-form.form-select>
+                    </x-form.form-wrapper>
+                </div>
+                {{--order dates--}}
+                <div class="flex gap-4 justify-self-end flex-row sm:flex-row">
+                    {{--order placed--}}
+                    <x-form.form-wrapper>
+                        <x-form.form-label id="order_placed_at" text="Placed At"/>
+                        <x-form.form-input type="date" id="order_placed_at" name="order_placed_at"
+                                           value="{{$order->order_placed_at}}"/>
+                    </x-form.form-wrapper>
+                    {{--order due--}}
+                    <x-form.form-wrapper>
+                        <x-form.form-label id="order_due_at" text="Due At"/>
+                        <x-form.form-input type="date" id="order_due_at" name="order_due_at" value="{{$order->order_due_at}}"/>
+                    </x-form.form-wrapper>
+                </div>
+            </div>
 
-            @endforeach
+
             <flux:button variant="primary" type="submit">Update</flux:button>
         </form>
     </x-page-section>

@@ -11,7 +11,7 @@ class FormInput extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $type = "text", public string $id, public string|null $wireModelLive = null, public string|null $wireModel = null, public string|null $placeholder = null, public string|null $name = null, public bool $noFullWidth = false)
+    public function __construct(public ?string $type = "text", public string $id, public string|null $wireModelLive = null, public string|null $wireModel = null, public string|null $placeholder = null, public string|null $name = null, public bool $noFullWidth = false)
     {
         //
     }

@@ -126,7 +126,7 @@ class OrderController extends Controller
                 'order_status' => $request->validated('order_status'),
                 'order_placed_at' => $request->validated('order_placed_at'),
                 'order_due_at' => $request->validated('order_due_at'),
-                'is_daytime' => $request->boolean('is_daytime'),
+                'is_daytime' => $request->input('shift') === 'day',
                 // once an order is updated, it is no longer a standing order
                 'is_standing' => false
             ]);

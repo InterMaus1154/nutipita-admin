@@ -304,8 +304,6 @@
                 </div>
             @endforeach
         </div>
-    @else
-        <h2 class="font-bold text-xl sm:text-3xl text-center">No Orders!</h2>
     @endif
 
     {{--bottom pagination--}}

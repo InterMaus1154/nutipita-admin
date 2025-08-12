@@ -21,10 +21,6 @@
         </div>
     @endif
 
-    @if($is_nighttime && $is_daytime)
-        <flux:separator />
-    @endif
-
     {{-- Night Time Orders --}}
     @if($is_nighttime)
         <div class="flex flex-col gap-4">

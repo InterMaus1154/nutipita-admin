@@ -13,7 +13,7 @@ enum OrderStatus: string
     case R_DUE_PAYMENT = "Payment Due";
     case R_CANCELLED = "cancelled";
     case R_INVALIDATED = "invalidated";
-    case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED";
+//    case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED";
 
     /**
      * Returns an enum value if there is a matching case
@@ -27,6 +27,6 @@ enum OrderStatus: string
                 return $case->value;
             }
         }
-        return self::R_UNDEFINED_ORDER_STATUS_FROM_ENUM->value;
+        return "";
     }
 }

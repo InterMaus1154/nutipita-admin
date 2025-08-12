@@ -24,7 +24,6 @@ class StoreOrderRequest extends FormRequest
         return [
             'customer_id' => 'required|integer|exists:customers,customer_id',
             'products' => 'required|array',
-            'products.*' => 'integer',
             'order_placed_at' => 'required|date',
             'order_due_at' => 'required|date|after_or_equal:order_placed_at',
             'shift' => 'required|in:day,night'

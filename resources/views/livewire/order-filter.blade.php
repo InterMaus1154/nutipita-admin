@@ -3,15 +3,7 @@
     <div class="flex gap-8 justify-between flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center">
             {{--customer filter--}}
-            <x-form.form-wrapper center="true">
-                <x-form.form-label id="customer_id" text="Customer"/>
-                <x-form.form-select id="customer_id" wireModelLive="customer_id">
-                    <option value=""></option>
-                    @foreach($customers as $customer)
-                        <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
-                    @endforeach
-                </x-form.form-select>
-            </x-form.form-wrapper>
+            <x-form.customer-select />
             {{--status filter--}}
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="order_status" text="Status"/>
@@ -38,15 +30,6 @@
         </div>
         {{--due date inputs--}}
         <div class="flex gap-6 justify-self-end flex-wrap">
-{{--            <x-form.form-wrapper center="true">--}}
-{{--                <x-form.form-label id="month" text="Month"/>--}}
-{{--                <x-form.form-select id="month" wireModelLive="month">--}}
-{{--                    <option value=""></option>--}}
-{{--                    @foreach($months as $number => $month)--}}
-{{--                        <option value="{{$number}}">{{$month}}</option>--}}
-{{--                    @endforeach--}}
-{{--                </x-form.form-select>--}}
-{{--            </x-form.form-wrapper>--}}
             <x-form.form-wrapper center="true">
                 <x-form.form-label id="due_from" text="Due From"/>
                 <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>

@@ -1,4 +1,4 @@
-<input type="{{$type}}"
+<input type="{{$type ?? "text"}}"
        id="{{$id}}"
        {{$wireModelLive ? "wire:model.live=$wireModelLive" : ""}}
        {{$wireModel ? "wire:model=$wireModel" : ""}}
