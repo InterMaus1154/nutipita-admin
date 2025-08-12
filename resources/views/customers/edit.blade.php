@@ -50,8 +50,6 @@
             </x-form.form-wrapper>
             {{--phone--}}
             <x-form.form-wrapper>
-                <label for="customer_phone" class="block text-sm font-medium mb-2 dark:text-white">Phone (optional)
-                </label>
                  <x-form.form-label id="customer_phone" text="Phone (optional)"/>
                 <x-form.form-input id="customer_phone" name="customer_phone" value="{{$customer->customer_phone}}"/>
             </x-form.form-wrapper>
