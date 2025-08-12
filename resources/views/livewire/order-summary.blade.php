@@ -4,7 +4,7 @@
             <flux:button wire:click="toggleSummaries()" class="sm:hidden">Toggle Summaries</flux:button>
             <div @class([
                         'hidden' => !$visible,
-                        'flex gap-4 justify-between'
+                        'flex gap-4 justify-between flex-wrap'
                     ])>
                 <div class="flex gap-4">
                     @if($withIncome)

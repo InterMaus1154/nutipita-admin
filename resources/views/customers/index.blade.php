@@ -72,15 +72,15 @@
                                 @endif
                             </x-table.data>
                         @endforeach
-                        <x-table.data>
-                            <flux:link href="{{route('customers.show', compact('customer'))}}">
-                                <flux:icon.eye class="!inline"/>
+                        <x-table.data link>
+                            <flux:link href="{{route('customers.show', compact('customer'))}}" title="View customer">
+                                <flux:icon.eye/>
                             </flux:link>
-                            <flux:link href="{{route('customers.edit', compact('customer'))}}">
-                                <flux:icon.pencil-square class="!inline"/>
+                            <flux:link href="{{route('customers.edit', compact('customer'))}}" title="Edit customer">
+                                <flux:icon.pencil-square />
                             </flux:link>
                             <flux:link href="{{route('customers.edit.custom-price', compact('customer'))}}">
-                                Edit Prices
+                                <flux:icon.circle-pound-sterling/>
                             </flux:link>
                         </x-table.data>
                     </x-table.row>

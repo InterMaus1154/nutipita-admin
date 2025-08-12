@@ -26,7 +26,7 @@ class StandingOrderController extends Controller
     public function create(): View
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
-        $products = Product::select(['product_id', 'product_name'])->get();
+        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         return view('standing_orders.create', compact('customers', 'products'));
     }
 

@@ -45,10 +45,6 @@
                         </x-table.data>
                         <x-table.data>
                             <flux:link
-                                href="{{route('products.show', compact('product'))}}">
-                                <flux:icon.eye class="!inline"/>
-                            </flux:link>
-                            <flux:link
                                 href="{{route('products.edit', compact('product'))}}">
                                 <flux:icon.pencil-square class="!inline"/>
                             </flux:link>

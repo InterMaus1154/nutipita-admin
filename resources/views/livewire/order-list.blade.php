@@ -162,7 +162,7 @@
                             <x-table.data>
                                 @moneyFormat($order->total_price)
                             </x-table.data>
-                            <x-table.data>
+                            <x-table.data link>
                                 <flux:link href="{{route('orders.show', compact('order'))}}" title="View order">
                                     <flux:icon.eye class="!inline"/>
                                 </flux:link>

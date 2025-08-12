@@ -89,24 +89,29 @@
                     <x-table.data>
                         @moneyFormat($invoice->invoice_total)
                     </x-table.data>
-                    <x-table.data>
-                        <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
+                    <x-table.data link>
+                        <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
+                            <flux:icon.eye class="!inline"/>
                         </flux:link>
-                        <flux:link href="{{route('invoices.download', compact('invoice'))}}">Download
+                        <flux:link href="{{route('invoices.download', compact('invoice'))}}">
+                            <flux:icon.arrow-down-tray class="!inline"/>
                         </flux:link>
                         @if($invoice->invoice_status == "due")
                             <flux:link class="cursor-pointer"
-                                       wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
+                                       wire:click="markPaid({{$invoice->invoice_id}})">
+                                <flux:icon.exclamation-circle class="!inline"/>
                             </flux:link>
                         @else
                             <flux:link class="cursor-pointer"
-                                       wire:click="markDue({{$invoice->invoice_id}})">Mark Unpaid
+                                       wire:click="markDue({{$invoice->invoice_id}})">
+                                <flux:icon.check-circle class="!inline"/>
                             </flux:link>
                         @endif
                         <flux:link class="cursor-pointer"
                                    wire:click="delete({{$invoice->invoice_id}})"
                                    wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"
-                        >Delete
+                        >
+                            <flux:icon.trash class="!inline"/>
                         </flux:link>
                     </x-table.data>
                 </x-table.row>
