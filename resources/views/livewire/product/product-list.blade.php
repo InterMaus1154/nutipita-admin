@@ -18,7 +18,7 @@
         </x-table.head>
         <x-table.body>
             @foreach($products as $product)
-                <x-table.row>
+                <x-table.row wire:key="product-{{$product->product_id}}">
                     <x-table.data>
                             <span class="text-accent">
                                 {{$product->product_name}}

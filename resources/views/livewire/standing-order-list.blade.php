@@ -21,7 +21,7 @@
         </x-table.head>
         <tbody>
         @forelse($orders as $order)
-            <x-table.row>
+            <x-table.row wire:key="standing-order-{{$order->standing_order_id}}">
                 <x-table.data>
                     <flux:link href="{{route('standing-orders.show', compact('order'))}}">
                         #{{$order->standing_order_id}}</flux:link>

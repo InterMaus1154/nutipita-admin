@@ -36,17 +36,7 @@ class CustomerController extends Controller
      */
     public function index(): View
     {
-        $products = Product::query()
-            ->with('customPrices')
-            ->select(['product_id', 'product_name', 'product_weight_g'])
-            ->orderByDesc('product_name')
-            ->orderByDesc('product_weight_g')
-            ->get();
-        $customers = Customer::query()
-            ->withCount('orders')
-            ->orderBy('customer_name', 'asc')
-            ->get();
-        return view('customers.index', compact('customers', 'products'));
+        return view('customers.index');
     }
 
     /*

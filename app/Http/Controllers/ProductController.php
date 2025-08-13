@@ -15,8 +15,7 @@ class ProductController extends Controller
     // product list
     public function index()
     {
-        $products = Product::query()->select(['product_id', 'product_name', 'product_weight_g', 'product_qty_per_pack'])->get();
-        return view('products.index', compact('products'));
+        return view('products.index');
     }
 
     // show create form
