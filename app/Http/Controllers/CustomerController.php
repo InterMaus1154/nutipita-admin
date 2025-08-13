@@ -91,7 +91,10 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer): View
     {
-        return view('customers.edit', compact('customer'));
+        $products = Product::all()->map(function (Product $product) use($customer){
+            return $product->setCurrentCustomer($customer);
+        });
+        return view('customers.edit', compact('customer', 'products'));
     }
 
     /*

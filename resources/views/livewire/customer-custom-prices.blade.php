@@ -1,8 +1,5 @@
 @use(Illuminate\Support\Facades\Crypt)
 <div class="flex flex-col gap-4">
-    <flux:link href="{{route('customers.edit.custom-price', compact('customer'))}}">
-        Edit custom prices
-    </flux:link>
     @if(!$hasCustomPrices)
         <em>---No prices set yet!---</em>
     @else

@@ -1,6 +1,6 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Add new product" />
+        <x-page-heading title="Add New Product" />
         <x-error />
         <x-success />
         <form action="{{route('products.store')}}" method="POST" class="flex flex-col gap-4">

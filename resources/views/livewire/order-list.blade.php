@@ -72,7 +72,7 @@
                     </x-table.header>
                     @foreach($products as $product)
                         <x-table.header>
-                            {{$product->product_name}} {{$product->product_weight_g}}g
+                            {{$product->product_name}} <br> {{$product->product_weight_g}}g
                         </x-table.header>
                     @endforeach
                     <x-table.header wire:click="setSort('total_pita')">

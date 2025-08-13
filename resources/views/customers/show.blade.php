@@ -3,7 +3,6 @@
         <x-page-heading title="Customer '{{$customer->customer_name}}'" details/>
         <x-success/>
         <x-error/>
-        <flux:link href="{{route('customers.edit', compact('customer'))}}">Edit customer</flux:link>
         <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 inline-block align-middle">
@@ -76,9 +75,6 @@
         @livewire('customer-custom-prices', ['customer' => $customer])
         {{--custom orders section--}}
         <h3 class="font font-bold">Customer Orders</h3>
-        <flux:link href="{{route('orders.create', ['customer_id' => $customer->customer_id])}}">Place New
-            Order
-        </flux:link>
         @if(collect($customer->orders)->isEmpty())
             <em>This customer hasn't placed an order yet!</em>
         @else

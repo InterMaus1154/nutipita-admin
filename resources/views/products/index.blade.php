@@ -7,7 +7,7 @@
         </x-page-heading>
         <x-success/>
         <x-error/>
-        <x-table.table>
+        <x-table.table smallTable>
             <x-table.head>
                 <x-table.header>
                     Name
@@ -26,8 +26,9 @@
                 @foreach($products as $product)
                     <x-table.row>
                         <x-table.data>
-                            <flux:link
-                                href="{{route('products.show', compact('product'))}}">{{$product->product_name}}</flux:link>
+                            <span class="text-accent">
+                                {{$product->product_name}}
+                            </span>
                         </x-table.data>
                         <x-table.data>
                             @if($product->product_weight_g)

@@ -16,6 +16,10 @@
                 <x-form.form-label id="customer_business_owner_name" text="Business Owner"/>
                 <x-form.form-input type="text" id="customer_business_owner_name" name="customer_business_owner_name" value="{{old('customer_business_owner_name', '')}}" placeholder="Business Owner Name"/>
             </x-form.form-wrapper>
+            <x-form.form-wrapper>
+                <x-form.form-label id="customer_optional_name" text="Name (optional)"/>
+                <x-form.form-input id="customer_optional_name" name="customer_optional_name" value="{{old('customer_optional_name', '')}}" placeholder="Optional name"/>
+            </x-form.form-wrapper>
             {{--Customer address--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="customer_address_1" text="First Address Line"/>

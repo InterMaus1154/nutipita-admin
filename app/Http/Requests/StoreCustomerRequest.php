@@ -27,6 +27,7 @@ class StoreCustomerRequest extends FormRequest
             'customer_phone' => 'nullable|string|max:20',
             'customer_address_1' => 'required|string|max:300',
             'customer_address_2' => 'nullable|string|max:300',
+            'customer_optional_name' => 'nullable|string|max:150',
             'customer_postcode' => 'required|string|max:10',
             'customer_city' => 'required|string|max:100',
             'customer_country' => 'required|string|max:200',
