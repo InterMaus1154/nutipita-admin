@@ -102,11 +102,54 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
+        DB::beginTransaction();
         try {
-            $customer->update($request->validated());
+            // update customer details
+            $customer->update($request->except('products'));
+
+            // update custom prices
+            foreach ($request->array('products') as $product_id => $price) {
+                $product = Product::find($product_id)->setCurrentCustomer($customer);
+                // if price is 0 or empty, delete the custom price
+                if (!$this->isProductPriceValid(0, $price)) {
+                    $customPrice = CustomerProductPrice::query()
+                        ->where('product_id', $product_id)
+                        ->where('customer_id', $customer->customer_id)
+                        ->delete();
+                    continue;
+                }
+
+                // if price is same as previous price, skip
+                if(!$this->isProductPriceValid($product->price, $price)){
+                    continue;
+                }
+
+                DB::beginTransaction();
+                try {
+                    CustomerProductPrice::updateOrCreate(
+                        [
+                            'customer_id' => $customer->customer_id,
+                            'product_id' => $product->product_id
+                        ],
+                        [
+                            'customer_product_price' => $price,
+                            'product_id' => $product->product_id,
+                            'customer_id' => $customer->customer_id
+                        ]
+                    );
+                    DB::commit();
+                } catch (Throwable $e) {
+                    DB::rollBack();
+                    Log::error($e->getMessage());;
+                    return redirect()->route('customers.edit', compact('customer'))->withErrors(['error' => $e->getMessage()]);
+                }
+            }
+
+            DB::commit();
             return redirect()->route('customers.index')
                 ->with('success', 'Customer successfully updated!');
         } catch (Throwable $e) {
+            DB::rollBack();
             Log::error($e->getMessage());;
             return redirect()->route('customers.edit', compact('customer'))->withErrors(['error' => $e->getMessage()]);
         }
