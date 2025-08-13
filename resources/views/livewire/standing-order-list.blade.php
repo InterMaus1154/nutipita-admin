@@ -27,8 +27,9 @@
                         #{{$order->standing_order_id}}</flux:link>
                 </x-table.data>
                 <x-table.data>
-                    <flux:link
-                        href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+                    <span class="text-accent">
+                        {{$order->customer->customer_name}}
+                    </span>
                 </x-table.data>
                 <x-table.data>
                     {{daydate($order->start_from)}}
@@ -77,7 +78,8 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Modal Content -->
         <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4" x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
+            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
+            x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Status</h2>
@@ -90,7 +92,8 @@
                     <x-form.form-label id="order_status_update" text="Select a status"/>
                     <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatus">
                         <option value="active" @selected($selectedOrder && $selectedOrder->is_active)>Active</option>
-                        <option value="inactive" @selected($selectedOrder && !$selectedOrder->is_active)>Inactive</option>
+                        <option value="inactive" @selected($selectedOrder && !$selectedOrder->is_active)>Inactive
+                        </option>
                     </x-form.form-select>
                 </x-form.form-wrapper>
             </div>

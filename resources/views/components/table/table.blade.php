@@ -1,5 +1,5 @@
 @props(['smallTable' => false])
-<div class="flex flex-col {{$smallTable ? "max-w-[50%] min-w-[50%] mx-auto" : ""}} ">
+<div class="flex flex-col {{$smallTable ? "md:max-w-[50%] md:min-w-[50%] md:mx-auto" : "w-full"}} ">
     <div class="-m-1.5 overflow-x-auto">
         <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="overflow-hidden">

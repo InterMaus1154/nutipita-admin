@@ -46,46 +46,29 @@
                     <x-table.header>
                         #
                     </x-table.header>
-                    <x-table.header wire:click="setSort('customer')">
-                        <div class="flex items-center justify-center text-center cursor-pointer">
-                            Customer
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortField="customer">
+                        Customer
                     </x-table.header>
-                    <x-table.header wire:click="setSort('order_placed_at')">
-                        <div class="flex items-center justify-center text-center cursor-pointer">
-                            Placed Date
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortField="order_placed_at">
+                        Placed Date
                     </x-table.header>
-                    <x-table.header wire:click="setSort('order_due_at')">
-                        <div class="flex items-center justify-center text-center cursor-pointer">
-                            Due Date
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortField="order_due_at">
+                        Due Date
                     </x-table.header>
-                    <x-table.header wire:click="setSort('order_status')">
-                        <div class="flex items-center justify-center cursor-pointer">
-                            Status
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortfield="order_status">
+                        Status
                     </x-table.header>
                     @foreach($products as $product)
                         <x-table.header>
-                            {{$product->product_name}} <br> {{$product->product_weight_g}}g
+                            {{$product->product_name}}
+                            <br> {{$product->product_weight_g}}g
                         </x-table.header>
                     @endforeach
-                    <x-table.header wire:click="setSort('total_pita')">
-                        <div class="flex items-center justify-center text-center cursor-pointer">
-                            Total Pita
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortField="total_pita">
+                        Total Pita
                     </x-table.header>
-                    <x-table.header wire:click="setSort('total_price')">
-                        <div class="flex items-center justify-center text-center cursor-pointer">
-                            Total £
-                            <flux:icon.arrows-up-down variant="mini"/>
-                        </div>
+                    <x-table.header sortField="total_price">
+                        Total £
                     </x-table.header>
                     <x-table.header>
                         Actions
@@ -304,7 +287,7 @@
                                 <flux:icon.chevron-double-up/>
                             </template>
                             <template x-if="!detailsMenuOpen">
-                                <flux:icon.chevron-double-down />
+                                <flux:icon.chevron-double-down/>
                             </template>
                         </flux:button>
                     </div>
@@ -324,7 +307,8 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Modal Content -->
         <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4" x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
+            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
+            x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>

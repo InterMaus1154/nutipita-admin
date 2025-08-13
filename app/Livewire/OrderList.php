@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Traits\HasSort;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ use Livewire\WithPagination;
 class OrderList extends Component
 {
 
-    use WithPagination;
+    use WithPagination, HasSort;
 
     protected $paginationTheme = 'tailwind';
 
@@ -59,8 +60,6 @@ class OrderList extends Component
     /*
      * Sorting variables
      */
-    public string $sortField = "order_placed_at";
-    public string $sortDirection = "desc";
 
     public string $mobileSort = "desc:order_id";
 
@@ -69,6 +68,7 @@ class OrderList extends Component
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false): void
     {
         $this->resetPage();
+        $this->initSort('order_id', 'desc', 'resetPage');
         $this->withSummaryData = $withSummaryData;
         $this->filters = array_merge([
             'customer_id' => null,
@@ -152,30 +152,6 @@ class OrderList extends Component
     }
 
     /**
-     * Set the sorting field and direction
-     * @param string $field
-     * @param string|null $direction
-     * @return void
-     */
-    public function setSort(string $field, ?string $direction = null): void
-    {
-        // check if direction provided
-        // set both field and direction explicitly
-        if (!is_null($direction)) {
-            $this->sortField = $field;
-            $this->sortDirection = $direction;
-        } else {
-            if ($this->sortField !== $field) {
-                $this->sortField = $field;
-            }
-            $this->sortDirection = $this->sortDirection === "desc" ? "asc" : "desc";
-        }
-
-        // paginator has to be reset to default at every new sorting
-        $this->resetPage();
-    }
-
-    /**
      * Track mobile sorting changes
      * @param string $value
      * @return void
@@ -211,29 +187,30 @@ class OrderList extends Component
             ->with('customer:customer_id,customer_name', 'products');
 
 
-        // order sorting
-        if ($this->sortField === "customer") {
-            // sort by customer name
-            $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
-                ->orderBy('customers.customer_name', $this->sortDirection)
-                ->select('orders.*');
-        } else if ($this->sortField === "total_pita") {
-            // sort by the amount of total pita in an order
-            $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
-                ->select('orders.*')
-                ->selectRaw('SUM(order_product.product_qty) as total_pita')
-                ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
-                ->orderBy('total_pita', $this->sortDirection);
-        } else if ($this->sortField === "total_price") {
-            // sort by total price of an order
-            $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
-                ->select('orders.*')
-                ->selectRaw('SUM(order_product.product_qty * order_product.order_product_unit_price) as total_price')
-                ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
-                ->orderBy('total_price', $this->sortDirection);
-        } else {
-            $query->orderBy($this->sortField, $this->sortDirection);
-        }
+        $customSorts = [
+            'customer' => function (Builder $query) {
+                $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
+                    ->orderBy('customers.customer_name', $this->sortDirection)
+                    ->select('orders.*');
+            },
+            'total_pita' => function (Builder $query) {
+                $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
+                    ->select('orders.*')
+                    ->selectRaw('SUM(order_product.product_qty) as total_pita')
+                    ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
+                    ->orderBy('total_pita', $this->sortDirection);
+            },
+            'total_price' => function (Builder $query) {
+                $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
+                    ->select('orders.*')
+                    ->selectRaw('SUM(order_product.product_qty * order_product.order_product_unit_price) as total_price')
+                    ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
+                    ->orderBy('total_price', $this->sortDirection);
+            }
+        ];
+
+        $this->applySort($query, $customSorts);
+
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
