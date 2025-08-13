@@ -80,9 +80,6 @@
                             <flux:link href="{{route('customers.edit', compact('customer'))}}" title="Edit customer">
                                 <flux:icon.pencil-square />
                             </flux:link>
-                            <flux:link href="{{route('customers.edit.custom-price', compact('customer'))}}">
-                                <flux:icon.circle-pound-sterling/>
-                            </flux:link>
                         </x-table.data>
                     </x-table.row>
                 @endforeach

@@ -324,7 +324,7 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Modal Content -->
         <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4">
+            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4" x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>

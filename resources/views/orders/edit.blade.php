@@ -3,9 +3,8 @@
     <x-page-section>
         <x-page-heading title="Edit Order #{{$order->order_id}}"/>
         <div class="flex gap-2 justify-center">
-            <flux:badge class="px-4 py-2 !text-lg">
-                <flux:link
-                    href="{{route('customers.show', ['customer' => $order->customer])}}">{{$order->customer->customer_name}}</flux:link>
+            <flux:badge class="px-4 py-2 !text-lg text-accent!">
+                {{$order->customer->customer_name}}
             </flux:badge>
         </div>
         <x-error/>
