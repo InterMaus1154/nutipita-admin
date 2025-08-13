@@ -10,3 +10,4 @@
     data-flux-sidebar-toggle
     aria-label="{{ __('Toggle sidebar') }}"
 />
+

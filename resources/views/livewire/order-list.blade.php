@@ -170,11 +170,13 @@
                                     <flux:icon.pencil-square class="!inline"/>
                                 </flux:link>
                                 @unless($order->invoice)
-                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}" title="Create invoice">
+                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}"
+                                               title="Create invoice">
                                         <flux:icon.clipboard-document-list class="!inline"/>
                                     </flux:link>
                                 @else
-                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}" title="Download invoice">
+                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}"
+                                               title="Download invoice">
                                         <flux:icon.clipboard-document-check class="!inline"/>
                                     </flux:link>
                                 @endunless
@@ -192,7 +194,9 @@
         <div class="flex flex-col gap-4 sm:hidden">
             @foreach($orders as $order)
                 {{--card wrapper--}}
-                <div class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-gray-600 p-4">
+                <div wire:key="order-{{$order->order_id}}"
+                     class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-gray-600 p-4"
+                     x-data="{ actionMenuOpen: false, detailsMenuOpen: false}">
                     {{--card header--}}
                     <div class="flex gap-4 justify-between">
                         {{--status badges--}}
@@ -228,12 +232,10 @@
                         </div>
                         {{--dropdown menu for actions--}}
                         <div class="relative">
-                            <flux:icon.adjustments-horizontal class="openActionMenuButton"
-                                                              data-order-id="{{$order->order_id}}"/>
+                            <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
                             {{--actual link box--}}
-                            <div
-                                class="hidden absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action"
-                                data-order-id="{{$order->order_id}}">
+                            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak
+                                 class="flex absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action">
                                 <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
                                 <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
                                 @unless($order->invoice)
@@ -278,7 +280,7 @@
                     {{--extra info section wrapper--}}
                     <div class="flex flex-col gap-4">
                         {{--extra info section--}}
-                        <div class="flex-col gap-4 hidden" id="extra-info-{{$order->order_id}}">
+                        <div class="flex-col gap-4 flex" x-cloak x-show="detailsMenuOpen">
                             <div class="flex gap-2">
                                 <flux:badge color="indigo">Placed:</flux:badge>
                                 <span class="text-base">@dayDate($order->order_placed_at)</span>
@@ -297,8 +299,13 @@
                                 @endforeach
                             </div>
                         </div>
-                        <flux:button data-order-id="{{$order->order_id}}" class="openExtraInfoButton">
-                            <flux:icon.chevron-double-down/>
+                        <flux:button x-on:click="detailsMenuOpen = !detailsMenuOpen">
+                            <template x-if="detailsMenuOpen">
+                                <flux:icon.chevron-double-up/>
+                            </template>
+                            <template x-if="!detailsMenuOpen">
+                                <flux:icon.chevron-double-down />
+                            </template>
                         </flux:button>
                     </div>
                 </div>

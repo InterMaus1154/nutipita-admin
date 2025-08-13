@@ -47,4 +47,8 @@
     .box-shadow-theme{
         box-shadow: 2px 2px 10px 0 var(--color-accent);
     }
+
+    [x-cloak]{
+        display: none!important;
+    }
 }

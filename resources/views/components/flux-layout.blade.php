@@ -8,7 +8,7 @@
     <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
     <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
     <meta name="robots" content="noindex">
-    @vite(['resources/css/app.css', 'resources/js/orderList.js'])
+    @vite(['resources/css/app.css'])
     @livewireScripts
     <title>Nuti Pita: Order Management</title>
 </head>

@@ -17,12 +17,12 @@
     if ($stashable) {
         $attributes = $attributes->merge([
             // Always stashable — no breakpoint check
-            'x-init' => '$el.classList.add(\'-translate-x-full\', \'rtl:translate-x-full\', \'transition-transform\'); $el.removeAttribute(\'data-mobile-cloak\');',
+            'x-init' => '$el.classList.add(\'-translate-x-full\', \'rtl:translate-x-full\', \'transition-transform\'); $el.removeAttribute(\'x-cloak\');',
             // Always considered "stashed" unless toggled
             'x-bind:data-stashed' => 'true',
         ])->class([
             // Hide by default, show when toggled
-            'data-mobile-cloak:hidden',
+            'x-cloak:hidden',
             '[[data-show-stashed-sidebar]_&]:translate-x-0!',
             'z-20! data-stashed:start-0! data-stashed:fixed! data-stashed:top-0! data-stashed:min-h-dvh! data-stashed:max-h-dvh!'
         ]);
@@ -35,7 +35,7 @@
 
 <div {{ $attributes->class($classes) }}
      x-data
-     data-mobile-cloak
+     x-cloak
      data-flux-sidebar>
     {{ $slot }}
 </div>
