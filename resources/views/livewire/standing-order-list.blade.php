@@ -3,16 +3,16 @@
     <x-error/>
     <x-table.table>
         <x-table.head>
-            <x-table.header>
+            <x-table.header sortField="standing_order_id">
                 #ID
             </x-table.header>
-            <x-table.header>
+            <x-table.header sortField="customer">
                 Customer
             </x-table.header>
-            <x-table.header>
+            <x-table.header sortField="start_from">
                 Start From
             </x-table.header>
-            <x-table.header>
+            <x-table.header sortField="is_active">
                 Status
             </x-table.header>
             <x-table.header>
