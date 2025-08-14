@@ -1,9 +1,10 @@
-# Nuti Pita Admin
-
+# Bespoke Order Management App: Nuti Pita Admin
+ 
 [Visit our public page](https://nutipita.co.uk/)\
 [Developer and maintenar: Márk Kiss](https://markkiss.netlify.app/)
 
-# Description coming soon
+# Description 
+A bespoke web application for managing orders, customers, products and invoices for [Nuti Pita Limited](https://nutipita.co.uk/)\
 
 ## Feature list
 
