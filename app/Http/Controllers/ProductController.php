@@ -58,11 +58,11 @@ class ProductController extends Controller
     {
         try {
             $product->update($request->validated());
-            return redirect()->route('products.show', compact('product'))
+            return redirect()->route('products.index')
                 ->with('success', 'Product successfully updated!');
         } catch (Throwable $e) {
             Log::error($e->getMessage());;
-            return redirect()->route('products.edit', status: 500)->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('products.edit')->withErrors(['error' => $e->getMessage()]);
         }
     }
 }

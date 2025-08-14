@@ -1,7 +1,7 @@
 <div class="flex flex-col">
     <x-success/>
     <x-error/>
-    <x-table.table>
+    <x-table.table smallTable>
         <x-table.head>
             <x-table.header sortField="standing_order_id">
                 #ID
@@ -34,16 +34,17 @@
                 <x-table.data>
                     {{daydate($order->start_from)}}
                 </x-table.data>
-                <x-table.data wire:click="openStatusUpdateModal({{$order}})" class="cursor-pointer">
-                    @if($order->is_active)
-                        <flux:badge color="green">Active
-                            <flux:icon.chevron-down variant="mini"/>
-                        </flux:badge>
-                    @else
-                        <flux:badge color="rose">Inactive
-                            <flux:icon.chevron-down variant="mini"/>
-                        </flux:badge>
-                    @endif
+                <x-table.data class="cursor-pointer">
+                    @php
+                        $classes = $order->is_active ? "bg-green-400/50!" : "bg-red-400/50!";
+                        $classes.= ' text-white! max-w-fit! mx-auto! ';
+                    @endphp
+                    <x-form.form-wrapper>
+                        <x-form.form-select :class="$classes" wire:change="updateOrderStatus({{$order->standing_order_id}}, $event.target.value)">
+                            <option value="active" @selected($order->is_active)>Active</option>
+                            <option value="inactive" @selected(!$order->is_active)>Inactive</option>
+                        </x-form.form-select>
+                    </x-form.form-wrapper>
                 </x-table.data>
                 <x-table.data>
                     <flux:link href="{{route('standing-orders.show', compact('order'))}}">
@@ -71,32 +72,4 @@
         @endforelse
         </tbody>
     </x-table.table>
-    {{--status update modal--}}
-    <div @class(['hidden' => !$isStatusUpdateModalVisible,
-            'fixed inset-0 z-50 flex items-center justify-center'])>
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-        <!-- Modal Content -->
-        <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
-            x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
-            <div class="flex flex-col gap-4">
-                <div class="flex gap-4 justify-between">
-                    <h2 class="text-xl font-semibold mb-4 text-center">Update Status</h2>
-                    <flux:button wire:click="closeStatusUpdateModal">X</flux:button>
-                </div>
-                <flux:separator/>
-            </div>
-            <div class="mx-auto">
-                <x-form.form-wrapper>
-                    <x-form.form-label id="order_status_update" text="Select a status"/>
-                    <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatus">
-                        <option value="active" @selected($selectedOrder && $selectedOrder->is_active)>Active</option>
-                        <option value="inactive" @selected($selectedOrder && !$selectedOrder->is_active)>Inactive
-                        </option>
-                    </x-form.form-select>
-                </x-form.form-wrapper>
-            </div>
-        </div>
-    </div>
 </div>

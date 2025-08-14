@@ -141,7 +141,6 @@ class StandingOrderController extends Controller
         DB::beginTransaction();
         try {
             // first update order details
-            $order->is_active = $request->boolean('is_active');
             $order->start_from = $request->date('start_from')->toDateString();
             $order->save();
 

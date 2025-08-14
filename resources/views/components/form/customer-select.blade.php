@@ -1,4 +1,4 @@
-<x-form.form-wrapper center="true">
+<x-form.form-wrapper class="sm:max-w-[210px]!">
     <x-form.form-label id="customer_id" text="Customer" />
     <x-form.form-select id="customer_id" name="customer_id" wireModelLive="customer_id">
         <option value=""></option>

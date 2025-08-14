@@ -8,8 +8,6 @@
                 </flux:link>
             </div>
         </x-page-heading>
-        <x-success/>
-        <x-error/>
         <div class="flex flex-col gap-8">
             <livewire:order-filter/>
             @php

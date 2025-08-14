@@ -19,7 +19,8 @@
 $square ??= $slot->isEmpty();
 
 // Size-up icons in square/icon-only buttons...
-$iconClasses = Flux::classes($square ? 'size-5!' : 'size-4!');
+//$iconClasses = Flux::classes($square ? 'size-5!' : 'size-4!');
+$iconClasses = "size-6!";
 
 $classes = Flux::classes()
     ->add('h-10 lg:h-8 relative flex items-center gap-3 rounded-lg')

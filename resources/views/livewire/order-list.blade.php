@@ -43,7 +43,7 @@
         <div class="hidden sm:block">
             <x-table.table>
                 <x-table.head>
-                    <x-table.header>
+                    <x-table.header sortField="is_daytime">
                         #
                     </x-table.header>
                     <x-table.header sortField="customer">
@@ -80,16 +80,17 @@
                             $orderCount = $orders->total() - ($orders->firstItem() + $index) + 1;
                         @endphp
                         <x-table.row wire:key="order-{{$order->order_id}}">
-                            <x-table.data>
-                                @if($order->is_standing)
-                                    <flux:badge color="lime" size="lg">S</flux:badge>
-                                @endif
+                            <x-table.data class="whitespace-nowrap space-y-1">
                                 @if($order->is_daytime)
-                                    <flux:badge color="cyan" size="lg">D</flux:badge>
+                                    <flux:badge color="cyan" size="sm">D</flux:badge>
                                 @endif
-                                <flux:link href="{{route('orders.show', compact('order'))}}">
-                                    #{{$orderCount}}
-                                </flux:link>
+                                @if(!$order->is_daytime)
+                                    <flux:badge color="pink" size="sm">N</flux:badge>
+                                @endif
+                                @if($order->is_standing)
+                                    <flux:badge color="lime" size="sm">S</flux:badge>
+                                @endif
+                                <span class="text-accent">#{{$orderCount}}</span>
                             </x-table.data>
                             <x-table.data>
                                 <flux:link
@@ -146,9 +147,9 @@
                                 @moneyFormat($order->total_price)
                             </x-table.data>
                             <x-table.data link>
-                                <flux:link href="{{route('orders.show', compact('order'))}}" title="View order">
-                                    <flux:icon.eye class="!inline"/>
-                                </flux:link>
+                                {{--                                <flux:link href="{{route('orders.show', compact('order'))}}" title="View order">--}}
+                                {{--                                    <flux:icon.eye class="!inline"/>--}}
+                                {{--                                </flux:link>--}}
                                 <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
                                     <flux:icon.pencil-square class="!inline"/>
                                 </flux:link>

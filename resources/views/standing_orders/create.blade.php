@@ -1,11 +1,11 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Add new standing order"/>
+        <x-page-heading title="Add New Standing Order"/>
         <x-success/>
         <x-error/>
-        <form action="{{route('standing-orders.store')}}" method="POST" class="flex flex-col gap-4">
+        <form action="{{route('standing-orders.store')}}" method="POST" class="flex flex-col gap-8">
             @csrf
-            <div class="flex gap-4 flex-wrap">
+            <div class="flex gap-4 flex-wrap justify-center mt-4">
                 {{--customer dropdown--}}
                 <x-form.customer-select />
                 {{--standing order activation/start date--}}
@@ -14,7 +14,7 @@
                     <x-form.form-input type="date" id="start_from" name="start_from" value="{{old('start_from', now()->toDateString())}}" />
                 </x-form.form-wrapper>
             </div>
-            <div class="flex gap-8 flex-wrap my-2">
+            <div class="flex gap-8 flex-wrap my-2 justify-center">
                 {{--count the days from 0 to 7--}}
                 @for($i = 0; $i<7;$i++)
                     <div
@@ -29,7 +29,7 @@
                     </div>
                 @endfor
             </div>
-            <flux:button variant="primary" type="submit">Add</flux:button>
+            <flux:button variant="primary" type="submit" class="sm:min-w-[41%] mx-auto">Add</flux:button>
         </form>
     </x-page-section>
 </x-flux-layout>

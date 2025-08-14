@@ -1,7 +1,7 @@
 @use(App\Enums\OrderStatus)
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Edit Order #{{$order->order_id}}"/>
+        <x-page-heading title="Edit Order"/>
         <div class="flex gap-2 justify-center">
             <flux:badge class="px-4 py-2 !text-lg text-accent!">
                 {{$order->customer->customer_name}}

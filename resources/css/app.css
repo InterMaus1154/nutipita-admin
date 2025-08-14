@@ -79,4 +79,22 @@
         -webkit-appearance: auto;
         -moz-appearance: auto;
     }
+
+    select{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    .select-wrapper{
+        position: relative;
+    }
+
+    .select-wrapper::after{
+        content:'\25BE';
+        position: absolute;
+        right: 5%;
+        bottom: 50%;
+        transform: translateY(50%);
+    }
 }

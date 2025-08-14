@@ -14,40 +14,26 @@ class StandingOrderList extends Component
 {
     use HasSort;
 
-    public bool $isStatusUpdateModalVisible = false;
-    public ?StandingOrder $selectedOrder = null;
-    public ?string $updateOrderStatus = null;
-
-
     public function mount(): void
     {
         $this->initSort('standing_order_id');
     }
 
-    public function openStatusUpdateModal(StandingOrder $order): void
-    {
-        $this->isStatusUpdateModalVisible = true;
-        $this->selectedOrder = $order;
-        $this->updateOrderStatus = $order->is_active ? "active" : "inactive";
-    }
 
-    public function closeStatusUpdateModal(): void
+    public function updateOrderStatus(StandingOrder $order, string $value): void
     {
-        $this->reset(['isStatusUpdateModalVisible', 'selectedOrder', 'updateOrderStatus']);
-    }
-
-    public function updatedUpdateOrderStatus(string $value): void
-    {
-        if ($value === "active") {
-            $this->selectedOrder->update([
-                'is_active' => true
+        DB::beginTransaction();
+        try{
+            $order->update([
+               'is_active' => $value === "active"
             ]);
-        } else {
-            $this->selectedOrder->update([
-                'is_active' => false
-            ]);
+            session()->flash('success', 'Status updated');
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            session()->flash('error', 'Error updating status');
+            Log::error($e->getMessage());
         }
-        $this->closeStatusUpdateModal();
     }
 
     public function delete(StandingOrder $order): void
