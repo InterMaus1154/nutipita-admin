@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\DataTransferObjects\OrderSummaryDto;
+use App\Livewire\Homepage\DownloadSummary;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -23,14 +25,18 @@ class OrderList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    public $filters = [
+    public array $defaultFilters = [
         'customer_id' => null,
         'due_from' => null,
         'due_to' => null,
         'status' => null,
         'cancelled_order_hidden' => true,
-        'daytime_only' => false
+        'daytime_only' => false,
+        'nighttime_only' => false
     ];
+
+    public array $filters = [];
+    public array $propFilters = [];
 
     /*
      * Variables for status update modal
@@ -65,19 +71,12 @@ class OrderList extends Component
 
 
     // Initial component load
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, array $filters = [], ?bool $withSummaryPdf = false): void
+    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
     {
         $this->resetPage();
         $this->initSort('order_id', 'desc', 'resetPage');
         $this->withSummaryData = $withSummaryData;
-        $this->filters = array_merge([
-            'customer_id' => null,
-            'due_from' => null,
-            'due_to' => null,
-            'status' => null,
-            'cancelled_order_hidden' => true,
-            'daytime_only' => false
-        ], $filters);
+        $this->filters = array_replace($this->defaultFilters, $this->propFilters);
         $this->withSummaryPdf = $withSummaryPdf;
     }
 
@@ -86,7 +85,7 @@ class OrderList extends Component
     public function applyFilter(array $filters): void
     {
         $this->resetPage();
-        $this->filters = array_merge($this->filters, $filters);
+        $this->filters = array_replace($this->defaultFilters, $filters);
     }
 
     /*
@@ -162,32 +161,14 @@ class OrderList extends Component
         $this->setSort($field, $direction);
     }
 
-    public function render(): View
+
+    /**
+     * Custom order sortings
+     * @return array
+     */
+    public function customSorts(): array
     {
-        $filters = $this->filters;
-        $query = Order::query()
-            ->when($filters['cancelled_order_hidden'], function ($builder) {
-                return $builder->nonCancelled();
-            })
-            ->when($filters['daytime_only'], function ($builder) {
-                return $builder->where('orders.is_daytime', true);
-            })
-            ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
-                return $builder->where('orders.customer_id', $filters['customer_id']);
-            })
-            ->when(!empty($filters['due_from']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
-            })
-            ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
-            })
-            ->when(!empty($filters['status']), function ($builder) use ($filters) {
-                return $builder->where('order_status', $filters['status']);
-            })
-            ->with('customer:customer_id,customer_name', 'products');
-
-
-        $customSorts = [
+        return [
             'customer' => function (Builder $query) {
                 $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
                     ->orderBy('customers.customer_name', $this->sortDirection)
@@ -208,9 +189,48 @@ class OrderList extends Component
                     ->orderBy('total_price', $this->sortDirection);
             }
         ];
+    }
 
-        $this->applySort($query, $customSorts);
+    /**
+     * Create an order query from the filters
+     * @return Builder
+     */
+    public
+    function buildOrderQuery(): Builder
+    {
+        $filters = $this->filters;
+        $query = Order::query()
+            ->when($filters['cancelled_order_hidden'], function ($builder) {
+                return $builder->nonCancelled();
+            })
+            ->when($filters['nighttime_only'], function ($builder) {
+                return $builder->where('is_daytime', false);
+            })
+            ->when($filters['daytime_only'], function ($builder) {
+                return $builder->where('orders.is_daytime', true);
+            })
+            ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
+                return $builder->where('orders.customer_id', $filters['customer_id']);
+            })
+            ->when(!empty($filters['due_from']), function ($builder) use ($filters) {
+                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
+            })
+            ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
+                return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
+            })
+            ->when(!empty($filters['status']), function ($builder) use ($filters) {
+                return $builder->where('order_status', $filters['status']);
+            })
+            ->with('customer:customer_id,customer_name', 'products');
 
+        return $this->applySort($query, $this->customSorts());
+    }
+
+
+    public
+    function render(): View
+    {
+        $query = $this->buildOrderQuery();
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
@@ -219,13 +239,11 @@ class OrderList extends Component
         // cancelled or invalidated orders will not contribute to the summaries, hence the query clone above
         $this->ordersAll = $query->nonCancelled()->get();
 
-        // only if pdf save is required, otherwise useless data
-        if (!empty($this->filters['customer_id'])) {
+        if (!empty($this->defaultFilters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
         }
-
 
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         return view('livewire.order-list', [

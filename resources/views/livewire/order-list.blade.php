@@ -82,13 +82,19 @@
                         <x-table.row wire:key="order-{{$order->order_id}}">
                             <x-table.data class="whitespace-nowrap space-y-1">
                                 @if($order->is_daytime)
-                                    <flux:badge color="cyan" size="sm">D</flux:badge>
+                                    <flux:badge color="cyan" size="sm">
+                                        <flux:icon.sun class="size-4" />
+                                    </flux:badge>
                                 @endif
                                 @if(!$order->is_daytime)
-                                    <flux:badge color="pink" size="sm">N</flux:badge>
+                                    <flux:badge color="pink" size="sm">
+                                        <flux:icon.moon class="size-4"/>
+                                    </flux:badge>
                                 @endif
                                 @if($order->is_standing)
-                                    <flux:badge color="lime" size="sm">S</flux:badge>
+                                    <flux:badge color="lime" size="sm">
+                                        <flux:icon.arrow-path-rounded-square class="size-4" />
+                                    </flux:badge>
                                 @endif
                                 <span class="text-accent">#{{$orderCount}}</span>
                             </x-table.data>

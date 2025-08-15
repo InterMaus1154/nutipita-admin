@@ -33,9 +33,9 @@
     </flux:dropdown>
 </flux:sidebar>
 
-<flux:header class="grid grid-cols-[1fr_auto_1fr] items-center z-100 bg-zinc-800" sticky>
-{{--    <flux:sidebar.toggle icon="bars-2" inset="left"/>--}}
-    <flux:dropdown position="top" alignt="center" class="justify-self-start!">
+<flux:header class="grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_auto_1fr] items-center z-100 bg-zinc-800" sticky>
+    <flux:sidebar.toggle icon="bars-2" inset="left" class="sm:hidden"/>
+    <flux:dropdown position="top" align="right" class="justify-self-start! max-sm:justify-self-end!">
         <flux:profile avatar="{{asset('images/icon_96x96.png?v=3')}}"/>
         <flux:menu>
             <flux:menu.item icon="arrow-right-start-on-rectangle" class="w-full">
@@ -46,7 +46,7 @@
             </flux:menu.item>
         </flux:menu>
     </flux:dropdown>
-    <div class="flex gap-4">
+    <div class="flex gap-4 max-sm:hidden">
         <flux:navlist variant="outline" class="flex-row! gap-4!">
             <flux:navlist.item icon="home" href="{{route('admin.view.dashboard')}}" title="Dashboard" :current="Route::is('admin.view.dashboard')"></flux:navlist.item>
             <flux:navlist.item icon="building-storefront" href="{{route('orders.index')}}" title="Orders" :current="Route::is('orders.*')"></flux:navlist.item>
@@ -58,5 +58,5 @@
             <flux:navlist.item icon="cog-6-tooth"></flux:navlist.item>
         </flux:navlist>
     </div>
-    <div></div>
+    <div class="max-sm:hidden"></div>
 </flux:header>

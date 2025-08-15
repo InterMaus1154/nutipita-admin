@@ -1,6 +1,6 @@
 @props(['sortField' => null])
 <th {{$attributes->merge([
-    'class' => "py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500",
+    'class' => "px-2 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500",
     'scope' => "col"
 ])}}
     @if($sortField)

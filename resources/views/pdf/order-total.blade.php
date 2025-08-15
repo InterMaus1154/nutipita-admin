@@ -1,3 +1,9 @@
+@php use App\DataTransferObjects\OrderSummaryDto; @endphp
+@php
+    /**
+* @var OrderSummaryDto $summaryDto
+ */
+@endphp
 <style>
     .product-list {
         display: flex;
@@ -14,13 +20,13 @@
 
 </style>
 
-<h1>Order total {{dayDate(now())}}</h1>
+<h1>{{$type === "both" ? "Day and Night" : ucfirst($type)}} Order Total {{dayDate(now())}}</h1>
 <div class="product-list">
-    @foreach($productTotals as $key => $value)
+    @foreach($summaryDto->productTotalDTOs() as $productTotal)
         <div class="product-box">
-            <span>{{$key}}</span>
-            <span>{{$value}}</span>
+            <span>{{$productTotal->name()}}</span>
+            <span>{{$productTotal->total()}}</span>
         </div>
     @endforeach
 </div>
-<span style="font-weight: bold; font-size: 1.75rem">Total: {{$totalDayPita}}</span>
+<span style="font-weight: bold; font-size: 1.75rem">Total: {{$summaryDto->productTotals()}}</span>

@@ -1,4 +1,10 @@
 <div class="flex flex-col gap-8">
+
+    {{--both orders--}}
+    @if($is_daytime && $is_nighttime)
+
+    @endif
+
     {{-- Day Time Orders --}}
     @if($is_daytime)
         <div class="flex flex-col gap-4">
@@ -11,7 +17,7 @@
                     wire:key="day-orders"
                     :withSummaryData="true"
                     :summaryVisibleByDefault="true"
-                    :filters="[
+                    :prop-filters="[
                                 'due_from'=>now()->toDateString(),
                                 'due_to' => now()->toDateString(),
                                 'daytime_only' => true
@@ -33,9 +39,10 @@
                     wire:key="night-orders"
                     :withSummaryData="true"
                     :summaryVisibleByDefault="true"
-                    :filters="[
+                    :prop-filters="[
                             'due_from' => now()->addDay()->toDateString(),
-                            'due_to' => now()->addDay()->toDateString()
+                            'due_to' => now()->addDay()->toDateString(),
+                            'nighttime_only' => true
                         ]"
                 />
             </div>
