@@ -64,8 +64,9 @@
                         INV-{{$invoice->invoice_number}}
                     </x-table.data>
                     <x-table.data>
-                        <flux:link
-                            href="{{route('customers.show', ['customer' => $invoice->customer])}}">{{$invoice->customer->customer_name}}</flux:link>
+                        <span class="text-accent text-base">
+                        {{$invoice->customer->customer_name}}
+                        </span>
                     </x-table.data>
                     <x-table.data>
                         @if($invoice->invoice_status === "paid")

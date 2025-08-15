@@ -37,7 +37,6 @@
         <livewire:order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
                                 :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
-    <flux:separator class="m-0"/>
     @if($orders->isNotEmpty())
         {{--table on desktop--}}
         <div class="hidden sm:block">
@@ -82,27 +81,26 @@
                         <x-table.row wire:key="order-{{$order->order_id}}">
                             <x-table.data class="whitespace-nowrap space-y-1">
                                 @if($order->is_daytime)
-                                    <flux:badge color="cyan" size="sm">
-                                        <flux:icon.sun class="size-4" />
+                                    <flux:badge color="yellow" variant="solid" size="sm">
+                                        <flux:icon.sun class="size-4 text-black" />
                                     </flux:badge>
                                 @endif
                                 @if(!$order->is_daytime)
-                                    <flux:badge color="pink" size="sm">
+                                    <flux:badge color="violet" variant="solid" size="sm">
                                         <flux:icon.moon class="size-4"/>
                                     </flux:badge>
                                 @endif
                                 @if($order->is_standing)
-                                    <flux:badge color="lime" size="sm">
-                                        <flux:icon.arrow-path-rounded-square class="size-4" />
+                                    <flux:badge color="teal" variant="solid" size="sm">
+                                        <flux:icon.arrow-path-rounded-square class="size-4 text-white" />
                                     </flux:badge>
                                 @endif
                                 <span class="text-accent">#{{$orderCount}}</span>
                             </x-table.data>
                             <x-table.data>
-                                <flux:link
-                                    href="{{route('customers.show', ['customer' => $order->customer])}}">
+                                <span class="text-accent text-base">
                                     {{\Illuminate\Support\Str::limit($order->customer->customer_name, 20)}}
-                                </flux:link>
+                                </span>
                             </x-table.data>
                             <x-table.data>
                                 @dayDate($order->order_placed_at)
@@ -153,9 +151,6 @@
                                 @moneyFormat($order->total_price)
                             </x-table.data>
                             <x-table.data link>
-                                {{--                                <flux:link href="{{route('orders.show', compact('order'))}}" title="View order">--}}
-                                {{--                                    <flux:icon.eye class="!inline"/>--}}
-                                {{--                                </flux:link>--}}
                                 <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
                                     <flux:icon.pencil-square class="!inline"/>
                                 </flux:link>

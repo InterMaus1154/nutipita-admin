@@ -4,16 +4,14 @@
             <flux:button wire:click="toggleSummaries()" class="sm:hidden">Toggle Summaries</flux:button>
             <div @class([
                         'hidden' => !$visible,
-                        'flex gap-4 justify-between flex-wrap'
+                        'grid grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4 mx-auto'
                     ])>
-                <div class="flex gap-4">
                     @if($withIncome)
                         <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>
                     @endif
                     <x-data-box dataBoxHeader="Total Orders" :dataBoxValue="amountFormat(collect($orders)->count())"/>
                     <x-data-box dataBoxHeader="Total Pita" :dataBoxValue="amountFormat($totalPita)"/>
-                </div>
-                <div class="flex gap-4">
+
                     @foreach($productTotals as $productTotal)
                         @unless(empty($productTotal['qty']))
                             <x-data-box wire:key="$productTotal['name']"
@@ -21,7 +19,6 @@
                                         :dataBoxValue="amountFormat($productTotal['qty'])"/>
                         @endunless
                     @endforeach
-                </div>
             </div>
         </div>
     @endif

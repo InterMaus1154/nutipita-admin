@@ -32,7 +32,7 @@
         --color-accent-foreground: var(--color-orange-950);
     }
 
-    input{
+    input {
         @apply border-1 border-gray-400
     }
 
@@ -52,46 +52,46 @@
         display: inline !important;
     }
 
-    .box-shadow-theme{
+    .box-shadow-theme {
         box-shadow: 2px 2px 10px 0 var(--color-accent);
     }
 
-    [x-cloak]{
-        display: none!important;
+    [x-cloak] {
+        display: none !important;
     }
 
-    button[type="submit"]{
+    button[type="submit"] {
         @apply max-w-full mt-4!;
     }
 
-    form{
+    form {
         @apply sm:mx-auto!;
     }
 
-    input{
+    input {
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
     }
 
-    input[type="checkbox"]{
+    input[type="checkbox"] {
         appearance: auto;
         -webkit-appearance: auto;
         -moz-appearance: auto;
     }
 
-    select{
+    select {
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
     }
 
-    .select-wrapper{
+    .select-wrapper {
         position: relative;
     }
 
-    .select-wrapper::after{
-        content:'\25BE';
+    .select-wrapper::after {
+        content: '\25BE';
         position: absolute;
         right: 5%;
         bottom: 50%;

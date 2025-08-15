@@ -20,7 +20,9 @@
             </x-table.header>
             {{--render products for product unit prices/customer--}}
             @foreach($products as $product)
-                <x-table.header>{{$product->product_name}}<br> {{$product->product_weight_g}}g</x-table.header>
+                <x-table.header>{{$product->product_name}}
+                    <br> {{$product->product_weight_g}}g
+                </x-table.header>
             @endforeach
             <x-table.header>
                 Actions
@@ -30,7 +32,7 @@
             @foreach($customers as $customer)
                 <x-table.row wire:key="customer-{{$customer->customer_id}}">
                     <x-table.data>
-                            <span class="text-accent">
+                            <span class="text-accent text-base">
                                 {{$customer->customer_name}}
                             </span>
                     </x-table.data>
@@ -38,16 +40,21 @@
                         {{$customer->customer_business_owner_name}}
                     </x-table.data>
                     <x-table.data>
-                        {{$customer->customer_optional_name}} <br>
-                        {{$customer->customer_address_1}} <br>
-                        {{$customer->customer_address_2}}<br>
-                        {{$customer->customer_city}} <br>
+                        {{$customer->customer_optional_name}}
+                        <br>
+                        {{$customer->customer_address_1}}
+                        <br>
+                        {{$customer->customer_address_2}}
+                        <br>
+                        {{$customer->customer_city}}
+                        <br>
                         {{$customer->customer_postcode}}
                     </x-table.data>
                     <x-table.data>
                         @if($customer->customer_email)
                             <flux:link
-                                href="mailto:{{$customer->customer_email}}" class="text-white">{{$customer->customer_email}}</flux:link>
+                                href="mailto:{{$customer->customer_email}}"
+                                class="text-white">{{$customer->customer_email}}</flux:link>
                         @else
                             <em>No email provided!</em>
                         @endif
@@ -72,7 +79,7 @@
                     @endforeach
                     <x-table.data link>
                         <flux:link href="{{route('customers.edit', compact('customer'))}}" title="Edit customer">
-                            <flux:icon.pencil-square />
+                            <flux:icon.pencil-square/>
                         </flux:link>
                     </x-table.data>
                 </x-table.row>
