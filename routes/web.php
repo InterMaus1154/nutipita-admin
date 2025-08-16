@@ -118,19 +118,19 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         Route::get('/', 'index')->name('invoices.index');
 
         // create form
-        Route::get('/createFromOrder', 'create')->name('invoices.create');
+//        Route::get('/createFromOrder', 'create')->name('invoices.create');
 
         // download an invoice
         Route::get('/download/{invoice}', 'download')->name('invoices.download');
 
         // view a pdf in browser
-        Route::get('/viewInline/{invoice}', 'viewInline')->name('invoices.view-inline');
+        Route::get('/view-inline/{invoice}', 'viewInline')->name('invoices.view-inline');
 
         // create manual invoice form
-        Route::get('/createManual', 'createManual')->name('invoices.create-manual');
+        Route::get('/create', 'createManual')->name('invoices.create');
 
         // create single
-        Route::get('/createSingle/{order}', 'createSingleInvoice')->name('invoices.create-single');
+        Route::get('/create-single/{order}', 'createSingleInvoice')->name('invoices.create-single');
 
     });
 

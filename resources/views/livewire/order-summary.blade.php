@@ -3,7 +3,7 @@
         <div class="space-y-4">
             <div @class([
                         'hidden' => !$visible,
-                        'grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4 mx-auto'
+                        'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-2 sm:gap-4 mx-auto'
                     ])>
                     @if($withIncome)
                         <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>

@@ -1,13 +1,13 @@
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Invoices">
-            <flux:link href="{{route('invoices.create-manual')}}">
+            <flux:link href="{{route('invoices.create')}}">
                 <flux:icon.plus-circle class="size-8"/>
             </flux:link>
         </x-page-heading>
         <x-success />
         <x-error />
-        <div class="grid gap-8">
+        <div class="flex flex-col gap-8">
             <livewire:invoice.invoice-filter />
             <livewire:invoice.invoice-list />
         </div>

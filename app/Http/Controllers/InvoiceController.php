@@ -80,7 +80,7 @@ class InvoiceController extends Controller
      */
     public function createManual()
     {
-        return view('invoices.create-manual');
+        return view('invoices.create');
     }
 
     /*

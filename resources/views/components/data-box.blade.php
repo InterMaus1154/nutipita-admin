@@ -6,8 +6,8 @@
 {{--    <span>{{$dataBoxValue}}</span>--}}
 {{--</div>--}}
 
-<div class="max-w-xs flex flex-col  border-gray-200 border-1  rounded-xl shadow-md/50  dark:border-zinc-800 dark:bg-linear-to-br from-neutral-950 to-zinc-900">
-    <div class="p-4 sm:p-6 bg-zinc-300/5 rounded-xl h-full">
+<div class="flex flex-col  border-gray-200 border-1  rounded-xl shadow-md/50  dark:border-zinc-800 dark:bg-linear-to-br from-neutral-950 to-zinc-900">
+    <div class="p-2 py-4 sm:p-6 bg-zinc-300/5 rounded-xl h-full">
         <h3 class="text-base sm:text-lg text-gray-800 dark:text-white text-center">
             {{$dataBoxHeader}}
         </h3>
