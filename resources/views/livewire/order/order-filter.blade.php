@@ -22,8 +22,8 @@
                     <flux:icon.brush-cleaning/>
                 </flux:button>
                 <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months" class="max-sm:order-1"/>
-                <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()" class="max-sm:order-2">
-                    <flux:icon.sun/>
+                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-sm:order-2' : 'max-sm:order-2'" wire:click="toggleDaytime()">
+                    <flux:icon.sun :class="$daytime_only ? 'text-black!' : ''"/>
                 </flux:button>
             </div>
         </div>
