@@ -3,7 +3,7 @@
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @use(App\Enums\OrderStatus)
 @use(App\Models\Order)
-@props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false])
+@props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false, 'withMobileSort' => false])
 @php
     /**
 * @var Order $order
@@ -13,7 +13,7 @@
     <x-success/>
     <x-error/>
     {{--sorting for mobile--}}
-    @if($orders->isNotEmpty())
+    @if($orders->isNotEmpty() && $withMobileSort)
         <div class="sm:hidden">
             <x-form.form-label id="mobile_sort" text="Sort by"/>
             <x-form.form-select id="mobile_sort" wireModelLive="mobileSort">
@@ -34,7 +34,7 @@
     @endif
     {{--order summary--}}
     @if($withSummaryData)
-        <livewire:order-summary :orders="$ordersAll" :products="$products" :withIncome="true"
+        <livewire:order.order-summary :orders="$ordersAll" :products="$products" :withIncome="true"
                                 :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     @if($orders->isNotEmpty())
@@ -211,13 +211,20 @@
                                     </x-form.form-select>
                                 </x-form.form-wrapper>
                             </div>
-                            {{--daytime badge--}}
                             @if($order->is_daytime)
-                                <flux:badge color="cyan">Daytime</flux:badge>
+                                <flux:badge color="yellow" variant="solid" size="sm">
+                                    <flux:icon.sun class="size-4 text-black"/>
+                                </flux:badge>
                             @endif
-                            {{--standing order badge--}}
+                            @if(!$order->is_daytime)
+                                <flux:badge color="violet" variant="solid" size="sm">
+                                    <flux:icon.moon class="size-4"/>
+                                </flux:badge>
+                            @endif
                             @if($order->is_standing)
-                                <flux:badge color="lime">Standing</flux:badge>
+                                <flux:badge color="teal" variant="solid" size="sm">
+                                    <flux:icon.arrow-path-rounded-square class="size-4 text-white"/>
+                                </flux:badge>
                             @endif
                         </div>
                         {{--dropdown menu for actions--}}
@@ -306,34 +313,5 @@
     {{--bottom pagination--}}
     <div>
         {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
-    </div>
-    {{--status update modal--}}
-    <div @class(['hidden' => !$isStatusUpdateModalVisible,
-            'fixed inset-0 z-50 flex items-center justify-center'])>
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-        <!-- Modal Content -->
-        <div
-                class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
-                x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
-            <div class="flex flex-col gap-4">
-                <div class="flex gap-4 justify-between">
-                    <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>
-                    <flux:button wire:click="closeStatusUpdateModal">X</flux:button>
-                </div>
-                <flux:separator/>
-            </div>
-            <x-form.form-wrapper>
-                <x-form.form-label id="order_status_update" text="Select a status"/>
-                <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatusName">
-                    @foreach(OrderStatus::cases() as $status)
-                        <option
-                                value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
-                            {{ucfirst($status->value)}}
-                        </option>
-                    @endforeach
-                </x-form.form-select>
-            </x-form.form-wrapper>
-        </div>
     </div>
 </div>

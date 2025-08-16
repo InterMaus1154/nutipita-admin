@@ -32,13 +32,6 @@ class OrderList extends Component
     public array $filters = [];
     public array $propFilters = [];
 
-    /*
-     * Variables for status update modal
-     */
-    public bool $isStatusUpdateModalVisible = false;
-
-    public ?Order $modalSelectedOrder = null;
-    public ?string $updateOrderStatusName = null;
 
     /*
      * --- END ---
@@ -83,40 +76,6 @@ class OrderList extends Component
     }
 
     /*
-     * Methods for controlling status update modal
-     */
-    public function openStatusUpdateModal(Order $order): void
-    {
-        $this->modalSelectedOrder = $order;
-        $this->isStatusUpdateModalVisible = true;
-        $this->updateOrderStatusName = $order->order_status;
-
-    }
-
-    public function closeStatusUpdateModal(): void
-    {
-        $this->reset(['modalSelectedOrder', 'isStatusUpdateModalVisible', 'updateOrderStatusName']);
-    }
-
-    /**
-     * Handler of updating order status in modal
-     * @param $value
-     * @return void
-     */
-    public function updatedUpdateOrderStatusName($value): void
-    {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        if ($this->modalSelectedOrder) {
-            $this->modalSelectedOrder->update([
-                'order_status' => $value
-            ]);
-        }
-        $this->reset(['modalSelectedOrder', 'isStatusUpdateModalVisible', 'updateOrderStatusName']);
-    }
-
-    /*
      * --- END ---
      */
 
@@ -146,12 +105,13 @@ class OrderList extends Component
 
     /**
      * Track mobile sorting changes
-     * @param string $value
+     * @param array $data
      * @return void
      */
-    public function updatedMobileSort(string $value): void
+    #[On('set-mobile-sort')]
+    public function setMobileSort(array $data): void
     {
-        [$direction, $field] = explode(':', $value);
+        [$direction, $field] = explode(':', $data['value']);
         $this->setSort($field, $direction);
     }
 

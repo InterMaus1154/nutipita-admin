@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Order;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -74,8 +75,8 @@ class OrderSummary extends Component
         $this->visible = !$this->visible;
     }
 
-    public function render()
+    public function render(): View
     {
-        return view('livewire.order-summary');
+        return view('livewire.order.order-summary');
     }
 }

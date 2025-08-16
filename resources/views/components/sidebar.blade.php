@@ -14,7 +14,7 @@
         <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" :current="Route::is('money.*')">Money Management</flux:navlist.item>
         <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" :current="Route::is('standing-orders.*')">Standing Orders</flux:navlist.item>
         <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" :current="Route::is('customers.*')">Customers</flux:navlist.item>
-        <flux:navlist.item icon="cake" href="{{route('products.index')}}" :current="Route::is('products.*')">Products</flux:navlist.item>
+        <flux:navlist.item icon="croissant" href="{{route('products.index')}}" :current="Route::is('products.*')">Products</flux:navlist.item>
         <flux:navlist.item icon="cog-6-tooth">Settings</flux:navlist.item>
     </flux:navlist>
 
@@ -54,7 +54,7 @@
             <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" title="Income" :current="Route::is('money.*')"></flux:navlist.item>
             <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" title="Standing orders" :current="Route::is('standing-orders.*')"></flux:navlist.item>
             <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" title="Customers" :current="Route::is('customers.*')"></flux:navlist.item>
-            <flux:navlist.item icon="cake" href="{{route('products.index')}}" title="Products" :current="Route::is('products.*')"></flux:navlist.item>
+            <flux:navlist.item icon="croissant" href="{{route('products.index')}}" title="Products" :current="Route::is('products.*')"></flux:navlist.item>
             <flux:navlist.item icon="cog-6-tooth"></flux:navlist.item>
         </flux:navlist>
     </div>

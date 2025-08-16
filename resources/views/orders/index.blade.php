@@ -2,14 +2,15 @@
     <x-page-section>
         <x-page-heading title="Orders">
             <div class="flex gap-4">
-                <livewire:order-summary-download />
+                <livewire:order-summary-download/>
+                <livewire:order.mobile-order-sort/>
                 <flux:link href="{{route('orders.create')}}" class="cursor-pointer" title="Add new order">
                     <flux:icon.plus-circle class="size-8"/>
                 </flux:link>
             </div>
         </x-page-heading>
         <div class="flex flex-col gap-8">
-            <livewire:order-filter/>
+            <livewire:order.order-filter/>
             @php
                 // set week as default
                     $filters = [

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Order;
 
 use App\Models\Customer;
 use App\Traits\HasQuickDueFilter;
-use Carbon\Carbon;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -79,6 +78,6 @@ class OrderFilter extends Component
     public function render(): View
     {
         $customers = Customer::select(['customer_id', 'customer_name', 'customer_business_owner_name'])->get();
-        return view('livewire.order-filter', compact('customers'));
+        return view('livewire.order.order-filter', compact('customers'));
     }
 }
