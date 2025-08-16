@@ -35,7 +35,7 @@
     {{--order summary--}}
     @if($withSummaryData)
         <livewire:order.order-summary :orders="$ordersAll" :products="$products" :withIncome="true"
-                                :visibleByDefault="$summaryVisibleByDefault"/>
+                                      :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     @if($orders->isNotEmpty())
         {{--table on desktop--}}
@@ -124,8 +124,9 @@
                                     <x-form.form-select :class="$classes"
                                                         wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
                                         @foreach(OrderStatus::cases() as $status)
-                                            <option @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
-                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                            <option
+                                                @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
+                                                value="{{$status->name}}">{{ucfirst($status->value)}}</option>
                                         @endforeach
                                     </x-form.form-select>
                                 </x-form.form-wrapper>
@@ -189,7 +190,7 @@
                         {{--status badges--}}
                         <div class="flex gap-2">
                             {{--normal status badge--}}
-                            <div class="cursor-pointer" >
+                            <div class="cursor-pointer">
                                 @php
                                     // match color
                                     if($order->order_status === OrderStatus::G_PAID->name){
@@ -205,8 +206,9 @@
                                     <x-form.form-select :class="$classes"
                                                         wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
                                         @foreach(OrderStatus::cases() as $status)
-                                            <option @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
-                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                            <option
+                                                @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
+                                                value="{{$status->name}}">{{ucfirst($status->value)}}</option>
                                         @endforeach
                                     </x-form.form-select>
                                 </x-form.form-wrapper>
@@ -231,21 +233,29 @@
                         <div class="relative">
                             <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
                             {{--actual link box--}}
-                            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak x-transition
+                            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak
+                                 x-transition
                                  class="absolute z-100 left-[-9rem] top-5 border-2 border-neutral-700 rounded-xl bg-zinc-800 p-4 flex flex-col gap-4 min-w-[200px] action">
-                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('orders.show', compact('order'))}}">View</flux:link>
-                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
+                                           href="{{route('orders.show', compact('order'))}}">View
+                                </flux:link>
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
+                                           href="{{route('orders.edit', compact('order'))}}">Edit
+                                </flux:link>
                                 @unless($order->invoice)
-                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! " href="{{route('invoices.create-single', compact('order'))}}">
+                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! "
+                                               href="{{route('invoices.create-single', compact('order'))}}">
                                         Generate Invoice
                                     </flux:link>
                                 @else
-                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
+                                               href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
                                         Download
                                         Invoice
                                     </flux:link>
                                 @endunless
-                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer"
+                                           wire:click="deleteOrder({{$order->order_id}})"
                                            wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
                                     Delete
                                 </flux:link>
@@ -277,10 +287,77 @@
                     {{--extra info section wrapper--}}
                     <div class="flex flex-col gap-4">
                         {{--extra info section--}}
-                        <div class="flex-col gap-4 flex" x-cloak x-show="detailsMenuOpen" x-transition>
-                            <div class="flex gap-2">
-                                <flux:badge color="indigo">Placed:</flux:badge>
-                                <span class="text-base">@dayDate($order->order_placed_at)</span>
+                        {{--backdrop--}}
+                        <div class="fixed inset-0 min-h-screen z-40 bg-black/60" x-show="detailsMenuOpen"
+                             x-transition></div>
+                        <div
+                            class="flex-col gap-4 flex fixed bottom-0 z-50 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800 rounded-t-xl p-4 border-t-6 border-t-accent"
+                            x-cloak x-show="detailsMenuOpen" x-on:click.outside="detailsMenuOpen = false"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 translate-y-full"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-300"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-full">
+                            <div x-on:click="detailsMenuOpen = false" class="absolute right-2 top-2">
+                                <flux:icon.x-circle class="text-accent size-8"/>
+                            </div>
+                            <div class="flex justify-center">
+                                <span class="text-lg! text-white! font-bold">{{$order->customer->customer_name}}</span>
+                            </div>
+                            <div class="flex justify-between gap-4">
+                                {{--status badge--}}
+                                <div class="cursor-pointer">
+                                    @php
+                                        // match color
+                                        if($order->order_status === OrderStatus::G_PAID->name){
+                                            $bgColor = "bg-lime-400!";
+                                        }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
+                                            $bgColor = "bg-orange-400!";
+                                        }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
+                                            $bgColor = "bg-red-400!";
+                                        }
+                                        $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
+                                    @endphp
+                                    <x-form.form-wrapper>
+                                        <x-form.form-select :class="$classes"
+                                                            wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
+                                            @foreach(OrderStatus::cases() as $status)
+                                                <option
+                                                    @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
+                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                            @endforeach
+                                        </x-form.form-select>
+                                    </x-form.form-wrapper>
+                                </div>
+                                {{--other badges--}}
+                                <div class="flex gap-2">
+                                    @if($order->is_daytime)
+                                        <flux:badge color="yellow" variant="solid" size="sm">
+                                            <flux:icon.sun class="size-4 text-black"/>
+                                        </flux:badge>
+                                    @endif
+                                    @if(!$order->is_daytime)
+                                        <flux:badge color="violet" variant="solid" size="sm">
+                                            <flux:icon.moon class="size-4"/>
+                                        </flux:badge>
+                                    @endif
+                                    @if($order->is_standing)
+                                        <flux:badge color="teal" variant="solid" size="sm">
+                                            <flux:icon.arrow-path-rounded-square class="size-4 text-white"/>
+                                        </flux:badge>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="flex gap-2 justify-between">
+                                <div class="flex gap-2">
+                                    <flux:badge color="indigo">Placed:</flux:badge>
+                                    <span class="text-base">@dayDate($order->order_placed_at)</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <flux:badge color="indigo">Due:</flux:badge>
+                                    <span class="text-base">@dayDate($order->order_due_at)</span>
+                                </div>
                             </div>
                             {{--product wrapper--}}
                             <div class="flex flex-col gap-4">
@@ -295,14 +372,41 @@
                                     <flux:separator/>
                                 @endforeach
                             </div>
+                            {{--total pita and price info--}}
+                            <div class="flex justify-between gap-4 items-center flex-wrap">
+                                <div class="flex gap-2">
+                                    <flux:badge color="indigo">Pita:</flux:badge>
+                                    <span class="text-base">@amountFormat($order->total_pita)</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <flux:badge color="indigo">£:</flux:badge>
+                                    <span class="text-base">@moneyFormat($order->total_price)</span>
+                                </div>
+                            </div>
+                            {{--action buttons--}}
+                            <div class="flex gap-4 justify-center">
+                                <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
+                                    <flux:icon.pencil-square class="!inline"/>
+                                </flux:link>
+                                @unless($order->invoice)
+                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}"
+                                               title="Create invoice">
+                                        <flux:icon.clipboard-document-list class="!inline"/>
+                                    </flux:link>
+                                @else
+                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}"
+                                               title="Download invoice">
+                                        <flux:icon.clipboard-document-check class="!inline"/>
+                                    </flux:link>
+                                @endunless
+                                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
+                                           wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
+                                    <flux:icon.trash class="!inline"/>
+                                </flux:link>
+                            </div>
                         </div>
                         <flux:button x-on:click="detailsMenuOpen = !detailsMenuOpen">
-                            <template x-if="detailsMenuOpen">
-                                <flux:icon.chevron-double-up class="text-accent"/>
-                            </template>
-                            <template x-if="!detailsMenuOpen">
-                                <flux:icon.chevron-double-down class="text-accent"/>
-                            </template>
+                            <flux:icon.chevron-double-up class="text-accent"/>
                         </flux:button>
                     </div>
                 </div>
