@@ -5,7 +5,7 @@
             {{--customer filter--}}
             <x-form.customer-select />
             {{--status filter--}}
-            <x-form.form-wrapper center="true">
+            <x-form.form-wrapper>
                 <x-form.form-label id="order_status" text="Status"/>
                 <x-form.form-select id="order_status" wireModelLive="status">
                     <option value=""></option>
@@ -29,11 +29,11 @@
         </div>
         {{--due date inputs--}}
         <div class="flex gap-6 justify-self-end 2xl:justify-self-start flex-wrap">
-            <x-form.form-wrapper center="true">
+            <x-form.form-wrapper>
                 <x-form.form-label id="due_from" text="Due From"/>
                 <x-form.form-input type="date" id="due_from" wireModelLive="due_from" placeholder="Due From"/>
             </x-form.form-wrapper>
-            <x-form.form-wrapper center="true">
+            <x-form.form-wrapper>
                 <x-form.form-label id="due_to" text="Due To"/>
                 <x-form.form-input type="date" id="due_to" wireModelLive="due_to" placeholder="Due To"/>
             </x-form.form-wrapper>
