@@ -18,11 +18,11 @@
         {{--quick due date filters--}}
         <div class="flex flex-col items-center flex-wrap gap-2 mt-8">
             <div class="flex flex-wrap gap-4">
-                <flux:button wire:click="clearFilter()" class="max-sm:order-3">
+                <flux:button wire:click="clearFilter()" class="max-lg:order-3">
                     <flux:icon.brush-cleaning/>
                 </flux:button>
-                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months" class="max-sm:order-1"/>
-                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-sm:order-2' : 'max-sm:order-2'" wire:click="toggleDaytime()">
+                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months" class="max-lg:order-1 max-sm:basis-[100%]"/>
+                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-lg:order-2' : 'max-lg:order-2'" wire:click="toggleDaytime()">
                     <flux:icon.sun :class="$daytime_only ? 'text-black!' : ''"/>
                 </flux:button>
             </div>
