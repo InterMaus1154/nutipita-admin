@@ -4,17 +4,20 @@ namespace App\Livewire\Invoice;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;
 use App\Traits\HasQuickDueFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class CreateInvoice extends Component
 {
@@ -111,10 +114,18 @@ class CreateInvoice extends Component
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
 
+            $orderQuery = Order::query()
+                ->where('customer_id', $this->customer_id)
+                ->when($this->due_from, function ($q) {
+                    return $q->whereDate('order_due_at', '>=', $this->due_from);
+                })
+                ->when($this->due_to, function ($q) {
+                    return $q->whereDate('order_due_at', '<=', $this->due_to);
+                });
 
             // --- ON MANUAL MODE
 
-            if($this->formMode === "manual"){
+            if ($this->formMode === "manual") {
                 // prepare products
                 $selectedProducts = collect($this->invoiceProducts)
                     ->filter(function ($qty) {
@@ -139,21 +150,15 @@ class CreateInvoice extends Component
                         productUnitPrice: $product->price
                     ));
                 });
-            }else{
+            } else {
                 // --- ON AUTO MODE
                 // get orders for the selected customer
                 if (isset($this->customer_id)) {
                     // fetch orders based on filter
-                    $orderQuery = Order::query()
+                    $this->ordersAll = $orderQuery
                         ->with('products', 'customer:customer_id,customer_name')
-                        ->where('customer_id', $this->customer_id)
-                        ->when($this->due_from, function ($q) {
-                            return $q->whereDate('order_due_at', '>=', $this->due_from);
-                        })
-                        ->when($this->due_to, function ($q) {
-                            return $q->whereDate('order_due_at', '<=', $this->due_to);
-                        });
-                    $this->ordersAll = $orderQuery->get();
+                        ->get();
+
                 }
 
                 // extract products from orders
@@ -183,6 +188,7 @@ class CreateInvoice extends Component
                 ->generateInvoicePdfFromDtos($invoiceProductDtos)
                 ->save($invoice->invoice_path, 'local');
 
+            $this->markOrdersAsUnpaid($orderQuery);
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
             DB::commit();
@@ -191,6 +197,18 @@ class CreateInvoice extends Component
             Log::error($e->getMessage());
             session()->flash('error', 'Error at creating invoice. Check log for more info!');
         }
+    }
+
+    /**
+     * Mark selected orders as unpaid
+     * @param Builder $query
+     * @return void
+     */
+    public function markOrdersAsUnpaid(Builder $query): void
+    {
+        $query->update([
+            'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
+        ]);
     }
 
 
