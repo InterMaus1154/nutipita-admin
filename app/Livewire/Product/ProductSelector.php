@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Product;
 
 use App\Models\Customer;
 use App\Models\Product;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class ProductSelector extends Component
@@ -11,12 +12,12 @@ class ProductSelector extends Component
 
     public ?int $customer_id = null;
 
-    public function mount()
+    public function mount(): void
     {
         $this->customer_id = old('customer_id', request()->get('customer_id'));
     }
 
-    public function render()
+    public function render(): View
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
         if (is_null($this->customer_id)) {
@@ -28,6 +29,6 @@ class ProductSelector extends Component
                 ->get()
                 ->map(fn($p) => $p->setCurrentCustomer(Customer::find($this->customer_id)));
         }
-        return view('livewire.product-selector', compact('customers', 'products'));
+        return view('livewire.product.product-selector', compact('customers', 'products'));
     }
 }

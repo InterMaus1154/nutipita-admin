@@ -6,7 +6,7 @@
         <form action="{{route('orders.store')}}" method="POST" class="flex flex-col gap-4">
             @csrf
             <div class="flex flex-wrap gap-4 sm:grid grid-cols-3">
-                <livewire:product-selector />
+                <livewire:product.product-selector />
                 <div class="justify-self-center">
                     <x-form.form-wrapper>
                         <x-form.form-label id="shift" text="Shift"/>
