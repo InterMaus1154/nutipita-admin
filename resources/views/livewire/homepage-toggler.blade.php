@@ -7,7 +7,7 @@
         <flux:icon.moon class="!inline"/>
     </flux:button>
     <flux:button :class="($is_nighttime && !$is_daytime) ? 'bg-violet-600!' : ''" wire:click="setNighttime">
-        <flux:icon.moon :class="($is_nighttime && !$is_daytime) ? 'text-black!' : ''"/>
+        <flux:icon.moon :class="($is_nighttime && !$is_daytime) ? 'text-white!' : ''"/>
     </flux:button>
 
 </div>

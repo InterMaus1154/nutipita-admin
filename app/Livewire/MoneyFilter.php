@@ -44,7 +44,6 @@ class MoneyFilter extends Component
         $this->totalIncome = 0;
         $this->orderCount = 0;
         $this->orders = Order::query()
-            ->nonCancelled()
             ->when($this->customer_id, function ($q) {
                 return $q->where('customer_id', $this->customer_id);
             })

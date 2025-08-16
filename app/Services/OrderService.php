@@ -35,7 +35,6 @@ class OrderService
                     ->orWhereDate('order_due_at', '=', today()->addDay()->toDateString());
             })
             ->with('customer:customer_id,customer_name', 'products')
-            ->nonCancelled()
             ->get();
 
         return OrderSummaryDto::from($orders);

@@ -4,15 +4,15 @@ namespace App\Enums;
 
 enum OrderStatus: string
 {
-    case Y_PENDING = "pending";
-    case Y_CONFIRMED = "confirmed";
-    case G_DELIVERED = "delivered";
-    case G_PAID = "paid";
-    case G_DELIVERED_AND_PAID = "Delivered Paid";
-    CASE O_DELIVERED_UNPAID = "Delivered Unpaid";
-    case R_DUE_PAYMENT = "Payment Due";
-    case R_CANCELLED = "cancelled";
-    case R_INVALIDATED = "invalidated";
+//    case Y_PENDING = "pending";
+    case Y_CONFIRMED = "Confirmed";
+//    case G_DELIVERED = "delivered";
+    case G_PAID = "Paid";
+//    case G_DELIVERED_AND_PAID = "Delivered Paid";
+    CASE O_DELIVERED_UNPAID = "Unpaid";
+//    case R_DUE_PAYMENT = "Payment Due";
+//    case R_CANCELLED = "cancelled";
+//    case R_INVALIDATED = "invalidated";
 //    case R_UNDEFINED_ORDER_STATUS_FROM_ENUM = "UNDEFINED";
 
     /**

@@ -34,7 +34,7 @@
     @endif
     {{--order summary--}}
     @if($withSummaryData)
-        <livewire:order-summary :orders="$ordersAll ?? $orders" :products="$products" :withIncome="true"
+        <livewire:order-summary :orders="$ordersAll" :products="$products" :withIncome="true"
                                 :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     @if($orders->isNotEmpty())
@@ -82,7 +82,7 @@
                             <x-table.data class="whitespace-nowrap space-y-1">
                                 @if($order->is_daytime)
                                     <flux:badge color="yellow" variant="solid" size="sm">
-                                        <flux:icon.sun class="size-4 text-black" />
+                                        <flux:icon.sun class="size-4 text-black"/>
                                     </flux:badge>
                                 @endif
                                 @if(!$order->is_daytime)
@@ -92,7 +92,7 @@
                                 @endif
                                 @if($order->is_standing)
                                     <flux:badge color="teal" variant="solid" size="sm">
-                                        <flux:icon.arrow-path-rounded-square class="size-4 text-white" />
+                                        <flux:icon.arrow-path-rounded-square class="size-4 text-white"/>
                                     </flux:badge>
                                 @endif
                                 <span class="text-accent">#{{$orderCount}}</span>
@@ -108,25 +108,27 @@
                             <x-table.data>
                                 @dayDate($order->order_due_at)
                             </x-table.data>
-                            <x-table.data wire:click="openStatusUpdateModal({{$order->order_id}})"
-                                          class="cursor-pointer">
-                                @if(str_starts_with($order->order_status, 'Y'))
-                                    <flux:badge color="amber">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @elseif(str_starts_with($order->order_status, 'G'))
-                                    <flux:badge color="emerald">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @elseif(str_starts_with($order->order_status, 'O'))
-                                    <flux:badge color="orange">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @else
-                                    <flux:badge color="red">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @endif
+                            <x-table.data>
+                                @php
+                                    // match color
+                                    if($order->order_status === OrderStatus::G_PAID->name){
+                                        $bgColor = "bg-lime-400!";
+                                    }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
+                                        $bgColor = "bg-orange-400!";
+                                    }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
+                                        $bgColor = "bg-red-400!";
+                                    }
+                                    $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
+                                @endphp
+                                <x-form.form-wrapper>
+                                    <x-form.form-select :class="$classes"
+                                                        wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
+                                        @foreach(OrderStatus::cases() as $status)
+                                            <option @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
+                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                        @endforeach
+                                    </x-form.form-select>
+                                </x-form.form-wrapper>
                             </x-table.data>
                             @foreach($products as $product)
                                 @php
@@ -180,31 +182,34 @@
             @foreach($orders as $order)
                 {{--card wrapper--}}
                 <div wire:key="order-{{$order->order_id}}"
-                     class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-gray-600 p-4"
+                     class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-neutral-700 p-4"
                      x-data="{ actionMenuOpen: false, detailsMenuOpen: false}">
                     {{--card header--}}
                     <div class="flex gap-4 justify-between">
                         {{--status badges--}}
                         <div class="flex gap-2">
                             {{--normal status badge--}}
-                            <div class="cursor-pointer" wire:click="openStatusUpdateModal({{$order->order_id}})">
-                                @if(str_starts_with($order->order_status, 'Y'))
-                                    <flux:badge color="amber">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @elseif(str_starts_with($order->order_status, 'G'))
-                                    <flux:badge color="emerald">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @elseif(str_starts_with($order->order_status, 'O'))
-                                    <flux:badge color="orange">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @else
-                                    <flux:badge color="red">{{$order->status}}
-                                        <flux:icon.chevron-down variant="mini"/>
-                                    </flux:badge>
-                                @endif
+                            <div class="cursor-pointer" >
+                                @php
+                                    // match color
+                                    if($order->order_status === OrderStatus::G_PAID->name){
+                                        $bgColor = "bg-lime-400!";
+                                    }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
+                                        $bgColor = "bg-orange-400!";
+                                    }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
+                                        $bgColor = "bg-red-400!";
+                                    }
+                                    $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
+                                @endphp
+                                <x-form.form-wrapper>
+                                    <x-form.form-select :class="$classes"
+                                                        wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
+                                        @foreach(OrderStatus::cases() as $status)
+                                            <option @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
+                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                        @endforeach
+                                    </x-form.form-select>
+                                </x-form.form-wrapper>
                             </div>
                             {{--daytime badge--}}
                             @if($order->is_daytime)
@@ -219,21 +224,21 @@
                         <div class="relative">
                             <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
                             {{--actual link box--}}
-                            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak
-                                 class="flex absolute z-100 left-[-8rem] top-6 flex-col gap-4 dark:bg-gray-900 border-1 border-gray-600 p-2 min-w-[180px] action">
-                                <flux:link href="{{route('orders.show', compact('order'))}}">View</flux:link>
-                                <flux:link href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
+                            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak x-transition
+                                 class="absolute z-100 left-[-9rem] top-5 border-2 border-neutral-700 rounded-xl bg-zinc-800 p-4 flex flex-col gap-4 min-w-[200px] action">
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('orders.show', compact('order'))}}">View</flux:link>
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('orders.edit', compact('order'))}}">Edit</flux:link>
                                 @unless($order->invoice)
-                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}">
+                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! " href="{{route('invoices.create-single', compact('order'))}}">
                                         Generate Invoice
                                     </flux:link>
                                 @else
-                                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 " href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
                                         Download
                                         Invoice
                                     </flux:link>
                                 @endunless
-                                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
+                                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
                                            wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
                                     Delete
                                 </flux:link>
@@ -242,9 +247,9 @@
                     </div>
                     {{--customer and due date info--}}
                     <div class="flex justify-between gap-4 items-center">
-                        <flux:link href="{{route('customers.show', ['customer' => $order->customer])}}">
+                        <span class="text-accent">
                             {{$order->customer->customer_name}}
-                        </flux:link>
+                        </span>
                         <div class="flex gap-2">
                         <span class="text-base font-semibold">
                             @dayDate($order->order_due_at)
@@ -265,7 +270,7 @@
                     {{--extra info section wrapper--}}
                     <div class="flex flex-col gap-4">
                         {{--extra info section--}}
-                        <div class="flex-col gap-4 flex" x-cloak x-show="detailsMenuOpen">
+                        <div class="flex-col gap-4 flex" x-cloak x-show="detailsMenuOpen" x-transition>
                             <div class="flex gap-2">
                                 <flux:badge color="indigo">Placed:</flux:badge>
                                 <span class="text-base">@dayDate($order->order_placed_at)</span>
@@ -286,10 +291,10 @@
                         </div>
                         <flux:button x-on:click="detailsMenuOpen = !detailsMenuOpen">
                             <template x-if="detailsMenuOpen">
-                                <flux:icon.chevron-double-up/>
+                                <flux:icon.chevron-double-up class="text-accent"/>
                             </template>
                             <template x-if="!detailsMenuOpen">
-                                <flux:icon.chevron-double-down/>
+                                <flux:icon.chevron-double-down class="text-accent"/>
                             </template>
                         </flux:button>
                     </div>
@@ -309,8 +314,8 @@
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <!-- Modal Content -->
         <div
-            class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
-            x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
+                class="relative z-10 w-full max-w-md p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg dark:text-white text-black flex flex-col gap-4"
+                x-data x-on:click.outside="$wire.closeStatusUpdateModal()">
             <div class="flex flex-col gap-4">
                 <div class="flex gap-4 justify-between">
                     <h2 class="text-xl font-semibold mb-4 text-center">Update Order Status</h2>
@@ -323,7 +328,7 @@
                 <x-form.form-select id="order_status_update" wireModelLive="updateOrderStatusName">
                     @foreach(OrderStatus::cases() as $status)
                         <option
-                            value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
+                                value="{{$status->name}}" @selected($modalSelectedOrder && $modalSelectedOrder->order_status === $status->name)>
                             {{ucfirst($status->value)}}
                         </option>
                     @endforeach

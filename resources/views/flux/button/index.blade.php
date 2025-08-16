@@ -78,7 +78,7 @@ $classes = Flux::classes()
         'subtle' => 'bg-transparent hover:bg-zinc-800/5 dark:hover:bg-white/15',
     })
     ->add(match ($variant) { // Text color...
-        'primary' => 'text-[var(--color-accent-foreground)]',
+        'primary' => 'text-[var(--color-accent-foreground)] font-bold!',
         'filled' => 'text-zinc-800 dark:text-white',
         'outline' => 'text-zinc-800 dark:text-white',
         'danger' => 'text-white',

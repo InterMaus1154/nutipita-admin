@@ -100,12 +100,6 @@ class Order extends Model
     /*
      * Other
      */
-    public function scopeNonCancelled(Builder $builder)
-    {
-        return $builder->whereNotIn('order_status', [
-            OrderStatus::R_CANCELLED->name,
-            OrderStatus::R_INVALIDATED->name
-        ]);
-    }
+
 
 }

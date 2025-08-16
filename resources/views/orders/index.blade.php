@@ -17,7 +17,7 @@
                         'due_to' => now()->endOfWeek(\Carbon\WeekDay::Saturday)->format('Y-m-d')
                         ];
             @endphp
-            <livewire:order-list :withSummaryPdf="true" :summary-visible-by-default="true" :filters="$filters"/>
+            <livewire:order-list :withSummaryPdf="true" :summary-visible-by-default="true" :prop-filters="$filters"/>
         </div>
     </x-page-section>
 </x-flux-layout>

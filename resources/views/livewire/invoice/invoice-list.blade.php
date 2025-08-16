@@ -1,9 +1,6 @@
 <div class="space-y-4">
     <x-success/>
     <x-error/>
-    <div>
-        {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
-    </div>
     <x-table.table>
         <x-table.head>
             <x-table.header wire:click="setSort('invoice_number')">

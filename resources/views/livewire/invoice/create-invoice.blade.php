@@ -10,7 +10,7 @@
             </flux:link>
         </div>
     @endif
-    <form method="POST" wire:submit="save" class="flex flex-col gap-4">
+    <form method="POST" wire:submit="save" class="flex flex-col gap-4 m-0!">
         @csrf
         <div class="flex flex-wrap gap-4 sm:grid grid-cols-3 items-center">
             <div class="flex gap-4">
@@ -19,12 +19,16 @@
                 <x-form.form-wrapper>
                     <x-form.form-label id="order_status" text="Order Status"/>
                     <x-form.form-select id="order_status" wireModelLive="order_status">
-                        <option value="">---Select status---</option>
+                        <option value=""></option>
                         @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
                             <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
                         @endforeach
                     </x-form.form-select>
                 </x-form.form-wrapper>
+                {{--auto/manual toggle--}}
+                <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7" wire:click="toggleMode()">
+                    <flux:icon.hand/>
+                </flux:button>
             </div>
             {{--quick date buttons--}}
             <div class="flex flex-col items-center flex-wrap gap-2">
@@ -63,9 +67,11 @@
                 <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number"/>
             </x-form.form-wrapper>
         </div>
-        @if(!empty($customer_id))
+        @if(!empty($customer_id) && $formMode === "manual")
             @foreach($products as $product)
-                @php($product->setCurrentCustomer($customer_id))
+                @php
+                    $product->setCurrentCustomer($customer_id)
+                @endphp
                 {{--only render products, that has prices set for a customer--}}
                 @if($product->price > 0)
                     <x-form.form-wrapper>
@@ -84,5 +90,12 @@
         @endif
         <flux:button variant="primary" type="submit">Generate Invoice</flux:button>
     </form>
-    <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true"/>
+    @php
+        // set week as default
+            $filters = [
+                'due_from' => now()->startOfWeek(\Carbon\WeekDay::Sunday)->format('Y-m-d'),
+                'due_to' => now()->endOfWeek(\Carbon\WeekDay::Saturday)->format('Y-m-d')
+                ];
+    @endphp
+    <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true" :prop-filters="$filters"/>
 </div>

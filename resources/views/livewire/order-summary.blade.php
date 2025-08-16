@@ -1,10 +1,9 @@
 <div class="space-y-4">
     @if($orders->isNotEmpty())
         <div class="space-y-4">
-            <flux:button wire:click="toggleSummaries()" class="sm:hidden">Toggle Summaries</flux:button>
             <div @class([
                         'hidden' => !$visible,
-                        'grid grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4 mx-auto'
+                        'grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4 mx-auto'
                     ])>
                     @if($withIncome)
                         <x-data-box dataBoxHeader="Total Income" :dataBoxValue="moneyFormat($totalIncome)"/>

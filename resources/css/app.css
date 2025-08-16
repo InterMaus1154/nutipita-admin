@@ -65,7 +65,8 @@
     }
 
     form {
-        @apply sm:mx-auto!;
+        /*@apply sm:mx-auto!;*/
+        @apply max-w-[1440px] mx-auto!;
     }
 
     input {

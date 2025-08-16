@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Invoice;
 
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class InvoiceFilter extends Component
@@ -17,7 +17,7 @@ class InvoiceFilter extends Component
 
     public Collection $customers;
 
-    public function mount()
+    public function mount(): void
     {
         $this->customers = Customer::query()->select(['customer_id', 'customer_name'])->orderBy('customer_name')->get();
     }
@@ -35,7 +35,7 @@ class InvoiceFilter extends Component
 
     }
 
-    public function updated()
+    public function updated(): void
     {
         $this->dispatchEvent();
     }
@@ -50,8 +50,8 @@ class InvoiceFilter extends Component
         $this->dispatchEvent();
     }
 
-    public function render()
+    public function render(): View
     {
-        return view('livewire.invoice-filter');
+        return view('livewire.invoice.invoice-filter');
     }
 }

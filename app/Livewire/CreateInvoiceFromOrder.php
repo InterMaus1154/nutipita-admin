@@ -147,7 +147,6 @@ class CreateInvoiceFromOrder extends Component
         if (isset($this->customer_id)) {
             $orderQuery = Order::query()
                 ->with('products', 'customer:customer_id,customer_name')
-                ->nonCancelled()
                 ->where('customer_id', $this->customer_id)
                 ->when($this->due_from, function ($q) {
                     return $q->whereDate('order_due_at', '>=', $this->due_from);

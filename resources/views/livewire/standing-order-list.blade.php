@@ -36,8 +36,8 @@
                 </x-table.data>
                 <x-table.data class="cursor-pointer">
                     @php
-                        $classes = $order->is_active ? "bg-green-400/50!" : "bg-red-400/50!";
-                        $classes.= ' text-white! max-w-[100px]! px-2! py-2! mx-auto! ';
+                        $classes = $order->is_active ? "bg-green-400!" : "bg-red-400!";
+                        $classes.= ' text-black! w-[90px]! px-2! py-2! mx-auto! ';
                     @endphp
                     <x-form.form-wrapper>
                         <x-form.form-select :class="$classes" wire:change="updateOrderStatus({{$order->standing_order_id}}, $event.target.value)">

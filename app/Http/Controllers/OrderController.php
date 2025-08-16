@@ -177,7 +177,6 @@ class OrderController extends Controller
         // refetch orders
         $orderIds = $request->array('orderIds');
         $orders = Order::query()
-            ->nonCancelled()
             ->orderBy('order_placed_at')
             ->whereIn('order_id', $orderIds)
             ->get();

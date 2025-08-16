@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Invoice;
 
 use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Builder;
@@ -121,7 +121,7 @@ class InvoiceList extends Component
         }
 
         $invoices = $query->paginate(15);
-        return view('livewire.invoice-list', [
+        return view('livewire.invoice.invoice-list', [
             'invoices' => $invoices
         ]);
     }

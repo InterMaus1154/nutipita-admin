@@ -2,17 +2,12 @@
 
 namespace App\Livewire;
 
-use App\DataTransferObjects\OrderSummaryDto;
-use App\Livewire\Homepage\DownloadSummary;
-use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Traits\HasSort;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -30,7 +25,6 @@ class OrderList extends Component
         'due_from' => null,
         'due_to' => null,
         'status' => null,
-        'cancelled_order_hidden' => true,
         'daytime_only' => false,
         'nighttime_only' => false
     ];
@@ -162,6 +156,22 @@ class OrderList extends Component
     }
 
 
+    public function updateOrderStatus(Order $order, string $value): void
+    {
+        DB::beginTransaction();
+        try{
+            $order->update([
+                'order_status' => $value
+            ]);
+            session()->flash('success', 'Status updated');
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            session()->flash('error', 'Error updating status');
+            Log::error($e->getMessage());
+        }
+    }
+
     /**
      * Custom order sortings
      * @return array
@@ -195,14 +205,10 @@ class OrderList extends Component
      * Create an order query from the filters
      * @return Builder
      */
-    public
-    function buildOrderQuery(): Builder
+    public function buildOrderQuery(): Builder
     {
         $filters = $this->filters;
         $query = Order::query()
-            ->when($filters['cancelled_order_hidden'], function ($builder) {
-                return $builder->nonCancelled();
-            })
             ->when($filters['nighttime_only'], function ($builder) {
                 return $builder->where('is_daytime', false);
             })
@@ -227,8 +233,7 @@ class OrderList extends Component
     }
 
 
-    public
-    function render(): View
+    public function render(): View
     {
         $query = $this->buildOrderQuery();
 
@@ -236,8 +241,7 @@ class OrderList extends Component
         $orders = (clone $query)
             ->paginate(15);
 
-        // cancelled or invalidated orders will not contribute to the summaries, hence the query clone above
-        $this->ordersAll = $query->nonCancelled()->get();
+        $this->ordersAll = $query->get();
 
         if (!empty($this->defaultFilters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();

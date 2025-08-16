@@ -72,7 +72,7 @@ class CustomerController extends Controller
         $customer->loadMissing('customPrices', 'customPrices.product');
         $orderQuery = $customer->orders()->orderByDesc('order_id')->with('products');
         $orders = (clone $orderQuery)->paginate(15);
-        $ordersAll = $orderQuery->nonCancelled()->get();
+        $ordersAll = $orderQuery->get();
         return view('customers.show', compact('customer', 'products', 'orders', 'ordersAll') + ['withSummaries' => true]);
     }
 
