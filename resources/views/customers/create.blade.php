@@ -4,7 +4,7 @@
         <x-page-heading title="Add new customer" />
         <x-error/>
         <x-success />
-        <form action="{{route('customers.store')}}" method="POST" class="flex flex-col gap-4">
+        <form action="{{route('customers.store')}}" method="POST" class="flex flex-col gap-4 items-center">
             @csrf
             {{--Customer name--}}
             <x-form.form-wrapper>

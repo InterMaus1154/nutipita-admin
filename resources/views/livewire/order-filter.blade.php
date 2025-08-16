@@ -16,14 +16,13 @@
             </x-form.form-wrapper>
         </div>
         {{--quick due date filters--}}
-        <div class="flex flex-col items-center flex-wrap gap-2">
-            <x-form.form-label text="Due date range"/>
+        <div class="flex flex-col items-center flex-wrap gap-2 mt-8">
             <div class="flex flex-wrap gap-4">
-                <flux:button wire:click="clearFilter()">
+                <flux:button wire:click="clearFilter()" class="max-sm:order-3">
                     <flux:icon.brush-cleaning/>
                 </flux:button>
-                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months"/>
-                <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()">
+                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months" class="max-sm:order-1"/>
+                <flux:button :variant="$daytime_only ? 'primary' : 'filled'" wire:click="toggleDaytime()" class="max-sm:order-2">
                     <flux:icon.sun/>
                 </flux:button>
             </div>

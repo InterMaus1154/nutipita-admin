@@ -49,7 +49,7 @@
                 </x-form.form-wrapper>
             </div>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between flex-wrap gap-4">
             <div class="flex gap-6">
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_issue_date" text="Invoice Issue Date"/>
@@ -64,7 +64,7 @@
             </div>
             <x-form.form-wrapper>
                 <x-form.form-label id="invoice_number" text="Invoice Number"/>
-                <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number"/>
+                <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number" class="max-w-[100px]!"/>
             </x-form.form-wrapper>
         </div>
         @if(!empty($customer_id) && $formMode === "manual")

@@ -46,7 +46,7 @@
                         </x-form.form-select>
                     </x-form.form-wrapper>
                 </x-table.data>
-                <x-table.data>
+                <x-table.data link>
                     <flux:link href="{{route('standing-orders.show', compact('order'))}}">
                         <flux:icon.eye class="!inline"/>
                     </flux:link>

@@ -1,5 +1,5 @@
-@props(['activePeriod', 'months'])
-<div>
+@props(['activePeriod', 'months', 'class' => ''])
+<div class="{{$class}}">
     <div>
         <flux:button.group>
             <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'" wire:click="setYear">Y</flux:button>

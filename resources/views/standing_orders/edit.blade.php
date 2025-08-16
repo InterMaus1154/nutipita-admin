@@ -1,6 +1,6 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Edit Standing Order #{{$order->standing_order_id}}"/>
+        <x-page-heading title="Edit Standing Order"/>
         <div class="flex gap-2 justify-center">
             <flux:badge class="px-4 py-2 !text-lg text-accent!">
                 {{$order->customer->customer_name}}
@@ -23,7 +23,7 @@
                 <x-form.form-label id="start_from" text="Start From"/>
                 <x-form.form-input type="date" id="start_from" name="start_from" value="{{$order->start_from}}"/>
             </x-form.form-wrapper>
-            <div class="flex gap-8 flex-wrap my-2">
+            <div class="flex gap-8 flex-wrap my-2 justify-center">
                 {{--count the days from 0 to 7--}}
                 @for($i = 0; $i<7;$i++)
                     <div

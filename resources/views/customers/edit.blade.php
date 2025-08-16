@@ -3,7 +3,7 @@
         <x-page-heading title="Edit Customer '{{$customer->customer_name}}'"/>
         <x-error/>
         <x-success/>
-        <form action="{{route('customers.update', compact('customer'))}}" method="POST" class="flex flex-col gap-4">
+        <form action="{{route('customers.update', compact('customer'))}}" method="POST" class="flex flex-col gap-4 items-center">
             @csrf
             @method('PUT')
             <div class="flex gap-20">
