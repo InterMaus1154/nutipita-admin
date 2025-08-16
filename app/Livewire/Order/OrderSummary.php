@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Order;
 
+use App\Enums\OrderStatus;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
@@ -48,8 +49,10 @@ class OrderSummary extends Component
         $this->reset(['totalPita', 'productTotals', 'totalIncome']);
 
         foreach ($this->orders as $order) {
-            // calculate total income for all orders
-            $this->totalIncome += $order->total_price;
+            // only add to income, if the order has been paid
+            if($order->order_status === OrderStatus::G_PAID->name){
+                $this->totalIncome += $order->total_price;
+            }
 
             $this->totalPita += $order->total_pita;
 

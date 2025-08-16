@@ -201,6 +201,7 @@ class OrderList extends Component
         $orders = (clone $query)
             ->paginate(15);
 
+        // for summary boxes
         $this->ordersAll = $query->get();
 
         if (!empty($this->defaultFilters['customer_id'])) {

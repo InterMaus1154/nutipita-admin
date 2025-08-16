@@ -116,12 +116,8 @@ class CreateInvoice extends Component
 
             $orderQuery = Order::query()
                 ->where('customer_id', $this->customer_id)
-                ->when($this->due_from, function ($q) {
-                    return $q->whereDate('order_due_at', '>=', $this->due_from);
-                })
-                ->when($this->due_to, function ($q) {
-                    return $q->whereDate('order_due_at', '<=', $this->due_to);
-                });
+                ->whereDate('order_due_at', '>=', $this->due_from)
+                ->whereDate('order_due_at', '<=', $this->due_to);
 
             // --- ON MANUAL MODE
 

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Enums\OrderStatus;
 use App\Models\Invoice;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,9 +46,28 @@ class InvoiceList extends Component
         if (!auth()->check()) {
             abort(403);
         }
-        $invoice->update([
-            'invoice_status' => 'paid'
-        ]);
+        DB::beginTransaction();
+        try{
+            $invoice->update([
+                'invoice_status' => 'paid'
+            ]);
+
+            // mark orders in the invoice as "paid"
+
+            // fetch orders based on invoice from/to dates
+            $orderQuery = Order::query()
+                ->where('customer_id', $invoice->customer_id)
+                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
+                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
+
+            $this->markOrdersAsPaid($orderQuery);
+
+            DB::commit();
+        }catch (\Throwable $e){
+            DB::rollBack();
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at updating invoice or orders');
+        }
     }
 
     /*
@@ -57,8 +78,51 @@ class InvoiceList extends Component
         if (!auth()->check()) {
             abort(403);
         }
-        $invoice->update([
-            'invoice_status' => 'due'
+        DB::beginTransaction();
+        try{
+            $invoice->update([
+                'invoice_status' => 'due'
+            ]);
+
+            // mark orders in the invoice as "unpaid"
+
+            // fetch orders based on invoice from/to dates
+            $orderQuery = Order::query()
+                ->where('customer_id', $invoice->customer_id)
+                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
+                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
+
+            $this->markOrdersAsUnpaid($orderQuery);
+
+            DB::commit();
+        }catch (\Throwable $e){
+            DB::rollBack();
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at updating invoice or orders');
+        }
+    }
+
+    /**
+     * Mark selected orders as paid
+     * @param Builder $query
+     * @return void
+     */
+    public function markOrdersAsPaid(Builder $query): void
+    {
+        $query->update([
+            'order_status' => OrderStatus::G_PAID->name
+        ]);
+    }
+
+    /**
+     * Mark selected orders as unpaid
+     * @param Builder $query
+     * @return void
+     */
+    public function markOrdersAsUnpaid(Builder $query): void
+    {
+        $query->update([
+            'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
         ]);
     }
 

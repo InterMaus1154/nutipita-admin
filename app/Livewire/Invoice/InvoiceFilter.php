@@ -31,7 +31,7 @@ class InvoiceFilter extends Component
         $this->dispatch('update-filter', [
             'customer_id' => $this->customer_id,
             'invoice_status' => $this->invoice_status
-        ]);
+        ])->to(InvoiceList::class);
 
     }
 

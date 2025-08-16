@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Order;
 
+use App\Livewire\OrderList;
 use App\Models\Customer;
 use App\Traits\HasQuickDueFilter;
 use Illuminate\View\View;
