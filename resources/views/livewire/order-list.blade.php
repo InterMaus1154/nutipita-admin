@@ -184,7 +184,15 @@
                 {{--card wrapper--}}
                 <div wire:key="order-{{$order->order_id}}"
                      class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-neutral-700 p-4"
-                     x-data="{ actionMenuOpen: false, detailsMenuOpen: false}">
+                     x-data="{ actionMenuOpen: false, detailsMenuOpen: false}" x-effect="
+        if(detailsMenuOpen) {
+            document.body.setAttribute('data-menu-open', '');
+
+        } else {
+            document.body.removeAttribute('data-menu-open');
+
+        }
+     ">
                     {{--card header--}}
                     <div class="flex gap-4 justify-between">
                         {{--status badges--}}
@@ -288,10 +296,10 @@
                     <div class="flex flex-col gap-4">
                         {{--extra info section--}}
                         {{--backdrop--}}
-                        <div class="fixed inset-0 min-h-screen z-40 bg-black/60" x-show="detailsMenuOpen"
+                        <div class="fixed inset-0 min-h-screen z-101 bg-black/60" x-show="detailsMenuOpen"
                              x-transition></div>
                         <div
-                            class="flex-col gap-4 flex fixed bottom-0 z-50 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800 rounded-t-xl p-4 border-t-6 border-t-accent"
+                            class="flex-col gap-4 flex fixed bottom-0 z-102 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800 rounded-t-xl p-4 border-t-6 border-t-accent"
                             x-cloak x-show="detailsMenuOpen" x-on:click.outside="detailsMenuOpen = false"
                             x-transition:enter="transition ease-out duration-300"
                             x-transition:enter-start="opacity-0 translate-y-full"
@@ -350,12 +358,12 @@
                                 </div>
                             </div>
                             <div class="flex gap-2 justify-between">
-                                <div class="flex gap-2">
-                                    <flux:badge color="indigo">Placed:</flux:badge>
+                                <div class="flex gap-2 flex-col justify-center text-center">
+                                    <span>Placed:</span>
                                     <span class="text-base">@dayDate($order->order_placed_at)</span>
                                 </div>
-                                <div class="flex gap-2">
-                                    <flux:badge color="indigo">Due:</flux:badge>
+                                <div class="flex gap-2 flex-col justify-center text-center">
+                                    <span>Due:</span>
                                     <span class="text-base">@dayDate($order->order_due_at)</span>
                                 </div>
                             </div>

@@ -167,4 +167,8 @@
         transform: translateY(50%);
     }
 
+    [data-menu-open]{
+        overflow: hidden;
+    }
+
 }
