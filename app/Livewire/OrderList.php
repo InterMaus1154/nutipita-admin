@@ -204,6 +204,12 @@ class OrderList extends Component
         // for summary boxes
         $this->ordersAll = $query->get();
 
+        $this->dispatch('order-count-details', [
+           'is_nighttime' => $this->filters['nighttime_only'],
+           'is_daytime' => $this->filters['daytime_only'],
+           'hasOrders' => $this->ordersAll->isNotEmpty()
+        ]);
+
         if (!empty($this->filters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
             // send an event to the download component with the already made download link

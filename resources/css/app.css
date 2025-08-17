@@ -132,9 +132,9 @@
     }
 
     form {
-        /*@apply sm:mx-auto!;*/
+        @apply sm:mx-auto!;
         /*@apply max-w-[1440px] mx-auto!;*/
-        @apply 2xl:max-w-[1000px] min-w-[75%] mx-auto!;
+        /*@apply 2xl:max-w-[1000px] min-w-[75%] mx-auto!;*/
     }
 
     input {
@@ -166,4 +166,5 @@
         bottom: 50%;
         transform: translateY(50%);
     }
+
 }

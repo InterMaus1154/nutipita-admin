@@ -20,7 +20,7 @@
                 <x-form.form-label id="product_qty_per_pack" text="Product/Pack"/>
                 <x-form.form-input id="product_qty_per_pack" name="product_qty_per_pack" value="{{old('product_qty_per_pack', '')}}" placeholder="Product/pack"/>
             </x-form.form-wrapper>
-            <flux:button variant="primary" type="submit">Add</flux:button>
+            <flux:button variant="primary" type="submit" class="">Add</flux:button>
         </form>
     </x-page-section>
 </x-flux-layout>

@@ -1,7 +1,7 @@
 @use(Illuminate\Support\Carbon)
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Standing Order #{{$order->standing_order_id}}">
+        <x-page-heading title="Standing Order">
             <flux:link href="{{route('standing-orders.edit', compact('order'))}}">
                 <flux:icon.pencil-square class="size-8"/>
             </flux:link>
@@ -49,22 +49,22 @@
         <h3 class="font-bold text-center text-xl text-accent">
             Products
         </h3>
-        <div class="flex flex-col">
+        <div class="flex flex-col mx-auto md:w-[75%]">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
                     <div class="overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                            <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700 border-1 border-neutral-700">
+                            <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center border-1 border-neutral-700">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200"></td>
                                 @foreach($products as $product)
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{$product->product_name}} {{$product->product_weight_g}}
+                                    <th class="px-2 py-3 text-center text-md font-medium text-gray-500 uppercase dark:text-neutral-500">{{$product->product_name}} {{$product->product_weight_g}}
                                         g
-                                    </td>
+                                    </th>
                                 @endforeach
                             </tr>
                             @for($i = 0;$i<7;$i++)
-                                <tr class="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-neutral-800 dark:even:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{Carbon::create()->startOfWeek()->addDays($i)->dayName}}</td>
+                                <tr class="even:bg-white odd:bg-gray-100 hover:bg-gray-100 dark:even:bg-neutral-800 dark:odd:bg-neutral-700 dark:hover:bg-neutral-700 text-center">
+                                    <th class="px-2 py-3 text-center text-md font-medium text-white dark:text-white">{{Carbon::create()->startOfWeek()->addDays($i)->dayName}}</th>
                                     @php
                                         $day = $order->days->where('day', $i)->first();
                                         // check if the day exists

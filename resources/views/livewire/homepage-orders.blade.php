@@ -48,4 +48,14 @@
             </div>
         @endif
     </div>
+    <div x-data="
+
+    ">
+
+    </div>
+    <script>
+        Livewire.on('order-count-details', e => {
+            console.log(e);
+        });
+    </script>
 </div>

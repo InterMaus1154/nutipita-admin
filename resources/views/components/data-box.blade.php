@@ -15,7 +15,7 @@
             @endif
         </h3>
 
-        <p class="mt-2 text-gray-500 text-accent! dark:text-neutral-200 text-center text-xl sm:text-xl font-bold">
+        <p class="mt-2 text-accent! text-center text-xl sm:text-xl font-bold">
             {{$dataBoxValue}}
         </p>
     </div>

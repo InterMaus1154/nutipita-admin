@@ -36,7 +36,7 @@
                 </x-table.data>
                 <x-table.data class="cursor-pointer">
                     @php
-                        $classes = $order->is_active ? "bg-green-400!" : "bg-red-400!";
+                        $classes = $order->is_active ? "bg-green-500!" : "bg-red-500!";
                         $classes.= ' text-black! w-[90px]! px-2! py-2! mx-auto! ';
                     @endphp
                     <x-form.form-wrapper>

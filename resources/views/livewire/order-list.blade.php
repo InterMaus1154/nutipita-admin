@@ -112,11 +112,11 @@
                                 @php
                                     // match color
                                     if($order->order_status === OrderStatus::G_PAID->name){
-                                        $bgColor = "bg-lime-400!";
+                                        $bgColor = "bg-green-500!";
                                     }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                        $bgColor = "bg-orange-400!";
+                                        $bgColor = "bg-orange-500!";
                                     }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                        $bgColor = "bg-red-400!";
+                                        $bgColor = "bg-red-500!";
                                     }
                                     $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
                                 @endphp
@@ -194,11 +194,11 @@
                                 @php
                                     // match color
                                     if($order->order_status === OrderStatus::G_PAID->name){
-                                        $bgColor = "bg-lime-400!";
+                                        $bgColor = "bg-green-500!";
                                     }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                        $bgColor = "bg-orange-400!";
+                                        $bgColor = "bg-orange-500!";
                                     }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                        $bgColor = "bg-red-400!";
+                                        $bgColor = "bg-red-500!";
                                     }
                                     $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
                                 @endphp
@@ -311,11 +311,11 @@
                                     @php
                                         // match color
                                         if($order->order_status === OrderStatus::G_PAID->name){
-                                            $bgColor = "bg-lime-400!";
+                                            $bgColor = "bg-green-500!";
                                         }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                            $bgColor = "bg-orange-400!";
+                                            $bgColor = "bg-orange-500!";
                                         }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                            $bgColor = "bg-red-400!";
+                                            $bgColor = "bg-red-500!";
                                         }
                                         $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
                                     @endphp

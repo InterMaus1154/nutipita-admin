@@ -1,7 +1,7 @@
 <div class="flex flex-col">
     <x-error/>
     <x-success/>
-    <x-table.table>
+    <x-table.table class="md:max-w-[75%] mx-auto">
         <x-table.head>
             <x-table.header sortField="customer_name">
                 Name

@@ -67,9 +67,9 @@
                     </x-table.data>
                     <x-table.data>
                         @if($invoice->invoice_status === "paid")
-                            <flux:badge color="green">Paid</flux:badge>
+                            <flux:badge color="green" variant="solid">Paid</flux:badge>
                         @else
-                            <flux:badge color="orange">Unpaid</flux:badge>
+                            <flux:badge color="red" variant="solid">Unpaid</flux:badge>
                         @endif
                     </x-table.data>
                     <x-table.data>

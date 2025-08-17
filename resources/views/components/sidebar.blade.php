@@ -10,7 +10,7 @@
     <flux:navlist variant="outline">
         <flux:navlist.item icon="home" href="{{route('admin.view.dashboard')}}" :current="Route::is('admin.view.dashboard')">Home</flux:navlist.item>
         <flux:navlist.item icon="building-storefront" href="{{route('orders.index')}}" :current="Route::is('orders.*')">Orders</flux:navlist.item>
-        <flux:navlist.item icon="banknotes" href="{{route('invoices.index')}}" :current="Route::is('invoices.*')">Invoices</flux:navlist.item>
+        <flux:navlist.item icon="file-text" href="{{route('invoices.index')}}" :current="Route::is('invoices.*')">Invoices</flux:navlist.item>
         <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" :current="Route::is('money.*')">Money Management</flux:navlist.item>
         <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" :current="Route::is('standing-orders.*')">Standing Orders</flux:navlist.item>
         <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" :current="Route::is('customers.*')">Customers</flux:navlist.item>
@@ -50,7 +50,7 @@
         <flux:navlist variant="outline" class="flex-row! gap-4!">
             <flux:navlist.item icon="home" href="{{route('admin.view.dashboard')}}" title="Dashboard" :current="Route::is('admin.view.dashboard')"></flux:navlist.item>
             <flux:navlist.item icon="building-storefront" href="{{route('orders.index')}}" title="Orders" :current="Route::is('orders.*')"></flux:navlist.item>
-            <flux:navlist.item icon="banknotes" href="{{route('invoices.index')}}" title="Invoices" :current="Route::is('invoices.*')"></flux:navlist.item>
+            <flux:navlist.item icon="file-text" href="{{route('invoices.index')}}" title="Invoices" :current="Route::is('invoices.*')"></flux:navlist.item>
             <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" title="Income" :current="Route::is('money.*')"></flux:navlist.item>
             <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}" title="Standing orders" :current="Route::is('standing-orders.*')"></flux:navlist.item>
             <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" title="Customers" :current="Route::is('customers.*')"></flux:navlist.item>
