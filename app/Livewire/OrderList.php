@@ -204,7 +204,7 @@ class OrderList extends Component
         // for summary boxes
         $this->ordersAll = $query->get();
 
-        if (!empty($this->defaultFilters['customer_id'])) {
+        if (!empty($this->filters['customer_id'])) {
             $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
