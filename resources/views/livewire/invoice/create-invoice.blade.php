@@ -16,15 +16,15 @@
             <div class="flex gap-4">
                 {{--customer--}}
                 <x-form.customer-select/>
-{{--                <x-form.form-wrapper>--}}
-{{--                    <x-form.form-label id="order_status" text="Order Status"/>--}}
-{{--                    <x-form.form-select id="order_status" wireModelLive="order_status">--}}
-{{--                        <option value=""></option>--}}
-{{--                        @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)--}}
-{{--                            <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>--}}
-{{--                        @endforeach--}}
-{{--                    </x-form.form-select>--}}
-{{--                </x-form.form-wrapper>--}}
+                <x-form.form-wrapper>
+                    <x-form.form-label id="order_status" text="Order Status"/>
+                    <x-form.form-select id="order_status" wireModelLive="order_status">
+                        <option value=""></option>
+                        @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
+                            <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
+                        @endforeach
+                    </x-form.form-select>
+                </x-form.form-wrapper>
                 {{--auto/manual toggle--}}
                 <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7" wire:click="toggleMode()">
                     <flux:icon.hand/>

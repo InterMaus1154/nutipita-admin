@@ -103,21 +103,35 @@ class CreateInvoice extends Component
 
         DB::beginTransaction();
         try {
+            $firstOrderDate = Order::query()
+                ->where('customer_id', $this->customer_id)
+                ->whereDate('order_due_at', '>=', $this->due_from)
+                ->whereDate('order_due_at', '<=', $this->due_to)
+                ->orderBy('order_due_at', 'asc')
+                ->first()
+                ->order_due_at;
+
+            $lastOrderDate = Order::query()
+                ->where('customer_id', $this->customer_id)
+                ->whereDate('order_due_at', '>=', $this->due_from)
+                ->whereDate('order_due_at', '<=', $this->due_to)
+                ->orderBy('order_due_at', 'desc')
+                ->first()
+                ->order_due_at;
+
             // create invoice record
             $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
                 invoiceIssueDate: $this->invoice_issue_date,
                 invoiceDueDate: $this->invoice_due_date,
-                invoiceOrdersFrom: $this->due_from,
-                invoiceOrdersTo: $this->due_to,
+                invoiceOrdersFrom: $firstOrderDate,
+                invoiceOrdersTo: $lastOrderDate,
                 invoiceNumber: $this->invoice_number
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
 
-            $orderQuery = Order::query()
-                ->where('customer_id', $this->customer_id)
-                ->whereDate('order_due_at', '>=', $this->due_from)
-                ->whereDate('order_due_at', '<=', $this->due_to);
+
+
 
             // --- ON MANUAL MODE
 
@@ -151,7 +165,10 @@ class CreateInvoice extends Component
                 // get orders for the selected customer
                 if (isset($this->customer_id)) {
                     // fetch orders based on filter
-                    $this->ordersAll = $orderQuery
+                    $this->ordersAll = Order::query()
+                        ->where('customer_id', $this->customer_id)
+                        ->whereDate('order_due_at', '>=', $firstOrderDate)
+                        ->whereDate('order_due_at', '<=', $lastOrderDate)
                         ->with('products', 'customer:customer_id,customer_name')
                         ->get();
 
@@ -183,6 +200,11 @@ class CreateInvoice extends Component
             $invoiceService
                 ->generateInvoicePdfFromDtos($invoiceProductDtos)
                 ->save($invoice->invoice_path, 'local');
+
+            $orderQuery = Order::query()
+                ->where('customer_id', $this->customer_id)
+                ->whereDate('order_due_at', '>=', $firstOrderDate)
+                ->whereDate('order_due_at', '<=', $lastOrderDate);
 
             $this->markOrdersAsUnpaid($orderQuery);
             session()->flash('success', 'Invoice created successfully!');

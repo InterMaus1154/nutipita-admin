@@ -1,7 +1,10 @@
 @use(Carbon\Carbon)
+@use(Carbon\WeekDay)
 <x-flux-layout>
     <x-page-section>
-        @php($week = now()->weekOfYear())
+        @php
+            $week = now()->startOfWeek(WeekDay::Sunday)->endOfWeek(WeekDay::Saturday)->week;
+        @endphp
         <x-page-heading title="Today Orders - Week {{$week}}">
             <div class="flex gap-4 items-center">
                 <livewire:homepage.download-summary />

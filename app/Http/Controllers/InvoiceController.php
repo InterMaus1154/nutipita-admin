@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -47,6 +48,10 @@ class InvoiceController extends Controller
             $invoiceProductDTOs = $invoiceService->generateInvoiceProductDTOs($invoice, $order->products);
 
             $invoiceService->generateInvoiceProductRecords($invoiceProductDTOs);
+
+            $order->update([
+                'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
+            ]);
 
             // generate invoice pdf
             $invoiceService
