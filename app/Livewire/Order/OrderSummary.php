@@ -50,7 +50,7 @@ class OrderSummary extends Component
 
         foreach ($this->orders as $order) {
             // only add to income, if the order has been paid
-            if(true){
+            if($order->order_status === OrderStatus::G_PAID->name){
                 $this->totalIncome += $order->total_price;
             }
 
