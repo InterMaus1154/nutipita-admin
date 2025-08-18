@@ -1,6 +1,7 @@
 @props(['activePeriod', 'months', 'class' => ''])
 @use(Carbon\Carbon)
 @use(Carbon\WeekDay)
+@use(Illuminate\Support\Str)
 <div class="{{$class}}">
     @php
         function getWeeksOfTheYear()
@@ -63,7 +64,7 @@
             </flux:button>
         </flux:button.group>
         {{--week selector--}}
-        <div class="absolute z-[220] left-20 border-2 border-neutral-700 rounded-xl darK:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[100px] h-[300px] overflow-scroll"
+        <div class="absolute z-[220] left-20 border-2 border-neutral-700 rounded-xl darK:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll"
              x-show="weekOpen" x-cloak x-transition x-on:click.outside="weekOpen = false">
             @foreach(getWeeksOfTheYear() as $index => $week)
                 @php
@@ -81,20 +82,20 @@
             @endforeach
         </div>
         {{--month selector--}}
-        <div class="absolute z-[220] left-4 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[150px] h-[300px] overflow-scroll"
+        <div class="absolute z-[220] left-4 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll"
              x-show="monthOpen" x-cloak x-transition x-on:click.outside="monthOpen = false">
             @foreach(getMonthsOfTheYear() as $index => $month)
                 @php
                     $today = now()->toDateString();
                     $isCurrentMonth = $today >= $month['start_date'] && $today < $month['end_date'];
                 @endphp
-                <div class="cursor-pointer text-center py-1 px-4 rounded-sm hover:bg-neutral-500/50"
+                <div class="cursor-pointer text-center py-1 rounded-sm hover:bg-neutral-500/50"
                      x-on:click="selectedMonth = {{$index}}; monthOpen = false"
                      :class="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'bg-gray-400 text-black' : '' "
                      wire:click="setMonth('{{$month['start_date']}}', '{{$month['end_date']}}')"
                      data-week-index="{{$index}}"
                      :id="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'current-month' : ''">
-                    {{$month['month']}}
+                    {{Str::limit($month['month'], 3, '')}}
                 </div>
             @endforeach
         </div>
