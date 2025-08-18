@@ -12,6 +12,8 @@
                     <livewire:order-list
                         wire:key="day-orders"
                         :withSummaryData="true"
+                        :withIncome="false"
+                        :with-mobile-sort="true"
                         :summaryVisibleByDefault="true"
                         :prop-filters="[
                                 'due_from'=>now()->toDateString(),
@@ -37,6 +39,8 @@
                     <livewire:order-list
                         wire:key="night-orders"
                         :withSummaryData="true"
+                        :withIncome="false"
+                        :with-mobile-sort="true"
                         :summaryVisibleByDefault="true"
                         :prop-filters="[
                             'due_from' => now()->addDay()->toDateString(),

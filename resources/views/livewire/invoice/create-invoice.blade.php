@@ -67,7 +67,7 @@
                 <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number" class="max-w-[100px]!"/>
             </x-form.form-wrapper>
         </div>
-        <div class="flex justify-between">
+        <div class="flex gap-4">
             @if(!empty($customer_id) && $formMode === "manual")
                 @foreach($products as $product)
                     @php

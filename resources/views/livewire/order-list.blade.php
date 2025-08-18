@@ -3,7 +3,6 @@
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @use(App\Enums\OrderStatus)
 @use(App\Models\Order)
-@props(['withSummaryData' => true, 'products', 'summaryVisibleByDefault' => true, 'withSummaryPdf' => false, 'withMobileSort' => false])
 @php
     /**
 * @var Order $order
@@ -34,7 +33,7 @@
     @endif
     {{--order summary--}}
     @if($withSummaryData)
-        <livewire:order.order-summary :orders="$ordersAll" :products="$products" :withIncome="true"
+        <livewire:order.order-summary :orders="$ordersAll" :products="$products" :withIncome="$withIncome"
                                       :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     @if($orders->isNotEmpty())

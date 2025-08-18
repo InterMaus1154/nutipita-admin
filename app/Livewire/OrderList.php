@@ -42,6 +42,7 @@ class OrderList extends Component
      */
     public bool $withSummaryData = true;
     public bool $withSummaryPdf = false;
+    public bool $withIncome = true;
     public bool $summaryVisibleByDefault = false;
     public $orderIds = [];
     public $ordersAll = [];
@@ -55,6 +56,8 @@ class OrderList extends Component
      */
 
     public string $mobileSort = "desc:order_id";
+
+    public bool $withMobileSort = false;
 
 
     // Initial component load
@@ -221,7 +224,6 @@ class OrderList extends Component
             'products' => $products,
             'orders' => $orders,
             'withSummaries' => true,
-            'withIncome' => true
         ]);
     }
 }
