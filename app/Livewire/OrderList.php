@@ -58,6 +58,9 @@ class OrderList extends Component
     public string $mobileSort = "desc:order_id";
 
     public bool $withMobileSort = false;
+    /*
+     * End
+     */
 
 
     // Initial component load
@@ -211,8 +214,11 @@ class OrderList extends Component
     }
 
 
+
+
     public function render(): View
     {
+        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         $query = $this->buildOrderQuery();
 
         // clone query for pagination only, as it contains everything from the filter
@@ -234,7 +240,7 @@ class OrderList extends Component
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
         }
 
-        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
+
         return view('livewire.order-list', [
             'products' => $products,
             'orders' => $orders,
