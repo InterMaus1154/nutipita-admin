@@ -38,7 +38,7 @@
             {{--actual link box--}}
             <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak
                  x-transition
-                 class="absolute z-100 left-[-9rem] top-5 border-2 border-neutral-700 rounded-xl bg-zinc-800 p-4 flex flex-col gap-4 min-w-[200px] action">
+                 class="absolute z-100 left-[-9rem] top-5 border-2 border-neutral-700 rounded-xl bg-zinc-800/60 backdrop-blur-lg p-4 flex flex-col gap-4 min-w-[200px] action">
                 <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
                            href="{{route('orders.show', compact('order'))}}">View
                 </flux:link>
@@ -94,7 +94,7 @@
         <div class="fixed inset-0 min-h-screen z-101 bg-black/60" x-show="detailsMenuOpen"
              x-transition></div>
         <div
-            class="flex-col gap-4 flex fixed bottom-0 z-102 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800 rounded-t-xl p-4 border-t-6 border-t-accent"
+            class="flex-col gap-4 flex fixed bottom-0 z-102 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800/80 backdrop-blur-lg rounded-t-xl p-4 border-t-6 border-t-accent"
             x-cloak x-show="detailsMenuOpen" x-on:click.outside="detailsMenuOpen = false"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-full"
@@ -141,8 +141,11 @@
                 </div>
             </div>
             {{--product wrapper--}}
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 my-4">
                 @foreach($order->products as $orderProduct)
+                    @if($loop->first)
+                        <flux:separator/>
+                    @endif
                     <div class="text-base flex gap-4 justify-between items-center">
                         <span>{{$orderProduct->product_name}}</span>
                         <div class="flex flex-col gap-1 justify-center items-center text-center">
@@ -156,33 +159,31 @@
             {{--total pita and price info--}}
             <div class="flex justify-between gap-4 items-center flex-wrap">
                 <div class="flex gap-2">
-                    <flux:badge color="indigo">Pita:</flux:badge>
-                    <span class="text-base">@amountFormat($order->total_pita)</span>
+                    <span class="text-lg text-accent font-semibold">@amountFormat($order->total_pita)</span>
                 </div>
                 <div class="flex gap-2">
-                    <flux:badge color="indigo">£:</flux:badge>
-                    <span class="text-base">@moneyFormat($order->total_price)</span>
+                    <span class="text-lg text-accent font-semibold">@moneyFormat($order->total_price)</span>
                 </div>
             </div>
             {{--action buttons--}}
-            <div class="flex gap-4 justify-center">
+            <div class="flex gap-6 justify-center">
                 <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
-                    <flux:icon.pencil-square class="!inline"/>
+                    <flux:icon.pencil-square class="size-7"/>
                 </flux:link>
                 @unless($order->invoice)
                     <flux:link href="{{route('invoices.create-single', compact('order'))}}"
                                title="Create invoice">
-                        <flux:icon.clipboard-document-list class="!inline"/>
+                        <flux:icon.clipboard-document-list class="size-7"/>
                     </flux:link>
                 @else
                     <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}"
                                title="Download invoice">
-                        <flux:icon.clipboard-document-check class="!inline"/>
+                        <flux:icon.clipboard-document-check class="size-7"/>
                     </flux:link>
                 @endunless
                 <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
                            wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
-                    <flux:icon.trash class="!inline"/>
+                    <flux:icon.trash class="size-7"/>
                 </flux:link>
             </div>
         </div>
