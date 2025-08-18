@@ -3,6 +3,7 @@
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
 @use(App\Enums\OrderStatus)
 @use(App\Models\Order)
+@use(Illuminate\Support\Str)
 @php
     /**
 * @var Order $order
@@ -98,7 +99,7 @@
                             </x-table.data>
                             <x-table.data>
                                 <span class="text-accent text-base">
-                                    {{\Illuminate\Support\Str::limit($order->customer->customer_name, 20)}}
+                                    {{Str::limit($order->customer->customer_name, 20)}}
                                 </span>
                             </x-table.data>
                             <x-table.data>

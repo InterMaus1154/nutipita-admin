@@ -1,7 +1,7 @@
 <div class="flex flex-col">
     <x-error/>
     <x-success/>
-    <x-table.table class="md:max-w-[75%] mx-auto">
+    <x-table.table class="2xl:max-w-[75%] mx-auto">
         <x-table.head>
             <x-table.header sortField="customer_name">
                 Name
@@ -40,12 +40,16 @@
                         {{$customer->customer_business_owner_name}}
                     </x-table.data>
                     <x-table.data>
-                        {{$customer->customer_optional_name}}
-                        <br>
+                        @if($customer->customer_optional_name)
+                            {{$customer->customer_optional_name}}
+                            <br>
+                        @endif
                         {{$customer->customer_address_1}}
                         <br>
-                        {{$customer->customer_address_2}}
-                        <br>
+                        @if($customer->customer_address_2)
+                            {{$customer->customer_address_2}}
+                            <br>
+                        @endif
                         {{$customer->customer_city}}
                         <br>
                         {{$customer->customer_postcode}}
