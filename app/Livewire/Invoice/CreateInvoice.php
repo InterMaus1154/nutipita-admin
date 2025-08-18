@@ -68,7 +68,7 @@ class CreateInvoice extends Component
         $this->invoice_due_date = now()->addDay()->toDateString();
         $this->invoice_number = Invoice::getNextInvoiceNumber();
 
-        $this->setWeek();
+        $this->setCurrentWeek();
     }
 
     public function updated(): void
