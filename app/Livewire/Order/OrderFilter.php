@@ -66,7 +66,8 @@ class OrderFilter extends Component
             'status' => $this->status,
             'cancelled_order_hidden' => $this->cancelled_order_hidden,
             'month' => $this->month,
-            'daytime_only' => $this->daytime_only
+            'daytime_only' => $this->daytime_only,
+            'active_period' => $this->activePeriod ?? ''
         ]);
     }
 

@@ -71,7 +71,6 @@ class OrderList extends Component
     }
 
 
-
     // when any filter is received from another component
     #[On('update-filter')]
     public function applyFilter(array $filters): void
@@ -121,15 +120,15 @@ class OrderList extends Component
     }
 
     public function updateOrderStatus(Order $order, string $value): void
-    {;
+    {
         DB::beginTransaction();
-        try{
+        try {
             $order->update([
                 'order_status' => $value
             ]);
             session()->flash('success', 'Status updated');
             DB::commit();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Error updating status');
             Log::error($e->getMessage());
@@ -173,6 +172,18 @@ class OrderList extends Component
     {
         $filters = $this->filters;
         $query = Order::query()
+            ->when(!empty($filters['active_period']) && $filters['active_period'] === 'today', function (Builder $query) {
+                $query->where(function ($q) {
+                    $q->where(function ($q2) {
+                        $q2->whereDate('orders.order_due_at', now()->toDateString())
+                            ->where('orders.is_daytime', true);
+                    })
+                        ->orWhere(function ($q2) {
+                            $q2->whereDate('orders.order_due_at', now()->addDay()->toDateString())
+                                ->where('orders.is_daytime', false);
+                        });
+                });
+            })
             ->when($filters['nighttime_only'], function ($builder) {
                 return $builder->where('is_daytime', false);
             })
@@ -182,20 +193,22 @@ class OrderList extends Component
             ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
                 return $builder->where('orders.customer_id', $filters['customer_id']);
             })
-            ->when(!empty($filters['due_from']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
-            })
-            ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
-            })
             ->when(!empty($filters['status']), function ($builder) use ($filters) {
                 return $builder->where('order_status', $filters['status']);
             })
             ->with('customer:customer_id,customer_name', 'products');
 
+        if (empty($filters['active_period']) || $filters['active_period'] !== 'today') {
+            $query->when(!empty($filters['due_from']), function ($builder) use ($filters) {
+                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
+            })
+                ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
+                    return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
+                });
+        }
+
         return $this->applySort($query, $this->customSorts());
     }
-
 
 
     public function render(): View
@@ -210,9 +223,9 @@ class OrderList extends Component
         $this->ordersAll = $query->get();
 
         $this->dispatch('order-count-details', [
-           'is_nighttime' => $this->filters['nighttime_only'],
-           'is_daytime' => $this->filters['daytime_only'],
-           'hasOrders' => $this->ordersAll->isNotEmpty()
+            'is_nighttime' => $this->filters['nighttime_only'],
+            'is_daytime' => $this->filters['daytime_only'],
+            'hasOrders' => $this->ordersAll->isNotEmpty()
         ]);
 
         if (!empty($this->filters['customer_id'])) {
