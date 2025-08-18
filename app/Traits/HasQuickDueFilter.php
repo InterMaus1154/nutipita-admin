@@ -61,16 +61,36 @@ trait HasQuickDueFilter
         $this->afterChangeAction();
     }
 
-    public function setWeek(): void
+    public function setWeek(string $weekStart, string $weekEnd): void
     {
-        $this->due_from = now()->startOfWeek(WeekDay::Sunday)->format('Y-m-d');
-        $this->due_to = now()->endOfWeek(WeekDay::Saturday)->format('Y-m-d');
+//        $this->due_from = now()->startOfWeek(WeekDay::Sunday)->format('Y-m-d');
+//        $this->due_to = now()->endOfWeek(WeekDay::Saturday)->format('Y-m-d');
+        $this->due_from = $weekStart;
+        $this->due_to = $weekEnd;
         $this->activePeriod = "week";
 
         $this->afterChangeAction();
     }
 
-    public function setMonth(): void
+    public function setCurrentWeek(): void
+    {
+        $this->due_from = now()->startOfWeek(WeekDay::Sunday)->format('Y-m-d');
+        $this->due_to = now()->endOfWeek(WeekDay::Saturday)->format('Y-m-d');
+
+        $this->activePeriod = "week";
+        $this->afterChangeAction();
+    }
+
+    public function setMonth(string $monthStart, string $monthEnd): void
+    {
+        $this->due_from = $monthStart;
+        $this->due_to = $monthEnd;
+        $this->activePeriod = "month";
+
+        $this->afterChangeAction();
+    }
+
+    public function setCurrentMonth(): void
     {
         $this->due_from = now()->startOfMonth()->toDateString();
         $this->due_to = now()->endOfMonth()->toDateString();
@@ -78,6 +98,7 @@ trait HasQuickDueFilter
 
         $this->afterChangeAction();
     }
+
 
     public function setYear(): void
     {

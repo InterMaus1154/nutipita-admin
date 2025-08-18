@@ -27,8 +27,8 @@ class OrderFilter extends Component
 
     public function mount(): void
     {
-        /*set week as default*/
-        $this->setWeek();
+        /*set current week as default*/
+        $this->setCurrentWeek();
     }
 
     /**
@@ -39,22 +39,6 @@ class OrderFilter extends Component
     {
         $this->daytime_only = !$this->daytime_only;
         $this->dispatchEvent();
-    }
-
-    /*
-     * Listens for month update
-     */
-    public function updatedMonth($value): void
-    {
-        if(empty($value)){
-            $this->setMonth();
-        }else{
-            $year = now()->year;
-            $this->due_from = now()->setDate($year, $value, 1)->startOfMonth()->toDateString();
-            $this->due_to = now()->setDate($year, $value, 1)->endOfMonth()->toDateString();
-            $this->activePeriod = "month";
-            $this->dispatchEvent();
-        }
     }
 
     public function dispatchEvent(): void
