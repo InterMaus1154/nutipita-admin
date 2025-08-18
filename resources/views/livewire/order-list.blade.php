@@ -109,27 +109,7 @@
                                 @dayDate($order->order_due_at)
                             </x-table.data>
                             <x-table.data>
-                                @php
-                                    // match color
-                                    if($order->order_status === OrderStatus::G_PAID->name){
-                                        $bgColor = "bg-green-500!";
-                                    }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                        $bgColor = "bg-orange-500!";
-                                    }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                        $bgColor = "bg-red-500!";
-                                    }
-                                    $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
-                                @endphp
-                                <x-form.form-wrapper>
-                                    <x-form.form-select :class="$classes"
-                                                        wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
-                                        @foreach(OrderStatus::cases() as $status)
-                                            <option
-                                                @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
-                                                value="{{$status->name}}">{{ucfirst($status->value)}}</option>
-                                        @endforeach
-                                    </x-form.form-select>
-                                </x-form.form-wrapper>
+                                <x-order.order-status-select :order="$order"/>
                             </x-table.data>
                             @foreach($products as $product)
                                 @php
@@ -198,29 +178,7 @@
                         {{--status badges--}}
                         <div class="flex gap-2">
                             {{--normal status badge--}}
-                            <div class="cursor-pointer">
-                                @php
-                                    // match color
-                                    if($order->order_status === OrderStatus::G_PAID->name){
-                                        $bgColor = "bg-green-500!";
-                                    }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                        $bgColor = "bg-orange-500!";
-                                    }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                        $bgColor = "bg-red-500!";
-                                    }
-                                    $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
-                                @endphp
-                                <x-form.form-wrapper>
-                                    <x-form.form-select :class="$classes"
-                                                        wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
-                                        @foreach(OrderStatus::cases() as $status)
-                                            <option
-                                                @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
-                                                value="{{$status->name}}">{{ucfirst($status->value)}}</option>
-                                        @endforeach
-                                    </x-form.form-select>
-                                </x-form.form-wrapper>
-                            </div>
+                            <x-order.order-status-select :order="$order"/>
                             @if($order->is_daytime)
                                 <flux:badge color="yellow" variant="solid" size="sm">
                                     <flux:icon.sun class="size-4 text-black"/>
@@ -315,29 +273,7 @@
                             </div>
                             <div class="flex justify-between gap-4">
                                 {{--status badge--}}
-                                <div class="cursor-pointer">
-                                    @php
-                                        // match color
-                                        if($order->order_status === OrderStatus::G_PAID->name){
-                                            $bgColor = "bg-green-500!";
-                                        }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-                                            $bgColor = "bg-orange-500!";
-                                        }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
-                                            $bgColor = "bg-red-500!";
-                                        }
-                                        $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
-                                    @endphp
-                                    <x-form.form-wrapper>
-                                        <x-form.form-select :class="$classes"
-                                                            wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
-                                            @foreach(OrderStatus::cases() as $status)
-                                                <option
-                                                    @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"
-                                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
-                                            @endforeach
-                                        </x-form.form-select>
-                                    </x-form.form-wrapper>
-                                </div>
+                                <x-order.order-status-select />
                                 {{--other badges--}}
                                 <div class="flex gap-2">
                                     @if($order->is_daytime)

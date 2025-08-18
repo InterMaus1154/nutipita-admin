@@ -70,6 +70,8 @@ class OrderList extends Component
         $this->withSummaryPdf = $withSummaryPdf;
     }
 
+
+
     // when any filter is received from another component
     #[On('update-filter')]
     public function applyFilter(array $filters): void
@@ -118,9 +120,8 @@ class OrderList extends Component
         $this->setSort($field, $direction);
     }
 
-
     public function updateOrderStatus(Order $order, string $value): void
-    {
+    {;
         DB::beginTransaction();
         try{
             $order->update([
@@ -194,6 +195,7 @@ class OrderList extends Component
 
         return $this->applySort($query, $this->customSorts());
     }
+
 
 
     public function render(): View
