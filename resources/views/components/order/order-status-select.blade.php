@@ -1,4 +1,4 @@
-@props(['order'])
+@aware(['order'])
 @use(App\Enums\OrderStatus)
 <div class="cursor-pointer">
     @php
