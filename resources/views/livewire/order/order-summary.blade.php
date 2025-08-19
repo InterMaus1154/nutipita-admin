@@ -7,8 +7,7 @@
 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto'
                     ])>
                 @if($withIncome)
-                    <x-data-box dataBoxHeader="Paid" :dataBoxValue="moneyFormat($totalIncome)"/>
-                    <x-data-box dataBoxHeader="Expected" :dataBoxValue="moneyFormat($expectedIncome)"/>
+                    <x-data-box dataBoxHeader="Income" :dataBoxValue="moneyFormat($totalIncome)"/>
                 @endif
                 <x-data-box dataBoxHeader="Orders" :dataBoxValue="amountFormat(collect($orders)->count())"/>
                 <x-data-box dataBoxHeader="Pita" :dataBoxValue="amountFormat($totalPita)"/>

@@ -8,7 +8,7 @@
                     <livewire:order-list
                         wire:key="day-orders"
                         :withSummaryData="true"
-                        :withIncome="false"
+                        :withIncome="true"
                         :with-mobile-sort="true"
                         :summaryVisibleByDefault="true"
                         :prop-filters="$dayTimeFilters"
@@ -27,7 +27,7 @@
                     <livewire:order-list
                         wire:key="night-orders"
                         :withSummaryData="true"
-                        :withIncome="false"
+                        :withIncome="true"
                         :with-mobile-sort="true"
                         :summaryVisibleByDefault="true"
                         :prop-filters="$nightTimeFilters"

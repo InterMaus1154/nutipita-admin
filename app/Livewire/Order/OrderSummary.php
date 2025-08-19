@@ -20,8 +20,6 @@ class OrderSummary extends Component
 
     public float $totalIncome = 0;
 
-    public float $expectedIncome = 0;
-
     public array $productTotals = [];
     public int $totalPita = 0;
 
@@ -48,23 +46,18 @@ class OrderSummary extends Component
     #[On('update-filter')]
     public function calculateSummaries(): void
     {
-        $this->reset(['totalPita', 'productTotals', 'totalIncome', 'expectedIncome']);
+        $this->reset(['totalPita', 'productTotals', 'totalIncome']);
 
         foreach ($this->orders as $order) {
-            // only add to income, if the order has been paid
-            if($order->order_status === OrderStatus::G_PAID->name){
-                $this->totalIncome += $order->total_price;
-            }
-
-            $this->expectedIncome += $order->total_price;
+            $this->totalIncome += $order->total_price;
 
             $this->totalPita += $order->total_pita;
 
             // calculate product quantity total for each product
             foreach ($this->products as $product) {
-                if(isset($this->productTotals[$product->product_id])){
+                if (isset($this->productTotals[$product->product_id])) {
                     $this->productTotals[$product->product_id]['qty'] += $order->getTotalOfProduct($product);
-                }else{
+                } else {
                     $this->productTotals[$product->product_id]['qty'] = $order->getTotalOfProduct($product);
                     $this->productTotals[$product->product_id]['name'] = $product->product_name;
                     $this->productTotals[$product->product_id]['g'] = $product->product_weight_g;

@@ -4,6 +4,8 @@
             {{$wireModelLive ? "wire:model.live=$wireModelLive" : ""}}
             {{$wireModel ? "wire:model=$wireModel" : ""}}
             name="{{$name}}"
+            x-data
+            x-ref="select" x-on:click.outside="$refs.select.blur();"
             class="py-3 px-4 pe-9 block w-full max-sm:max-w-[100px] sm:max-w-[130px] bg-gray-100 border-transparent rounded-lg text-sm focus:border-white disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600 {{$class}}" {{$attributes}}>
         {{$slot}}
     </select>
