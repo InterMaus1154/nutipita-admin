@@ -31,7 +31,7 @@ class MoneyFilter extends Component
         $this->totalIncome = 0;
         $this->orderCount = 0;
 
-        $this->setWeek();
+        $this->setCurrentWeek();
     }
 
     public function updated(): void

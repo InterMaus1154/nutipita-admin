@@ -3,16 +3,29 @@
     <div class="flex gap-8 justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">
             {{--customer filter--}}
-            <x-form.customer-select />
+            <x-form.customer-select/>
             {{--status filter--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="order_status" text="Status"/>
-                <x-form.form-select id="order_status" wireModelLive="status">
-                    <option value=""></option>
-                    @foreach(OrderStatus::cases() as $orderStatus)
-                        <option value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>
-                    @endforeach
-                </x-form.form-select>
+                @php
+                    $options = collect(OrderStatus::cases())
+                ->map(function(OrderStatus $orderStatus){
+                    return [
+                        'key' => $orderStatus->name,
+                        'value'  =>$orderStatus->value
+                        ];
+                })
+                ->prepend(['key' => '', 'value' => ''])
+                ->toArray();
+                @endphp
+                <x-ui.select :options="$options" id="order_status" wire-model="status" wire:key="select-status" width="max-w-full!"/>
+{{--                                <x-form.form-select id="order_status" wireModelLive="status">--}}
+{{--                                    <option value=""></option>--}}
+{{--                                    @foreach(OrderStatus::cases() as $orderStatus)--}}
+{{--                                        <option value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </x-form.form-select>--}}
+
             </x-form.form-wrapper>
         </div>
         {{--quick due date filters--}}
