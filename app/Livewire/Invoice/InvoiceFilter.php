@@ -11,7 +11,7 @@ class InvoiceFilter extends Component
 {
 
     // --- Filter data ---
-    public ?string $customer_id = null;
+    public $customer_id = null;
     public ?string $invoice_status = null;
     // ---
 

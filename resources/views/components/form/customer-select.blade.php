@@ -19,5 +19,5 @@
 {{--            <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>--}}
 {{--        @endforeach--}}
 {{--    </x-form.form-select>--}}
-    <x-ui.select :options="$options" id="customer_id" name="customer_id" wire-model="customer_id" show-max="10"/>
+    <x-ui.select :options="$options" id="customer_id" name="customer_id" wire-model="customer_id"/>
 </x-form.form-wrapper>

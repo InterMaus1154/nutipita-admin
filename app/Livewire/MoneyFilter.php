@@ -20,7 +20,7 @@ class MoneyFilter extends Component
     public int $orderCount;
     public float $totalIncome;
 
-    public ?string $customer_id = null;
+    public $customer_id = null;
 
 
     public function mount(): void

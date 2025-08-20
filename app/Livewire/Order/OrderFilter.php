@@ -12,7 +12,7 @@ class OrderFilter extends Component
 {
     use HasQuickDueFilter;
 
-    public int|string|null $customer_id = null;
+    public $customer_id = null;
     public ?string $status = null;
     public ?int $month = null;
     public bool $cancelled_order_hidden = true;
