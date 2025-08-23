@@ -225,6 +225,6 @@ class OrderController extends Controller
         ];
 
         return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal', 'productTotals', 'week'))
-            ->download("Order_Summary_Week_{$week['weekNum']}_{$customer->customer_name}.pdf");
+            ->download("{$customer->customer_name}_Week_{$week['weekNum']}_Order_Summary.pdf");
     }
 }
