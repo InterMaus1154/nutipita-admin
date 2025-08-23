@@ -212,7 +212,19 @@ class OrderController extends Controller
 
         $periodTotal = $orders->sum('total_price');
 
-        return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal', 'productTotals'))
-            ->download("Order_Summary_$customer->customer_name.pdf");
+        $firstOrderDate = $orders->min('order_due_at');
+        $lastOrderDate  = $orders->max('order_due_at');
+
+        $first = \Carbon\Carbon::parse($firstOrderDate);
+        $last  = \Carbon\Carbon::parse($lastOrderDate);
+
+        $week = [
+            'start' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday),
+            'end'   => $last->copy()->endOfWeek(\Carbon\WeekDay::Saturday),
+            'weekNum' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week
+        ];
+
+        return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal', 'productTotals', 'week'))
+            ->download("Order_Summary_Week_{$week['weekNum']}_{$customer->customer_name}.pdf");
     }
 }

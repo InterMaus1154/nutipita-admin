@@ -32,22 +32,6 @@
 </head>
 <body>
 <header>
-    @php
-        $weekNum = now()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week;
-
-        $firstOrderDate = $orders->min('order_due_at');
-        $lastOrderDate  = $orders->max('order_due_at');
-
-        $first = \Carbon\Carbon::parse($firstOrderDate);
-        $last  = \Carbon\Carbon::parse($lastOrderDate);
-
-        $week = [
-            'start' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday),
-            'end'   => $last->copy()->endOfWeek(\Carbon\WeekDay::Saturday),
-            'weekNum' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week
-        ];
-
-    @endphp
     <h1 style="text-align: center">Order Summary - Week {{$week['weekNum']}}
     </h1>
     <p style="text-align: center">(This is not an invoice)</p>
