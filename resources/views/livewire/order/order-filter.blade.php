@@ -18,13 +18,14 @@
                 ->prepend(['key' => '', 'value' => ''])
                 ->toArray();
                 @endphp
-                <x-ui.select :options="$options" id="order_status" wire-model="status" wire:key="select-status" width="max-w-full!"/>
-{{--                                <x-form.form-select id="order_status" wireModelLive="status">--}}
-{{--                                    <option value=""></option>--}}
-{{--                                    @foreach(OrderStatus::cases() as $orderStatus)--}}
-{{--                                        <option value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </x-form.form-select>--}}
+                {{--                <x-ui.select :options="$options" id="order_status" wire-model="status" wire:key="select-status" width="max-w-full!"/>--}}
+                <x-form.form-select id="order_status" wireModelLive="status">
+                    <option value=""></option>
+                    @foreach(OrderStatus::cases() as $orderStatus)
+                        <option
+                            value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>
+                    @endforeach
+                </x-form.form-select>
 
             </x-form.form-wrapper>
         </div>
@@ -34,8 +35,10 @@
                 <flux:button wire:click="clearFilter()" class="max-lg:order-3">
                     <flux:icon.brush-cleaning/>
                 </flux:button>
-                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months" class="max-lg:order-1 max-sm:basis-[100%]"/>
-                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-lg:order-2' : 'max-lg:order-2'" wire:click="toggleDaytime()">
+                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months"
+                                           class="max-lg:order-1 max-sm:basis-[100%]"/>
+                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-lg:order-2' : 'max-lg:order-2'"
+                             wire:click="toggleDaytime()">
                     <flux:icon.sun :class="$daytime_only ? 'text-black!' : ''"/>
                 </flux:button>
             </div>

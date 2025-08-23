@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Traits\HasQuickDueFilter;
@@ -44,6 +45,7 @@ class MoneyFilter extends Component
         $this->totalIncome = 0;
         $this->orderCount = 0;
         $this->orders = Order::query()
+            ->where('order_status', OrderStatus::G_PAID->name)
             ->when($this->customer_id, function ($q) {
                 return $q->where('customer_id', $this->customer_id);
             })

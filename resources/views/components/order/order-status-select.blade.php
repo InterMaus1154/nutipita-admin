@@ -14,7 +14,7 @@
     @endphp
     <x-form.form-wrapper>
         <x-form.form-select :class="$classes"
-                            wire:change="updateOrderStatus({{$order->order_id}}, $event.target.value)">
+                            wire:change="updateOrderStatus($event.target.value, {{$order->order_id}})">
             @foreach(OrderStatus::cases() as $status)
                 <option
                     @selected($order->order_status === $status->name) wire:key="order-status-{{$order->order_id}}"

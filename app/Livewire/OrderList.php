@@ -122,7 +122,7 @@ class OrderList extends Component
         $this->setSort($field, $direction);
     }
 
-    public function updateOrderStatus(Order $order, string $value): void
+    public function updateOrderStatus(string $value, Order $order): void
     {
         DB::beginTransaction();
         try {

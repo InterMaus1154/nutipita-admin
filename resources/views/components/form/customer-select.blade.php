@@ -13,11 +13,11 @@
     ->toArray();
     @endphp
 
-{{--    <x-form.form-select id="customer_id" name="customer_id" wireModelLive="customer_id">--}}
-{{--        <option value=""></option>--}}
-{{--        @foreach($customers as $customer)--}}
-{{--            <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>--}}
-{{--        @endforeach--}}
-{{--    </x-form.form-select>--}}
-    <x-ui.select :options="$options" id="customer_id" name="customer_id" wire-model="customer_id"/>
+    <x-form.form-select id="customer_id" name="customer_id" wireModelLive="customer_id">
+        <option value=""></option>
+        @foreach($customers as $customer)
+            <option value="{{$customer->customer_id}}">{{$customer->customer_name}}</option>
+        @endforeach
+    </x-form.form-select>
+{{--    <x-ui.select :options="$options" id="customer_id" name="customer_id" wire-model="customer_id"/>--}}
 </x-form.form-wrapper>

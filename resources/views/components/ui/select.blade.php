@@ -4,19 +4,26 @@
     'name' => 'null',
     'width' => 'w-[200px]',
     'showMax' => 5,
+    'outerClass' => '',
     'innerClass' => '',
     'wireModel' => null,
     'showSelected' => false,
     'onChange' => null,
-    'onChangeParam' => null
+    'onChangeParam' => null,
+    'defaultValue'  => null,
+    'shadowColor' => null
 ])
 
 @php
     // Get initial value from options or empty string
-    $initialValue = $options[0]['key'] ?? '';
+    $initialValue = $defaultValue ?? ($options[0]['key'] ?? '');
+    $shadowClass = $shadowColor
+        ? "shadow-[0_0_10px_1px_theme(colors.{$shadowColor})]"
+        : "shadow-[0_0_10px_1px_var(--color-accent)]";
 @endphp
 
 <div class="relative w-full"
+     :class="'{{$outerClass}}'"
      x-data="{
         open: false,
         selected: @js($initialValue),
@@ -40,15 +47,20 @@
         },
 
         setLivewire(value) {
-            this.selected = value;
-            @if($onChange)
-                @if($onChangeParam)
-                    @this.call('{{$onChange}}', value, @js($onChangeParam));
-                @else
-                    @this.call('{{$onChange}}', value);
-                @endif
-            @endif
-        }
+    @if($onChange)
+        @if($onChangeParam)
+            @this.call('{{$onChange}}', value, @js($onChangeParam)).then(() => {
+                this.selected = value;
+            });
+        @else
+            @this.call('{{$onChange}}', value).then(() => {
+                this.selected = value;
+            });
+        @endif
+    @else
+        this.selected = value;
+    @endif
+}
     }">
 
     {{-- Hidden input --}}
@@ -60,17 +72,16 @@
         {{-- First option display --}}
         <div class="{{ $innerClass ? $innerClass.' ' : '' }} bg-zinc-800 text-white flex items-center justify-between w-full px-4 py-2 cursor-pointer border-2 border-zinc-500 rounded-xl transition-all duration-300 ease"
              x-on:click="open = !open"
-             :class="open === true ? 'shadow-[0_0_10px_1px_var(--color-accent)]' : ''">
+             :class="open ? '{{$shadowClass}}' : ''">
 
-            <div class="cursor-pointer" x-text="options.find(o => o.key === selected)?.value"></div>
-
+            <div class="cursor-pointer" x-text="options.find(o => o.key === selected)?.value"></div>9
             <span :class="open ? 'rotate-180 ' : 'rotate-0 '"
                   class="inline-block transition-transform duration-300 ease-in-out">▾</span>
         </div>
 
         {{-- Options dropdown --}}
         <div style="max-height: {{$showMax * 50}}px"
-             class="overflow-y-scroll absolute min-w-full top-full left-0 bg-zinc-800/80 backdrop-blur-lg border-2 border-zinc-500 rounded-xl flex flex-col gap-3 z-10"
+             class="overflow-y-scroll absolute min-w-full top-full left-0 bg-zinc-800/80 backdrop-blur-lg border-2 border-zinc-500 rounded-xl flex flex-col gap-3 z-300"
              x-show="open"
              x-transition
              x-cloak
