@@ -213,9 +213,6 @@ class OrderList extends Component
         return $this->applySort($query, $this->customSorts());
     }
 
-
-
-
     public function render(): View
     {
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();

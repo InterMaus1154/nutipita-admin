@@ -1,12 +1,13 @@
+@php use App\Models\Order; @endphp
 <html>
 <head>
     <title>Order Summary</title>
     <style>
-        *{
+        * {
             margin: 0;
         }
 
-        body{
+        body {
             padding: 1rem;
         }
 
@@ -14,15 +15,16 @@
             margin: 2rem 0;
         }
 
-        header *{
+        header * {
             margin: 6px 0;
         }
 
-        table{
+        table {
             border-collapse: collapse;
             margin: 0.5rem 0;
         }
-        table th, td{
+
+        table th, td {
             padding: 1rem 0.5rem;
             border: 1px solid black;
         }
@@ -30,7 +32,24 @@
 </head>
 <body>
 <header>
-    <h1 style="text-align: center">Order Summary</h1>
+    @php
+        $weekNum = now()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week;
+
+        $firstOrderDate = $orders->min('order_due_at');
+        $lastOrderDate  = $orders->max('order_due_at');
+
+        $first = \Carbon\Carbon::parse($firstOrderDate);
+        $last  = \Carbon\Carbon::parse($lastOrderDate);
+
+        $week = [
+            'start' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday),
+            'end'   => $last->copy()->endOfWeek(\Carbon\WeekDay::Saturday),
+            'weekNum' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week
+        ];
+
+    @endphp
+    <h1 style="text-align: center">Order Summary - Week {{$week['weekNum']}}
+    </h1>
     <p style="text-align: center">(This is not an invoice)</p>
     <table style="width: 100%; border: none">
         <tr>
@@ -39,6 +58,11 @@
             </td>
             <td style="text-align: right; font-size: 1.5rem; font-weight: bold; border: none; padding: 0">
                 {{$customer->customer_name}}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 1.25rem; font-weight: normal; border: none; padding: 0">
+                @dayDate($week['start']) - @dayDate($week['end'])
             </td>
         </tr>
     </table>
@@ -57,29 +81,50 @@
     </tr>
     </thead>
     <tbody>
-        @foreach($orders as $index => $order)
-
-            <tr>
-                <td>{{$index+1}}</td>
-                <td>@dayDate($order->order_placed_at)</td>
-                <td>@dayDate($order->order_due_at)</td>
-                @foreach($products as $product)
-                    @php($orderProduct = $order->products->firstWhere('product_id', $product->product_id))
-                    @if(is_null($orderProduct))
-                        <td style="text-align: center">-</td>
-                    @else
-                        <td style="text-align: center">
-                            @amountFormat($orderProduct->pivot->product_qty) x @unitPriceFormat($orderProduct->pivot->order_product_unit_price) <br>
-                            @moneyFormat($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
-                        </td>
-                    @endif
-                @endforeach
-                <td style="text-align: center">
-                    @moneyFormat($order->total_price)
-                </td>
-            </tr>
-        @endforeach
+    @foreach($orders as $index => $order)
+        <tr>
+            <td>{{$index+1}}</td>
+            <td>@dayDate($order->order_placed_at)</td>
+            <td>@dayDate($order->order_due_at)</td>
+            @foreach($products as $product)
+                @php($orderProduct = $order->products->firstWhere('product_id', $product->product_id))
+                @if(is_null($orderProduct))
+                    <td style="text-align: center">-</td>
+                @else
+                    <td style="text-align: center">
+                        @amountFormat($orderProduct->pivot->product_qty)
+                        x @unitPriceFormat($orderProduct->pivot->order_product_unit_price) <br>
+                        @moneyFormat($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
+                    </td>
+                @endif
+            @endforeach
+            <td style="text-align: center">
+                @moneyFormat($order->total_price)
+            </td>
+        </tr>
+    @endforeach
     </tbody>
+    <tfoot>
+    <tr>
+        <td>#</td>
+        <td></td>
+        <td></td>
+        @foreach($products as $product)
+            <td style="text-align: center; font-weight: bold">
+                @amountFormat($productTotals[$product->product_id])
+            </td>
+        @endforeach
+        <td style="text-align: center; font-weight: bold">
+            @amountFormat($orders->sum(function (Order $order) {
+ return $order->total_pita;
+}))
+            <br>
+            @moneyFormat($orders->sum(function (Order $order) {
+                return $order->total_price;
+        }))
+        </td>
+    </tr>
+    </tfoot>
 </table>
 <h2 style="text-align: right">
     Total for period: @moneyFormat($periodTotal)

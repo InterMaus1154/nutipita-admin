@@ -187,6 +187,19 @@ class OrderController extends Controller
             return $order->products->pluck('product_id');
         })->unique();
 
+        $productTotals = $orders->flatMap(function (Order $order) {
+            return $order->products->map(function (Product $product) {
+                return [
+                    'product_id' => $product->product_id,
+                    'quantity' => $product->pivot->product_qty
+                ];
+            });
+        })
+            ->groupBy('product_id')
+            ->map(function ($items) {
+                return $items->sum('quantity');
+            });
+
         // TODO: optimise by getting data from the already loaderd orders or sth
         // get the customer for the orders
         $customer = $orders->first()->customer;
@@ -199,7 +212,7 @@ class OrderController extends Controller
 
         $periodTotal = $orders->sum('total_price');
 
-        return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal'))
+        return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal', 'productTotals'))
             ->download("Order_Summary_$customer->customer_name.pdf");
     }
 }
