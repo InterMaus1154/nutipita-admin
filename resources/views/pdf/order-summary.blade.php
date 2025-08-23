@@ -12,7 +12,7 @@
         }
 
         header {
-            margin: 2rem 0;
+            margin: 1rem 0;
         }
 
         header * {
@@ -21,7 +21,6 @@
 
         table {
             border-collapse: collapse;
-            margin: 0.5rem 0;
         }
 
         table th, td {
@@ -38,20 +37,15 @@
     <table style="width: 100%; border: none">
         <tr>
             <td style="text-align: left; font-size: 1.5rem; font-weight: bold; border: none; padding: 0">
-                Total orders: {{$orders->count()}}
-            </td>
-            <td style="text-align: right; font-size: 1.5rem; font-weight: bold; border: none; padding: 0">
                 {{$customer->customer_name}}
             </td>
-        </tr>
-        <tr>
-            <td style="text-align: left; font-size: 1.25rem; font-weight: normal; border: none; padding: 0">
+            <td style="text-align: right; font-size: 1.25rem; font-weight: bold; border: none; padding: 0">
                 @dayDate($week['start']) - @dayDate($week['end'])
             </td>
         </tr>
     </table>
 </header>
-<table>
+<table style="width: 100%; margin-bottom: 1rem">
     <thead>
     <tr>
         <th>#</th>
@@ -67,9 +61,9 @@
     <tbody>
     @foreach($orders as $index => $order)
         <tr>
-            <td>{{$index+1}}</td>
-            <td>@dayDate($order->order_placed_at)</td>
-            <td>@dayDate($order->order_due_at)</td>
+            <td style="text-align: center">{{$index+1}}</td>
+            <td style="text-align: center">@dayDate($order->order_placed_at)</td>
+            <td style="text-align: center">@dayDate($order->order_due_at)</td>
             @foreach($products as $product)
                 @php($orderProduct = $order->products->firstWhere('product_id', $product->product_id))
                 @if(is_null($orderProduct))
@@ -77,7 +71,8 @@
                 @else
                     <td style="text-align: center">
                         @amountFormat($orderProduct->pivot->product_qty)
-                        x @unitPriceFormat($orderProduct->pivot->order_product_unit_price) <br>
+                        x @unitPriceFormat($orderProduct->pivot->order_product_unit_price)
+                        <br>
                         @moneyFormat($orderProduct->pivot->product_qty * $orderProduct->pivot->order_product_unit_price)
                     </td>
                 @endif
@@ -110,8 +105,15 @@
     </tr>
     </tfoot>
 </table>
-<h2 style="text-align: right">
-    Total for period: @moneyFormat($periodTotal)
-</h2>
+<table style="width: 100%">
+    <tr>
+        <td style="text-align: left; font-weight: bold; border: 0; padding: 0; font-size: 1.5rem;">
+            Total orders: {{$orders->count()}}
+        </td>
+        <td style="text-align: right; font-weight: bold; border: 0; padding: 0; font-size: 1.5rem">
+            Total for period: @moneyFormat($periodTotal)
+        </td>
+    </tr>
+</table>
 </body>
 </html>
