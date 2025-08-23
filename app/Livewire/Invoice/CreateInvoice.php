@@ -109,7 +109,7 @@ class CreateInvoice extends Component
                 ->whereDate('order_due_at', '<=', $this->due_to)
                 ->orderBy('order_due_at', 'asc')
                 ->first()
-                ->order_due_at;
+                ->order_due_at ?? $this->due_from;
 
             $lastOrderDate = Order::query()
                 ->where('customer_id', $this->customer_id)
@@ -117,7 +117,7 @@ class CreateInvoice extends Component
                 ->whereDate('order_due_at', '<=', $this->due_to)
                 ->orderBy('order_due_at', 'desc')
                 ->first()
-                ->order_due_at;
+                ->order_due_at ?? $this->due_to;
 
             // create invoice record
             $invoiceDto = InvoiceDto::from(
@@ -129,9 +129,6 @@ class CreateInvoice extends Component
                 invoiceNumber: $this->invoice_number
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
-
-
-
 
             // --- ON MANUAL MODE
 
@@ -210,11 +207,25 @@ class CreateInvoice extends Component
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
             DB::commit();
+
+            // reset form to default state
+            $this->resetInvoiceForm();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             session()->flash('error', 'Error at creating invoice. Check log for more info!');
         }
+    }
+
+    /**
+     * Resets form to its default state
+     * @return void
+     */
+    public function resetInvoiceForm(): void
+    {
+        $this->reset('customer_id', 'invoiceProducts');
+        $this->invoice_number = Invoice::getNextInvoiceNumber();
+        $this->setCurrentWeek();
     }
 
     /**
