@@ -24,29 +24,24 @@
         </div>
         {{--dropdown menu for actions--}}
         <x-ui.mobile-card-dropdown-menu>
-            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                       href="{{route('orders.show', compact('order'))}}">View
-            </flux:link>
-            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                       href="{{route('orders.edit', compact('order'))}}">Edit
-            </flux:link>
+            <x-ui.mobile-card-dropdown-link href="{{route('orders.show', compact('order'))}}">View
+            </x-ui.mobile-card-dropdown-link>
+            <x-ui.mobile-card-dropdown-link href="{{route('orders.edit', compact('order'))}}">Edit
+            </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
-                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! "
-                           href="{{route('invoices.create-single', compact('order'))}}">
-                    Generate Invoice
-                </flux:link>
+                <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-single', compact('order'))}}">Generate
+                    Invoice
+                </x-ui.mobile-card-dropdown-link>
             @else
-                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                           href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
                     Download
                     Invoice
-                </flux:link>
+                </x-ui.mobile-card-dropdown-link>
             @endunless
-            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer"
-                       wire:click="deleteOrder({{$order->order_id}})"
-                       wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
+            <x-ui.mobile-card-dropdown-link wire:click="deleteOrder({{$order->order_id}})"
+                                            wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
                 Delete
-            </flux:link>
+            </x-ui.mobile-card-dropdown-link>
         </x-ui.mobile-card-dropdown-menu>
     </div>
     {{--customer and due date info--}}
