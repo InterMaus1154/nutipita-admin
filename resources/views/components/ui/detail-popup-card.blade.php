@@ -1,4 +1,12 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4" x-data="{detailsMenuOpen: false}" x-effect="
+        if(detailsMenuOpen) {
+            document.body.setAttribute('data-menu-open', '');
+
+        } else {
+            document.body.removeAttribute('data-menu-open');
+
+        }
+     ">
     {{--extra info section--}}
     {{--backdrop--}}
     <div class="fixed inset-0 min-h-screen z-101 bg-black/60" x-show="detailsMenuOpen"

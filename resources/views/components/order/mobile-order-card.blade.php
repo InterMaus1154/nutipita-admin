@@ -1,15 +1,5 @@
 @props(['order'])
-<div
-     class="flex flex-col gap-4 rounded-sm shadow-sm border-1 border-neutral-700 p-4"
-     x-data="{ actionMenuOpen: false, detailsMenuOpen: false}" x-effect="
-        if(detailsMenuOpen) {
-            document.body.setAttribute('data-menu-open', '');
-
-        } else {
-            document.body.removeAttribute('data-menu-open');
-
-        }
-     ">
+<x-ui.mobile-card-skeleton>
     {{--card header--}}
     <div class="flex gap-4 justify-between">
         {{--status badges--}}
@@ -33,37 +23,31 @@
             @endif
         </div>
         {{--dropdown menu for actions--}}
-        <div class="relative">
-            <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
-            {{--actual link box--}}
-            <div x-show="actionMenuOpen" x-on:click.outside="actionMenuOpen = false" x-cloak
-                 x-transition
-                 class="absolute z-100 left-[-9rem] top-5 border-2 border-neutral-700 rounded-xl bg-zinc-800/60 backdrop-blur-lg p-4 flex flex-col gap-4 min-w-[200px] action">
+        <x-ui.mobile-card-dropdown-menu>
+            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
+                       href="{{route('orders.show', compact('order'))}}">View
+            </flux:link>
+            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
+                       href="{{route('orders.edit', compact('order'))}}">Edit
+            </flux:link>
+            @unless($order->invoice)
+                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! "
+                           href="{{route('invoices.create-single', compact('order'))}}">
+                    Generate Invoice
+                </flux:link>
+            @else
                 <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                           href="{{route('orders.show', compact('order'))}}">View
+                           href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                    Download
+                    Invoice
                 </flux:link>
-                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                           href="{{route('orders.edit', compact('order'))}}">Edit
-                </flux:link>
-                @unless($order->invoice)
-                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50! block! "
-                               href="{{route('invoices.create-single', compact('order'))}}">
-                        Generate Invoice
-                    </flux:link>
-                @else
-                    <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 "
-                               href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
-                        Download
-                        Invoice
-                    </flux:link>
-                @endunless
-                <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer"
-                           wire:click="deleteOrder({{$order->order_id}})"
-                           wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
-                    Delete
-                </flux:link>
-            </div>
-        </div>
+            @endunless
+            <flux:link class="py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer"
+                       wire:click="deleteOrder({{$order->order_id}})"
+                       wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
+                Delete
+            </flux:link>
+        </x-ui.mobile-card-dropdown-menu>
     </div>
     {{--customer and due date info--}}
     <div class="flex justify-between gap-4 items-center">
@@ -93,7 +77,7 @@
         </div>
         <div class="flex justify-between gap-4">
             {{--status badge--}}
-            <x-order.order-status-select />
+            <x-order.order-status-select/>
             {{--other badges--}}
             <div class="flex gap-2">
                 @if($order->is_daytime)
@@ -139,7 +123,7 @@
                 <flux:separator/>
             @endforeach
         </div>
-{{--        total pita and price info--}}
+        {{--        total pita and price info--}}
         <div class="flex justify-between gap-4 items-center flex-wrap">
             <div class="flex gap-2">
                 <span class="text-lg text-accent font-semibold">@amountFormat($order->total_pita)</span>
@@ -170,4 +154,4 @@
             </flux:link>
         </div>
     </x-ui.detail-popup-card>
-</div>
+</x-ui.mobile-card-skeleton>
