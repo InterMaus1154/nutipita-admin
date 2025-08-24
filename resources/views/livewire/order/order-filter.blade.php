@@ -7,18 +7,6 @@
             {{--status filter--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="order_status" text="Status"/>
-                @php
-                    $options = collect(OrderStatus::cases())
-                ->map(function(OrderStatus $orderStatus){
-                    return [
-                        'key' => $orderStatus->name,
-                        'value'  =>$orderStatus->value
-                        ];
-                })
-                ->prepend(['key' => '', 'value' => ''])
-                ->toArray();
-                @endphp
-                {{--                <x-ui.select :options="$options" id="order_status" wire-model="status" wire:key="select-status" width="max-w-full!"/>--}}
                 <x-form.form-select id="order_status" wireModelLive="status">
                     <option value=""></option>
                     @foreach(OrderStatus::cases() as $orderStatus)
@@ -26,7 +14,6 @@
                             value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>
                     @endforeach
                 </x-form.form-select>
-
             </x-form.form-wrapper>
         </div>
         {{--quick due date filters--}}
