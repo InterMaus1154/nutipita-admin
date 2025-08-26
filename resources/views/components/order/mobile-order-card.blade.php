@@ -128,7 +128,7 @@
             </div>
         </div>
         {{--action buttons--}}
-        <div class="flex gap-6 justify-center">
+        <div class="flex gap-6 justify-center justify-self-end">
             <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
                 <flux:icon.pencil-square class="size-7"/>
             </flux:link>

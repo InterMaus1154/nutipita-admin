@@ -63,27 +63,29 @@
                 <span class="text-accent text-lg font-bold">@moneyFormat($invoice->invoice_total)</span>
             </div>
         </div>
-        <div class="flex justify-between gap-4">
-            <div class="flex gap-2 flex-col justify-center text-center">
-                <span>Issued At:</span>
-                <span class="text-base">@dayDate($invoice->invoice_issue_date)</span>
+        <div>
+            <div class="flex justify-between gap-4">
+                <div class="flex gap-2 flex-col justify-center text-center">
+                    <span>Issued At:</span>
+                    <span class="text-base">@dayDate($invoice->invoice_issue_date)</span>
+                </div>
+                <div class="flex gap-2 flex-col justify-center text-center">
+                    <span>Due At:</span>
+                    <span class="text-base">@dayDate($invoice->invoice_due_date)</span>
+                </div>
             </div>
-            <div class="flex gap-2 flex-col justify-center text-center">
-                <span>Due At:</span>
-                <span class="text-base">@dayDate($invoice->invoice_due_date)</span>
+            <div class="flex justify-between gap-4">
+                <div class="flex gap-2 flex-col justify-center text-center">
+                    <span>Orders From:</span>
+                    <span class="text-base">{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : '-'}}</span>
+                </div>
+                <div class="flex gap-2 flex-col justify-center text-center">
+                    <span>Orders To:</span>
+                    <span class="text-base">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : '-'}}</span>
+                </div>
             </div>
         </div>
-        <div class="flex justify-between gap-4">
-            <div class="flex gap-2 flex-col justify-center text-center">
-                <span>Orders From:</span>
-                <span class="text-base">@dayDate($invoice->invoice_from)</span>
-            </div>
-            <div class="flex gap-2 flex-col justify-center text-center">
-                <span>Orders To:</span>
-                <span class="text-base">@dayDate($invoice->invoice_to)</span>
-            </div>
-        </div>
-        <div class="flex gap-6 justify-center">
+        <div class="flex gap-6 justify-center justify-self-end">
             <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
                 <flux:icon.eye class="size-7"/>
             </flux:link>
