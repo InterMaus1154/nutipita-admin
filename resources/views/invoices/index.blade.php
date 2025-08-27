@@ -1,9 +1,12 @@
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Invoices">
-            <flux:link href="{{route('invoices.create')}}">
-                <flux:icon.plus-circle class="size-8"/>
-            </flux:link>
+            <div class="flex gap-4">
+                <livewire:invoice.mobile-invoice-sort />
+                <flux:link href="{{route('invoices.create')}}">
+                    <flux:icon.plus-circle class="size-8"/>
+                </flux:link>
+            </div>
         </x-page-heading>
         <x-success />
         <x-error />
