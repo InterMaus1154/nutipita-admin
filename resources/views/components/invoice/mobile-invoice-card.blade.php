@@ -15,7 +15,7 @@
             @endif
         </div>
         <div class="justify-self-center text-center">
-            <span class="text-lg">
+            <span class="text-lg text-accent font-bold">
             {{$invoice->customer->customer_name}}
             </span>
         </div>
@@ -35,7 +35,7 @@
     </div>
     <div class="flex justify-between gap-4">
         <div>
-            <span class="font-bold">
+            <span>
             INV-{{$invoice->invoice_number}}
             </span>
         </div>
@@ -47,42 +47,41 @@
     </div>
     <x-ui.detail-popup-card>
         <div class="flex justify-center">
-            <span class="text-lg text-white font-bold">
-                {{$invoice->customer->customer_name}} - INV-{{$invoice->invoice_number}}
+            <span class="text-lg text-accent font-bold">
+                {{$invoice->customer->customer_name}}
             </span>
         </div>
-        <div class="flex justify-between gap-4">
-            <div>
+        <div class="flex justify-between gap-4 items-center">
+            <div class="flex gap-2 items-center">
                 @if($invoice->invoice_status === "paid")
                     <flux:badge color="green" variant="solid">Paid</flux:badge>
                 @else
                     <flux:badge color="red" variant="solid">Unpaid</flux:badge>
                 @endif
+                <span>INV-{{$invoice->invoice_number}}</span>
             </div>
             <div>
-                <span class="text-accent text-lg font-bold">@moneyFormat($invoice->invoice_total)</span>
+                <span class="text-white text-lg font-bold">@moneyFormat($invoice->invoice_total)</span>
             </div>
         </div>
-        <div>
-            <div class="flex justify-between gap-4">
-                <div class="flex gap-2 flex-col justify-center text-center">
-                    <span>Issued At:</span>
-                    <span class="text-base">@dayDate($invoice->invoice_issue_date)</span>
-                </div>
-                <div class="flex gap-2 flex-col justify-center text-center">
-                    <span>Due At:</span>
-                    <span class="text-base">@dayDate($invoice->invoice_due_date)</span>
-                </div>
+        <div class="flex justify-between gap-4">
+            <div class="flex gap-2 flex-col justify-center text-center">
+                <span>Issued At:</span>
+                <span class="text-base">@dayDate($invoice->invoice_issue_date)</span>
             </div>
-            <div class="flex justify-between gap-4">
-                <div class="flex gap-2 flex-col justify-center text-center">
-                    <span>Orders From:</span>
-                    <span class="text-base">{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : '-'}}</span>
-                </div>
-                <div class="flex gap-2 flex-col justify-center text-center">
-                    <span>Orders To:</span>
-                    <span class="text-base">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : '-'}}</span>
-                </div>
+            <div class="flex gap-2 flex-col justify-center text-center">
+                <span>Due At:</span>
+                <span class="text-base">@dayDate($invoice->invoice_due_date)</span>
+            </div>
+        </div>
+        <div class="flex justify-between gap-4">
+            <div class="flex gap-2 flex-col justify-center text-center">
+                <span>Orders From:</span>
+                <span class="text-base">{{$invoice->invoice_from ? dayDate($invoice->invoice_from) : '-'}}</span>
+            </div>
+            <div class="flex gap-2 flex-col justify-center text-center">
+                <span>Orders To:</span>
+                <span class="text-base">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : '-'}}</span>
             </div>
         </div>
         <div class="flex gap-6 justify-center justify-self-end">

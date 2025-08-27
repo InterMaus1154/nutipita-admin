@@ -24,6 +24,7 @@ class CustomerList extends Component
     public function render(): View
     {
         $customerQuery = Customer::query()
+            ->with('customPrices', 'customPrices.product')
             ->select('*');
 
         $this->applySort($customerQuery);
