@@ -110,17 +110,6 @@ class OrderList extends Component
         }
     }
 
-    /**
-     * Track mobile sorting changes
-     * @param array $data
-     * @return void
-     */
-    #[On('set-mobile-sort')]
-    public function setMobileSort(array $data): void
-    {
-        [$direction, $field] = explode(':', $data['value']);
-        $this->setSort($field, $direction);
-    }
 
     public function updateOrderStatus(string $value, Order $order): void
     {

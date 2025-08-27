@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 trait HasSort
 {
@@ -71,5 +72,17 @@ trait HasSort
         }
 
         return $builder;
+    }
+
+    /**
+     * Track mobile sorting changes
+     * @param array $data
+     * @return void
+     */
+    #[On('set-mobile-sort')]
+    public function setMobileSort(array $data): void
+    {
+        [$direction, $field] = explode(':', $data['value']);
+        $this->setSort($field, $direction);
     }
 }

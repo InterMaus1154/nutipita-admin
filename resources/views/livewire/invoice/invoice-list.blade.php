@@ -5,35 +5,20 @@
     <div class="hidden sm:block">
         <x-table.table>
             <x-table.head>
-                <x-table.header wire:click="setSort('invoice_number')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Invoice#
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="invoice_number">
+                    Invoice#
                 </x-table.header>
-                <x-table.header wire:click="setSort('customer')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Customer
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="customer">
+                    Customer
                 </x-table.header>
-                <x-table.header wire:click="setSort('invoice_status')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Status
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="invoice_status">
+                    Status
                 </x-table.header>
-                <x-table.header wire:click="setSort('invoice_issue_date')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Issue Date
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="invoice_issue_date">
+                    Issue Date
                 </x-table.header>
-                <x-table.header wire:click="setSort('invoice_due_date')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Due Date
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="invoice_due_date">
+                    Due Date
                 </x-table.header>
                 <x-table.header>
                     Orders From
@@ -41,11 +26,8 @@
                 <x-table.header>
                     Orders To
                 </x-table.header>
-                <x-table.header wire:click="setSort('invoice_total')">
-                    <div class="flex items-center justify-center text-center cursor-pointer">
-                        Invoice Total
-                        <flux:icon.arrows-up-down variant="mini"/>
-                    </div>
+                <x-table.header sort-field="invoice_total">
+                    Invoice Total
                 </x-table.header>
                 <x-table.header>
                     Actions

@@ -5,6 +5,7 @@ namespace App\Livewire\Invoice;
 use App\Enums\OrderStatus;
 use App\Models\Invoice;
 use App\Models\Order;
+use App\Traits\HasSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,18 +18,20 @@ use Livewire\WithPagination;
 class InvoiceList extends Component
 {
 
-    use WithPagination;
+    use WithPagination, HasSort;
 
     protected $paginationTheme = 'tailwind';
 
-    // --- Sorting
-    public string $sortField = "invoice_number";
-    public string $sortDirection = "desc";
-    // ----
 
     public array $filters = [
         'customer_id' => null
     ];
+
+
+    public function mount(): void
+    {
+        $this->initSort('invoice_number', 'desc', 'resetPage');
+    }
 
     #[On('update-filter')]
     public function applyFilter(array $filters): void
@@ -163,18 +166,16 @@ class InvoiceList extends Component
 
     }
 
-    /**
-     * Change sorted by field
-     * @param string $field
-     * @return void
-     */
-    public function setSort(string $field): void
+    public function customSorts(): array
     {
-        if($field !== $this->sortField) {
-            $this->sortField = $field;
-        }
-        $this->sortDirection = $this->sortDirection === 'desc' ? 'asc' : 'desc';
-        $this->resetPage();
+        return [
+            'customer' => function(Builder $query){
+                $query
+                    ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
+                    ->orderBy('customers.customer_name', $this->sortDirection)
+                    ->select('invoices.*');
+            }
+        ];
     }
 
     public function render(): View
@@ -185,19 +186,9 @@ class InvoiceList extends Component
             ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoices.customer_id', $filters['customer_id']);
             })
-            ->when(!empty($filters['invoice_status']), function (Builder $builder) use ($filters) {
-                return $builder->where('invoice_status', $filters['invoice_status']);
-            })
             ->with('customer:customer_id,customer_name');
 
-        if($this->sortField === 'customer'){
-            $query
-                ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
-                ->orderBy('customers.customer_name', $this->sortDirection)
-                ->select('invoices.*');
-        }else{
-            $query->orderBy($this->sortField, $this->sortDirection);
-        }
+        $this->applySort($query, $this->customSorts());
 
         $invoices = $query->paginate(15);
         return view('livewire.invoice.invoice-list', [
