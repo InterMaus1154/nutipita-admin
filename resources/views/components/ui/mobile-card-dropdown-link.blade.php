@@ -1,6 +1,6 @@
 <flux:link
     {{$attributes->merge([
-    'class' =>  'py-1 px-4 rounded-sm hover:bg-neutral-500/50 cursor-pointer'
+    'class' =>  'no-underline! py-1 px-4 rounded-sm hover:bg-accent/90 hover:text-black cursor-pointer transition-all'
 ])}}
 >
     {{$slot}}
