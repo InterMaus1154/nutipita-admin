@@ -71,9 +71,9 @@
                     $today = now()->toDateString();
                     $isCurrentWeek = $today >= $week['start_date'] && $today < $week['end_date'];
                 @endphp
-                <div class="cursor-pointer text-center py-1 px-4 rounded-sm hover:bg-neutral-500/50"
+                <div class="cursor-pointer text-center py-1 px-4 rounded-sm hover:bg-accent/90 transition-all hover:text-black"
                      x-on:click="selectedWeek = {{$index}}; weekOpen = false"
-                     :class="selectedWeek === {{$index}} || (selectedWeek === null) && {{$isCurrentWeek ? 'true' : 'false'}} ? 'bg-gray-400 text-black' : '' "
+                     :class="selectedWeek === {{$index}} || (selectedWeek === null) && {{$isCurrentWeek ? 'true' : 'false'}} ? 'border-2 border-accent' : 'border-2 border-transparent' "
                      wire:click="setWeek('{{$week['start_date']}}', '{{$week['end_date']}}')"
                      data-week-index="{{$index}}"
                      :id="selectedWeek === {{$index}} || (selectedWeek === null) && {{$isCurrentWeek ? 'true' : 'false'}} ? 'current-week' : ''">
@@ -89,9 +89,9 @@
                     $today = now()->toDateString();
                     $isCurrentMonth = $today >= $month['start_date'] && $today < $month['end_date'];
                 @endphp
-                <div class="cursor-pointer text-center py-1 rounded-sm hover:bg-neutral-500/50"
+                <div class="cursor-pointer text-center py-1 rounded-sm hover:bg-accent/90 transition-all hover:text-black"
                      x-on:click="selectedMonth = {{$index}}; monthOpen = false"
-                     :class="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'bg-gray-400 text-black' : '' "
+                     :class="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'border-2 border-accent' : 'border-2 border-transparent' "
                      wire:click="setMonth('{{$month['start_date']}}', '{{$month['end_date']}}')"
                      data-week-index="{{$index}}"
                      :id="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'current-month' : ''">
