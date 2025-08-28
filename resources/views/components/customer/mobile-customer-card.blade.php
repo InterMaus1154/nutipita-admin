@@ -60,7 +60,7 @@
                     <flux:separator/>
                 @endif
                 <div class="text-base flex gap-4 justify-between items-center">
-                    <span>{{$customPrice->product->product_name}}</span>
+                    <span>{{$customPrice->product->product_name}} {{$customPrice->product->product_weight_g}}g</span>
                     <span>@unitPriceFormat($customPrice->customer_product_price)</span>
                 </div>
                 <flux:separator/>
