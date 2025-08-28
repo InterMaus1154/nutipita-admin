@@ -34,13 +34,15 @@
         </x-ui.mobile-card-dropdown-menu>
     </div>
     <div class="flex justify-between gap-4">
-        <div>
-            <span>
+        <div class="flex gap-2 items-center">
+            <flux:icon.notebook-tabs class="size-5 text-accent"/>
+            <span class="text-lg font-semibold">
             INV-{{$invoice->invoice_number}}
             </span>
         </div>
-        <div>
-            <span class="font-bold">
+        <div class="flex gap-2 items-center">
+            <flux:icon.circle-pound-sterling class="size-5 text-accent"/>
+            <span class="font-semibold text-lg">
                 @moneyFormat($invoice->invoice_total)
             </span>
         </div>
