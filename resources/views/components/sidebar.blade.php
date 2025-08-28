@@ -27,7 +27,7 @@
         <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" :current="Route::is('customers.*')">
             Customers
         </flux:navlist.item>
-        <flux:navlist.item icon="croissant" href="{{route('products.index')}}" :current="Route::is('products.*')">
+        <flux:navlist.item icon="pita" href="{{route('products.index')}}" :current="Route::is('products.*')">
             Products
         </flux:navlist.item>
         <flux:navlist.item icon="cog-6-tooth">Settings</flux:navlist.item>
@@ -85,7 +85,7 @@
                                title="Standing orders" :current="Route::is('standing-orders.*')"></flux:navlist.item>
             <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" title="Customers"
                                :current="Route::is('customers.*')"></flux:navlist.item>
-            <flux:navlist.item icon="croissant" href="{{route('products.index')}}" title="Products"
+            <flux:navlist.item icon="pita" href="{{route('products.index')}}" title="Products"
                                :current="Route::is('products.*')"></flux:navlist.item>
             <flux:navlist.item icon="cog-6-tooth"></flux:navlist.item>
         </flux:navlist>
