@@ -6,7 +6,7 @@
         if($order->order_status === OrderStatus::G_PAID->name){
             $bgColor = "bg-green-500!";
         }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
-            $bgColor = "bg-orange-500!";
+            $bgColor = "bg-orange-400!";
         }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
             $bgColor = "bg-red-500!";
         }
