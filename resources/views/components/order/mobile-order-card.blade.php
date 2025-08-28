@@ -57,18 +57,18 @@
     </div>
     {{--total pita and price info--}}
     <div class="flex justify-between gap-4 items-center flex-wrap">
-        <div class="flex gap-2">
-            <flux:badge color="indigo">Pita:</flux:badge>
+        <div class="flex gap-2 items-center">
+            <flux:icon.pita class="size-5 text-accent"/>
             <span class="text-base">@amountFormat($order->total_pita)</span>
         </div>
-        <div class="flex gap-2">
-            <flux:badge color="indigo">£:</flux:badge>
+        <div class="flex gap-2 items-center">
+            <flux:icon.circle-pound-sterling class="size-5 text-accent"/>
             <span class="text-base">@moneyFormat($order->total_price)</span>
         </div>
     </div>
     <x-ui.detail-popup-card>
         <div class="flex justify-center">
-            <span class="text-lg! text-white! font-bold">{{$order->customer->customer_name}}</span>
+            <span class="text-lg text-accent font-bold">{{$order->customer->customer_name}}</span>
         </div>
         <div class="flex justify-between gap-4">
             {{--status badge--}}
