@@ -186,7 +186,7 @@ class InvoiceList extends Component
             ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoices.customer_id', $filters['customer_id']);
             })
-            ->with('customer:customer_id,customer_name');
+            ->with('customer:customer_id,customer_name', 'products', 'products.product');
 
         $this->applySort($query, $this->customSorts());
 

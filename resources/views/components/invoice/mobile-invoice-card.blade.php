@@ -93,6 +93,21 @@
                 <span class="text-base">{{$invoice->invoice_to ? dayDate($invoice->invoice_to) : '-'}}</span>
             </div>
         </div>
+        <div class="flex flex-col gap-4 my-4">
+            @foreach($invoice->products as $invoiceProduct)
+                @if($loop->first)
+                    <flux:separator/>
+                @endif
+                <div class="text-base flex gap-4 justify-between items-center">
+                    <span>{{$invoiceProduct->product->product_name}} {{$invoiceProduct->product->product_weight_g}}g</span>
+                    <div class="flex flex-col gap-1 justify-center items-center text-center">
+                        <span>@amountFormat($invoiceProduct->product_qty) x @unitPriceFormat($invoiceProduct->product_unit_price)</span>
+                        <span>@moneyFormat($invoiceProduct->product_qty * $invoiceProduct->product_unit_price)</span>
+                    </div>
+                </div>
+                <flux:separator/>
+            @endforeach
+        </div>
         <div class="flex gap-6 justify-center justify-self-end">
             <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
                 <flux:icon.eye class="size-7"/>

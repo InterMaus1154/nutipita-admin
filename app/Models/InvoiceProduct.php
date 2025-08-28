@@ -26,10 +26,10 @@ class InvoiceProduct extends Model
     }
 
     /**
-     * An invoice_product belongs to an invoice
+     * An invoice_product belongs to an product
      * @return BelongsTo
      */
-    public function products(): BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
