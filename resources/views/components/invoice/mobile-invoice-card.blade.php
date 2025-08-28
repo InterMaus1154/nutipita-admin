@@ -48,22 +48,29 @@
         </div>
     </div>
     <x-ui.detail-popup-card>
-        <div class="flex justify-center">
-            <span class="text-lg text-accent font-bold">
-                {{$invoice->customer->customer_name}}
-            </span>
-        </div>
-        <div class="flex justify-between gap-4 items-center">
-            <div class="flex gap-2 items-center">
+        <div class="grid grid-cols-[1fr_auto_1fr]">
+            <div class="justify-self-start">
                 @if($invoice->invoice_status === "paid")
                     <flux:badge color="green" variant="solid">Paid</flux:badge>
                 @else
                     <flux:badge color="red" variant="solid">Unpaid</flux:badge>
                 @endif
-                <span>INV-{{$invoice->invoice_number}}</span>
             </div>
-            <div>
-                <span class="text-white text-lg font-bold">@moneyFormat($invoice->invoice_total)</span>
+            <div class="justify-self-center text-center">
+                <span class="text-lg text-accent text-center font-bold">
+                {{$invoice->customer->customer_name}}
+            </span>
+            </div>
+            <div></div>
+        </div>
+        <div class="flex justify-between gap-4 items-center">
+            <div class="flex gap-2 items-center">
+                <flux:icon.notebook-tabs class="size-5 text-accent"/>
+                <span class="text-lg font-semibold">INV-{{$invoice->invoice_number}}</span>
+            </div>
+            <div class="flex gap-2 items-center">
+                <flux:icon.circle-pound-sterling class="size-5 text-accent"/>
+                <span class="text-white text-lg font-semibold">@moneyFormat($invoice->invoice_total)</span>
             </div>
         </div>
         <div class="flex justify-between gap-4">
