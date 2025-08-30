@@ -1,6 +1,6 @@
 @use(App\Enums\OrderStatus)
 <div class="flex flex-col gap-4 ">
-    <div class="flex gap-8 justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
+    <div class="flex gap-8 justify-center sm:justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">
             {{--customer filter--}}
             <x-form.customer-select/>
@@ -16,17 +16,32 @@
                 </x-form.form-select>
             </x-form.form-wrapper>
         </div>
-        {{--quick due date filters--}}
-        <div class="flex flex-col items-center flex-wrap gap-2 mt-8">
-            <div class="flex flex-wrap gap-4">
-                <flux:button wire:click="clearFilter()" class="max-lg:order-3">
+        <div class="flex flex-col gap-2 mt-8 sm:flex-row sm:justify-center sm:items-center">
+            <flux:button wire:click="clearFilter()" class="sm:order-1 hidden! sm:block!">
+                <flux:icon.brush-cleaning/>
+            </flux:button>
+            <x-form.quick-date-buttons
+                :activePeriod="$activePeriod"
+                :months="$months"
+                class="w-full sm:w-auto order-1 sm:order-2"
+            />
+            <flux:button
+                wire:click="toggleDaytime()"
+                class="hidden! sm:block! sm:order-3 {{ $daytime_only ? 'bg-yellow-300 text-black' : '' }}"
+            >
+                <flux:icon.sun />
+            </flux:button>
+
+            {{--mobile only bullshit--}}
+            <div class="flex gap-2 justify-between sm:hidden order-2 sm:order-none">
+                <flux:button wire:click="clearFilter()" class="order-2 sm:order-1">
                     <flux:icon.brush-cleaning/>
                 </flux:button>
-                <x-form.quick-date-buttons :activePeriod="$activePeriod" :months="$months"
-                                           class="max-lg:order-1 max-sm:basis-[100%]"/>
-                <flux:button :class="$daytime_only ? 'bg-yellow-300! max-lg:order-2' : 'max-lg:order-2'"
-                             wire:click="toggleDaytime()">
-                    <flux:icon.sun :class="$daytime_only ? 'text-black!' : ''"/>
+                <flux:button
+                    wire:click="toggleDaytime()"
+                    class="{{ $daytime_only ? 'bg-yellow-300 text-black' : '' }}"
+                >
+                    <flux:icon.sun />
                 </flux:button>
             </div>
         </div>
