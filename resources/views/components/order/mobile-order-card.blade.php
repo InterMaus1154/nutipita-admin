@@ -135,9 +135,15 @@
                 <flux:icon.pencil-square class="size-7"/>
             </flux:link>
             @unless($order->invoice)
-                <flux:link href="{{route('invoices.create-single', compact('order'))}}"
-                           title="Create invoice">
-                    <flux:icon.clipboard-document-list class="size-7"/>
+                <flux:link class="cursor-pointer"
+                           title="Create invoice"
+                           x-data x-on:click.prevent="
+                                                    if(window.confirm('Are you sure to generate this invoice?')){
+                                                        window.location.href = '{{route('invoices.create-single', compact('order'))}}';
+                                                    }
+                                                "
+                >
+                    <flux:icon.clipboard-document-list class="!inline"/>
                 </flux:link>
             @else
                 <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}"

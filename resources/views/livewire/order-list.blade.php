@@ -122,8 +122,14 @@
                                     <flux:icon.pencil-square class="!inline"/>
                                 </flux:link>
                                 @unless($order->invoice)
-                                    <flux:link href="{{route('invoices.create-single', compact('order'))}}"
-                                               title="Create invoice">
+                                    <flux:link class="cursor-pointer"
+                                               title="Create invoice"
+                                                x-data x-on:click.prevent="
+                                                    if(window.confirm('Are you sure to generate this invoice?')){
+                                                        window.location.href = '{{route('invoices.create-single', compact('order'))}}';
+                                                    }
+                                                "
+                                    >
                                         <flux:icon.clipboard-document-list class="!inline"/>
                                     </flux:link>
                                 @else
