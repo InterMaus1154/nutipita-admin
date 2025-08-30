@@ -1,7 +1,7 @@
 @props(['order'])
 <x-ui.mobile-card-skeleton>
     {{--card header--}}
-    <div class="grid grid-cols-[1fr_auto_1fr]">
+    <div class="grid grid-cols-[1fr_1fr]">
         {{--badge--}}
         <div class="justify-self-start">
             @php
@@ -15,10 +15,6 @@
                 </x-form.form-select>
             </x-form.form-wrapper>
         </div>
-        {{--customer name--}}
-        <div class="justify-self-center text-center">
-            <span class="text-lg text-accent text-center font-bold">{{$order->customer->customer_name}}</span>
-        </div>
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('standing-orders.show', compact('order'))}}">View</x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('standing-orders.edit', compact('order'))}}">Edit</x-ui.mobile-card-dropdown-link>
@@ -26,9 +22,13 @@
     </div>
     {{--card body--}}
     <div class="flex flex-col gap-4">
-        <div class="flex gap-2 items-center">
-            <flux:icon.circle-play class="size-5 text-accent"/>
-            <span>@dayDate($order->start_from)</span>
+        <div class="flex justify-between gap-4">
+            <div>
+                <span class="text-base text-accent">{{$order->customer->customer_name}}</span>
+            </div>
+            <div>
+                <span class="font-semibold">@dayDate($order->start_from)</span>
+            </div>
         </div>
     </div>
 </x-ui.mobile-card-skeleton>
