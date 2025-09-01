@@ -47,7 +47,7 @@ final readonly class InvoiceDto
                                 Carbon|string|null    $invoiceDueDate = null,
                                 Carbon|string         $invoiceOrdersFrom = null,
                                 Carbon|string|null    $invoiceOrdersTo = null,
-                                InvoiceStatus|string  $invoiceStatus = InvoiceStatus::DUE,
+                                InvoiceStatus|string  $invoiceStatus = InvoiceStatus::due,
                                 string|null           $invoiceNumber = null,
                                 Order|string|int|null $order = null
     ): InvoiceDto

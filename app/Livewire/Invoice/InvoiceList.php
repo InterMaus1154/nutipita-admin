@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Enums\InvoiceStatus;
 use App\Enums\OrderStatus;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -37,6 +38,17 @@ class InvoiceList extends Component
     {
         if(!auth()->check()) {
             abort(403);
+        }
+
+        $orderQuery = Order::query()
+            ->where('customer_id', $invoice->customer_id)
+            ->whereDate('order_due_at', '>=', $invoice->invoice_from)
+            ->whereDate('order_due_at', '<=', $invoice->invoice_to);
+
+        if($newValue === InvoiceStatus::due->name){
+            $this->markOrdersAsUnpaid($orderQuery);
+        }else if($newValue === InvoiceStatus::paid->name){
+            $this->markOrdersAsPaid($orderQuery);
         }
 
         $invoice->update([
