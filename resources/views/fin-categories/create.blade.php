@@ -9,7 +9,7 @@
             @csrf
             <x-form.form-wrapper>
                 <x-form.form-label id="fin_cat_name">Category Name</x-form.form-label>
-                <x-form.form-input id="fin_cat_name" placeholder="Category Name"></x-form.form-input>
+                <x-form.form-input id="fin_cat_name" name="fin_cat_name" placeholder="Category Name"></x-form.form-input>
             </x-form.form-wrapper>
             <flux:button type="submit" variant="primary">Add</flux:button>
         </form>

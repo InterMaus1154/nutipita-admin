@@ -1,6 +1,6 @@
 <x-flux-layout>
     <x-page-section>
-        <x-page-heading title="Financial Categories">
+        <x-page-heading title="Categories">
             <flux:link href="{{route('financial-categories.create')}}">
                 <flux:icon.plus-circle class="size-8"/>
             </flux:link>

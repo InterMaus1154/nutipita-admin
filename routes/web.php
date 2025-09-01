@@ -171,6 +171,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
            Route::get('/', 'index')->name('financial-categories.index');
            Route::get('/create', 'create')->name('financial-categories.create');
            Route::post('/', 'store')->name('financial-categories.store');
+           Route::get('/edit/{category}', 'edit')->name('financial-categories.edit');
+           Route::put('/update/{category}', 'update')->name('financial-categories.update');
         });
     });
 
