@@ -33,6 +33,17 @@ class InvoiceList extends Component
         $this->initSort('invoice_number', 'desc', 'resetPage');
     }
 
+    public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
+    {
+        if(!auth()->check()) {
+            abort(403);
+        }
+
+        $invoice->update([
+            'invoice_status' => $newValue
+        ]);
+    }
+
     #[On('update-filter')]
     public function applyFilter(array $filters): void
     {

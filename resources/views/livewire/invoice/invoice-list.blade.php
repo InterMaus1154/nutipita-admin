@@ -1,3 +1,4 @@
+@use(App\Enums\InvoiceStatus)
 <div class="space-y-4">
     <x-success/>
     <x-error/>
@@ -50,11 +51,29 @@
                         </span>
                         </x-table.data>
                         <x-table.data>
-                            @if($invoice->invoice_status === "paid")
-                                <flux:badge color="green" variant="solid">Paid</flux:badge>
-                            @else
-                                <flux:badge color="red" variant="solid">Unpaid</flux:badge>
-                            @endif
+                            <div class="cursor-pointer">
+                                @php
+                                    // match color
+                                    if($invoice->invoice_status === InvoiceStatus::paid->name){
+                                        $bgColor = "bg-green-500!";
+                                    }else if($invoice->invoice_status === InvoiceStatus::cancelled->name){
+                                        $bgColor = "bg-orange-400!";
+                                    }else if($invoice->invoice_status === InvoiceStatus::due->name){
+                                        $bgColor = "bg-red-500!";
+                                    }
+                                    $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
+                                @endphp
+                                <x-form.form-wrapper>
+                                    <x-form.form-select :class="$classes"
+                                                        wire:change="updateInvoiceStatus($event.target.value, {{$invoice->invoice_id}})">
+                                        @foreach(InvoiceStatus::cases() as $status)
+                                            <option
+                                                @selected($invoice->invoice_status === $status->name) wire:key="invoice-status-{{$invoice->invoice_id}}"
+                                                value="{{$status->name}}">{{ucfirst($status->value)}}</option>
+                                        @endforeach
+                                    </x-form.form-select>
+                                </x-form.form-wrapper>
+                            </div>
                         </x-table.data>
                         <x-table.data>
                             @dayDate($invoice->invoice_issue_date)

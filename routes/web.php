@@ -12,6 +12,7 @@ use App\Http\Controllers\StandingOrderController;
 use App\Http\Controllers\MoneyController;
 use App\Http\Controllers\FinancialRecordController;
 use App\Http\Controllers\FinancialCategoryController;
+use App\Http\Controllers\CreditNoteController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -174,6 +175,11 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
            Route::get('/edit/{category}', 'edit')->name('financial-categories.edit');
            Route::put('/update/{category}', 'update')->name('financial-categories.update');
         });
+    });
+
+    // credit notes
+    Route::group(['prefix' => 'credit-notes', 'controller' => CreditNoteController::class], function(){
+        Route::get('/test', 'test')->name('credit-notes.test');
     });
 
     require __DIR__ . '/errors.php';

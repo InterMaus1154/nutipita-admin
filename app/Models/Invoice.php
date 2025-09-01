@@ -27,6 +27,11 @@ class Invoice extends Model
         return $this->hasMany(InvoiceProduct::class, 'invoice_id', 'invoice_id');
     }
 
+    public function creditNote()
+    {
+        return $this->hasOne(CreditNote::class, 'invoice_id', 'invoice_id');
+    }
+
     /*
      * Custom methods
      */
