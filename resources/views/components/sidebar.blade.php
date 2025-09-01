@@ -18,7 +18,7 @@
         <flux:navlist.item icon="file-text" href="{{route('invoices.index')}}" :current="Route::is('invoices.*')">
             Invoices
         </flux:navlist.item>
-        <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" :current="Route::is('money.*')">Money
+        <flux:navlist.item icon="currency-pound" href="{{route('financial-records.index')}}" :current="request()->is('financial-records*')">Money
             Management
         </flux:navlist.item>
         <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}"
@@ -79,8 +79,8 @@
                                :current="Route::is('orders.*')"></flux:navlist.item>
             <flux:navlist.item icon="file-text" href="{{route('invoices.index')}}" title="Invoices"
                                :current="Route::is('invoices.*')"></flux:navlist.item>
-            <flux:navlist.item icon="currency-pound" href="{{route('money.index')}}" title="Income"
-                               :current="Route::is('money.*')"></flux:navlist.item>
+            <flux:navlist.item icon="currency-pound" href="{{route('financial-records.index')}}" title="Money Management"
+                               :current="request()->is('financial-records*')"></flux:navlist.item>
             <flux:navlist.item icon="arrow-path-rounded-square" href="{{route('standing-orders.index')}}"
                                title="Standing orders" :current="Route::is('standing-orders.*')"></flux:navlist.item>
             <flux:navlist.item icon="user-circle" href="{{route('customers.index')}}" title="Customers"

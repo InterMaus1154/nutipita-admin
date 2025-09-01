@@ -10,6 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StandingOrderController;
 use App\Http\Controllers\MoneyController;
+use App\Http\Controllers\FinancialRecordController;
+use App\Http\Controllers\FinancialCategoryController;
 
 Route::group(['controller' => AuthController::class], function () {
     Route::get('/login', 'showLogin')->name('auth.view.login');
@@ -156,8 +158,21 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         Route::put('/update/{order}', 'update')->name('standing-orders.update');
     });
 
-    // money route for income filtering
-    Route::get('/money', MoneyController::class)->name('money.index');
+    // financial records & categories
+    Route::group(['prefix' => 'financial-records'], function () {
+
+        // records only
+        Route::group(['controller' => FinancialRecordController::class], function () {
+            Route::get('/', 'index')->name('financial-records.index');
+        });
+
+        // cats only
+        Route::group(['prefix' =>'categories' ,'controller' => FinancialCategoryController::class], function () {
+           Route::get('/', 'index')->name('financial-categories.index');
+           Route::get('/create', 'create')->name('financial-categories.create');
+           Route::post('/', 'store')->name('financial-categories.store');
+        });
+    });
 
     require __DIR__ . '/errors.php';
 });
