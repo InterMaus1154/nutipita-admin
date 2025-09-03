@@ -10,7 +10,7 @@
     {{--extra info section--}}
     {{--backdrop--}}
     <div class="fixed inset-0 min-h-screen z-101 bg-black/60" x-show="detailsMenuOpen"
-         x-transition></div>
+         x-transition x-cloak></div>
     <div
         class="flex-col gap-4 flex fixed bottom-0 z-102 overflow-y-scroll min-h-[60vh] left-0 right-0 dark:bg-zinc-800/80 backdrop-blur-lg rounded-t-xl p-4 border-t-6 border-t-accent"
         x-cloak x-show="detailsMenuOpen" x-on:click.outside="detailsMenuOpen = false"
