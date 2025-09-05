@@ -10,4 +10,9 @@ class FinancialRecord extends Model
     protected $primaryKey = 'fin_record_id';
     protected $guarded = [];
 
+    public function category()
+    {
+        return $this->belongsTo(FinancialCategory::class, 'fin_cat_id', 'fin_cat_id');
+    }
+
 }

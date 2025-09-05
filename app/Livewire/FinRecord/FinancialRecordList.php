@@ -26,6 +26,15 @@ class FinancialRecordList extends Component
         $this->selectedType = $type;
     }
 
+    public function deleteRecord(FinancialRecord $record): void
+    {
+        if(!auth()->check()){
+            abort(403);
+        }
+        $record->delete();
+        session()->flash('success', 'Record deleted');
+    }
+
     public function buildQuery(): Builder
     {
         $filters = $this->filters;
@@ -39,13 +48,15 @@ class FinancialRecordList extends Component
             })
             ->when(!empty($filters['due_to']), function (Builder $query) use ($filters) {
                 return $query->whereDate('financial_records.fin_record_date', '<=', $filters['due_to']);
-            });
+            })
+            ->with('category');
 
     }
 
     public function render(): View
     {
         $records = $this->buildQuery()->get();
-        return view('livewire.fin-record.financial-record-list', compact('records'));
+        $total = $records->sum('fin_record_amount');
+        return view('livewire.fin-record.financial-record-list', compact('records', 'total'));
     }
 }
