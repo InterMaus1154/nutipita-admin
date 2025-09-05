@@ -101,6 +101,12 @@ class FileImport extends Component
                 $this->csvData[] = $combined;
             }
             $this->isLoading = false;
+
+            // remove unwanted default columns
+            $this->removeColumn('transaction_type');
+            $this->removeColumn('sort_code');
+            $this->removeColumn('account_number');
+            $this->removeColumn('balance');
         } catch (\Throwable $e) {
             Log::error("Error reading CSV file:");
             Log::error($e->getMessage());
