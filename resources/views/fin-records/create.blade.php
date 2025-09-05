@@ -39,7 +39,7 @@
                         @endforeach
                     </x-form.form-select>
                 </x-form.form-wrapper>
-                <livewire:fin-record.file-import />
+                <livewire:fin-record.file-import :categories="$categories"/>
             </div>
             <flux:button type="submit" variant="primary">Add</flux:button>
         </form>
