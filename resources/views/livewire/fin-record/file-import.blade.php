@@ -62,6 +62,10 @@
                                                             value="{{$recordType->name}}">{{$recordType->value}}</option>
                                                     @endforeach
                                                 </x-form.form-select>
+                                            @elseif($slug === 'transaction_date')
+                                                <x-form.form-input id="input-{{$row}}-{{$slug}}" type="date"
+                                                                   wire-key="input-{{$row}}-{{$slug}}"
+                                                                   wire-model="csvData.{{$row}}.{{$slug}}" class="mx-auto"/>
                                             @else
                                                 <x-form.form-input id="input-{{$row}}-{{$slug}}" type="text"
                                                                    wire-key="input-{{$row}}-{{$slug}}"
