@@ -165,6 +165,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         // records only
         Route::group(['controller' => FinancialRecordController::class], function () {
             Route::get('/', 'index')->name('financial-records.index');
+            Route::get('/create', 'create')->name('financial-records.create');
+            Route::post('/', 'store')->name('financial-records.store');
         });
 
         // cats only

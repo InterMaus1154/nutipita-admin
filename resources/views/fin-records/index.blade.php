@@ -5,7 +5,7 @@
                 <flux:link href="{{route('financial-categories.index')}}">
                     <flux:icon.layout-list class="size-8" />
                 </flux:link>
-                <flux:link>
+                <flux:link href="{{route('financial-records.create')}}">
                     <flux:icon.plus-circle class="size-8" />
                 </flux:link>
             </div>
