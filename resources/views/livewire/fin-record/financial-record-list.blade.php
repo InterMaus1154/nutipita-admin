@@ -8,7 +8,10 @@
         <x-success />
         <x-error />
     </div>
-    <div class="flex justify-center">
+    {{--summary section--}}
+
+    <div class='grid grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[50%] mx-auto'>
+        <x-data-box data-box-header="# Items" :data-box-value="amountFormat($itemsCount)"/>
         <x-data-box data-box-header="Total £" :data-box-value="moneyFormat($total)"/>
     </div>
     <x-table.table>

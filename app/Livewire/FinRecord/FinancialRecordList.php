@@ -57,6 +57,7 @@ class FinancialRecordList extends Component
     {
         $records = $this->buildQuery()->get();
         $total = $records->sum('fin_record_amount');
-        return view('livewire.fin-record.financial-record-list', compact('records', 'total'));
+        $itemsCount = $records->count();
+        return view('livewire.fin-record.financial-record-list', compact('records', 'total', 'itemsCount'));
     }
 }
