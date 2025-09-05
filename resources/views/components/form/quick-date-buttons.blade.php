@@ -49,13 +49,13 @@
         <flux:button.group>
             <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'" wire:click="setYear">Y</flux:button>
             <flux:button :variant="$activePeriod === 'month' ? 'primary' : 'filled'" x-on:click="monthOpen = !monthOpen; $nextTick(()=>{
-                const el = document.getElementById('current-month');
-                if(el) el.scrollIntoView({ block: 'center', behavior: 'instant' });
+                const elM = document.getElementById('current-month');
+                if(elM){ elM.scrollIntoView({block: 'center'});}
             })">M &darr;
             </flux:button>
             <flux:button :variant="$activePeriod === 'week' ? 'primary' : 'filled'" x-on:click="weekOpen = !weekOpen; $nextTick(() => {
-                    const el = document.getElementById('current-week');
-                    if(el) el.scrollIntoView({ block: 'center', behavior: 'instant' });
+                    const elW = document.getElementById('current-week');
+                        if(elW){ elW.scrollIntoView({block: 'center'});}
                 })">W &darr;
             </flux:button>
             <flux:button :variant="$activePeriod === 'today' ? 'primary' : 'filled'" wire:click="setToday">T
@@ -64,8 +64,10 @@
             </flux:button>
         </flux:button.group>
         {{--week selector--}}
-        <div class="absolute z-[220] left-20 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll"
-             x-show="weekOpen" x-cloak x-transition x-on:click.outside="weekOpen = false">
+        <div
+            class="absolute z-[220] left-20 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll origin-top"
+            x-show="weekOpen" x-cloak x-on:click.outside="weekOpen = false" x-transition
+        >
             @foreach(getWeeksOfTheYear() as $index => $week)
                 @php
                     $today = now()->toDateString();
@@ -82,8 +84,11 @@
             @endforeach
         </div>
         {{--month selector--}}
-        <div class="absolute z-[220] left-4 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll"
-             x-show="monthOpen" x-cloak x-transition x-on:click.outside="monthOpen = false">
+        <div
+            class="absolute z-[220] left-4 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll origin-top"
+            x-show="monthOpen" x-cloak x-on:click.outside="monthOpen = false"
+            x-transition
+        >
             @foreach(getMonthsOfTheYear() as $index => $month)
                 @php
                     $today = now()->toDateString();

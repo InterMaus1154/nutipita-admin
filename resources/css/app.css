@@ -3,6 +3,15 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+*{
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar{
+    display: none;
+}
+
 /* Re-assign Flux's gray of choice... */
 @theme {
     --color-zinc-50: var(--color-neutral-50);
@@ -28,6 +37,7 @@
 }
 
 @layer theme {
+
     /*
     *define color schemas
     */

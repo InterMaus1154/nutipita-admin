@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Livewire\FinRecord;
+
+use App\Models\FinancialCategory;
+use App\Traits\HasQuickDueFilter;
+use Illuminate\View\View;
+use Livewire\Component;
+
+class FinancialRecordFilter extends Component
+{
+    use HasQuickDueFilter;
+
+    public $financialCategories;
+    public $category_id;
+
+    public function mount(): void
+    {
+        $this->setAfterChangeMethod('dispatchEvent');
+        $this->setCurrentMonth();
+        $this->financialCategories = FinancialCategory::all();
+    }
+
+    public function updated(): void
+    {
+        $this->dispatchEvent();
+    }
+
+    public function dispatchEvent(): void
+    {
+        // dispatch filter to list component
+        $this->dispatch('update-filter', [
+            'category_id' => $this->category_id
+        ])->to(FinancialRecordList::class);
+    }
+
+
+    public function render(): View
+    {
+        return view('livewire.fin-record.financial-record-filter');
+    }
+}
