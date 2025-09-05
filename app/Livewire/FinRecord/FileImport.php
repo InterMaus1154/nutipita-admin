@@ -5,6 +5,7 @@ namespace App\Livewire\FinRecord;
 use App\Enums\FinancialRecordType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -19,6 +20,7 @@ class FileImport extends Component
     public $file;
 
     public bool $isEditMode = false;
+    public bool $isLoading = false;
 
     public array $csvData = [];
     public array $csvHeaders = [];
@@ -32,6 +34,9 @@ class FileImport extends Component
 
     public function updatedFile(): void
     {
+        $this->isEditMode = true;
+        $this->isLoading = true;
+
         // only csv allowed
         $extension = $this->file->getClientOriginalExtension();
         if ($extension !== "csv") {
@@ -65,6 +70,14 @@ class FileImport extends Component
 
         $this->csvHeaders = array_combine($csvHeaderSlugs, $this->csvHeaders);
 
+        // add extra fields and change labels for some
+        $this->csvHeaders['category_id'] = 'Category';
+        $this->csvHeaders['type'] = 'Type';
+        $this->csvHeaders['transaction_date'] = 'Date';
+        $this->csvHeaders['transaction_description'] = 'Item Name';
+        $this->csvHeaders['debit_amount'] = 'Expense Amount';
+        $this->csvHeaders['credit_amount'] = 'Income Amount';
+
         try {
             // loop through row by row
             while (($row = fgetcsv($handle)) !== false) {
@@ -85,8 +98,7 @@ class FileImport extends Component
 
                 $this->csvData[] = $combined;
             }
-
-            $this->isEditMode = true;
+            $this->isLoading = false;
         } catch (\Throwable $e) {
             Log::error("Error reading CSV file:");
             Log::error($e->getMessage());
@@ -117,7 +129,7 @@ class FileImport extends Component
 
     public function save(): void
     {
-        dd($this->csvData);
+
     }
 
     public function render(): View
