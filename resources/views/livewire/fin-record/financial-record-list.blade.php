@@ -22,7 +22,11 @@
         <x-table.body>
             @foreach($records as $record)
                 <x-table.row wire:key="record-{{$record->fin_record_id}}">
-                    <x-table.data>{{$record->fin_record_name}}</x-table.data>
+                    <x-table.data>
+                        <span class="text-accent">
+                            {{$record->fin_record_name}}
+                        </span>
+                        </x-table.data>
                     <x-table.data>@dayDate($record->fin_record_date)</x-table.data>
                     <x-table.data>@moneyFormat($record->fin_record_amount)</x-table.data>
                     <x-table.data>{{$record->category?->fin_cat_name}}</x-table.data>

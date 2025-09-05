@@ -21,7 +21,7 @@ class FinancialRecordFilter extends Component
     public function mount(): void
     {
         $this->setAfterChangeMethod('dispatchEvent');
-        $this->setCurrentMonth();
+//        $this->setCurrentMonth();
         $this->selectedType = null;
         $this->financialCategories = FinancialCategory::all();
     }
