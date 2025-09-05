@@ -25,7 +25,7 @@
                     <x-table.data>{{$record->fin_record_name}}</x-table.data>
                     <x-table.data>@dayDate($record->fin_record_date)</x-table.data>
                     <x-table.data>@moneyFormat($record->fin_record_amount)</x-table.data>
-                    <x-table.data>{{$record->category->fin_cat_name}}</x-table.data>
+                    <x-table.data>{{$record->category?->fin_cat_name}}</x-table.data>
                     <x-table.data link>
                         <flux:link class="cursor-pointer" wire:click="deleteRecord('{{$record->fin_record_id}}')" wire:confirm="Are you sure to delete this record permanently?">
                             <flux:icon.trash />

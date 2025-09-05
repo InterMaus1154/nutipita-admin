@@ -3,6 +3,7 @@
 namespace App\Livewire\FinRecord;
 
 use App\Enums\FinancialRecordType;
+use App\Models\FinancialRecord;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -129,7 +130,36 @@ class FileImport extends Component
 
     public function save(): void
     {
-
+        $successCount = 0;
+        foreach ($this->csvData as $index => $row) {
+            DB::beginTransaction();
+            try {
+                $amount = $row['type'] === FinancialRecordType::EXPENSE->name ? $row['debit_amount'] : $row['credit_amount'];
+                FinancialRecord::create([
+                    'fin_cat_id' => empty($row['category_id']) ? null : $row['category_id'],
+                    'fin_record_amount' => $amount,
+                    'fin_record_name' => $row['transaction_description'],
+                    'fin_record_date' => $row['transaction_date'],
+                    'fin_record_type' => $row['type']
+                ]);
+                DB::commit();
+                $successCount++;
+            } catch (\Throwable $e) {
+                DB::rollBack();
+                Log::error("Error creating financial record for row: " . $index);
+                Log::error($e->getMessage());
+                continue;
+            }
+        }
+        $size = sizeof($this->csvData);
+        $missing = $size - $successCount;
+        if($missing !== 0){
+            session()->flash('error', "$missing of $size values could not be loaded.");
+        }else{
+            session()->flash('success', "All $size records have been loaded!");
+        }
+        $this->resetExcept('categories');
+        $this->redirectRoute('financial-records.index');
     }
 
     public function render(): View

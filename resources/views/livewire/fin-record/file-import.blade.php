@@ -18,7 +18,7 @@
                 </button>
             </div>
             <div class="flex flex-col gap-4 p-4">
-                <h2 class="text-center text-2xl font-semibold">Edit CSV</h2>
+                <h2 class="text-center text-2xl font-semibold">{{$file?->getClientOriginalName()}}</h2>
                 <template x-if="isLoading">
                     <p class="text-2xl text-center">Loading...</p>
                 </template>
