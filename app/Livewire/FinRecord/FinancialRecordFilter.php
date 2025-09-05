@@ -52,7 +52,9 @@ class FinancialRecordFilter extends Component
     {
         // dispatch filter to list component
         $this->dispatch('update-filter', [
-            'category_id' => $this->category_id
+            'category_id' => $this->category_id,
+            'due_from' => $this->due_from,
+            'due_to' => $this->due_to
         ])->to(FinancialRecordList::class);
     }
 

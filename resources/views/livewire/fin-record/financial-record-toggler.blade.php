@@ -2,17 +2,25 @@
 <div>
     {{--show both--}}
     @if(is_null($selectedType))
-        <div class="flex gap-4">
-            <h2>Both selected</h2>
-            <livewire:fin-record.financial-record-list />
-            <div></div>
-            <livewire:fin-record.financial-record-list />
+        <div class="flex flex-col sm:grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-4">
+                <h2 class="text-center">Income</h2>
+                <livewire:fin-record.financial-record-list :type="\App\Enums\FinancialRecordType::INCOME"/>
+            </div>
+            <div class="flex flex-col gap-4">
+                <h2 class="text-center">Expense</h2>
+                <livewire:fin-record.financial-record-list :type="\App\Enums\FinancialRecordType::EXPENSE"/>
+            </div>
         </div>
     @elseif($selectedType === FinancialRecordType::EXPENSE)
-        <h2>Expense Selected</h2>
-        <livewire:fin-record.financial-record-list />
+        <div class="flex flex-col gap-4">
+            <h2 class="text-center">Expense</h2>
+            <livewire:fin-record.financial-record-list :type="\App\Enums\FinancialRecordType::EXPENSE"/>
+        </div>
     @elseif($selectedType === FinancialRecordType::INCOME)
-        <h2>Income selected</h2>
-        <livewire:fin-record.financial-record-list />
+        <div class="flex flex-col gap-4">
+            <h2 class="text-center">Income</h2>
+            <livewire:fin-record.financial-record-list :type="\App\Enums\FinancialRecordType::INCOME"/>
+        </div>
     @endif
 </div>

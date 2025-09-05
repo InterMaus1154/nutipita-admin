@@ -15,7 +15,7 @@ class FinancialRecordToggler extends Component
     #[On('update-selected-type')]
     public function updateSelectedType(array $data): void
     {
-        $this->selectedType = is_null($data['selectedType']) ? null : FinancialRecordType::from($data['selectedType']) ;
+        $this->selectedType = FinancialRecordType::tryFrom($data['selectedType']);
     }
 
     public function render(): View
