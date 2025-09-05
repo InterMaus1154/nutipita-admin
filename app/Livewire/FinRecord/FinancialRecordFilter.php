@@ -33,6 +33,14 @@ class FinancialRecordFilter extends Component
         }else{
             $this->selectedType = $type;
         }
+        $this->dispatchSelectedType();
+    }
+
+    public function dispatchSelectedType(): void
+    {
+        $this->dispatch('update-selected-type', [
+            'selectedType' => $this->selectedType
+        ])->to(FinancialRecordToggler::class);
     }
 
     public function updated(): void

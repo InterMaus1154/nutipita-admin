@@ -12,6 +12,7 @@
         </x-page-heading>
         <div class="flex flex-col gap-8">
             <livewire:fin-record.financial-record-filter />
+            <livewire:fin-record.financial-record-toggler />
         </div>
     </x-page-section>
 </x-flux-layout>
