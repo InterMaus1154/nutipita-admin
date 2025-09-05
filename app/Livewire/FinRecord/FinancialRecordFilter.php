@@ -2,6 +2,7 @@
 
 namespace App\Livewire\FinRecord;
 
+use App\Enums\FinancialRecordType;
 use App\Models\FinancialCategory;
 use App\Traits\HasQuickDueFilter;
 use Illuminate\View\View;
@@ -14,11 +15,24 @@ class FinancialRecordFilter extends Component
     public $financialCategories;
     public $category_id;
 
+    public ?FinancialRecordType $selectedType = null;
+
+
     public function mount(): void
     {
         $this->setAfterChangeMethod('dispatchEvent');
         $this->setCurrentMonth();
+        $this->selectedType = null;
         $this->financialCategories = FinancialCategory::all();
+    }
+
+    public function toggleType(FinancialRecordType $type): void
+    {
+        if($this->selectedType === $type){
+            $this->selectedType = null;
+        }else{
+            $this->selectedType = $type;
+        }
     }
 
     public function updated(): void

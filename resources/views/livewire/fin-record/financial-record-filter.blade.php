@@ -1,3 +1,4 @@
+@use(App\Enums\FinancialRecordType)
 <div class="flex flex-col gap-4 ">
     <div class="flex gap-8 justify-center sm:justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">
@@ -12,7 +13,7 @@
             </x-form.form-wrapper>
         </div>
         <div class="flex flex-col gap-2 mt-8 sm:flex-row sm:justify-center sm:items-center">
-            <flux:button class="sm:order-1 hidden! sm:block!">
+            <flux:button :variant="$selectedType === \App\Enums\FinancialRecordType::INCOME ? 'primary' : 'filled'" class="sm:order-1 hidden! sm:block!" wire:click="toggleType('{{FinancialRecordType::INCOME}}')">
                 <flux:icon.banknote-arrow-up/>
             </flux:button>
             <x-form.quick-date-buttons
@@ -21,18 +22,17 @@
                 class="w-full sm:w-auto order-1 sm:order-2"
             />
             <flux:button
-                class="hidden! sm:block! sm:order-3"
-            >
+                :variant="$selectedType === \App\Enums\FinancialRecordType::EXPENSE ? 'primary' : 'filled'"
+                class="hidden! sm:block! sm:order-3" wire:click="toggleType('{{FinancialRecordType::EXPENSE}}')">
                 <flux:icon.banknote-arrow-down />
             </flux:button>
 
             {{--mobile only bullshit--}}
             <div class="flex gap-2 justify-between sm:hidden order-2 sm:order-none">
-                <flux:button wire:click="clearFilter()" class="order-2 sm:order-1">
-                    <flux:icon.banknote-arrow-down/>
+                <flux:button :variant="$selectedType === \App\Enums\FinancialRecordType::EXPENSE ? 'primary' : 'filled'" class="order-2 sm:order-1" wire:click="toggleType('{{FinancialRecordType::EXPENSE}}')">
+                    <flux:icon.banknote-arrow-down />
                 </flux:button>
-                <flux:button
-                >
+                <flux:button :variant="$selectedType === \App\Enums\FinancialRecordType::INCOME ? 'primary' : 'filled'" wire:click="toggleType('{{FinancialRecordType::INCOME}}')">
                     <flux:icon.banknote-arrow-up />
                 </flux:button>
             </div>
