@@ -5,6 +5,6 @@ namespace App\Enums;
 enum InvoiceStatus: string
 {
     CASE paid = "Paid";
-    CASE due = "Due";
+    CASE due = "Unpaid";
     case cancelled = "Cancelled";
 }

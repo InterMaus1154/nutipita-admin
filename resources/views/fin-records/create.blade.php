@@ -19,11 +19,11 @@
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="fin_record_amount">Amount</x-form.form-label>
-                    <x-form.form-input id="fin_record_date" type="number" name="fin_record_amount" placeholder="Amount £"></x-form.form-input>
+                    <x-form.form-input id="fin_record_date" step="any" type="number" name="fin_record_amount" placeholder="Amount £"></x-form.form-input>
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="fin_record_type">Type</x-form.form-label>
-                    <x-form.form-select id="fin_record_type">
+                    <x-form.form-select id="fin_record_type" name="fin_record_type">
                         <option value=""></option>
                         @foreach(FinancialRecordType::cases() as $type)
                             <option value="{{$type->name}}">{{$type->value}}</option>
@@ -32,7 +32,7 @@
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="fin_cat_id">Category</x-form.form-label>
-                    <x-form.form-select id="fin_cat_id">
+                    <x-form.form-select id="fin_cat_id" name="fin_cat_id">
                         <option value=""></option>
                         @foreach($categories as $category)
                             <option value="{{$category->fin_cat_id}}">{{$category->fin_cat_name}}</option>
