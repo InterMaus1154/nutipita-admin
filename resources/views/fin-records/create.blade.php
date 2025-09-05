@@ -39,8 +39,10 @@
                         @endforeach
                     </x-form.form-select>
                 </x-form.form-wrapper>
+                <livewire:fin-record.file-import />
             </div>
             <flux:button type="submit" variant="primary">Add</flux:button>
         </form>
+
     </x-page-section>
 </x-flux-layout>
