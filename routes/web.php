@@ -9,7 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StandingOrderController;
-use App\Http\Controllers\MoneyController;
 use App\Http\Controllers\FinancialRecordController;
 use App\Http\Controllers\FinancialCategoryController;
 use App\Http\Controllers\CreditNoteController;
@@ -167,6 +166,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
             Route::get('/', 'index')->name('financial-records.index');
             Route::get('/create', 'create')->name('financial-records.create');
             Route::post('/', 'store')->name('financial-records.store');
+            Route::get('/edit/{record}', 'edit')->name('financial-records.edit');
+            Route::put('/update/{record}', 'update')->name('financial-records.update');
         });
 
         // cats only

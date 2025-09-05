@@ -18,14 +18,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function(Throwable $e){
             /*
-             * If the requested method is not allowed for that specific route, redirect to dashboard
+             * If the requested method is not allowed for that specific route
              */
            if($e instanceof MethodNotAllowedHttpException){
                return redirect()->route('errors.405');
            }
 
            /*
-            * If the requested route is not found, redirect to dashboard
+            * If the requested route is not found
             */
            if($e instanceof NotFoundHttpException){
                return redirect()->route('errors.404');
