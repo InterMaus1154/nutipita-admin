@@ -43,6 +43,7 @@ class FileImport extends Component
         if ($extension !== "csv") {
             session()->flash('error', 'File needs to be .csv only!');
             $this->redirectRoute('financial-records.create');
+            return;
         }
 
         // open file
