@@ -7,7 +7,7 @@
     'bg' => '' /*default background*/
 ])
 <div
-    class="cursor-pointer  relative min-w-[150px] {{$width}}"
+    class="cursor-pointer relative min-w-[150px] {{$width}}"
     x-data="{
         open: false,
         selected: @if($wireModel) @entangle($wireModel).live @else '' @endif,
@@ -31,13 +31,13 @@
     "
 >
     {{--selected value--}}
-    <div class="border-2 border-[#666] bg-[#393939] rounded-2xl flex justify-center items-center cursor-pointer text-center min-h-[40px] transition-all {{$bg}}"
+    <div class="outline-2 outline-[#666] bg-[#393939] rounded-2xl flex justify-center items-center cursor-pointer text-center min-h-[40px] transition-all duration-300 {{$bg}}"
          x-on:click="open = !open"
          x-text="selectedText"
          x-bind:class="{
             'text-accent': selectedText !== @js($placeholder),
             'dark:text-white': selectedText === @js($placeholder),
-            'custom-select-glowing border-transparent': open
+            'custom-select-glowing outline-transparent': open
          }"
     >
 

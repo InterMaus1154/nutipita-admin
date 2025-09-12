@@ -191,4 +191,9 @@
         100% { box-shadow: 0 0 5px 1px var(--color-accent); }
     }
 
+    .custom-select-transition{
+        transition: outline-color 0.25s ease-out,
+                    box-shadow 0.35s cubic-bezier(.4,0,.2,1);
+    }
+
 }
