@@ -3,17 +3,28 @@
     <div class="flex gap-8 justify-center sm:justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">
             {{--customer filter--}}
-            <x-form.customer-select/>
+            <x-form.form-wrapper>
+                <x-form.form-label id="customer_id" text="Customer"/>
+                <x-ui.select.select wire-model="customer_id" width="sm:w-[200px]">
+                    <x-slot:options>
+                        <x-ui.select.option value="" text="Clear"/>
+                        @foreach($customers as $customer)
+                            <x-ui.select.option value="{{$customer->customer_id}}" text="{{$customer->customer_name}}"/>
+                        @endforeach
+                    </x-slot:options>
+                </x-ui.select.select>
+            </x-form.form-wrapper>
             {{--status filter--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="order_status" text="Status"/>
-                <x-form.form-select id="order_status" wireModelLive="status">
-                    <option value=""></option>
-                    @foreach(OrderStatus::cases() as $orderStatus)
-                        <option
-                            value="{{$orderStatus->name}}">{{ucfirst(\Illuminate\Support\Str::limit($orderStatus->value, 18, ''))}}</option>
-                    @endforeach
-                </x-form.form-select>
+                <x-ui.select.select wire-model="status" width="w-[100px]">
+                    <x-slot:options>
+                        <x-ui.select.option value="" text="Clear"/>
+                        @foreach(OrderStatus::cases() as $orderStatus)
+                            <x-ui.select.option value="{{$orderStatus->name}}" text="{{ucfirst($orderStatus->value)}}"/>
+                        @endforeach
+                    </x-slot:options>
+                </x-ui.select.select>
             </x-form.form-wrapper>
         </div>
         <div class="flex flex-col gap-2 mt-8 sm:flex-row sm:justify-center sm:items-center">

@@ -185,5 +185,9 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
         Route::get('/test', 'test')->name('credit-notes.test');
     });
 
+    Route::get('/test/select', function(){
+        return view('_test.select');
+    });
+
     require __DIR__ . '/errors.php';
 });

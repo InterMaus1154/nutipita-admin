@@ -181,4 +181,14 @@
         overflow: hidden;
     }
 
+    .custom-select-glowing{
+        animation: glowPulse 1.6s cubic-bezier(0.4,0,0.6,1) infinite alternate;
+    }
+
+    @keyframes glowPulse {
+        0%   { box-shadow: 0 0 5px 1px var(--color-accent); }
+        50%  { box-shadow: 0 0 14px 3px var(--color-accent); }
+        100% { box-shadow: 0 0 5px 1px var(--color-accent); }
+    }
+
 }
