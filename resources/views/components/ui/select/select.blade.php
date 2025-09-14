@@ -25,8 +25,10 @@
             }
         }
     }"
-    x-effect="setText();"
     x-init="setText();
+        $nextTick(()=>{
+            setText();
+        });
         @if($wireChange)
          $watch('selected', (newValue)=>{
             @if($wireChangeProp)
@@ -39,10 +41,11 @@
     "
 >
     {{--selected value--}}
-    <div class="outline-2 outline-[#666] bg-[#393939] rounded-2xl flex justify-center items-center cursor-pointer text-center min-h-[40px] transition-all duration-300 {{$bg}} {{$innerClass}}"
-         x-on:click="open = !open"
-         x-text="selectedText"
-         x-bind:class="{
+    <div
+        class="outline-2 outline-[#666] bg-[#393939] rounded-2xl flex justify-center items-center cursor-pointer text-center min-h-[40px] transition-all duration-300 {{$bg}} {{$innerClass}}"
+        x-on:click="open = !open"
+        x-text="selectedText"
+        x-bind:class="{
             'text-accent': selectedText !== @js($placeholder),
             'dark:text-white': selectedText === @js($placeholder),
             'custom-select-glowing outline-transparent': open
