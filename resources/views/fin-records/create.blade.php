@@ -23,21 +23,25 @@
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="fin_record_type">Type</x-form.form-label>
-                    <x-form.form-select id="fin_record_type" name="fin_record_type">
-                        <option value=""></option>
-                        @foreach(FinancialRecordType::cases() as $type)
-                            <option value="{{$type->name}}">{{$type->value}}</option>
-                        @endforeach
-                    </x-form.form-select>
+                    <x-ui.select.select name="fin_record_type" wrapper-class="sm:w-[150px]">
+                        <x-slot:options>
+                            <x-ui.select.option text="Clear" value=""/>
+                            @foreach(FinancialRecordType::cases() as $type)
+                                <x-ui.select.option :text="$type->value" :value="$type->name"/>
+                            @endforeach
+                        </x-slot:options>
+                    </x-ui.select.select>
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="fin_cat_id">Category</x-form.form-label>
-                    <x-form.form-select id="fin_cat_id" name="fin_cat_id">
-                        <option value=""></option>
-                        @foreach($categories as $category)
-                            <option value="{{$category->fin_cat_id}}">{{$category->fin_cat_name}}</option>
-                        @endforeach
-                    </x-form.form-select>
+                    <x-ui.select.select name="fin_cat_id" wrapper-class="sm:w-[150px]">
+                        <x-slot:options>
+                            <x-ui.select.option value="" text="Clear"/>
+                            @foreach($categories as $category)
+                                <x-ui.select.option :value="$category->fin_cat_id" :text="$category->fin_cat_name"/>
+                            @endforeach
+                        </x-slot:options>
+                    </x-ui.select.select>
                 </x-form.form-wrapper>
                 <livewire:fin-record.file-import :categories="$categories"/>
             </div>
