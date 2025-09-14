@@ -3,16 +3,18 @@
     'wireModel' => null,
     'name' => '',
     'wireChange' => null,
+    'wireChangeProp' => null,
     'hasWire' => false,
+    'preSelectedValue' => '',
     'wrapperClass' => 'w-[250px]',
     'innerClass' => '',
-    'bg' => '' /*default background*/
+    'bg' => ''
 ])
 <div
     class="cursor-pointer relative min-w-[150px] {{$wrapperClass}}"
     x-data="{
         open: false,
-        selected: @if($wireModel && $hasWire) @entangle($wireModel).live @else '' @endif,
+        selected: @if($wireModel && $hasWire) @entangle($wireModel).live @else @js($preSelectedValue) @endif,
         selectedText: @js($placeholder),
         setText(){
             if (this.selected === '' || this.selected === null) {
@@ -27,7 +29,11 @@
     x-init="setText();
         @if($wireChange)
          $watch('selected', (newValue)=>{
-            $wire.call('{{$wireChange}}', newValue);
+            @if($wireChangeProp)
+                $wire.call('{{$wireChange}}', newValue, @js($wireChangeProp) );
+            @else
+                $wire.call('{{$wireChange}}', newValue);
+            @endif
          });
          @endif
     "
@@ -54,7 +60,7 @@
     <ul x-show="open"
         x-cloak
         x-on:click.outside="open = false"
-        class="border-1 border-black/60 shadow-md shadow-black absolute top-[120%] text-center left-0 right-0 h-auto max-h-[240px] overflow-y-scroll flex flex-col gap-1 py-2 px-2 bg-[#333] rounded-2xl origin-top z-[200]"
+        class="border-1 border-black/60 shadow-md shadow-black absolute top-[120%] text-center left-0 right-0 h-auto max-h-[240px] overflow-y-scroll flex flex-col gap-1 py-2 px-2 bg-[#333] rounded-2xl origin-top z-[9999] "
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-x-50 scale-y-10"
         x-transition:enter-end="opacity-100 scale-x-100 scale-y-100"
