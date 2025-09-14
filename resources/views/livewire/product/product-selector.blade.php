@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-4">
     {{--customer input--}}
-    <x-form.customer-select />
+    <x-form.customer-select has-wire="true"/>
     {{--product fields--}}
     <div class="flex flex-col gap-4 items-start">
         @foreach($products as $product)

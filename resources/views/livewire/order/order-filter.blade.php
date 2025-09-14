@@ -3,21 +3,11 @@
     <div class="flex gap-8 justify-center sm:justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">
             {{--customer filter--}}
-            <x-form.form-wrapper>
-                <x-form.form-label id="customer_id" text="Customer"/>
-                <x-ui.select.select wire-model="customer_id" width="sm:w-[200px]">
-                    <x-slot:options>
-                        <x-ui.select.option value="" text="Clear"/>
-                        @foreach($customers as $customer)
-                            <x-ui.select.option value="{{$customer->customer_id}}" text="{{$customer->customer_name}}"/>
-                        @endforeach
-                    </x-slot:options>
-                </x-ui.select.select>
-            </x-form.form-wrapper>
+            <x-form.customer-select has-wire="true"/>
             {{--status filter--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="order_status" text="Status"/>
-                <x-ui.select.select wire-model="status" width="w-[100px]">
+                <x-ui.select.select wire-model="status" wrapper-class="w-[100px]" has-wire>
                     <x-slot:options>
                         <x-ui.select.option value="" text="Clear"/>
                         @foreach(OrderStatus::cases() as $orderStatus)

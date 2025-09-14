@@ -1,3 +1,4 @@
+@use(App\Enums\OrderStatus)
 <div class="flex flex-col gap-4">
     <x-error/>
     <x-success/>
@@ -15,15 +16,17 @@
         <div class="flex flex-wrap gap-4 sm:grid grid-cols-3 items-center">
             <div class="flex gap-4">
                 {{--customer--}}
-                <x-form.customer-select/>
+                <x-form.customer-select has-wire="true"/>
                 <x-form.form-wrapper>
                     <x-form.form-label id="order_status" text="Order Status"/>
-                    <x-form.form-select id="order_status" wireModelLive="order_status">
-                        <option value=""></option>
-                        @foreach(\App\Enums\OrderStatus::cases() as $orderStatus)
-                            <option value="{{$orderStatus->name}}">{{ucfirst($orderStatus->value)}}</option>
-                        @endforeach
-                    </x-form.form-select>
+                    <x-ui.select.select wire-model="order_status" wrapper-class="w-[100px]" has-wire>
+                        <x-slot:options>
+                            <x-ui.select.option value="" text="Clear"/>
+                            @foreach(OrderStatus::cases() as $orderStatus)
+                                <x-ui.select.option value="{{$orderStatus->name}}" text="{{ucfirst($orderStatus->value)}}"/>
+                            @endforeach
+                        </x-slot:options>
+                    </x-ui.select.select>
                 </x-form.form-wrapper>
                 {{--auto/manual toggle--}}
                 <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7" wire:click="toggleMode()">
