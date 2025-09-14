@@ -4,12 +4,14 @@
         <div class="flex gap-4 items-center 2xl:justify-self-end">
             <x-form.form-wrapper>
                 <x-form.form-label id="category">Category</x-form.form-label>
-                <x-form.form-select id="category" wire-model-live="category_id">
-                    <option value=""></option>
-                    @foreach($financialCategories as $category)
-                        <option value="{{$category->fin_cat_id}}">{{$category->fin_cat_name}}</option>
-                    @endforeach
-                </x-form.form-select>
+                <x-ui.select.select name="fin_cat_id" wrapper-class="sm:w-[150px]" wire-model="category_id" has-wire>
+                    <x-slot:options>
+                        <x-ui.select.option value="" text="Clear"/>
+                        @foreach($financialCategories as $category)
+                            <x-ui.select.option :value="$category->fin_cat_id" :text="$category->fin_cat_name"/>
+                        @endforeach
+                    </x-slot:options>
+                </x-ui.select.select>
             </x-form.form-wrapper>
         </div>
         <div class="flex flex-col gap-2 mt-8 sm:flex-row sm:justify-center sm:items-center">
