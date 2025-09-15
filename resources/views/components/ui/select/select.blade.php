@@ -9,11 +9,15 @@
     'wrapperClass' => 'w-[250px]',
     'innerClass' => '',
     'bg' => '',
-    'wireKey' => ''
+    'wireKey' => '',
+    'shadowColor' => null
 ])
 <div
     {{$wireKey ? " wire:key='$wireKey' " : ''}}
     class="cursor-pointer relative min-w-[150px] {{$wrapperClass}}"
+    @if($shadowColor)
+        style="--glow-color: {{ $shadowColor }};"
+    @endif
     x-data="{
         open: false,
         selected: @if($wireModel && $hasWire) @entangle($wireModel).live @else @js($preSelectedValue) @endif,

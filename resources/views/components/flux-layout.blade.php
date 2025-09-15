@@ -9,8 +9,6 @@
     <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
     <meta name="robots" content="noindex">
     @vite(['resources/css/app.css'])
-    @fluxScripts
-    @livewireScripts
     <title>Nuti Pita: Order Management</title>
 </head>
 <body class="bg-white dark:bg-zinc-800 min-h-screen dark:text-white">
@@ -18,6 +16,8 @@
 <flux:main>
     {{$slot}}
 </flux:main>
+@fluxScripts
+@livewireScripts
 </body>
 </html>
 

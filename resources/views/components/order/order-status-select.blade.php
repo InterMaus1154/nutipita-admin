@@ -7,10 +7,13 @@
         // match color
         if($order->order_status === OrderStatus::G_PAID->name){
             $bgColor = "bg-green-500!";
+            $shadowColor = "oklch(72.3% 0.219 149.579)";
         }else if($order->order_status === OrderStatus::Y_CONFIRMED->name){
             $bgColor = "bg-orange-400!";
+            $shadowColor = "oklch(75% 0.183 55.934)";
         }else if($order->order_status === OrderStatus::O_DELIVERED_UNPAID->name){
             $bgColor = "bg-red-500!";
+            $shadowColor = "oklch(63.7% 0.237 25.331)";
         }
 //        $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
     @endphp
@@ -20,6 +23,7 @@
                             wrapper-class="w-[80px] min-w-0!"
                             placeholder="Pl"
                             wireKey="order-status-{{$order->order_id}}"
+                            :shadow-color="$shadowColor"
         >
             <x-slot:options>
                 @foreach(OrderStatus::cases() as $status)

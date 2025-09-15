@@ -186,9 +186,9 @@
     }
 
     @keyframes glowPulse {
-        0%   { box-shadow: 0 0 5px 1px var(--color-accent); }
-        50%  { box-shadow: 0 0 14px 3px var(--color-accent); }
-        100% { box-shadow: 0 0 5px 1px var(--color-accent); }
+        0%   { box-shadow: 0 0 5px 1px var(--glow-color, var(--color-accent)); }
+        50%  { box-shadow: 0 0 14px 3px var(--glow-color, var(--color-accent)); }
+        100% { box-shadow: 0 0 5px 1px var(--glow-color, var(--color-accent)); }
     }
 
     .custom-select-transition{

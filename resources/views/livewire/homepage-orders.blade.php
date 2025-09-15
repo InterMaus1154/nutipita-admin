@@ -9,7 +9,7 @@
                         wire:key="day-orders"
                         :withSummaryData="true"
                         :withIncome="true"
-                        :with-mobile-sort="true"
+                        :with-mobile-sort="false"
                         :summaryVisibleByDefault="true"
                         :prop-filters="$dayTimeFilters"
                     />
@@ -28,7 +28,7 @@
                         wire:key="night-orders"
                         :withSummaryData="true"
                         :withIncome="true"
-                        :with-mobile-sort="true"
+                        :with-mobile-sort="false"
                         :summaryVisibleByDefault="true"
                         :prop-filters="$nightTimeFilters"
                     />
