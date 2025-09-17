@@ -12,15 +12,20 @@
 <div class="space-y-4">
     <x-success/>
     <x-error/>
+    <div>
+        <div wire:loading>
+            Loading orders...
+        </div>
+    </div>
     {{--sorting for mobile--}}
     @if(!$disabled && $orders->isNotEmpty() && $withMobileSort)
-        <x-order.mobile-order-select-sort />
+        <x-order.mobile-order-select-sort/>
     @endif
     {{--order summary--}}
     @if(!$disabled && $withSummaryData)
         <livewire:order.order-summary :filters="$filters" :withIncome="$withIncome"
                                       :visibleByDefault="$summaryVisibleByDefault"
-                                        :disabled="$disabled"
+                                      :disabled="$disabled"
         />
     @endif
     @if(!$disabled && $orders->isNotEmpty())
@@ -95,7 +100,7 @@
                                 @dayDate($order->order_due_at)
                             </x-table.data>
                             <x-table.data>
-                                <x-order.order-status-select :order="$order" />
+                                <x-order.order-status-select :order="$order"/>
                             </x-table.data>
                             @foreach($products as $product)
                                 @php
@@ -126,7 +131,7 @@
                                 @unless($order->invoice)
                                     <flux:link class="cursor-pointer"
                                                title="Create invoice"
-                                                x-data x-on:click.prevent="
+                                               x-data x-on:click.prevent="
                                                     if(window.confirm('Are you sure to generate this invoice?')){
                                                         window.location.href = '{{route('invoices.create-single', compact('order'))}}';
                                                     }
