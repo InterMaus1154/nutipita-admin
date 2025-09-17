@@ -1,5 +1,5 @@
 <div class="space-y-4">
-    @if($orders->isNotEmpty())
+    @if($ordersCount > 0)
         <div class="space-y-4">
             <div @class([
                         'hidden' => !$visible,
@@ -9,17 +9,15 @@
                 @if($withIncome)
                     <x-data-box dataBoxHeader="Income" :dataBoxValue="moneyFormat($totalIncome)"/>
                 @endif
-                <x-data-box dataBoxHeader="Orders" :dataBoxValue="amountFormat(collect($orders)->count())"/>
+                <x-data-box dataBoxHeader="Orders" :dataBoxValue="amountFormat($ordersCount)"/>
                 <x-data-box dataBoxHeader="Pita" :dataBoxValue="amountFormat($totalPita)"/>
 
                 @foreach($productTotals as $productTotal)
-                    @unless(empty($productTotal['qty']))
-                        <x-data-box wire:key="$productTotal['name']"
-                                    :dataBoxHeader="$productTotal['name']"
-                                    :dataBoxValue="amountFormat($productTotal['qty'])"
-                                    :subtitle="$productTotal['g'].'g'"
+                        <x-data-box wire:key="$productTotal->product_id"
+                                    :dataBoxHeader="$productTotal->product_name"
+                                    :dataBoxValue="amountFormat($productTotal->product_qty)"
+                                    :subtitle="$productTotal->product_weight_g.'g'"
                         />
-                    @endunless
                 @endforeach
             </div>
         </div>

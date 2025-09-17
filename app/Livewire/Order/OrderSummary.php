@@ -3,7 +3,10 @@
 namespace App\Livewire\Order;
 
 use App\Enums\OrderStatus;
+use App\Livewire\OrderList;
 use App\Models\Product;
+use App\Queries\OrderQueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
@@ -13,20 +16,19 @@ use Livewire\Component;
 class OrderSummary extends Component
 {
     #[Reactive]
-    public Collection $orders;
+    public array $filters;
+
     public Collection|null $products = null;
     public bool $visible = false;
     public bool $withIncome = false;
 
-    public float $totalIncome = 0;
+    public float|null $totalIncome = 0;
+    public int|null $ordersCount = 0;
+    public $productTotals = [];
+    public int|null $totalPita = 0;
 
-    public array $productTotals = [];
-    public int $totalPita = 0;
-
-    public function mount(Collection $orders, Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
+    public function mount(Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
     {
-        $this->orders = $orders;
-
         if (is_null($products)) {
             $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
         } else {
@@ -43,40 +45,42 @@ class OrderSummary extends Component
      * Calculate summary details
      * @return void
      */
-    #[On('update-filter')]
     public function calculateSummaries(): void
     {
         $this->reset(['totalPita', 'productTotals', 'totalIncome']);
 
-        foreach ($this->orders as $order) {
-            $this->totalIncome += $order->total_price;
+        $query = OrderQueryBuilder::build($this->filters);
 
-            $this->totalPita += $order->total_pita;
+        $this->ordersCount = (clone $query)
+            ->selectRaw('COUNT(*) AS total_orders')
+            ->first()->total_orders;
 
-            // calculate product quantity total for each product
-            foreach ($this->products as $product) {
-                if (isset($this->productTotals[$product->product_id])) {
-                    $this->productTotals[$product->product_id]['qty'] += $order->getTotalOfProduct($product);
-                } else {
-                    $this->productTotals[$product->product_id]['qty'] = $order->getTotalOfProduct($product);
-                    $this->productTotals[$product->product_id]['name'] = $product->product_name;
-                    $this->productTotals[$product->product_id]['g'] = $product->product_weight_g;
-                }
-            }
-        }
+        $this->totalIncome = (clone $query)
+            ->join('order_product', 'order_product.order_id', '=', 'orders.order_id')
+            ->selectRaw('SUM(order_product.order_product_unit_price * order_product.product_qty) AS total_income')
+            ->first()->total_income;
+
+        $this->productTotals = (clone $query)
+            ->join('order_product', 'orders.order_id', '=', 'order_product.order_id')
+            ->join('products', 'products.product_id', '=', 'order_product.product_id')
+            ->select('products.product_id', 'products.product_name', 'products.product_weight_g')
+            ->selectRaw('SUM(order_product.product_qty) AS product_qty')
+            ->groupBy('products.product_id', 'products.product_name', 'products.product_weight_g')
+            ->orderBy('products.product_name', 'DESC')
+            ->get();
+
+        $this->totalPita = (clone $query)
+            ->join('order_product', 'orders.order_id', '=', 'order_product.order_id')
+            ->selectRaw('SUM(order_product.product_qty) AS total_pita')
+            ->getQuery()
+            ->value('total_pita');
+
     }
 
-    /**
-     * Toggle the visibility of the summary boxes
-     * @return void
-     */
-    public function toggleSummaries(): void
-    {
-        $this->visible = !$this->visible;
-    }
 
     public function render(): View
     {
+        $this->calculateSummaries();
         return view('livewire.order.order-summary');
     }
 }

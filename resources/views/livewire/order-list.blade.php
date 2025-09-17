@@ -18,7 +18,7 @@
     @endif
     {{--order summary--}}
     @if($withSummaryData)
-        <livewire:order.order-summary :orders="$ordersAll" :products="$products" :withIncome="$withIncome"
+        <livewire:order.order-summary :filters="$filters" :products="$products" :withIncome="$withIncome"
                                       :visibleByDefault="$summaryVisibleByDefault"/>
     @endif
     @if($orders->isNotEmpty())
@@ -156,7 +156,6 @@
             @endforeach
         </div>
     @endif
-
     {{--bottom pagination--}}
     <div>
         {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}

@@ -12,6 +12,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Queries\OrderQueryBuilder;
 
 class OrderList extends Component
 {
@@ -45,7 +46,6 @@ class OrderList extends Component
     public bool $withIncome = true;
     public bool $summaryVisibleByDefault = false;
     public $orderIds = [];
-    public $ordersAll = [];
     /*
      * End
      */
@@ -156,63 +156,16 @@ class OrderList extends Component
         ];
     }
 
-    /**
-     * Create an order query from the filters
-     * @return Builder
-     */
-    public function buildOrderQuery(): Builder
-    {
-        $filters = $this->filters;
-        $query = Order::query()
-            ->when(!empty($filters['active_period']) && $filters['active_period'] === 'today', function (Builder $query) {
-                $query->where(function ($q) {
-                    $q->where(function ($q2) {
-                        $q2->whereDate('orders.order_due_at', now()->toDateString())
-                            ->where('orders.is_daytime', true);
-                    })
-                        ->orWhere(function ($q2) {
-                            $q2->whereDate('orders.order_due_at', now()->addDay()->toDateString())
-                                ->where('orders.is_daytime', false);
-                        });
-                });
-            })
-            ->when($filters['nighttime_only'], function ($builder) {
-                return $builder->where('is_daytime', false);
-            })
-            ->when($filters['daytime_only'], function ($builder) {
-                return $builder->where('orders.is_daytime', true);
-            })
-            ->when(!empty($filters['customer_id']), function ($builder) use ($filters) {
-                return $builder->where('orders.customer_id', $filters['customer_id']);
-            })
-            ->when(!empty($filters['status']), function ($builder) use ($filters) {
-                return $builder->where('order_status', $filters['status']);
-            })
-            ->with('customer:customer_id,customer_name', 'products');
-
-        if (empty($filters['active_period']) || $filters['active_period'] !== 'today') {
-            $query->when(!empty($filters['due_from']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
-            })
-                ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
-                    return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
-                });
-        }
-
-        return $this->applySort($query, $this->customSorts());
-    }
 
     public function render(): View
     {
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
-        $query = $this->buildOrderQuery();
+
+        $query = $this->applySort(OrderQueryBuilder::build($this->filters), $this->customSorts());
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
             ->paginate(15);
-
-        // for summary boxes
-        $this->ordersAll = $query->get();
 
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
@@ -226,11 +179,12 @@ class OrderList extends Component
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
         }
 
-
         return view('livewire.order-list', [
             'products' => $products,
             'orders' => $orders,
             'withSummaries' => true,
+            'orderQuery' => $query,
+            'filters' => $this->filters
         ]);
     }
 }
