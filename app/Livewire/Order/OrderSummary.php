@@ -19,7 +19,7 @@ class OrderSummary extends Component
     public array $filters;
 
     #[Reactive]
-    public bool $disabled = false;
+    public $disabled = false;
 
     public bool $visible = false;
     public bool $withIncome = false;
