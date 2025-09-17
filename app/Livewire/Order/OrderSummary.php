@@ -18,7 +18,6 @@ class OrderSummary extends Component
     #[Reactive]
     public array $filters;
 
-    public Collection|null $products = null;
     public bool $visible = false;
     public bool $withIncome = false;
 
@@ -29,12 +28,6 @@ class OrderSummary extends Component
 
     public function mount(Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
     {
-        if (is_null($products)) {
-            $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
-        } else {
-            $this->products = $products;
-        }
-
         $this->visible = $visibleByDefault;
         $this->withIncome = $withIncome;
 
