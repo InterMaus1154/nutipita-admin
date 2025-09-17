@@ -23,7 +23,7 @@
                             :pre-selected-value="$order->order_status"
                             inner-class="text-black text-sm! outline-0!"
                             :bg="$bgColor"
-                            wrapper-class="w-[80px] min-w-0!"
+                            wrapper-class="w-[80px] sm:w-[100px] min-w-0! sm:mx-auto!"
                             placeholder="Pl"
                             wireKey="order-status-{{$order->order_id}}"
                             :shadow-color="$shadowColor"
