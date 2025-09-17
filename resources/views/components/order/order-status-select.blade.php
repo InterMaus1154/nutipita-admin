@@ -18,12 +18,16 @@
 //        $classes = "$bgColor text-black! w-[110px]! px-2! py-2! mx-auto!";
     @endphp
     <x-form.form-wrapper>
-        <x-ui.select.select wire-change="updateOrderStatus" :wire-change-prop="$order->order_id"
-                            :pre-selected-value="$order->order_status" inner-class="text-black text-sm!" :bg="$bgColor"
+        <x-ui.select.select wire-change="updateOrderStatus"
+                            :wire-change-prop="$order->order_id"
+                            :pre-selected-value="$order->order_status"
+                            inner-class="text-black text-sm! outline-0!"
+                            :bg="$bgColor"
                             wrapper-class="w-[80px] min-w-0!"
                             placeholder="Pl"
                             wireKey="order-status-{{$order->order_id}}"
                             :shadow-color="$shadowColor"
+
         >
             <x-slot:options>
                 @foreach(OrderStatus::cases() as $status)
