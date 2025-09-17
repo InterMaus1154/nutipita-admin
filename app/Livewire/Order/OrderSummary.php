@@ -18,6 +18,9 @@ class OrderSummary extends Component
     #[Reactive]
     public array $filters;
 
+    #[Reactive]
+    public bool $disabled = false;
+
     public bool $visible = false;
     public bool $withIncome = false;
 
@@ -30,8 +33,6 @@ class OrderSummary extends Component
     {
         $this->visible = $visibleByDefault;
         $this->withIncome = $withIncome;
-
-        $this->calculateSummaries();
     }
 
     /**
@@ -73,7 +74,9 @@ class OrderSummary extends Component
 
     public function render(): View
     {
-        $this->calculateSummaries();
+        if(!$this->disabled){
+            $this->calculateSummaries();
+        }
         return view('livewire.order.order-summary');
     }
 }

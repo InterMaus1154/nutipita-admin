@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Queries\OrderQueryBuilder;
@@ -33,6 +34,9 @@ class OrderList extends Component
 
     public array $filters = [];
     public array $propFilters = [];
+
+    #[Reactive]
+    public bool $disabled = false;
 
     /*
      * Variables for summary
@@ -110,7 +114,11 @@ class OrderList extends Component
     {
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
 
-        $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
+        if($this->disabled){
+            $query = Order::query()->whereRaw('1 = 0');
+        }else{
+            $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
+        }
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
@@ -132,7 +140,6 @@ class OrderList extends Component
             'products' => $products,
             'orders' => $orders,
             'withSummaries' => true,
-            'orderQuery' => $query,
             'filters' => $this->filters
         ]);
     }

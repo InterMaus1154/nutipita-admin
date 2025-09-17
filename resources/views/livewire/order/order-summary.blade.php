@@ -1,5 +1,5 @@
 <div class="space-y-4">
-    @if($ordersCount > 0)
+    @if(!$disabled && $ordersCount > 0 )
         <div class="space-y-4">
             <div @class([
                         'hidden' => !$visible,

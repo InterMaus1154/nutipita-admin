@@ -23,13 +23,15 @@
                         <x-slot:options>
                             <x-ui.select.option value="" text="Clear"/>
                             @foreach(OrderStatus::cases() as $orderStatus)
-                                <x-ui.select.option value="{{$orderStatus->name}}" text="{{ucfirst($orderStatus->value)}}"/>
+                                <x-ui.select.option value="{{$orderStatus->name}}"
+                                                    text="{{ucfirst($orderStatus->value)}}"/>
                             @endforeach
                         </x-slot:options>
                     </x-ui.select.select>
                 </x-form.form-wrapper>
                 {{--auto/manual toggle--}}
-                <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7" wire:click="toggleMode()">
+                <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7"
+                             wire:click="toggleMode()">
                     <flux:icon.hand/>
                 </flux:button>
             </div>
@@ -67,7 +69,8 @@
             </div>
             <x-form.form-wrapper>
                 <x-form.form-label id="invoice_number" text="Invoice Number"/>
-                <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number" class="max-w-[100px]!"/>
+                <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number"
+                                   class="max-w-[100px]!"/>
             </x-form.form-wrapper>
         </div>
         <div class="flex gap-4">
@@ -103,5 +106,6 @@
                 'due_to' => now()->endOfWeek(\Carbon\WeekDay::Saturday)->format('Y-m-d')
                 ];
     @endphp
-    <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true" :prop-filters="$filters"/>
+    <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true" :prop-filters="$filters"
+                         :disabled="empty($customer_id)"/>
 </div>

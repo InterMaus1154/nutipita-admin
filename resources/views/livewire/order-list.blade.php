@@ -13,15 +13,17 @@
     <x-success/>
     <x-error/>
     {{--sorting for mobile--}}
-    @if($orders->isNotEmpty() && $withMobileSort)
+    @if(!$disabled && $orders->isNotEmpty() && $withMobileSort)
         <x-order.mobile-order-select-sort />
     @endif
     {{--order summary--}}
-    @if($withSummaryData)
+    @if(!$disabled && $withSummaryData)
         <livewire:order.order-summary :filters="$filters" :withIncome="$withIncome"
-                                      :visibleByDefault="$summaryVisibleByDefault"/>
+                                      :visibleByDefault="$summaryVisibleByDefault"
+                                        :disabled="$disabled"
+        />
     @endif
-    @if($orders->isNotEmpty())
+    @if(!$disabled && $orders->isNotEmpty())
         {{--table on desktop--}}
         <div class="hidden sm:block">
             <x-table.table>
