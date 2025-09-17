@@ -217,11 +217,11 @@ class OrderList extends Component
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
             'is_daytime' => $this->filters['daytime_only'],
-            'hasOrders' => $this->ordersAll->isNotEmpty()
+            'hasOrders' => $query->exists()
         ]);
 
         if (!empty($this->filters['customer_id'])) {
-            $this->orderIds = $this->ordersAll->pluck('order_id')->toArray();
+            $this->orderIds = (clone $query)->pluck('orders.order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
         }
