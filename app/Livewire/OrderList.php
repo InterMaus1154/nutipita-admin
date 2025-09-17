@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\LivewireHelpers\OrderListService;
 use App\Traits\HasSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -33,11 +34,6 @@ class OrderList extends Component
     public array $filters = [];
     public array $propFilters = [];
 
-
-    /*
-     * --- END ---
-     */
-
     /*
      * Variables for summary
      */
@@ -45,7 +41,6 @@ class OrderList extends Component
     public bool $withSummaryPdf = false;
     public bool $withIncome = true;
     public bool $summaryVisibleByDefault = false;
-    public $orderIds = [];
     /*
      * End
      */
@@ -54,13 +49,9 @@ class OrderList extends Component
     /*
      * Sorting variables
      */
-
     public string $mobileSort = "desc:order_id";
 
     public bool $withMobileSort = false;
-    /*
-     * End
-     */
 
 
     // Initial component load
@@ -73,23 +64,11 @@ class OrderList extends Component
         $this->withSummaryPdf = $withSummaryPdf;
     }
 
-
-    // when any filter is received from another component
     #[On('update-filter')]
     public function applyFilter(array $filters): void
     {
         $this->resetPage();
         $this->filters = array_replace($this->defaultFilters, $filters);
-    }
-
-    /*
-     * --- END ---
-     */
-
-    // returns the route url with an array of order ids, that are to be passed on creating a summary pdf
-    public function getOrderSummaryPdfUrl(): string
-    {
-        return route('orders.create-summary-pdf', ['orderIds' => $this->orderIds]);
     }
 
     public function deleteOrder(Order $order): void
@@ -127,41 +106,11 @@ class OrderList extends Component
         }
     }
 
-    /**
-     * Custom order sortings
-     * @return array
-     */
-    public function customSorts(): array
-    {
-        return [
-            'customer' => function (Builder $query) {
-                $query->join('customers', 'orders.customer_id', '=', 'customers.customer_id')
-                    ->orderBy('customers.customer_name', $this->sortDirection)
-                    ->select('orders.*');
-            },
-            'total_pita' => function (Builder $query) {
-                $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
-                    ->select('orders.*')
-                    ->selectRaw('SUM(order_product.product_qty) as total_pita')
-                    ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
-                    ->orderBy('total_pita', $this->sortDirection);
-            },
-            'total_price' => function (Builder $query) {
-                $query->leftJoin('order_product', 'order_product.order_id', '=', 'orders.order_id')
-                    ->select('orders.*')
-                    ->selectRaw('SUM(order_product.product_qty * order_product.order_product_unit_price) as total_price')
-                    ->groupBy('orders.order_id', 'orders.customer_id', 'orders.order_status', 'orders.is_daytime', 'orders.is_standing', 'orders.order_placed_at', 'orders.order_due_at', 'orders.created_at', 'orders.updated_at')
-                    ->orderBy('total_price', $this->sortDirection);
-            }
-        ];
-    }
-
-
     public function render(): View
     {
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
 
-        $query = $this->applySort(OrderQueryBuilder::build($this->filters), $this->customSorts());
+        $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
@@ -174,9 +123,9 @@ class OrderList extends Component
         ]);
 
         if (!empty($this->filters['customer_id'])) {
-            $this->orderIds = (clone $query)->pluck('orders.order_id')->toArray();
+            $orderIds = (clone $query)->pluck('orders.order_id')->toArray();
             // send an event to the download component with the already made download link
-            $this->dispatch('order-summary-link', ['url' => $this->getOrderSummaryPdfUrl()])->to(OrderSummaryDownload::class);
+            $this->dispatch('order-summary-link', ['url' => OrderListService::getOrderSummaryPdfUrl($orderIds)])->to(OrderSummaryDownload::class);
         }
 
         return view('livewire.order-list', [
