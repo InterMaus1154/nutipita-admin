@@ -36,33 +36,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
 
 
     Route::prefix('customers')->controller(CustomerController::class)->group(base_path('routes/route-groups/customers.php'));
-    Route::prefix('products')->controller(ProductController::class)->group(base_path('/routes/route-groups/products.php'));
-
-
-    // order routes
-    Route::group(['prefix' => 'orders', 'controller' => OrderController::class], function () {
-
-        // order list page
-        Route::get('/', 'index')->name('orders.index');
-
-        // show order creation form
-        Route::get('/create', 'create')->name('orders.create');
-
-        // store new order
-        Route::post('/', 'store')->name('orders.store');
-
-        // show an order
-        Route::get('/show/{order}', 'show')->name('orders.show');
-
-        // order edit form
-        Route::get('/edit/{order}', 'edit')->name('orders.edit');
-
-        // update order
-        Route::put('/update/{order}', 'update')->name('orders.update');
-
-        // create summary pdf
-        Route::get('/create-summary-pdf', 'createSummaryPdf')->name('orders.create-summary-pdf');
-    });
+    Route::prefix('products')->controller(ProductController::class)->group(base_path('routes/route-groups/products.php'));
+    Route::prefix('orders')->controller(OrderController::class)->group(base_path('routes/route-groups/orders.php'));
 
     // invoice routes
     Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
