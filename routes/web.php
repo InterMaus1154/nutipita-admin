@@ -39,29 +39,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::prefix('products')->controller(ProductController::class)->group(base_path('routes/route-groups/products.php'));
     Route::prefix('orders')->controller(OrderController::class)->group(base_path('routes/route-groups/orders.php'));
     Route::prefix('invoices')->controller(InvoiceController::class)->group(base_path('routes/route-groups/invoices.php'));
+    Route::prefix('standing-orders')->controller(StandingOrderController::class)->group(base_path('routes/route-groups/standing-orders.php'));
 
-
-    // standing order routes
-    Route::group(['prefix' => 'standing-orders', 'controller' => StandingOrderController::class], function () {
-
-        // index page
-        Route::get('/', 'index')->name('standing-orders.index');
-
-        // create form
-        Route::get('/create', 'create')->name('standing-orders.create');
-
-        // store new standing order
-        Route::post('/', 'store')->name('standing-orders.store');
-
-        // show details page
-        Route::get('/show/{order}', 'show')->name('standing-orders.show');
-
-        // show edit page
-        Route::get('/edit/{order}', 'edit')->name('standing-orders.edit');
-
-        // update standing order
-        Route::put('/update/{order}', 'update')->name('standing-orders.update');
-    });
 
     // financial records & categories
     Route::group(['prefix' => 'financial-records'], function () {
