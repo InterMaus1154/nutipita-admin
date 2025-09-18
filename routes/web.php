@@ -20,7 +20,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(base_path('route
 // routes with authentication
 Route::group(['middleware' => AuthMiddleware::class], function () {
 
-
     // main dashboard
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('admin.view.dashboard');
     Route::get('/', fn() => redirect()->route('admin.view.dashboard'));
@@ -37,29 +36,7 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::prefix('orders')->controller(OrderController::class)->group(base_path('routes/route-groups/orders.php'));
     Route::prefix('invoices')->controller(InvoiceController::class)->group(base_path('routes/route-groups/invoices.php'));
     Route::prefix('standing-orders')->controller(StandingOrderController::class)->group(base_path('routes/route-groups/standing-orders.php'));
-
-
-    // financial records & categories
-    Route::group(['prefix' => 'financial-records'], function () {
-
-        // records only
-        Route::group(['controller' => FinancialRecordController::class], function () {
-            Route::get('/', 'index')->name('financial-records.index');
-            Route::get('/create', 'create')->name('financial-records.create');
-            Route::post('/', 'store')->name('financial-records.store');
-            Route::get('/edit/{record}', 'edit')->name('financial-records.edit');
-            Route::put('/update/{record}', 'update')->name('financial-records.update');
-        });
-
-        // cats only
-        Route::group(['prefix' =>'categories' ,'controller' => FinancialCategoryController::class], function () {
-           Route::get('/', 'index')->name('financial-categories.index');
-           Route::get('/create', 'create')->name('financial-categories.create');
-           Route::post('/', 'store')->name('financial-categories.store');
-           Route::get('/edit/{category}', 'edit')->name('financial-categories.edit');
-           Route::put('/update/{category}', 'update')->name('financial-categories.update');
-        });
-    });
+    Route::prefix('financial-records')->group(base_path('routes/route-groups/financial-records.php'));
 
     // credit notes
     Route::group(['prefix' => 'credit-notes', 'controller' => CreditNoteController::class], function(){
