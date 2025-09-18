@@ -12,11 +12,6 @@
 <div class="space-y-4">
     <x-success/>
     <x-error/>
-    <div>
-        <div wire:loading>
-            Loading orders...
-        </div>
-    </div>
     {{--sorting for mobile--}}
     @if(!$disabled && $orders->isNotEmpty() && $withMobileSort)
         <x-order.mobile-order-select-sort/>
