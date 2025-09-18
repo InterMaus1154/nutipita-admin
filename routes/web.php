@@ -38,30 +38,8 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::prefix('customers')->controller(CustomerController::class)->group(base_path('routes/route-groups/customers.php'));
     Route::prefix('products')->controller(ProductController::class)->group(base_path('routes/route-groups/products.php'));
     Route::prefix('orders')->controller(OrderController::class)->group(base_path('routes/route-groups/orders.php'));
+    Route::prefix('invoices')->controller(InvoiceController::class)->group(base_path('routes/route-groups/invoices.php'));
 
-    // invoice routes
-    Route::group(['prefix' => 'invoices', 'controller' => InvoiceController::class], function () {
-//        Route::get('/createInvoice/{order}', 'createInvoice')->name('invoices.create');
-
-        // invoice list
-        Route::get('/', 'index')->name('invoices.index');
-
-        // create form
-//        Route::get('/createFromOrder', 'create')->name('invoices.create');
-
-        // download an invoice
-        Route::get('/download/{invoice}', 'download')->name('invoices.download');
-
-        // view a pdf in browser
-        Route::get('/view-inline/{invoice}', 'viewInline')->name('invoices.view-inline');
-
-        // create manual invoice form
-        Route::get('/create', 'createManual')->name('invoices.create');
-
-        // create single
-        Route::get('/create-single/{order}', 'createSingleInvoice')->name('invoices.create-single');
-
-    });
 
     // standing order routes
     Route::group(['prefix' => 'standing-orders', 'controller' => StandingOrderController::class], function () {
