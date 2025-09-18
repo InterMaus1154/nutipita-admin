@@ -9,27 +9,7 @@
     {{--card header--}}
     <div class="grid grid-cols-[1fr_auto_1fr]">
         <div class="justify-self-start">
-            @php
-                // match color
-                if($invoice->invoice_status === InvoiceStatus::paid->name){
-                    $bgColor = "bg-green-500!";
-                }else if($invoice->invoice_status === InvoiceStatus::cancelled->name){
-                    $bgColor = "bg-orange-400!";
-                }else if($invoice->invoice_status === InvoiceStatus::due->name){
-                    $bgColor = "bg-red-500!";
-                }
-                $classes = "$bgColor text-black! w-[75px]! px-2! py-2! mx-auto!";
-            @endphp
-            <x-form.form-wrapper>
-                <x-form.form-select :class="$classes"
-                                    wire:change="updateInvoiceStatus($event.target.value, {{$invoice->invoice_id}})">
-                    @foreach(InvoiceStatus::cases() as $status)
-                        <option
-                            @selected($invoice->invoice_status === $status->name) wire:key="invoice-status-{{$invoice->invoice_id}}"
-                            value="{{$status->name}}">{{ucfirst($status->value)}}</option>
-                    @endforeach
-                </x-form.form-select>
-            </x-form.form-wrapper>
+            <x-invoice.invoice-status-select :invoice="$invoice"/>
         </div>
         <div class="justify-self-center text-center ml-2">
             <span class="text-lg text-accent font-bold">
@@ -67,29 +47,7 @@
     <x-ui.detail-popup-card>
         <div class="grid grid-cols-[1fr_auto_1fr] gap-2">
             <div class="justify-self-start">
-                <div class="cursor-pointer">
-                    @php
-                        // match color
-                        if($invoice->invoice_status === InvoiceStatus::paid->name){
-                            $bgColor = "bg-green-500!";
-                        }else if($invoice->invoice_status === InvoiceStatus::cancelled->name){
-                            $bgColor = "bg-orange-400!";
-                        }else if($invoice->invoice_status === InvoiceStatus::due->name){
-                            $bgColor = "bg-red-500!";
-                        }
-                        $classes = "$bgColor text-black! w-[75px]! px-2! py-2! mx-auto!";
-                    @endphp
-                    <x-form.form-wrapper>
-                        <x-form.form-select :class="$classes"
-                                            wire:change="updateInvoiceStatus($event.target.value, {{$invoice->invoice_id}})">
-                            @foreach(InvoiceStatus::cases() as $status)
-                                <option
-                                    @selected($invoice->invoice_status === $status->name) wire:key="invoice-status-{{$invoice->invoice_id}}"
-                                    value="{{$status->name}}">{{ucfirst($status->value)}}</option>
-                            @endforeach
-                        </x-form.form-select>
-                    </x-form.form-wrapper>
-                </div>
+                <x-invoice.invoice-status-select :invoice="$invoice"/>
             </div>
             <div class="justify-self-center text-center">
                 <span class="text-lg text-accent text-center font-bold">
