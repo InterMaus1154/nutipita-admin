@@ -50,7 +50,7 @@
                             {{$order->customer->customer_name}}
                         </span>
         <div class="flex gap-2">
-                        <span class="text-base font-semibold">
+                        <span class="text-base">
                             @dayDate($order->order_due_at)
                         </span>
         </div>

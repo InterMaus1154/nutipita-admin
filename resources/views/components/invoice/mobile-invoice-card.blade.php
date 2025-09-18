@@ -12,9 +12,9 @@
             <x-invoice.invoice-status-select :invoice="$invoice"/>
         </div>
         <div class="justify-self-center text-center ml-2">
-            <span class="text-lg text-accent font-bold">
-            {{$invoice->customer->customer_name}}
-            </span>
+                <span class="text-lg text-accent font-semibold">
+                    INV-{{$invoice->invoice_number}}
+                </span>
         </div>
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
@@ -32,10 +32,10 @@
     </div>
     <div class="flex justify-between gap-4">
         <div class="flex gap-2 items-center">
-            <flux:icon.notebook-tabs class="size-5 text-accent"/>
+            <flux:icon.user-circle class="size-5 text-accent" />
             <span class="text-lg font-semibold">
-            INV-{{$invoice->invoice_number}}
-            </span>
+                    {{$invoice->customer->customer_name}}
+        </span>
         </div>
         <div class="flex gap-2 items-center">
             <flux:icon.circle-pound-sterling class="size-5 text-accent"/>
