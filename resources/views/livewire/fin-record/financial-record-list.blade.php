@@ -16,9 +16,9 @@
         </div>
         <x-table.table>
             <x-table.head>
-                <x-table.header>Name</x-table.header>
-                <x-table.header>Date</x-table.header>
-                <x-table.header>Amount</x-table.header>
+                <x-table.header sort-field="fin_record_name">Name</x-table.header>
+                <x-table.header sort-field="fin_record_date">Date</x-table.header>
+                <x-table.header sort-field="fin_record_amount">Amount</x-table.header>
                 <x-table.header>Category</x-table.header>
                 <x-table.header>Actions</x-table.header>
             </x-table.head>

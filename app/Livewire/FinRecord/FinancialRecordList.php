@@ -4,6 +4,7 @@ namespace App\Livewire\FinRecord;
 
 use App\Enums\FinancialRecordType;
 use App\Models\FinancialRecord;
+use App\Traits\HasSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
@@ -11,6 +12,8 @@ use Livewire\Component;
 
 class FinancialRecordList extends Component
 {
+
+    use HasSort;
 
     public ?FinancialRecordType $selectedType = null;
     public array $filters = [];
@@ -23,6 +26,7 @@ class FinancialRecordList extends Component
 
     public function mount(FinancialRecordType $type): void
     {
+        $this->initSort('fin_record_date', 'desc');
         $this->selectedType = $type;
     }
 
@@ -50,12 +54,11 @@ class FinancialRecordList extends Component
                 return $query->whereDate('financial_records.fin_record_date', '<=', $filters['due_to']);
             })
             ->with('category');
-
     }
 
     public function render(): View
     {
-        $records = $this->buildQuery()->get();
+        $records = $this->applySort($this->buildQuery())->get();
         $total = $records->sum('fin_record_amount');
         $itemsCount = $records->count();
         return view('livewire.fin-record.financial-record-list', compact('records', 'total', 'itemsCount'));

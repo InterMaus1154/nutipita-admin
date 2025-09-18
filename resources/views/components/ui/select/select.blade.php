@@ -15,7 +15,7 @@
 ])
 <div
     {{$wireKey ? " wire:key='$wireKey' " : ''}}
-    class="cursor-pointer relative min-w-[150px] {{$wrapperClass}}"
+    class="cursor-pointer select-none relative min-w-[150px] {{$wrapperClass}}"
     @if($shadowColor)
         style="--glow-color: {{ $shadowColor }};"
     @endif
@@ -28,7 +28,7 @@
                 this.selectedText = @js($placeholder);
             } else {
                 let el = $el.querySelector(`[data-value='${this.selected}']`);
-                this.selectedText = el ? el.innerText.trim() : @js($placeholder);
+                this.selectedText = el ? ( el.innerText.trim().length > 18 ? el.innerText.trim().substring(0,16) + '...' : el.innerText.trim() ) : @js($placeholder);
             }
         }
     }"
@@ -50,7 +50,7 @@
     <div
         class="outline-2 outline-[#666] bg-[#393939] rounded-2xl flex justify-center items-center cursor-pointer text-center min-h-[40px] transition-all duration-300 {{$bg}} {{$innerClass}}"
         x-on:click="open = !open"
-        x-text="selectedText.substring(0,18)"
+        x-text="selectedText"
         x-bind:class="{
             'text-accent': selectedText !== @js($placeholder),
             'dark:text-white': selectedText === @js($placeholder),
@@ -69,7 +69,7 @@
     <ul x-show="open"
         x-cloak
         x-on:click.outside="open = false"
-        class="border-1 border-black/60 shadow-md shadow-black absolute top-[120%] text-center left-1/2 -translate-x-1/2 right-0 mx-auto min-w-[150px] w-full h-auto max-h-[240px] overflow-y-scroll flex flex-col gap-1 py-2 px-2 bg-[#333] rounded-2xl origin-top z-[9999] {{$listClass}}"
+        class="border-1 border-black/60 shadow-md shadow-black absolute top-[120%] text-center left-1/2 -translate-x-1/2 right-0 mx-auto min-w-[150px] w-full h-auto max-h-[250px] overflow-y-scroll flex flex-col gap-1 py-2 px-2 bg-[#333] rounded-2xl origin-top z-[9999] {{$listClass}}"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-x-50 scale-y-10"
         x-transition:enter-end="opacity-100 scale-x-100 scale-y-100"
