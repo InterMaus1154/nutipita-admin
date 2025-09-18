@@ -96,22 +96,18 @@ class OrderList extends Component
 
     public function updateOrderStatus(string $value, Order $order): void
     {
-//        DB::beginTransaction();
-//        try {
-//            $order->update([
-//                'order_status' => $value
-//            ]);
-//            session()->flash('success', 'Status updated');
-//            DB::commit();
-//        } catch (\Exception $e) {
-//            DB::rollBack();
-//            session()->flash('error', 'Error updating status');
-//            Log::error($e->getMessage());
-//        }
-//
-        $order->update([
-            'order_status' => $value
-        ]);
+        DB::beginTransaction();
+        try {
+            $order->update([
+                'order_status' => $value
+            ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'Error updating status');
+            Log::error($e->getMessage());
+        }
+
     }
 
     public function render(): View
