@@ -16,6 +16,11 @@
                         <x-form.form-input id="customer_name" name="customer_name"
                                            value="{{$customer->customer_name}}"/>
                     </x-form.form-wrapper>
+                    {{--trading name--}}
+                    <x-form.form-wrapper>
+                        <x-form.form-label id="customer_trading_name" text="Trading Name"/>
+                        <x-form.form-input id="customer_trading_name" name="customer_trading_name" value="{{$customer->customer_trading_name}}" placeholder="Trading Name"/>
+                    </x-form.form-wrapper>
                     {{--business owner name--}}
                     <x-form.form-wrapper>
                         <x-form.form-label id="customer_business_owner_name" text="Business Owner"/>

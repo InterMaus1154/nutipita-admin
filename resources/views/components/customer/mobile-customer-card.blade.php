@@ -41,6 +41,7 @@
         <div class="flex gap-2 items-center">
             <flux:icon.home-modern class="text-accent size-5"/>
             <span>
+                <span class="font-bold">{{$customer->customer_trading_name}}</span>
                 {{$customer->customer_optional_name}}
                 {{$customer->customer_address_1}}
                 {{$customer->customer_address_2}}

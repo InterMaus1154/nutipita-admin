@@ -41,6 +41,10 @@
                             {{$customer->customer_business_owner_name}}
                         </x-table.data>
                         <x-table.data>
+                            @if($customer->customer_trading_name)
+                                <span class="font-bold">{{$customer->customer_trading_name}}</span>
+                                <br>
+                            @endif
                             @if($customer->customer_optional_name)
                                 {{$customer->customer_optional_name}}
                                 <br>

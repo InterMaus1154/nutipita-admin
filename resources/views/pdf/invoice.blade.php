@@ -212,6 +212,14 @@
                     <strong>
                         {{$customer->customer_name}}
                     </strong>
+                    @if($customer->customer_trading_name)
+                        <p>
+                            <strong>{{$customer->customer_trading_name}}</strong>
+                        </p>
+                    @endif
+                    @if($customer->customer_optional_name)
+                        <p>{{$customer->customer_optional_name}}</p>
+                    @endif
                     <p>
                         {{$customer->customer_address_1}}
                     </p>
