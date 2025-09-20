@@ -209,10 +209,15 @@
             <tr>
                 {{--customer data--}}
                 <td class="text-left customer-data">
-                    <strong>
-                        {{$customer->customer_name}}
-                    </strong>
+                    <p style="font-size: 1.25rem;">Bill To:</p>
+                    <p>
+                        <strong>
+                            {{$customer->customer_name}}
+                        </strong>
+                    </p>
+                    <p></p>
                     @if($customer->customer_trading_name)
+                        <p style="font-size: 1.25rem;">Trading As:</p>
                         <p>
                             <strong>{{$customer->customer_trading_name}}</strong>
                         </p>
