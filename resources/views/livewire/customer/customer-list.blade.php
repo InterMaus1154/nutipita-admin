@@ -11,7 +11,10 @@
                     Owner
                 </x-table.header>
                 <x-table.header>
-                    Address
+                    Business Address
+                </x-table.header>
+                <x-table.header>
+                    Delivery Address
                 </x-table.header>
                 <x-table.header>
                     Email
@@ -58,6 +61,9 @@
                             {{$customer->customer_city}}
                             <br>
                             {{$customer->customer_postcode}}
+                        </x-table.data>
+                        <x-table.data class="max-w-[40ch] whitespace-normal break-words">
+                            {{$customer->customer_delivery_address}}
                         </x-table.data>
                         <x-table.data>
                             @if($customer->customer_email)

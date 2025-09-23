@@ -37,6 +37,7 @@ class UpdateCustomerRequest extends FormRequest
             'customer_country' => 'required|string|max:200',
             'customer_business_owner_name' => 'required|string|max:150',
             'customer_trading_name' => 'nullable|string|max:250',
+            'customer_delivery_address' => 'nullable|string|max:300',
             'products' => 'array'
         ];
     }

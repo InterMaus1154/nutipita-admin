@@ -58,6 +58,11 @@
                         <x-form.form-input id="customer_city" name="customer_city"
                                            value="{{$customer->customer_city}}"/>
                     </x-form.form-wrapper>
+                    {{--delivery address--}}
+                    <x-form.form-wrapper>
+                        <x-form.form-label id="customer_delivery_address" text="Delivery Address (optional)"></x-form.form-label>
+                        <x-form.form-input id="customer_delivery_address" name="customer_delivery_address" value="{{$customer->customer_delivery_address}}" placeholder="Delivery Address (optional)"/>
+                    </x-form.form-wrapper>
                     <div class="hidden">
                         <label for="customer_country" class="block text-sm font-medium mb-2 dark:text-white">Country
                         </label>

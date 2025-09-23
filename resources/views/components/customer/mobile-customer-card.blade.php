@@ -29,13 +29,15 @@
         @if($customer->customer_phone)
             <div class="flex gap-2 items-center">
                 <flux:icon.phone class="text-accent size-5"/>
-                <flux:link href="tel:{{$customer->customer_phone}}" class="text-black dark:text-white">{{$customer->customer_phone}}</flux:link>
+                <flux:link href="tel:{{$customer->customer_phone}}"
+                           class="text-black dark:text-white">{{$customer->customer_phone}}</flux:link>
             </div>
         @endif
         @if($customer->customer_email)
             <div class="flex gap-2 items-center">
                 <flux:icon.envelope class="text-accent size-5"/>
-                <flux:link href="mailto:{{$customer->customer_email}}" class="text-black dark:text-white">{{$customer->customer_email}}</flux:link>
+                <flux:link href="mailto:{{$customer->customer_email}}"
+                           class="text-black dark:text-white">{{$customer->customer_email}}</flux:link>
             </div>
         @endif
         <div class="flex gap-2 items-center">
@@ -49,6 +51,12 @@
                 {{$customer->customer_postcode}}
             </span>
         </div>
+        @if($customer->customer_delivery_address)
+            <div class="flex gap-2 items-center">
+                <flux:icon.truck class="text-accent size-5"/>
+                <span class="max-w-[40ch] whitespace-normal break-words">{{$customer->customer_delivery_address}}</span>
+            </div>
+        @endif
     </div>
     <x-ui.detail-popup-card>
         <div class="flex justify-center items-center">

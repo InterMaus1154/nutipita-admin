@@ -43,6 +43,11 @@
                 <x-form.form-input id="customer_postcode" name="customer_postcode" value="{{old('customer_postcode', '')}}" placeholder="Postcode"/>
             </x-form.form-wrapper>
             <input type="hidden" id="customer_country" name="customer_country" value="United Kingdom"/>
+            {{--delivery address--}}
+            <x-form.form-wrapper>
+                <x-form.form-label id="customer_delivery_address" text="Delivery Address (optional)"></x-form.form-label>
+                <x-form.form-input id="customer_delivery_address" name="customer_delivery_address" value="{{old('customer_delivery_address', '')}}" placeholder="Delivery Address (optional)"/>
+            </x-form.form-wrapper>
             {{--Customer email--}}
             <x-form.form-wrapper>
                 <x-form.form-label id="customer_email" text="Email (optional)"/>
