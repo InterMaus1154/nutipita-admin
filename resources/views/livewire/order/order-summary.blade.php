@@ -1,9 +1,8 @@
 <div class="space-y-4">
     @if(!$disabled && $ordersCount > 0 )
         <div class="space-y-4">
-            <div @class([
+            <div wire:loading.remove @class([
                         'hidden' => !$visible,
-//                        'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-2 sm:gap-4 mx-auto',
 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto'
                     ])>
                 @if($withIncome)
@@ -19,6 +18,13 @@
                                     :subtitle="$productTotal->product_weight_g.'g'"
                         />
                 @endforeach
+            </div>
+            <div class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto" wire:loading.grid>
+                @for($i=0;$i<4;$i++)
+                    <x-data-box class="h-[94px]">
+                        <div class="h-full w-full animate-shine"></div>
+                    </x-data-box>
+                @endfor
             </div>
         </div>
     @endif

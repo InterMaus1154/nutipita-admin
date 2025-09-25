@@ -59,7 +59,7 @@
                         Actions
                     </x-table.header>
                 </x-table.head>
-                <x-table.body>
+                <x-table.body wire:loading.remove>
                     @foreach($orders as $index => $order)
                         @php
                             $orderCount = $orders->total() - ($orders->firstItem() + $index) + 1;
@@ -148,14 +148,32 @@
                         </x-table.row>
                     @endforeach
                 </x-table.body>
+                <x-table.body class="hidden" wire:loading.class="table-row-group!">
+                    @for($i = 0; $i < 5; $i++)
+                        <x-table.row>
+                            @for($j = 0; $j < 12; $j++)
+                                <x-table.data class="relative">
+                                    <div class="h-6 w-full animate-shine"></div>
+                                </x-table.data>
+                            @endfor
+                        </x-table.row>
+                    @endfor
+                </x-table.body>
             </x-table.table>
         </div>
         {{--cards on mobile--}}
-        <div class="flex flex-col gap-4 sm:hidden">
+        <div class="flex flex-col gap-4 sm:hidden" wire:loading.remove>
             @foreach($orders as $order)
                 {{--card wrapper--}}
                 <x-order.mobile-order-card wire:key="order-mobile-card-{{$order->order_id}}" :order="$order"/>
             @endforeach
+        </div>
+        <div class="flex flex-col gap-4 sm:hidden" wire:loading.class="max-sm:flex">
+            @for($i = 0; $i<5;$i++)
+                <x-ui.mobile-card-skeleton class="h-[175px]">
+                    <div class="h-10 w-full animate-shine"></div>
+                </x-ui.mobile-card-skeleton>
+            @endfor
         </div>
     @endif
     {{--bottom pagination--}}
