@@ -168,7 +168,7 @@
                 <x-order.mobile-order-card wire:key="order-mobile-card-{{$order->order_id}}" :order="$order"/>
             @endforeach
         </div>
-        <div class="flex flex-col gap-4 sm:hidden" wire:loading.class="max-sm:flex">
+        <div class="flex-col gap-4 hidden" wire:loading.class="max-sm:flex">
             @for($i = 0; $i<5;$i++)
                 <x-ui.mobile-card-skeleton class="h-[175px]">
                     <div class="h-10 w-full animate-shine"></div>
