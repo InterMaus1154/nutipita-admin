@@ -34,7 +34,7 @@
                     Actions
                 </x-table.header>
             </x-table.head>
-            <x-table.body>
+            <x-table.body wire:loading.remove>
                 @if($invoices->isEmpty())
                     <x-table.row wire:key="empty-row">
                         <x-table.data>No invoices for the current filter!</x-table.data>
@@ -51,7 +51,7 @@
                         </span>
                         </x-table.data>
                         <x-table.data>
-                            <x-invoice.invoice-status-select :invoice="$invoice" />
+                            <x-invoice.invoice-status-select :invoice="$invoice"/>
                         </x-table.data>
                         <x-table.data>
                             @dayDate($invoice->invoice_issue_date)
@@ -96,14 +96,32 @@
                     </x-table.row>
                 @endforeach
             </x-table.body>
+            <x-table.body class="hidden" wire:loading.class="table-row-group!">
+                @for($i = 0; $i < 5; $i++)
+                    <x-table.row>
+                        @for($j = 0; $j < 9; $j++)
+                            <x-table.data class="relative">
+                                <div class="h-6 w-full animate-shine"></div>
+                            </x-table.data>
+                        @endfor
+                    </x-table.row>
+                @endfor
+            </x-table.body>
         </x-table.table>
     </div>
     {{--cards on mobile--}}
-    <div class="flex flex-col gap-4 sm:hidden">
+    <div class="flex flex-col gap-4 sm:hidden" wire:loading.remove>
         @foreach($invoices as $invoice)
             {{--card wrapper--}}
             <x-invoice.mobile-invoice-card wire:key="invoice-mobile-card-{{$invoice->invoice_id}}" :invoice="$invoice"/>
         @endforeach
+    </div>
+    <div class="flex flex-col gap-4 sm:hidden" wire:loading.flex>
+        @for($i = 0; $i<5;$i++)
+            <x-ui.mobile-card-skeleton class="h-[175px]">
+                <div class="h-10 w-full animate-shine"></div>
+            </x-ui.mobile-card-skeleton>
+        @endfor
     </div>
     <div>
         {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
