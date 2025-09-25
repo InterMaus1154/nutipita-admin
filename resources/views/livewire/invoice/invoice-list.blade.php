@@ -116,7 +116,7 @@
             <x-invoice.mobile-invoice-card wire:key="invoice-mobile-card-{{$invoice->invoice_id}}" :invoice="$invoice"/>
         @endforeach
     </div>
-    <div class="flex flex-col gap-4 sm:hidden" wire:loading.flex>
+    <div class="flex-col gap-4 hidden" wire:loading.class="max-sm:flex">
         @for($i = 0; $i<5;$i++)
             <x-ui.mobile-card-skeleton class="h-[175px]">
                 <div class="h-10 w-full animate-shine"></div>
