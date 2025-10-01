@@ -1,9 +1,14 @@
+@props([
+    'withIcon' => true
+])
 <div
     {{$attributes->merge([
     'class' => 'relative'
 ])}}
 >
-    <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
+    @if($withIcon)
+        <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>
+    @endif
     {{--box--}}
     <div x-show="actionMenuOpen"
          x-on:click.outside="actionMenuOpen = false"

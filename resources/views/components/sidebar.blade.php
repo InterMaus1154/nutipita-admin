@@ -87,7 +87,22 @@
                                :current="Route::is('customers.*')"></flux:navlist.item>
             <flux:navlist.item icon="pita" href="{{route('products.index')}}" title="Products"
                                :current="Route::is('products.*')"></flux:navlist.item>
-            <flux:navlist.item icon="cog-6-tooth"></flux:navlist.item>
+            <flux:navlist.item icon="cog-6-tooth" x-data="{menuOpen: false}" x-on:click="menuOpen = true" class="cursor-pointer relative">
+                <div x-show="menuOpen"
+                     x-transition
+                     x-on:click.outside="menuOpen = false"
+                     x-cloak
+                     class="absolute z-100 left-[-70%] top-8 border-2 border-neutral-700 rounded-xl bg-zinc-800/60 backdrop-blur-lg p-2 flex flex-col gap-4 w-fit action">
+                    <ul>
+                        <li>
+                            <x-ui.mobile-card-dropdown-link class="flex! gap-2 py-2">
+                                <flux:icon.monitor class="text-black dark:text-white size-4"/>
+                                Appearance
+                            </x-ui.mobile-card-dropdown-link>
+                        </li>
+                    </ul>
+                </div>
+            </flux:navlist.item>
         </flux:navlist>
     </div>
     <div class="max-sm:hidden"></div>
