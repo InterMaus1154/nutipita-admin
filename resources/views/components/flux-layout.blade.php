@@ -1,5 +1,19 @@
+@php
+    use App\Enums\settings\UserColorMode;
+    use App\Enums\settings\UserThemeMode;
+
+    $settings = auth()->user()?->settings;
+    $fontSize = $settings?->user_font_size ?? 16;
+    $colorMode = $settings?->user_color_mode->value ?? 0;
+    $themeMode = $settings?->user_theme_mode->value ?? 0;
+@endphp
+
 <!doctype html>
-<html lang="en" data-theme="orange" class="dark">
+<html lang="en"
+      data-theme="{{UserColorMode::colorFromValue($colorMode)}}"
+      class="{{UserThemeMode::themeFromValue($themeMode)}}"
+      data-text="{{$fontSize}}"
+>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

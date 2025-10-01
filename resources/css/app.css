@@ -34,9 +34,33 @@
 
 
     --form-field-width: 250px;
+
 }
 
 @layer theme {
+
+    /*
+        define font sizes
+     */
+    [data-text="12"]{
+        font-size: 12px;
+    }
+
+    [data-text="14"]{
+        font-size: 14px;
+    }
+
+    [data-text="16"]{
+        font-size: 16px;
+    }
+
+    [data-text="18"]{
+        font-size: 18px;
+    }
+
+    [data-text="20"]{
+        font-size: 20px;
+    }
 
     /*
     *define color schemas
@@ -105,7 +129,7 @@
 
     [data-theme="pink"].dark {
         --color-accent: var(--color-pink-600);
-        --color-accent-content: var(--color-pink-400);
+        --color-accent-content: var(--color-pink-600);
         --color-accent-foreground: var(--color-white);
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Console\Migrations\ResetCommand;
 use Illuminate\Database\Console\WipeCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -48,6 +49,5 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('amountFormat', function($expression){
             return "<?php echo amountFormat($expression); ?>";
         });
-
     }
 }
