@@ -3,7 +3,7 @@
     use App\Enums\settings\UserThemeMode;
 
     $settings = auth()->user()?->settings;
-    $fontSize = $settings?->user_font_size ?? 16;
+    $fontSize = $settings?->user_font_size->value ?? 16;
     $colorMode = $settings?->user_color_mode->value ?? 0;
     $themeMode = $settings?->user_theme_mode->value ?? 0;
 @endphp

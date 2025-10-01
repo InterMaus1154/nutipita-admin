@@ -9,9 +9,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StandingOrderController;
-use App\Http\Controllers\FinancialRecordController;
-use App\Http\Controllers\FinancialCategoryController;
 use App\Http\Controllers\CreditNoteController;
+use App\Http\Controllers\UserSettingController;
 
 
 // auth routes
@@ -37,6 +36,7 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::prefix('invoices')->controller(InvoiceController::class)->group(base_path('routes/route-groups/invoices.php'));
     Route::prefix('standing-orders')->controller(StandingOrderController::class)->group(base_path('routes/route-groups/standing-orders.php'));
     Route::prefix('financial-records')->group(base_path('routes/route-groups/financial-records.php'));
+    Route::prefix('settings')->controller(UserSettingController::class)->group(base_path('routes/route-groups/user-settings.php'));
 
     // credit notes
     Route::group(['prefix' => 'credit-notes', 'controller' => CreditNoteController::class], function(){

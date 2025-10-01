@@ -6,14 +6,12 @@ enum UserThemeMode: int
 {
     case DARK = 0;
     case WHITE = 1;
-    case SYSTEM = 2;
 
     public static function themeFromValue(int $value): string
     {
         return match ($value) {
             0 => strtolower(self::DARK->name),
-            1 => strtolower(self::WHITE->name),
-            2 => strtolower(self::SYSTEM->name)
+            1 => strtolower(self::WHITE->name)
         };
     }
 
