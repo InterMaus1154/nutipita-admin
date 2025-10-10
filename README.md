@@ -4,7 +4,7 @@
 [Developer and maintenar: Márk Kiss](https://markkiss.netlify.app/)
 
 # Description 
-A bespoke web application for managing orders, customers, products and invoices for [Nuti Pita Limited](https://nutipita.co.uk/)\
+A bespoke web application for managing orders, customers, products, invoices and finance tracking for [Nuti Pita Limited](https://nutipita.co.uk/)\
 
 ## Feature list
 
@@ -16,10 +16,10 @@ A bespoke web application for managing orders, customers, products and invoices 
 ### Order management
 - Basic CRUD operations
 - Night and day time orders
-- Recurring orders (per customer, per day, per product)
+- Recurring (standing) orders (per customer, per day, per product)
   - cron jobs, fully automated
 - Filtering
-- Sorting (asc, desc, clicking on specific columns)
+- Sorting
 - Pagination
 - Dedicated page for orders that has to be done on current day
   - separated into day and night time orders
@@ -35,17 +35,23 @@ A bespoke web application for managing orders, customers, products and invoices 
   - for a bulk of orders (within user's specified date range)
   - manually (product quantities are added manually by the user)
 - Based on a PDF template
-- Editable invoices (coming soon)
-- Invoice PDF regeneration (coming soon)
-- Send invoice via email based on a template (coming soon)
 - Filtering
 - Pagination
-- Send email to customer directly (planned)
 
-### Income Filtering
-- dedicated page for income summaries
-- quick filtering for dates (year/month/week/day)
+### Financial tracking
+- bank statement can be uploaded as .csv
+- uploaded csv can be live edited before saving (deleting columns, changing values, setting item category)
+- separated income and expense filtering
 
-### User Settings (planned)
-- toggle UI theme
-- product priority (in which order they should show up at any place)
+### User Settings 
+- toggle UI theme (black and white)
+- different UI color schemes (green, pink, orange, etc...)
+
+### UI and UX
+- fully responsive
+- specific support for tablet devices
+- different components for mobile
+      - cards on mobile, instead of table
+      - pop-up card for more details
+- placeholders for loading elements (clear indicator for the user that data is being loaded)
+- custom select component built with Livewire and Alpine, styled as requested
