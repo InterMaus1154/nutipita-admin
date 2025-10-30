@@ -192,7 +192,7 @@
                         United Kingdom
                     </p>
                     <p>
-                        +44 7754 22632
+                        +44 7754 226325
                         <br>
                         nutipita.co.uk
                     </p>
