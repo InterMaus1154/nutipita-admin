@@ -114,6 +114,16 @@
             Total for period: @moneyFormat($periodTotal)
         </td>
     </tr>
+    @if($customer->customer_id == 101)
+        {{--only for Arik--}}
+        <tr>
+            <td style="text-align: left; font-weight: bold; border: 0; padding: 0; font-size: 1.5rem;">
+            </td>
+            <td style="text-align: right; font-weight: normal; border: 0; padding: 0; font-size: 1.125rem">
+                (2x @moneyFormat($periodTotal / 2) )
+            </td>
+        </tr>
+    @endif
 </table>
 </body>
 </html>
