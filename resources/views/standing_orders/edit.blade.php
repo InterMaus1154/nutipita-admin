@@ -60,7 +60,7 @@
                                     <x-form.form-label id="products[{{$i}}][{{$product->product_id}}]">
                                         {{$product->product_name}} {{$product->product_weight_g}}g
                                     </x-form.form-label>
-                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" value="{{$qty}}"/>
+                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" value="0"/>
                                 </x-form.form-wrapper>
                             @endforeach
                         @endif
