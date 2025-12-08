@@ -18,6 +18,14 @@
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('standing-orders.show', compact('order'))}}">View</x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('standing-orders.edit', compact('order'))}}">Edit</x-ui.mobile-card-dropdown-link>
+            @if(!$order->is_active)
+                <x-ui.mobile-card-dropdown-link
+                           wire:confirm="Are you sure to delete this standing order?"
+                           wire:click="delete({{$order->standing_order_id}})"
+                >
+                    Delete
+                </x-ui.mobile-card-dropdown-link>
+            @endif
         </x-ui.mobile-card-dropdown-menu>
     </div>
     {{--card body--}}
