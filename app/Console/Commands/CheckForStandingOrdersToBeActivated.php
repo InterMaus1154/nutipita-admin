@@ -35,8 +35,7 @@ class CheckForStandingOrdersToBeActivated extends Command
             $orders = StandingOrder::query()
                 ->where('is_active', false)
                 ->whereDate('start_from', '=', today())
-                ->whereNull('is_forced' )
-                ->select(['is_active'])
+                ->whereNull('is_forced')
                 ->get();
             foreach ($orders as $order) {
                 $order->update([
