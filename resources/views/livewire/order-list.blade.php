@@ -59,7 +59,7 @@
                         Actions
                     </x-table.header>
                 </x-table.head>
-                <x-table.body wire:loading.remove>
+                <x-table.body wire:loading.remove wire:target.except="updateOrderStatus">
                     @foreach($orders as $index => $order)
                         @php
                             $orderCount = $orders->total() - ($orders->firstItem() + $index) + 1;
@@ -148,7 +148,7 @@
                         </x-table.row>
                     @endforeach
                 </x-table.body>
-                <x-table.body class="hidden" wire:loading.class="table-row-group!">
+                <x-table.body class="hidden" wire:loading.class="table-row-group!" wire:target.except="updateOrderStatus">
                     @for($i = 0; $i < 5; $i++)
                         <x-table.row>
                             @for($j = 0; $j < 12; $j++)
@@ -162,7 +162,7 @@
             </x-table.table>
         </div>
         {{--cards on mobile--}}
-        <div class="flex flex-col gap-4 sm:hidden" wire:loading.remove>
+        <div class="flex flex-col gap-4 sm:hidden" wire:loading.remove wire:target.except="updateOrderStatus">
             @foreach($orders as $order)
                 {{--card wrapper--}}
                 <x-order.mobile-order-card wire:key="order-mobile-card-{{$order->order_id}}" :order="$order"/>

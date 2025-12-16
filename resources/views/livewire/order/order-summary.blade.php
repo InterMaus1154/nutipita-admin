@@ -19,7 +19,7 @@
                         />
                 @endforeach
             </div>
-            <div class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto" wire:loading.grid>
+            <div class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto" wire:loading.grid >
                 @for($i=0;$i<4;$i++)
                     <x-data-box class="h-[94px]">
                         <div class="h-full w-full animate-shine"></div>
