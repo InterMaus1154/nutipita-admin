@@ -31,14 +31,13 @@
 
         function getMonthsOfTheYear()
         {
-            $year = now()->year;
+            $_year = now()->year;
 
             $months = collect();
             for($i = 1; $i<=12;$i++){
                 $months->push([
-                    'month' => Carbon::create($year, $i, 1)->format('F'),
-                    'start_date' => Carbon::create($year, $i, 1)->startOfMonth()->toDateString(),
-                    'end_date' => Carbon::create($year, $i, 1)->endOfMonth()->toDateString()
+                    'month' => Carbon::create($_year, $i, 1)->format('F'),
+                    'monthIndex' => $i
                 ]);
             }
 
@@ -48,7 +47,7 @@
         function getYears(){
             // get years, where order exists
             $firstYear = Format::getYearFromDate(Order::orderBy('order_due_at', 'asc')->take(1)->first('order_due_at')->value('order_due_at'));
-            $latestYear = Format::getYearFromDate(Order::latest('order_due_at')->take(1)->first('order_due_at')->value('order_due_at'));
+            $latestYear = Format::getYearFromDate(Order::orderBy('order_due_at', 'desc')->take(1)->value('order_due_at'));
             return range($firstYear, $latestYear, 1);
         }
     @endphp
@@ -103,12 +102,12 @@
             @foreach(getMonthsOfTheYear() as $index => $month)
                 @php
                     $today = now()->toDateString();
-                    $isCurrentMonth = $today >= $month['start_date'] && $today < $month['end_date'];
+                    $isCurrentMonth = now()->month === $month['monthIndex'];
                 @endphp
                 <div class="cursor-pointer text-center py-1 rounded-sm hover:bg-neutral-600/50"
                      x-on:click="selectedMonth = {{$index}}; monthOpen = false"
                      :class="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'border-2 border-accent bg-zinc-900' : 'border-2 border-transparent' "
-                     wire:click="setMonth('{{$month['start_date']}}', '{{$month['end_date']}}')"
+                     wire:click="setMonth('{{$month['monthIndex']}}')"
                      data-week-index="{{$index}}"
                      :id="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'current-month' : ''">
                     {{Str::limit($month['month'], 3, '')}}

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Carbon\Carbon;
 use Carbon\WeekDay;
 use Livewire\Attributes\Reactive;
 
@@ -95,10 +96,10 @@ trait HasQuickDueFilter
         $this->afterChangeAction();
     }
 
-    public function setMonth(string $monthStart, string $monthEnd): void
+    public function setMonth(int $monthIndex): void
     {
-        $this->due_from = $monthStart;
-        $this->due_to = $monthEnd;
+        $this->due_from = Carbon::create($this->year, $monthIndex, 1)->startOfMonth()->toDateString();
+        $this->due_to = Carbon::create($this->year, $monthIndex, 1)->endOfMonth()->toDateString();
         $this->activePeriod = "month";
 
         $this->afterChangeAction();

@@ -29,6 +29,7 @@ class OrderFilter extends Component
     {
         /*set current week as default*/
         $this->setCurrentWeek();
+        $this->year = now()->year;
     }
 
     /**

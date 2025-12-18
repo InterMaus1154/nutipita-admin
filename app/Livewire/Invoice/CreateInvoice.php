@@ -69,6 +69,7 @@ class CreateInvoice extends Component
         $this->invoice_number = Invoice::getNextInvoiceNumber();
 
         $this->setCurrentWeek();
+        $this->year = now()->year;
     }
 
     public function updated(): void
