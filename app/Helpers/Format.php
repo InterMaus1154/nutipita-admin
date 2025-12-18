@@ -108,6 +108,18 @@ final class Format
         return ceil($amount * $factor) / $factor;
     }
 
+    /**
+     * Returns year from a date as int
+     * @param string|Carbon $date
+     * @return int
+     */
+    public static function getYearFromDate(string|Carbon $date): int
+    {
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+        return $date->year;
+    }
 
 
 }

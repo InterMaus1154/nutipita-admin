@@ -29,6 +29,9 @@ trait HasQuickDueFilter
 
     public ?string $afterChangeMethod = null;
 
+    public ?int $year;
+
+
     public function setAfterChangeMethod(string $method): void
     {
         $this->afterChangeMethod = $method;
@@ -48,6 +51,7 @@ trait HasQuickDueFilter
         $this->due_from = now()->addDay()->toDateString();
         $this->due_to = now()->addDay()->toDateString();
         $this->activePeriod = "today";
+        $this->year = now()->year;
 
         $this->afterChangeAction();
     }
@@ -81,6 +85,16 @@ trait HasQuickDueFilter
         $this->afterChangeAction();
     }
 
+    public function setYear(int $year): void
+    {
+        $this->due_from = sprintf('%04d-%02d-%02d', $year,1,1);
+        $this->due_to = sprintf('%04d-%02d-%02d', $year,12,31);
+
+        $this->year = $year;
+        $this->activePeriod = 'year';
+        $this->afterChangeAction();
+    }
+
     public function setMonth(string $monthStart, string $monthEnd): void
     {
         $this->due_from = $monthStart;
@@ -100,13 +114,13 @@ trait HasQuickDueFilter
     }
 
 
-    public function setYear(): void
-    {
-        $this->due_from = now()->startOfYear()->toDateString();
-        $this->due_to = now()->endOfYear()->toDateString();
-        $this->activePeriod = "year";
-
-        $this->afterChangeAction();
-    }
+//    public function setYear(): void
+//    {
+//        $this->due_from = now()->startOfYear()->toDateString();
+//        $this->due_to = now()->endOfYear()->toDateString();
+//        $this->activePeriod = "year";
+//
+//        $this->afterChangeAction();
+//    }
 
 }

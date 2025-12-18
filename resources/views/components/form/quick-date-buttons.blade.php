@@ -1,5 +1,5 @@
 @props(['activePeriod', 'months', 'class' => ''])
-@use(Carbon\Carbon)
+@use(App\Helpers\Format;use App\Models\Order;use Carbon\Carbon)
 @use(Carbon\WeekDay)
 @use(Illuminate\Support\Str)
 <div class="{{$class}}">
@@ -44,10 +44,21 @@
 
             return $months;
         }
+
+        function getYears(){
+            // get years, where order exists
+            $firstYear = Format::getYearFromDate(Order::orderBy('order_due_at', 'asc')->take(1)->first('order_due_at')->value('order_due_at'));
+            $latestYear = Format::getYearFromDate(Order::latest('order_due_at')->take(1)->first('order_due_at')->value('order_due_at'));
+            return range($firstYear, $latestYear, 1);
+        }
     @endphp
-    <div class="relative" x-data="{weekOpen: false, selectedWeek: null, monthOpen: false, selectedMonth: null}">
+    <div class="relative"
+         x-data="{weekOpen: false, selectedWeek: null, monthOpen: false, selectedMonth: null, yearOpen: false, selectedYear: null}">
         <flux:button.group>
-            <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'" wire:click="setYear">Y</flux:button>
+            <flux:button :variant="$activePeriod === 'year' ? 'primary' : 'filled'"
+                         x-on:click="yearOpen = !yearOpen; $nextTick(()=>{ const elY = document.getElementById('current-year'); if(elY){ elY.scrollIntoView({block: 'center'}); } });">
+                Y &darr;
+            </flux:button>
             <flux:button :variant="$activePeriod === 'month' ? 'primary' : 'filled'" x-on:click="monthOpen = !monthOpen; $nextTick(()=>{
                 const elM = document.getElementById('current-month');
                 if(elM){ elM.scrollIntoView({block: 'center'});}
@@ -101,6 +112,25 @@
                      data-week-index="{{$index}}"
                      :id="selectedMonth === {{$index}} || (selectedMonth === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'current-month' : ''">
                     {{Str::limit($month['month'], 3, '')}}
+                </div>
+            @endforeach
+        </div>
+        {{--year selector--}}
+        <div
+            class="absolute z-[220] left-4 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll origin-top"
+            x-show="yearOpen" x-cloak x-on:click.outside="yearOpen = false"
+            x-transition
+        >
+            @foreach(getYears() as $year)
+                @php
+                    $isCurrentYear = now()->year == $year;
+                @endphp
+                <div class="cursor-pointer text-center py-1 rounded-sm hover:bg-neutral-600/50"
+                     x-on:click="selectedYear = {{$year}}; yearOpen = false"
+                     :class="selectedYear === {{$year}} || (selectedYear === null) && {{$isCurrentYear ? 'true' : 'false'}} ? 'border-2 border-accent bg-zinc-900' : 'border-2 border-transparent' "
+                     wire:click="setYear('{{$year}}')"
+                     :id="selectedYear === {{$index}} || (selectedYear === null) && {{$isCurrentMonth ? 'true' : 'false'}} ? 'current-year' : ''">
+                    {{$year}}
                 </div>
             @endforeach
         </div>
