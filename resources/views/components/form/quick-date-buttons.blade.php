@@ -4,9 +4,9 @@
 @use(Illuminate\Support\Str)
 <div class="{{$class}}">
     @php
-        function getWeeksOfTheYear()
+        function getWeeksOfTheYear(?int $year = null)
         {
-            $year = now()->year;
+            $year = $year ?? now()->year;
 
             $start = Carbon::create($year, 1, 1)->startOfWeek(WeekDay::Sunday);
             $end = Carbon::create($year, 12, 31)->endOfWeek(WeekDay::Saturday);
@@ -78,7 +78,7 @@
             class="absolute z-[220] left-20 border-2 border-neutral-700 rounded-xl dark:bg-zinc-800/80  backdrop-blur-lg p-4 flex flex-col gap-4 w-[90px] h-[300px] overflow-scroll origin-top"
             x-show="weekOpen" x-cloak x-on:click.outside="weekOpen = false" x-transition
         >
-            @foreach(getWeeksOfTheYear() as $index => $week)
+            @foreach(getWeeksOfTheYear($this->year) as $index => $week)
                 @php
                     $today = now()->toDateString();
                     $isCurrentWeek = $today >= $week['start_date'] && $today <= $week['end_date'];

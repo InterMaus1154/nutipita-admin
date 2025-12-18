@@ -68,8 +68,6 @@ trait HasQuickDueFilter
 
     public function setWeek(string $weekStart, string $weekEnd): void
     {
-//        $this->due_from = now()->startOfWeek(WeekDay::Sunday)->format('Y-m-d');
-//        $this->due_to = now()->endOfWeek(WeekDay::Saturday)->format('Y-m-d');
         $this->due_from = $weekStart;
         $this->due_to = $weekEnd;
         $this->activePeriod = "week";
@@ -98,8 +96,9 @@ trait HasQuickDueFilter
 
     public function setMonth(int $monthIndex): void
     {
-        $this->due_from = Carbon::create($this->year, $monthIndex, 1)->startOfMonth()->toDateString();
-        $this->due_to = Carbon::create($this->year, $monthIndex, 1)->endOfMonth()->toDateString();
+        $year = $this->year ?? now()->year;
+        $this->due_from = Carbon::create($year, $monthIndex, 1)->startOfMonth()->toDateString();
+        $this->due_to = Carbon::create($year, $monthIndex, 1)->endOfMonth()->toDateString();
         $this->activePeriod = "month";
 
         $this->afterChangeAction();
