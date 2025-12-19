@@ -5,6 +5,7 @@ namespace App\Livewire\Invoice;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Enums\OrderStatus;
+use App\Helpers\Format;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -41,6 +42,7 @@ class CreateInvoice extends Component
     public $customer_id = null;
     public array $invoiceProducts = [];
     public string $invoice_number;
+    public string $liveInvoiceTotal;
     // ---
     // End Form fields
     // ---
@@ -70,11 +72,37 @@ class CreateInvoice extends Component
 
         $this->setCurrentWeek();
         $this->year = now()->year;
+
+        $this->setAfterChangeMethod('afterDateChangeAction');
     }
 
     public function updated(): void
     {
         $this->dispatchEvent();
+        $this->calculateLiveInvoiceTotal();
+    }
+
+    // the method that will run after the setters are called from HasQuickDueFilter
+    public function afterDateChangeAction(): void
+    {
+        $this->dispatchEvent();
+        $this->calculateLiveInvoiceTotal();
+    }
+
+    public function calculateLiveInvoiceTotal(): void
+    {
+        if($this->formMode == 'auto'){
+            if(isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)){
+                $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
+                    ->where('customer_id', $this->customer_id)
+                    ->whereDate('order_due_at', '>', $this->due_from)
+                    ->whereDate('order_due_at', '<=', $this->due_to)
+                    ->join('order_product', 'orders.order_id', 'order_product.order_id')
+                    ->selectRaw('SUM(product_qty * order_product_unit_price) AS invoice_total')
+                    ->value('invoice_total'));
+            }
+        }
+
     }
 
     public function dispatchEvent(): void

@@ -40,10 +40,11 @@ trait HasQuickDueFilter
 
     public function afterChangeAction(): void
     {
-        if ($this->dispatchAble && method_exists($this, 'dispatchEvent')) {
-            $this->dispatchEvent();
-        } else if ($this->afterChangeMethod && method_exists($this, $this->afterChangeMethod)) {
+
+        if ($this->afterChangeMethod && method_exists($this, $this->afterChangeMethod)) {
             $this->{$this->afterChangeMethod}();
+        } else if ($this->dispatchAble && method_exists($this, 'dispatchEvent')) {
+            $this->dispatchEvent();
         }
     }
 
@@ -86,8 +87,8 @@ trait HasQuickDueFilter
 
     public function setYear(int $year): void
     {
-        $this->due_from = sprintf('%04d-%02d-%02d', $year,1,1);
-        $this->due_to = sprintf('%04d-%02d-%02d', $year,12,31);
+        $this->due_from = sprintf('%04d-%02d-%02d', $year, 1, 1);
+        $this->due_to = sprintf('%04d-%02d-%02d', $year, 12, 31);
 
         $this->year = $year;
         $this->activePeriod = 'year';

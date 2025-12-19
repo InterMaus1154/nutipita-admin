@@ -14,7 +14,7 @@
     <form method="POST" wire:submit="save" class="flex flex-col gap-4 m-0!">
         @csrf
         <div class="flex flex-wrap gap-4 sm:grid grid-cols-3 items-center">
-            <div class="flex gap-4">
+            <div class="flex gap-4 flex-wrap">
                 {{--customer--}}
                 <x-form.customer-select has-wire="true"/>
                 <x-form.form-wrapper>
@@ -67,11 +67,17 @@
                     <x-form.form-input type="date" id="due_to" wireModelLive="due_to"/>
                 </x-form.form-wrapper>
             </div>
-            <x-form.form-wrapper>
-                <x-form.form-label id="invoice_number" text="Invoice Number"/>
-                <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number"
-                                   class="max-w-[100px]!"/>
-            </x-form.form-wrapper>
+            <div class="flex gap-6 justify-self-end">
+                <x-form.form-wrapper>
+                    <x-form.form-label id="invoice_total" text="Invoice Total"/>
+                    <x-form.form-input id="invoice_total" name="invoice_total" disabled wireModelLive="liveInvoiceTotal" class="max-w-[100px]!"/>
+                </x-form.form-wrapper>
+                <x-form.form-wrapper>
+                    <x-form.form-label id="invoice_number" text="Invoice Number"/>
+                    <x-form.form-input id="invoice_number" name="invoice_number" wireModel="invoice_number"
+                                       class="max-w-[100px]!"/>
+                </x-form.form-wrapper>
+            </div>
         </div>
         <div class="flex gap-4">
             @if(!empty($customer_id) && $formMode === "manual")
