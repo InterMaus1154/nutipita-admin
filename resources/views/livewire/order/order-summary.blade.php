@@ -3,7 +3,7 @@
         <div class="space-y-4">
             <div wire:loading.remove @class([
                         'hidden' => !$visible,
-'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto'
+'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] justify-center gap-4 2xl:max-w-[90%] mx-auto'
                     ])>
                 @if($withIncome)
                     <x-data-box dataBoxHeader="Income" :dataBoxValue="moneyFormat($totalIncome)"/>
@@ -19,9 +19,9 @@
                         />
                 @endforeach
             </div>
-            <div class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))] justify-center gap-4 2xl:max-w-[65%] mx-auto" wire:loading.grid >
+            <div class="hidden grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] justify-center gap-4 2xl:max-w-[90%] mx-auto" wire:loading.grid >
                 @for($i=0;$i<4;$i++)
-                    <x-data-box class="h-[94px]">
+                    <x-data-box class="h-[112px]">
                         <div class="h-full w-full animate-shine"></div>
                     </x-data-box>
                 @endfor
