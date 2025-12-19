@@ -21,6 +21,7 @@
         <livewire:order.order-summary :filters="$filters" :withIncome="$withIncome"
                                       :visibleByDefault="$summaryVisibleByDefault"
                                       :disabled="$disabled"
+                                      :has-loading="$hasLoading"
         />
     @endif
     @if(!$disabled && $orders->isNotEmpty())
@@ -148,17 +149,20 @@
                         </x-table.row>
                     @endforeach
                 </x-table.body>
-                <x-table.body class="hidden" wire:loading.class="table-row-group!" wire:target.except="updateOrderStatus">
-                    @for($i = 0; $i < 5; $i++)
-                        <x-table.row>
-                            @for($j = 0; $j < 12; $j++)
-                                <x-table.data class="relative">
-                                    <div class="h-6 w-full animate-shine"></div>
-                                </x-table.data>
-                            @endfor
-                        </x-table.row>
-                    @endfor
-                </x-table.body>
+                {{--for loading animation--}}
+                @if($hasLoading)
+                    <x-table.body class="hidden" wire:loading.class="table-row-group!" wire:target.except="updateOrderStatus">
+                        @for($i = 0; $i < 5; $i++)
+                            <x-table.row>
+                                @for($j = 0; $j < 12; $j++)
+                                    <x-table.data class="relative">
+                                        <div class="h-6 w-full animate-shine"></div>
+                                    </x-table.data>
+                                @endfor
+                            </x-table.row>
+                        @endfor
+                    </x-table.body>
+                @endif
             </x-table.table>
         </div>
         {{--cards on mobile--}}
@@ -168,13 +172,16 @@
                 <x-order.mobile-order-card wire:key="order-mobile-card-{{$order->order_id}}" :order="$order"/>
             @endforeach
         </div>
-        <div class="flex-col gap-4 hidden" wire:loading.class="max-sm:flex">
-            @for($i = 0; $i<5;$i++)
-                <x-ui.mobile-card-skeleton class="h-[175px]">
-                    <div class="h-10 w-full animate-shine"></div>
-                </x-ui.mobile-card-skeleton>
-            @endfor
-        </div>
+        {{--for loading animation--}}
+        @if($hasLoading)
+            <div class="flex-col gap-4 hidden" wire:loading.class="max-sm:flex">
+                @for($i = 0; $i<5;$i++)
+                    <x-ui.mobile-card-skeleton class="h-[175px]">
+                        <div class="h-10 w-full animate-shine"></div>
+                    </x-ui.mobile-card-skeleton>
+                @endfor
+            </div>
+        @endif
     @endif
     {{--bottom pagination--}}
     <div>

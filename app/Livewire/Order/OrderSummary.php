@@ -21,6 +21,8 @@ class OrderSummary extends Component
     #[Reactive]
     public $disabled = false;
 
+    public bool $hasLoading = true;
+
     public bool $visible = false;
     public bool $withIncome = false;
 

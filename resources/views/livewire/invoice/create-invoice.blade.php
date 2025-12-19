@@ -95,7 +95,7 @@
                             <x-form.form-input type="number" placeholder="Quantity"
                                                id="invoiceProducts[{{$product->product_id}}]"
                                                name="invoiceProducts[{{$product->product_id}}]"
-                                               wireModel="invoiceProducts.{{$product->product_id}}"
+                                               wireModelLive="invoiceProducts.{{$product->product_id}}"
                             />
                         </x-form.form-wrapper>
                     @endif
@@ -113,5 +113,5 @@
                 ];
     @endphp
     <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true" :prop-filters="$filters"
-                         :disabled="empty($customer_id)"/>
+                         :disabled="empty($customer_id)" :has-loading="false"/>
 </div>

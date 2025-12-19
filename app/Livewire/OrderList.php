@@ -36,7 +36,9 @@ class OrderList extends Component
     public array $propFilters = [];
 
     #[Reactive]
-    public $disabled = false;
+    public bool $disabled = false;
+
+    public bool $hasLoading = true;
 
     /*
      * Variables for summary

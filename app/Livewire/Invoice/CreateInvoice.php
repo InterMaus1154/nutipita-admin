@@ -42,7 +42,7 @@ class CreateInvoice extends Component
     public $customer_id = null;
     public array $invoiceProducts = [];
     public string $invoice_number;
-    public string $liveInvoiceTotal;
+    public string $liveInvoiceTotal = '£----';
     // ---
     // End Form fields
     // ---
@@ -89,8 +89,13 @@ class CreateInvoice extends Component
         $this->calculateLiveInvoiceTotal();
     }
 
+    /**
+     * Calculate live total for invoice during creation
+     * @return void
+     */
     public function calculateLiveInvoiceTotal(): void
     {
+        $this->liveInvoiceTotal = "£----";
         if($this->formMode == 'auto'){
             if(isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)){
                 $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
@@ -100,6 +105,17 @@ class CreateInvoice extends Component
                     ->join('order_product', 'orders.order_id', 'order_product.order_id')
                     ->selectRaw('SUM(product_qty * order_product_unit_price) AS invoice_total')
                     ->value('invoice_total'));
+            }
+        }else{
+            if(isset($this->customer_id)){
+                $selectedProducts = collect($this->invoiceProducts)->filter(fn($qty) => $qty > 0);
+                $sum = 0;
+                foreach ($selectedProducts as $productId => $qty){
+                    $product = Product::find($productId);
+                    $product->setCurrentCustomer($this->customer_id);
+                    $sum += ($product->price * $qty);
+                }
+                $this->liveInvoiceTotal = moneyFormat((double)$sum);
             }
         }
 
