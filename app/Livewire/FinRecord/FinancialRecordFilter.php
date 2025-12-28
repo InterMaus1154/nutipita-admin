@@ -24,6 +24,7 @@ class FinancialRecordFilter extends Component
 //        $this->setCurrentMonth();
         $this->selectedType = null;
         $this->financialCategories = FinancialCategory::all();
+        $this->year = now()->year;
     }
 
     public function toggleType(FinancialRecordType $type): void
