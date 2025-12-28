@@ -9,6 +9,8 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Carbon\WeekDay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -221,7 +223,7 @@ class OrderController extends Controller
         $week = [
             'start' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday),
             'end'   => $last->copy()->endOfWeek(\Carbon\WeekDay::Saturday),
-            'weekNum' => $first->copy()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week
+            'weekNum' => getCurrentWeekNumber($first)
         ];
 
         return Pdf::loadView('pdf.order-summary', compact('orders', 'products', 'customer', 'periodTotal', 'productTotals', 'week'))

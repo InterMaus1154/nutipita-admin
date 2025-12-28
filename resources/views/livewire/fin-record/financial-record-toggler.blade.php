@@ -19,20 +19,4 @@
             <livewire:fin-record.financial-record-list :type="FinancialRecordType::EXPENSE"/>
         </div>
     </div>
-{{--    --}}{{--expense only--}}
-{{--    <div--}}
-{{--        x-show="selectedType === '@js(FinancialRecordType::EXPENSE->value)'"--}}
-{{--        x-cloak--}}
-{{--        class="flex flex-col gap-4">--}}
-{{--        <h2 class="text-center">Expense</h2>--}}
-{{--        <livewire:fin-record.financial-record-list :type="FinancialRecordType::EXPENSE"/>--}}
-{{--    </div>--}}
-{{--    --}}{{--income only--}}
-{{--    <div--}}
-{{--        x-show="selectedType === '@js(FinancialRecordType::INCOME->value)'"--}}
-{{--        x-cloak--}}
-{{--        class="flex flex-col gap-4">--}}
-{{--        <h2 class="text-center">Income</h2>--}}
-{{--        <livewire:fin-record.financial-record-list :type="FinancialRecordType::INCOME"/>--}}
-{{--    </div>--}}
 </div>

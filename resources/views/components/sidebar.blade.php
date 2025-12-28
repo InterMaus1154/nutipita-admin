@@ -68,14 +68,11 @@
 </flux:sidebar>
 
 <flux:header class="grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_auto_1fr] items-center z-100 bg-zinc-800 shadow-md py-2" sticky>
-    @php
-        $week = now()->startOfWeek(\Carbon\WeekDay::Sunday)->endOfWeek(\Carbon\WeekDay::Saturday)->week;
-    @endphp
     <flux:sidebar.toggle icon="bars-2" inset="left" class="sm:hidden"/>
     <div class="justify-self-start! max-sm:justify-self-end! flex gap-2 items-center sm:flex-row-reverse">
         <div>
             <span class="font-bold">
-            Week {{$week}}
+            Week {{getCurrentWeekNumber()}}
             </span>
         </div>
         <flux:dropdown position="top" align="right">

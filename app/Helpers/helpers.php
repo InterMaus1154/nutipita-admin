@@ -98,3 +98,17 @@ if(!function_exists('resolveModel')){
     }
 }
 
+if(!function_exists('getCurrentWeekNumber')){
+    function getCurrentWeekNumber(?Carbon $date = null): int
+    {
+        $date = $date ?? now();
+        $year = $date->year;
+
+        $start = Carbon::create($year, 1, 1)->startOfWeek(\Carbon\WeekDay::Sunday);
+
+        $current = $date->copy()->startOfWeek(\Carbon\WeekDay::Sunday);
+
+        return $start->diffInWeeks($current) + 1;
+    }
+}
+
