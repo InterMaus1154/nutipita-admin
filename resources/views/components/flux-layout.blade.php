@@ -21,6 +21,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet"/>
     <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
     <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
+    <script src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"></script>
     <meta name="robots" content="noindex">
     @vite(['resources/css/app.css'])
     @livewireStyles

@@ -3,6 +3,7 @@
 
 use App\Helpers\ModelResolver;
 use Carbon\Carbon;
+use Carbon\WeekDay;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Format;
 
@@ -99,16 +100,18 @@ if(!function_exists('resolveModel')){
 }
 
 if(!function_exists('getCurrentWeekNumber')){
-    function getCurrentWeekNumber(?Carbon $date = null): int
+    function getCurrentWeekNumber(Carbon|string $date = null): int
     {
-        $date = $date ?? now();
-        $year = $date->year;
+        if(is_null($date)){
+            $date = now();
+        }else{
+            $date = dateToCarbon($date, "Week Number input date");
+        }
 
-        $start = Carbon::create($year, 1, 1)->startOfWeek(\Carbon\WeekDay::Sunday);
-
-        $current = $date->copy()->startOfWeek(\Carbon\WeekDay::Sunday);
-
-        return $start->diffInWeeks($current) + 1;
+        return Carbon::create($date->year, $date->month, $date->day)
+            ->startOfWeek(WeekDay::Sunday)
+            ->endOfWeek(WeekDay::Saturday)
+            ->week;
     }
 }
 
