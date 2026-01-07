@@ -36,7 +36,7 @@ class InvoiceList extends Component
 
     public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
     {
-        if(!auth()->check()) {
+        if (!auth()->check()) {
             abort(403);
         }
 
@@ -45,9 +45,9 @@ class InvoiceList extends Component
             ->whereDate('order_due_at', '>=', $invoice->invoice_from)
             ->whereDate('order_due_at', '<=', $invoice->invoice_to);
 
-        if($newValue === InvoiceStatus::due->name){
+        if ($newValue === InvoiceStatus::due->name) {
             $this->markOrdersAsUnpaid($orderQuery);
-        }else if($newValue === InvoiceStatus::paid->name){
+        } else if ($newValue === InvoiceStatus::paid->name) {
             $this->markOrdersAsPaid($orderQuery);
         }
 
@@ -73,7 +73,7 @@ class InvoiceList extends Component
             abort(403);
         }
         DB::beginTransaction();
-        try{
+        try {
             $invoice->update([
                 'invoice_status' => 'paid'
             ]);
@@ -89,7 +89,7 @@ class InvoiceList extends Component
             $this->markOrdersAsPaid($orderQuery);
 
             DB::commit();
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             session()->flash('error', 'Error at updating invoice or orders');
@@ -105,7 +105,7 @@ class InvoiceList extends Component
             abort(403);
         }
         DB::beginTransaction();
-        try{
+        try {
             $invoice->update([
                 'invoice_status' => 'due'
             ]);
@@ -121,7 +121,7 @@ class InvoiceList extends Component
             $this->markOrdersAsUnpaid($orderQuery);
 
             DB::commit();
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             session()->flash('error', 'Error at updating invoice or orders');
@@ -192,7 +192,7 @@ class InvoiceList extends Component
     public function customSorts(): array
     {
         return [
-            'customer' => function(Builder $query){
+            'customer' => function (Builder $query) {
                 $query
                     ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
                     ->orderBy('customers.customer_name', $this->sortDirection)
@@ -208,6 +208,12 @@ class InvoiceList extends Component
         $query = Invoice::query()
             ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoices.customer_id', $filters['customer_id']);
+            })
+            ->when(!empty($filters['invoice_from']), function (Builder $builder) use ($filters) {
+                return $builder->where('invoices.invoice_due_date', '>=', $filters['invoice_from']);
+            })
+            ->when(!empty($filters['invoice_to']), function (Builder $builder) use ($filters) {
+                return $builder->where('invoices.invoice_due_date', '<=', $filters['invoice_to']);
             })
             ->with('customer:customer_id,customer_name', 'products', 'products.product');
 

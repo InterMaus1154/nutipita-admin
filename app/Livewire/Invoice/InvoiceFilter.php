@@ -12,7 +12,9 @@ class InvoiceFilter extends Component
 
     // --- Filter data ---
     public $customer_id = null;
-    public ?string $invoice_status = null;
+    public $invoice_from = null;
+    public $invoice_to = null;
+
     // ---
 
     public Collection $customers;
@@ -30,7 +32,8 @@ class InvoiceFilter extends Component
     {
         $this->dispatch('update-filter', [
             'customer_id' => $this->customer_id,
-            'invoice_status' => $this->invoice_status
+            'invoice_from' => $this->invoice_from,
+            'invoice_to' => $this->invoice_to
         ])->to(InvoiceList::class);
 
     }
