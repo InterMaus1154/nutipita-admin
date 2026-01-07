@@ -211,11 +211,16 @@ class InvoiceList extends Component
             })
             ->with('customer:customer_id,customer_name', 'products', 'products.product');
 
+        $invoiceTotals = $query->clone()->selectRaw('SUM(invoice_total) AS invoice_totals')->value('invoice_totals');
+        $invoiceCount = $query->clone()->selectRaw('COUNT(*) AS invoice_count')->value('invoice_count');
+
         $this->applySort($query, $this->customSorts());
 
         $invoices = $query->paginate(15);
         return view('livewire.invoice.invoice-list', [
-            'invoices' => $invoices
+            'invoices' => $invoices,
+            'invoiceTotals' => $invoiceTotals,
+            'invoiceCount' => $invoiceCount
         ]);
     }
 }
