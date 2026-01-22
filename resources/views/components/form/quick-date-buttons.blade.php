@@ -54,7 +54,6 @@
 
             $firstYear = null;
             if(!is_null($firstYearDate)){
-                dd($firstYearDate);
                 $firstYear = Format::getYearFromDate($firstYear);
             }
 
@@ -63,7 +62,6 @@
 
             $latestYear = null;
             if(!is_null($latestYearDate)){
-                dd($latestYearDate);
                 $latestYear = Format::getYearFromDate($latestYear);
                 $hasYear = true;
             }
