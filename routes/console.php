@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Schedule;
 
 // checking if any standing order to be activated
 Schedule::command('app:check-standing-order-status')
-    ->dailyAt('02:00');
+    ->dailyAt('0:01');
 
 // creating order records from standing order
 Schedule::command('app:create-order-from-standing')
-    ->dailyAt('03:00');
+    ->dailyAt('00:02');
