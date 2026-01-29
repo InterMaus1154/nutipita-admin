@@ -48,21 +48,21 @@
             // get years, where order exists
 
             $firstYearDate = Order::orderBy('order_due_at', 'asc')->take(1)->first('order_due_at');
-            $firstYearDate ? $firstYearDate->value('order_due_at') : null;
+            $firstYearDate = $firstYearDate ? $firstYearDate->value('order_due_at') : null;
 
             $hasYear = false;
 
             $firstYear = null;
             if(!is_null($firstYearDate)){
-                $firstYear = Format::getYearFromDate($firstYear);
+                $firstYear = Format::getYearFromDate($firstYearDate);
             }
 
-            $latestYearDate = Order::orderBy('order_due_at', 'desc')->take(1)->first('order_due_at');
-            $latestYearDate ? $latestYearDate->value('order_due_at') : null;
+            $latestYearDate = Order::orderBy('order_due_at', 'desc')->take(1);
+            $latestYearDate = $latestYearDate ? $latestYearDate->value('order_due_at') : null;
 
             $latestYear = null;
             if(!is_null($latestYearDate)){
-                $latestYear = Format::getYearFromDate($latestYear);
+                $latestYear = Format::getYearFromDate($latestYearDate);
                 $hasYear = true;
             }
 
