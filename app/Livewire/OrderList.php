@@ -124,7 +124,7 @@ class OrderList extends Component
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
-            ->paginate(15);
+            ->paginate(50);
 
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
