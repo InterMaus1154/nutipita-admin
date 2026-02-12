@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
-use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,8 +21,14 @@ class DatabaseSeeder extends Seeder
                 'password' => 'test'
             ]);
 
-            $this->createData();
-
+            $file = __DIR__ . '/nutipita_prod_db.sql';
+            if (!file_exists($file)) return; // file may not be present, as not pushed to git
+            try {
+                $content = file_get_contents($file);
+                DB::unprepared($content);
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
         }
     }
 }
