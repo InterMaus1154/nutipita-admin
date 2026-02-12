@@ -75,7 +75,7 @@
     <flux:sidebar.toggle icon="bars-2" inset="left" class="sm:hidden"/>
     <div class="justify-self-start! max-sm:justify-self-end! flex gap-2 items-center sm:flex-row-reverse">
         <div>
-            <span class="font-bold">
+            <span class="font-bold text-green-300">
                 Week {{getCurrentWeekNumber()}} @if(!app()->isProduction()) <span class="text-red-500">DEBUG</span>
 
                 @endif
