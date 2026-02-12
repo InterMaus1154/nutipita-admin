@@ -8,8 +8,8 @@
         {
             $year = $year ?? now()->year;
 
-            $start = Carbon::create($year, 1, 1)->startOfWeek(WeekDay::Sunday);
-            $end = Carbon::create($year, 12, 31)->endOfWeek(WeekDay::Saturday);
+            $start = Carbon::create($year, 1, 1)->startOfWeek();
+            $end = Carbon::create($year, 12, 31)->endOfWeek();
 
             $weeks = collect();
 
@@ -17,7 +17,7 @@
 
             for ($date = $start->copy(); $date->lte($end); $date->addWeek()) {
                 $weekStart = $date->copy();
-                $weekEnd = $date->copy()->endOfWeek(WeekDay::Saturday);
+                $weekEnd = $date->copy()->endOfWeek();
 
                 $weeks->push([
                     'week' => $weekNumber,

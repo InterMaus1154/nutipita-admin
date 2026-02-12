@@ -75,7 +75,7 @@ if (!function_exists('amountFormat')) {
 if (!function_exists('moneyFormat')) {
     function moneyFormat($amount): string
     {
-        return '£'.Format::numberFormat(roundUp($amount, 2), 2);
+        return '£' . Format::numberFormat(roundUp($amount, 2), 2);
     }
 }
 
@@ -88,29 +88,27 @@ if (!function_exists('unitPriceFormat')) {
      */
     function unitPriceFormat(string|int|float $amount): string
     {
-        return '£'.Format::unitPriceFormat($amount);
+        return '£' . Format::unitPriceFormat($amount);
     }
 }
 
-if(!function_exists('resolveModel')){
+if (!function_exists('resolveModel')) {
     function resolveModel(Model|int|string $id, string $modelClass): Model|null
     {
         return ModelResolver::resolve($id, $modelClass);
     }
 }
 
-if(!function_exists('getCurrentWeekNumber')){
+if (!function_exists('getCurrentWeekNumber')) {
     function getCurrentWeekNumber(Carbon|string $date = null): int
     {
-        if(is_null($date)){
+        if (is_null($date)) {
             $date = now();
-        }else{
+        } else {
             $date = dateToCarbon($date, "Week Number input date");
         }
 
         return Carbon::create($date->year, $date->month, $date->day)
-            ->startOfWeek(WeekDay::Sunday)
-            ->endOfWeek(WeekDay::Saturday)
             ->week;
     }
 }
