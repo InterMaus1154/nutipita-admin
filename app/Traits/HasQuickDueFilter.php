@@ -78,8 +78,8 @@ trait HasQuickDueFilter
 
     public function setCurrentWeek(): void
     {
-        $this->due_from = now()->startOfWeek(WeekDay::Sunday)->format('Y-m-d');
-        $this->due_to = now()->endOfWeek(WeekDay::Saturday)->format('Y-m-d');
+        $this->due_from = now()->startOfWeek()->format('Y-m-d');
+        $this->due_to = now()->endOfWeek()->format('Y-m-d');
 
         $this->activePeriod = "week";
         $this->afterChangeAction();
