@@ -102,11 +102,6 @@ class InvoiceService
             }
         });
 
-        // update total on invoice record
-        $invoice = $invoiceProductDtos->first()->invoice();
-        $invoice->update([
-            'invoice_total' => $invoiceTotal + $invoice->invoice_delivery_charge
-        ]);
 
         return $this->generateInvoicePdf([
             'fromBulk' => true,
