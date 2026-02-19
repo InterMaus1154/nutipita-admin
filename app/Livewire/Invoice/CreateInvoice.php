@@ -275,7 +275,7 @@ class CreateInvoice extends Component
      */
     public function resetInvoiceForm(): void
     {
-        $this->reset('customer_id', 'invoiceProducts');
+        $this->reset('customer_id', 'invoiceProducts', 'invoice_delivery_charge');
         $this->invoice_number = Invoice::getNextInvoiceNumber();
         $this->setCurrentWeek();
     }
