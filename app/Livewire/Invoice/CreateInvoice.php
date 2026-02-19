@@ -38,7 +38,7 @@ class CreateInvoice extends Component
     public string $invoice_issue_date;
     public string $invoice_due_date;
 
-    public float|null $invoice_delivery_charge = 0.00;
+    public float|null $invoice_delivery_charge = null;
 
     public $customer_id = null;
     public array $invoiceProducts = [];

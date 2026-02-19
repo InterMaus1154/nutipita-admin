@@ -330,6 +330,22 @@
                         @php($i++)
                     @endforeach
                 @endif
+                @if(!empty($invoice->invoice_delivery_charge))
+                    <tr>
+                        <td class="col-index">{{$i}}</td>
+                        <td class="col-description">
+                            <span
+                                class="product-data-name">Delivery Charge</span>
+                            <br>
+                        </td>
+                        <td class="col-amount">
+                            <span
+                                class="product-data-name">
+                                @moneyFormat($invoice->invoice_delivery_charge)
+                            </span>
+                        </td>
+                    </tr>
+                @endif
                 </tbody>
                 <tfoot>
                 <tr>
@@ -342,7 +358,7 @@
                     <td class="footer-right text-right">
                         <strong style="font-size: 1.25rem;">
                             <span>Total:</span>
-                            @moneyFormat($totalPrice)
+                            @moneyFormat($invoice->invoice_total)
                         </strong>
                     </td>
                 </tr>
