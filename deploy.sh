@@ -13,7 +13,7 @@ cd ~/public_html/lar || exit
 
 # Put application in maintenance mode
 echo -e "${YELLOW}Putting application in maintenance mode...${NC}"
-php artisan down --retry=15 --refresh=15
+php artisan down --retry=10 --refresh=10
 
 # Pull latest changes from GitHub
 echo -e "${YELLOW}Pulling latest code from GitHub...${NC}"
