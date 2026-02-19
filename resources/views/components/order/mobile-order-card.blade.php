@@ -29,7 +29,7 @@
             <x-ui.mobile-card-dropdown-link href="{{route('orders.edit', compact('order'))}}">Edit
             </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
-                <x-ui.mobile-card-dropdown-link href="#" wire:click="openInvoiceModal({{$order->order_id}})">Generate
+                <x-ui.mobile-card-dropdown-link class="select-none" wire:click="openInvoiceModal({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
