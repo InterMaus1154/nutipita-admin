@@ -315,7 +315,6 @@ class CreateInvoice extends Component
     {
         $this->reset('customer_id', 'invoiceProducts', 'invoice_delivery_charge');
         $this->invoice_number = Invoice::getNextInvoiceNumber();
-//        $this->setCurrentWeek();
     }
 
     /**
