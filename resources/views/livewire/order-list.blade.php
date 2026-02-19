@@ -160,7 +160,7 @@
         {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
     </div>
     {{--delivery charge modal--}}
-    @if(!empty($selectedOrderId))
+    @if($modalVisible)
         <div class="fixed inset-0 bg-black/80 z-[999] flex justify-center items-center" x-data x-on:click="$wire.closeInvoiceModal()">
             <div class="relative p-6 border border-accent rounded-md w-[20%] min-w-[400px] min-h-[150px] bg-zinc-900 flex gap-4 flex-col items-center" x-on:click.stop>
                 <div class="absolute top-4 right-4">

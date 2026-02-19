@@ -60,17 +60,19 @@ class OrderList extends Component
 
 
     // for single invoice creation
+    public bool $modalVisible = false;
     public ?int $selectedOrderId = null;
     public float|null $invoice_delivery_charge = null;
 
     public function openInvoiceModal(int $selectedOrderId): void
     {
         $this->selectedOrderId = $selectedOrderId;
+        $this->modalVisible = true;
     }
 
     public function closeInvoiceModal(): void
     {
-        $this->reset('selectedOrderId', 'invoice_delivery_charge');
+        $this->reset('modalVisible','selectedOrderId', 'invoice_delivery_charge');
     }
 
     public function createInvoice(): void
@@ -79,11 +81,14 @@ class OrderList extends Component
             'invoice_delivery_charge' => 'nullable|numeric|min:0'
         ]);
 
+        $orderId = $this->selectedOrderId;
+        $deliveryCharge = $this->invoice_delivery_charge;
+
         $this->closeInvoiceModal();
 
         $this->redirect(route('invoices.create-single', [
-            'order' => $this->selectedOrderId,
-            'invoice_delivery_charge' => $this->invoice_delivery_charge
+            'order' => $orderId,
+            'invoice_delivery_charge' => $deliveryCharge
         ]));
 
 
