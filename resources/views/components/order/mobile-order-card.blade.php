@@ -29,7 +29,7 @@
             <x-ui.mobile-card-dropdown-link href="{{route('orders.edit', compact('order'))}}">Edit
             </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
-                <x-ui.mobile-card-dropdown-link class="select-none" wire:click="openInvoiceModal({{$order->order_id}})">Generate
+                <x-ui.mobile-card-dropdown-link wire:click="openInvoiceModal({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
@@ -137,7 +137,6 @@
             @unless($order->invoice)
                 <flux:link class="cursor-pointer"
                            title="Create invoice"
-                           href="#"
                            wire:click="openInvoiceModal({{$order->order_id}})"
                 >
                     <flux:icon.clipboard-document-list class="!inline"/>

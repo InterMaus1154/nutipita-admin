@@ -127,7 +127,6 @@
                                 @unless($order->invoice)
                                     <flux:link class="cursor-pointer"
                                                title="Create invoice"
-                                               href="#"
                                                wire:click="openInvoiceModal({{$order->order_id}})"
                                     >
                                         <flux:icon.clipboard-document-list class="!inline"/>
