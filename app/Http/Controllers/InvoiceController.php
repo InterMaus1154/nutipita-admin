@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -22,41 +23,49 @@ class InvoiceController extends Controller
      * Create an invoice for a single order - from order list
      * @param Order $order
      * @param InvoiceService $invoiceService
+     * @param Request $request
      * @return RedirectResponse
+     * @throws \Throwable
      */
-    public function createSingleInvoice(Order $order, InvoiceService $invoiceService): RedirectResponse
+    public function createSingleInvoice(Order $order, InvoiceService $invoiceService, Request $request): RedirectResponse
     {
-        // check if the order already has an invoice
         if ($order->invoice()->exists()) {
             return redirect()->route('invoices.download', ['invoice' => $order->invoice()->first()]);
         }
+
         $order->loadMissing('customer', 'products');
+
+
+        $invoiceDeliveryCharge = $request->input('invoice_delivery_charge');
+
         DB::beginTransaction();
         try {
-            // create invoice dto from the order data
             $invoiceDto = InvoiceDto::from(
                 customer: $order->customer,
                 invoiceOrdersFrom: $order->order_due_at,
                 invoiceOrdersTo: $order->order_due_at,
-                order: $order
+                order: $order,
+                invoiceDeliveryCharge: $invoiceDeliveryCharge
             );
 
-            // create invoice from dto
             $invoice = $invoiceService->generateInvoice($invoiceDto);
-
-            // generate DTOs from order products
             $invoiceProductDTOs = $invoiceService->generateInvoiceProductDTOs($invoice, $order->products);
-
             $invoiceService->generateInvoiceProductRecords($invoiceProductDTOs);
+
+            $invoiceTotal = $invoiceProductDTOs->sum(function (InvoiceProductDto $dto) {
+                    return $dto->productQty() * $dto->productUnitPrice();
+                }) + ($invoiceDeliveryCharge ?? 0);
+
+            $invoice->update([
+                'invoice_total' => $invoiceTotal
+            ]);
 
             $order->update([
                 'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
             ]);
 
-            // generate invoice pdf
-            $invoiceService
-                ->generateInvoicePdfFromDtos($invoiceProductDTOs)
-                ->save($invoice->invoice_path, 'local');
+            $invoiceService->generateInvoicePdfFromDtos($invoiceProductDTOs)->save($invoice->invoice_path, 'local');
+
             DB::commit();
             return redirect()->route('invoices.download', compact('invoice'));
         } catch (\Exception $e) {
