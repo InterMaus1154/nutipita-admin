@@ -38,6 +38,7 @@ class CreateInvoice extends Component
     public string $invoice_issue_date;
     public string $invoice_due_date;
 
+    public float|null $invoice_delivery_charge = 0.00;
 
     public $customer_id = null;
     public array $invoiceProducts = [];
@@ -96,21 +97,21 @@ class CreateInvoice extends Component
     public function calculateLiveInvoiceTotal(): void
     {
         $this->liveInvoiceTotal = "£----";
-        if($this->formMode == 'auto'){
-            if(isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)){
+        if ($this->formMode == 'auto') {
+            if (isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)) {
                 $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
                     ->where('customer_id', $this->customer_id)
-                    ->whereDate('order_due_at', '>', $this->due_from)
+                    ->whereDate('order_due_at', '>=', $this->due_from)
                     ->whereDate('order_due_at', '<=', $this->due_to)
                     ->join('order_product', 'orders.order_id', 'order_product.order_id')
                     ->selectRaw('SUM(product_qty * order_product_unit_price) AS invoice_total')
                     ->value('invoice_total'));
             }
-        }else{
-            if(isset($this->customer_id)){
+        } else {
+            if (isset($this->customer_id)) {
                 $selectedProducts = collect($this->invoiceProducts)->filter(fn($qty) => $qty > 0);
                 $sum = 0;
-                foreach ($selectedProducts as $productId => $qty){
+                foreach ($selectedProducts as $productId => $qty) {
                     $product = Product::find($productId);
                     $product->setCurrentCustomer($this->customer_id);
                     $sum += ($product->price * $qty);
@@ -143,7 +144,8 @@ class CreateInvoice extends Component
             'invoice_issue_date' => 'required|date',
             'due_from' => 'required|date',
             'due_to' => 'required|date',
-            'invoice_number' => 'required|string|unique:invoices,invoice_number'
+            'invoice_number' => 'required|string|unique:invoices,invoice_number',
+            'invoice_delivery_charge' => 'nullable|numeric|min:0'
         ]);
 
         DB::beginTransaction();
@@ -171,7 +173,8 @@ class CreateInvoice extends Component
                 invoiceDueDate: $this->invoice_due_date,
                 invoiceOrdersFrom: $firstOrderDate,
                 invoiceOrdersTo: $lastOrderDate,
-                invoiceNumber: $this->invoice_number
+                invoiceNumber: $this->invoice_number,
+                invoiceDeliveryCharge: $this->invoice_delivery_charge
             );
             $invoice = $invoiceService->generateInvoice($invoiceDto);
 
@@ -220,6 +223,10 @@ class CreateInvoice extends Component
                 $products = collect();
                 foreach ($this->ordersAll as $order) {
                     $products = $products->merge($order->products);
+                }
+                if ($products->isEmpty()) {
+                    session()->flash('error', 'No products to create invoice from');
+                    return;
                 }
                 // group products by product ids, then create invoice product dtos
                 $invoiceProductDtos = $products

@@ -68,9 +68,17 @@
                 </x-form.form-wrapper>
             </div>
             <div class="flex gap-6 justify-self-end">
+                {{--delivery charge--}}
+                <x-form.form-wrapper>
+                    <x-form.form-label id="invoice_delivery_charge" text="Delivery Charge">
+                    </x-form.form-label>
+                    <x-form.form-input type="number" id="invoice_delivery_charge" name="invoice_delivery_charge"
+                                       wireModelLive="invoice_delivery_charge" placeholder="Delivery" class="max-w-[100px]!"/>
+                </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_total" text="Invoice Total"/>
-                    <x-form.form-input id="invoice_total" name="invoice_total" disabled wireModelLive="liveInvoiceTotal" class="max-w-[100px]!"/>
+                    <x-form.form-input id="invoice_total" name="invoice_total" disabled wireModelLive="liveInvoiceTotal"
+                                       class="max-w-[100px]!"/>
                 </x-form.form-wrapper>
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_number" text="Invoice Number"/>
