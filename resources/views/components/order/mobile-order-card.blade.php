@@ -29,7 +29,7 @@
             <x-ui.mobile-card-dropdown-link href="{{route('orders.edit', compact('order'))}}">Edit
             </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
-                <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-single', compact('order'))}}">Generate
+                <x-ui.mobile-card-dropdown-link wire:click="openInvoiceModal({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
@@ -137,11 +137,7 @@
             @unless($order->invoice)
                 <flux:link class="cursor-pointer"
                            title="Create invoice"
-                           x-data x-on:click.prevent="
-                                                    if(window.confirm('Are you sure to generate this invoice?')){
-                                                        window.location.href = '{{route('invoices.create-single', compact('order'))}}';
-                                                    }
-                                                "
+                           wire:click="openInvoiceModal({{$order->order_id}})"
                 >
                     <flux:icon.clipboard-document-list class="!inline"/>
                 </flux:link>

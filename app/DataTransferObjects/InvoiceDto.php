@@ -24,7 +24,8 @@ final readonly class InvoiceDto
                                  private InvoiceStatus $invoiceStatus,
                                  private string        $invoiceNumber,
                                  private string        $invoiceName,
-                                 private int|null      $orderId
+                                 private int|null      $orderId,
+                                 private float|null    $invoiceDeliveryCharge
 
     )
     {
@@ -42,14 +43,16 @@ final readonly class InvoiceDto
      * @param Order|string|int|null $order - single order to which the invoice might belong
      * @return InvoiceDto
      */
-    public static function from(Customer|int|string   $customer,
-                                Carbon|string|null    $invoiceIssueDate = null,
-                                Carbon|string|null    $invoiceDueDate = null,
-                                Carbon|string         $invoiceOrdersFrom = null,
-                                Carbon|string|null    $invoiceOrdersTo = null,
-                                InvoiceStatus|string  $invoiceStatus = InvoiceStatus::due,
-                                string|null           $invoiceNumber = null,
-                                Order|string|int|null $order = null
+    public
+    static function from(Customer|int|string   $customer,
+                         Carbon|string|null    $invoiceIssueDate = null,
+                         Carbon|string|null    $invoiceDueDate = null,
+                         Carbon|string         $invoiceOrdersFrom = null,
+                         Carbon|string|null    $invoiceOrdersTo = null,
+                         InvoiceStatus|string  $invoiceStatus = InvoiceStatus::due,
+                         string|null           $invoiceNumber = null,
+                         Order|string|int|null $order = null,
+                         float|null            $invoiceDeliveryCharge = null
     ): InvoiceDto
     {
         // check what type of customer is provided
@@ -113,7 +116,8 @@ final readonly class InvoiceDto
             invoiceStatus: $invoiceStatus,
             invoiceNumber: $invoiceNumber,
             invoiceName: $invoiceName,
-            orderId: $order);
+            orderId: $order,
+            invoiceDeliveryCharge: $invoiceDeliveryCharge);
     }
 
     /*
@@ -124,7 +128,8 @@ final readonly class InvoiceDto
      * Returns a customer model instance
      * @return Customer
      */
-    public function customer(): Customer
+    public
+    function customer(): Customer
     {
         return $this->customer;
     }
@@ -134,7 +139,8 @@ final readonly class InvoiceDto
      * Returns a Carbon date instance
      * @return Carbon
      */
-    public function invoiceIssueDate(): Carbon
+    public
+    function invoiceIssueDate(): Carbon
     {
         return $this->invoiceIssueDate;
     }
@@ -144,7 +150,8 @@ final readonly class InvoiceDto
      * Returns a Carbon date instance
      * @return Carbon
      */
-    public function invoiceDueDate(): Carbon
+    public
+    function invoiceDueDate(): Carbon
     {
         return $this->invoiceDueDate;
     }
@@ -155,7 +162,8 @@ final readonly class InvoiceDto
      * that date will be returned as the "orders from" date.
      * @return Carbon|null
      */
-    public function invoiceOrdersFrom(): Carbon|null
+    public
+    function invoiceOrdersFrom(): Carbon|null
     {
         return $this->invoiceOrdersFrom;
     }
@@ -167,7 +175,8 @@ final readonly class InvoiceDto
      *  that date will be returned as the "orders to" date
      * @return Carbon|null
      */
-    public function invoiceOrdersTo(): Carbon|null
+    public
+    function invoiceOrdersTo(): Carbon|null
     {
         return $this->invoiceOrdersTo;
     }
@@ -177,7 +186,8 @@ final readonly class InvoiceDto
      * Returns an InvoiceStatus enum
      * @return InvoiceStatus
      */
-    public function invoiceStatus(): InvoiceStatus
+    public
+    function invoiceStatus(): InvoiceStatus
     {
         return $this->invoiceStatus;
     }
@@ -186,7 +196,8 @@ final readonly class InvoiceDto
      * Returns a valid invoice number
      * @return string
      */
-    public function invoiceNumber(): string
+    public
+    function invoiceNumber(): string
     {
         return $this->invoiceNumber;
     }
@@ -196,7 +207,8 @@ final readonly class InvoiceDto
      * Eg: INV-0001.pdf
      * @return string
      */
-    public function invoiceName(): string
+    public
+    function invoiceName(): string
     {
         return $this->invoiceName;
     }
@@ -206,9 +218,20 @@ final readonly class InvoiceDto
      * Only in case of single invoice generation from a single order
      * @return int|null
      */
-    public function orderId(): int|null
+    public
+    function orderId(): int|null
     {
         return $this->orderId;
+    }
+
+    /**
+     *
+     * @return float|null
+     */
+    public
+    function invoiceDeliveryCharge(): float|null
+    {
+        return $this->invoiceDeliveryCharge;
     }
 
 

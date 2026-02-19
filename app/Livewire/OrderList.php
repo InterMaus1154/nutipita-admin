@@ -51,7 +51,6 @@ class OrderList extends Component
      * End
      */
 
-
     /*
      * Sorting variables
      */
@@ -60,7 +59,41 @@ class OrderList extends Component
     public bool $withMobileSort = false;
 
 
-    // Initial component load
+    // for single invoice creation
+    public bool $modalVisible = false;
+    public ?int $selectedOrderId = null;
+    public float|null $invoice_delivery_charge = null;
+
+    public function openInvoiceModal(int $selectedOrderId): void
+    {
+        $this->selectedOrderId = $selectedOrderId;
+        $this->modalVisible = true;
+    }
+
+    public function closeInvoiceModal(): void
+    {
+        $this->reset('modalVisible','selectedOrderId', 'invoice_delivery_charge');
+    }
+
+    public function createInvoice(): void
+    {
+        $this->validate([
+            'invoice_delivery_charge' => 'nullable|numeric|min:0'
+        ]);
+
+        $orderId = $this->selectedOrderId;
+        $deliveryCharge = $this->invoice_delivery_charge;
+
+        $this->closeInvoiceModal();
+
+        $this->redirect(route('invoices.create-single', [
+            'order' => $orderId,
+            'invoice_delivery_charge' => $deliveryCharge
+        ]));
+
+
+    }
+
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
     {
         $this->resetPage();
@@ -95,7 +128,6 @@ class OrderList extends Component
         }
     }
 
-
     public function updateOrderStatus(string $value, Order $order): void
     {
         DB::beginTransaction();
@@ -116,9 +148,9 @@ class OrderList extends Component
     {
         $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
 
-        if($this->disabled){
+        if ($this->disabled) {
             $query = Order::query()->whereRaw('1 = 0');
-        }else{
+        } else {
             $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
         }
 

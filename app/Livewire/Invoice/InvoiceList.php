@@ -170,15 +170,21 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             Storage::disk('local')->delete($invoice->invoice_path);
+
+            if($invoice->order){
+                $invoice->order->update([
+                   'order_status' => OrderStatus::Y_CONFIRMED->name
+                ]);
+            }else{
+                $orderQuery = Order::query()
+                    ->where('customer_id', $invoice->customer_id)
+                    ->whereDate('order_due_at', '>=', $invoice->invoice_from)
+                    ->whereDate('order_due_at', '<=', $invoice->invoice_to);
+
+                $this->markOrdersAsConfirmed($orderQuery);
+            }
+
             $invoice->delete();
-
-            $orderQuery = Order::query()
-                ->where('customer_id', $invoice->customer_id)
-                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-            $this->markOrdersAsConfirmed($orderQuery);
-
             DB::commit();
             session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
         } catch (\Exception $e) {

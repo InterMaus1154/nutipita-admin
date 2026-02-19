@@ -28,7 +28,8 @@ class InvoiceService
             'invoice_status' => $invoiceDto->invoiceStatus()->name,
             'invoice_name' => $invoiceDto->invoiceName(),
             'invoice_path' => 'invoices/' . $invoiceDto->invoiceName(),
-            'order_id' => $invoiceDto->orderId()
+            'order_id' => $invoiceDto->orderId(),
+            'invoice_delivery_charge' => $invoiceDto->invoiceDeliveryCharge()
         ]);
     }
 
@@ -101,10 +102,6 @@ class InvoiceService
             }
         });
 
-        // update total on invoice record
-        $invoiceProductDtos->first()->invoice()->update([
-            'invoice_total' => $invoiceTotal
-        ]);
 
         return $this->generateInvoicePdf([
             'fromBulk' => true,
