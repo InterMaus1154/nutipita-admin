@@ -127,7 +127,8 @@
                                 @unless($order->invoice)
                                     <flux:link class="cursor-pointer"
                                                title="Create invoice"
-                                               wire:click="openInvoiceModal({{$order->order_id}})"
+                                               wire:confirm="Are you sure to generate this invoice?"
+                                               wire:click="createInvoice({{$order->order_id}})"
                                     >
                                         <flux:icon.clipboard-document-list class="!inline"/>
                                     </flux:link>
@@ -160,18 +161,18 @@
         {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
     </div>
     {{--delivery charge modal--}}
-    @if($modalVisible)
-        <div class="fixed inset-0 bg-black/80 z-[999] flex justify-center items-center" x-data x-on:click="$wire.closeInvoiceModal()">
-            <div class="relative p-10 sm:p-6 border border-accent rounded-md sm:w-[20%] sm:min-w-[400px] min-h-[150px] bg-zinc-900 flex gap-4 flex-col items-center" x-on:click.stop>
-                <div class="absolute top-2 right-2 sm:top-4 sm:right-4">
-                    <flux:button wire:click="closeInvoiceModal()" variant="primary" >X</flux:button>
-                </div>
-                <h2 class="text-black dark:text-accent text-center text-xl">Add Delivery Charge?</h2>
-                <x-form.form-wrapper>
-                    <x-form.form-input type="number" id="invoice_delivery_charge" wire-model="invoice_delivery_charge" placeholder="0"/>
-                </x-form.form-wrapper>
-                <flux:button variant="primary" type="submit" wire:click="createInvoice()">Create Invoice</flux:button>
-            </div>
-        </div>
-    @endif
+{{--    @if($modalVisible)--}}
+{{--        <div class="fixed inset-0 bg-black/80 z-[999] flex justify-center items-center" x-data x-on:click="$wire.closeInvoiceModal()">--}}
+{{--            <div class="relative p-10 sm:p-6 border border-accent rounded-md sm:w-[20%] sm:min-w-[400px] min-h-[150px] bg-zinc-900 flex gap-4 flex-col items-center" x-on:click.stop>--}}
+{{--                <div class="absolute top-2 right-2 sm:top-4 sm:right-4">--}}
+{{--                    <flux:button wire:click="closeInvoiceModal()" variant="primary" >X</flux:button>--}}
+{{--                </div>--}}
+{{--                <h2 class="text-black dark:text-accent text-center text-xl">Add Delivery Charge?</h2>--}}
+{{--                <x-form.form-wrapper>--}}
+{{--                    <x-form.form-input type="number" id="invoice_delivery_charge" wire-model="invoice_delivery_charge" placeholder="0"/>--}}
+{{--                </x-form.form-wrapper>--}}
+{{--                <flux:button variant="primary" type="submit" wire:click="createInvoice()">Create Invoice</flux:button>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    @endif--}}
 </div>

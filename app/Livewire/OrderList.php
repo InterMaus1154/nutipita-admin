@@ -72,19 +72,20 @@ class OrderList extends Component
 
     public function closeInvoiceModal(): void
     {
-        $this->reset('modalVisible','selectedOrderId', 'invoice_delivery_charge');
+        $this->reset('modalVisible', 'selectedOrderId', 'invoice_delivery_charge');
     }
 
-    public function createInvoice(): void
+    public function createInvoice(int $orderId): void
     {
         $this->validate([
             'invoice_delivery_charge' => 'nullable|numeric|min:0'
         ]);
 
-        $orderId = $this->selectedOrderId;
         $deliveryCharge = $this->invoice_delivery_charge;
 
-        $this->closeInvoiceModal();
+//        $this->closeInvoiceModal();
+
+        $this->dispatch('$refresh');
 
         $this->redirect(route('invoices.create-single', [
             'order' => $orderId,
