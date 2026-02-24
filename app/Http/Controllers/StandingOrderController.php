@@ -6,6 +6,7 @@ use App\Http\Requests\StandingOrderRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\StandingOrder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -122,7 +123,11 @@ class StandingOrderController extends Controller
      */
     public function edit(StandingOrder $order): View
     {
-        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
+        $products = Product::query()
+            ->whereHas('customPrices', function (Builder $query) use ($order) {
+                $query->where('customer_id', $order->customer_id);
+            })
+            ->select(['product_id', 'product_name', 'product_weight_g'])->get();
         $order->loadMissing('days', 'days.products', 'customer');
         return view('standing_orders.edit', compact('order', 'products'));
     }

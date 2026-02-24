@@ -49,7 +49,7 @@ class Product extends Model
     public function getPriceAttribute()
     {
         if (!$this->currentCustomer) {
-            abort(400, "Price without customer called on product");
+            abort(500, "Price without customer called on product");
         }
         $price = $this->customPrices
             ->firstWhere('customer_id', $this->currentCustomer->customer_id);
