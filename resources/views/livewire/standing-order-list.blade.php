@@ -39,12 +39,30 @@
                         @php
                             $classes = $order->is_active ? "bg-green-500!" : "bg-red-500!";
                             $classes.= ' text-black! w-[90px]! px-2! py-2! mx-auto! ';
+                            if($order->is_active){
+                                $bgColor = "bg-green-500!";
+                                $shadowColor = "oklch(72.3% 0.219 149.579)";
+                            }else{
+                                $bgColor = "bg-red-500!";
+                                $shadowColor = "oklch(63.7% 0.237 25.331)";
+                            }
                         @endphp
                         <x-form.form-wrapper>
-                            <x-form.form-select :class="$classes" wire:change="updateOrderStatus({{$order->standing_order_id}}, $event.target.value)">
-                                <option value="active" @selected($order->is_active)>Active</option>
-                                <option value="inactive" @selected(!$order->is_active)>Inactive</option>
-                            </x-form.form-select>
+                            <x-ui.select.select wire-change="updateOrderStatus"
+                                                :wire-change-prop="$order->standing_order_id"
+                                                :pre-selected-value="$order->is_active"
+                                                inner-class="text-black text-sm! outline-0!"
+                                                :bg="$bgColor"
+                                                wrapper-class="w-[80px] sm:w-[100px] min-w-0! sm:mx-auto!"
+                                                wireKey="order-active-{{$order->standing_order_id}}-{{$order->is_active}}"
+                                                :shadow-color="$shadowColor"
+
+                            >
+                                <x-slot:options>
+                                    <x-ui.select.option value="1" text="Active"/>
+                                    <x-ui.select.option value="0" text="Inactive"/>
+                                </x-slot:options>
+                            </x-ui.select.select>
                         </x-form.form-wrapper>
                     </x-table.data>
                     <x-table.data link>
@@ -77,7 +95,8 @@
     {{--mobile cards--}}
     <div class="flex flex-col gap-4 sm:hidden">
         @foreach($orders as $order)
-            <x-standing-order.mobile-standing-order-card wire:key="standing-order-mobile-card-{{$order->standing_order_id}}" :order="$order"/>
+            <x-standing-order.mobile-standing-order-card
+                    wire:key="standing-order-mobile-card-{{$order->standing_order_id}}" :order="$order"/>
         @endforeach
     </div>
 </div>

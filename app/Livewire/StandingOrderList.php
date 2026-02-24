@@ -20,7 +20,7 @@ class StandingOrderList extends Component
     }
 
 
-    public function updateOrderStatus(StandingOrder $order, string $value): void
+    public function updateOrderStatus(string $value, StandingOrder $order): void
     {
         DB::beginTransaction();
         try{
