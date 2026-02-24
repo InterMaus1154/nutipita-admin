@@ -32,7 +32,7 @@ class CreateOrderFromStanding extends Command
     public function handle(): void
     {
         // correct number for today's day
-        $today = now()->isoFormat('E') - 1;
+        $today = now()->isoFormat('E');
 
         // fetch active orders for today
         $standingOrders = StandingOrder::query()
