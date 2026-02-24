@@ -31,14 +31,17 @@ class CreateOrderFromStanding extends Command
      */
     public function handle(): void
     {
-        // correct number for today's day
-        $today = now()->isoFormat('E');
+        // this uses iso numbering 1 .. 7
+        // database days use numbering 0 .. 6
+        // so what is today, in database that is tomorrow (which we need for this)
+        // why? fuck knows...
+        $nextDay = now()->isoFormat('E');
 
         // fetch active orders for today
         $standingOrders = StandingOrder::query()
             ->where('is_active', true)
-            ->whereHas('days', function (Builder $q) use ($today) {
-                return $q->where('day', $today)->whereHas('products', function (Builder $q) {
+            ->whereHas('days', function (Builder $q) use ($nextDay) {
+                return $q->where('day', $nextDay)->whereHas('products', function (Builder $q) {
                     $q->where('product_qty', '>', 0);
                 });
             })
@@ -50,7 +53,7 @@ class CreateOrderFromStanding extends Command
             DB::beginTransaction();
 
             // current day from the order
-            $day = $standingOrder->days->where('day', $today)->first();
+            $day = $standingOrder->days->where('day', $nextDay)->first();
 
             // all products from the day
             $dayProducts = $day->products;
@@ -69,7 +72,7 @@ class CreateOrderFromStanding extends Command
                 ]);
                 foreach ($dayProducts as $dayProduct) {
                     $product = $dayProduct->product->setCurrentCustomer($customer);
-                    $order->products()->attach($product->product_id,[
+                    $order->products()->attach($product->product_id, [
                         'product_qty' => $dayProduct->product_qty,
                         'order_product_unit_price' => $product->price
                     ]);
@@ -77,9 +80,9 @@ class CreateOrderFromStanding extends Command
                 DB::commit();
                 Log::info("Standing order successfully created as order " . $order->order_id);
             } catch (\Exception $e) {
+                DB::rollBack();
                 Log::error($e->getMessage());
                 Log::error("Error at creating order for " . $standingOrder->standing_order_id);
-                DB::rollBack();
             }
         }
     }
