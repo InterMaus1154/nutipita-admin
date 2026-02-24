@@ -16,7 +16,7 @@
                 <div class="p-1.5 inline-block align-middle">
                     <div class="overflow-hidden">
                         <table
-                            class="divide-y divide-gray-200 dark:divide-neutral-700 border border-zinc-600 border-solid">
+                                class="divide-y divide-gray-200 dark:divide-neutral-700 border border-zinc-600 border-solid">
                             <x-table.row>
                                 <x-table.data>
                                     Status
@@ -81,13 +81,20 @@
                                                     $qty =  $dayProducts->where('product_id', $product->product_id)->first()->product_qty;
                                                 }
                                             @endphp
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">@amountFormat($qty)</td>
+                                            <td @class([
+                                                'px-6 py-4 whitespace-nowrap text-sm font-medium',
+                                                'text-white dark:text-gray-500' => $qty === 0
+                                                ])>@amountFormat($qty)
+                                            </td>
                                         @endforeach
                                     @else
                                         {{--If there is no day = no products for that day--}}
                                         {{--Show everything as 0 for the day --}}
                                         @for($j = 0; $j < $products->count(); $j++)
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                            <td @class([
+                                                'px-6 py-4 whitespace-nowrap text-sm font-medium',
+                                                'text-white dark:text-gray-500' => $qty === 0
+                                                ])>
                                                 0
                                             </td>
                                         @endfor
