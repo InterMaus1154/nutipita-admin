@@ -25,7 +25,7 @@ class StandingOrderList extends Component
         DB::beginTransaction();
         try{
             $order->update([
-               'is_active' => $value === "active"
+               'is_active' => $value
             ]);
             session()->flash('success', 'Status updated');
             DB::commit();

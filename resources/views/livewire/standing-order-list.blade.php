@@ -37,8 +37,6 @@
                     </x-table.data>
                     <x-table.data class="cursor-pointer">
                         @php
-                            $classes = $order->is_active ? "bg-green-500!" : "bg-red-500!";
-                            $classes.= ' text-black! w-[90px]! px-2! py-2! mx-auto! ';
                             if($order->is_active){
                                 $bgColor = "bg-green-500!";
                                 $shadowColor = "oklch(72.3% 0.219 149.579)";
