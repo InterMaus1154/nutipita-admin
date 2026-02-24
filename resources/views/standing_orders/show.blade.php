@@ -92,8 +92,7 @@
                                         {{--Show everything as 0 for the day --}}
                                         @for($j = 0; $j < $products->count(); $j++)
                                             <td @class([
-                                                'px-6 py-4 whitespace-nowrap text-sm font-medium',
-                                                'text-white dark:text-gray-500' => $qty === 0
+                                                'px-6 py-4 whitespace-nowrap text-sm font-medium text-white dark:text-gray-500',
                                                 ])>
                                                 0
                                             </td>
