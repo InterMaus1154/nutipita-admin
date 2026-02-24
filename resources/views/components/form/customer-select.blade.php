@@ -1,6 +1,6 @@
 <x-form.form-wrapper class="sm:w-[200px]">
     <x-form.form-label id="customer_id" text="Customer"/>
-    <x-ui.select.select name="customer_id" wire-model="customer_id" wrapper-class="sm:w-full" list-class="max-h-none! overflow-visible!" :has-wire="$hasWire">
+    <x-ui.select.select name="customer_id" wire-model="customer_id" wrapper-class="sm:w-full" list-class="max-h-[500px]" :has-wire="$hasWire">
         <x-slot:options>
             <x-ui.select.option value="" text="Clear"/>
             @foreach($customers as $customer)
