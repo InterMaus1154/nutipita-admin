@@ -31,6 +31,15 @@ class UpdateOrderRequest extends FormRequest
             }, OrderStatus::cases()))],
             'shift' => 'required|in:day,night',
             'products' => 'required|array',
+            'product.*' => 'nullable|numeric|min:0'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'products.required' => 'Products are empty or all zero',
+            'products.*.min' => 'A product quantity cannot be less than 0'
         ];
     }
 }

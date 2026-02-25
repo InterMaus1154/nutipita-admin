@@ -4,6 +4,7 @@ namespace App\Livewire\Product;
 
 use App\Models\Customer;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -21,11 +22,13 @@ class ProductSelector extends Component
     {
         $customers = Customer::select(['customer_id', 'customer_name'])->get();
         if (is_null($this->customer_id)) {
-            $products = [];
+            $products = collect();
         } else {
             $products = Product::query()
                 ->select(['product_name', 'product_id', 'product_weight_g'])
-                ->orderByDesc('product_name')
+                ->whereHas('customPrices', function (Builder $query) {
+                    $query->where('customer_id', $this->customer_id);
+                })
                 ->get()
                 ->map(fn($p) => $p->setCurrentCustomer(Customer::find($this->customer_id)));
         }

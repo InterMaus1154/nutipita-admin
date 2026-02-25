@@ -24,6 +24,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'customer_id' => 'required|integer|exists:customers,customer_id',
             'products' => 'required|array',
+            'products.*' => 'nullable|numeric|min:0',
             'order_placed_at' => 'required|date',
             'order_due_at' => 'required|date|after_or_equal:order_placed_at',
             'shift' => 'required|in:day,night'
@@ -34,7 +35,8 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'customer_id.required' => 'You need to select a customer from the list!',
-            'products.required' => 'Select a customer to be able to add products!'
+            'products.required' => 'Products are empty or all zero',
+            'products.*.min' => 'A product quantity cannot be less than 0'
         ];
     }
 }
