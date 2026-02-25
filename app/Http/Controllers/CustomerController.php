@@ -81,7 +81,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer): View
     {
-        $products = Product::all()->map(function (Product $product) use($customer){
+        $products = Product::all()->map(function (Product $product) use ($customer) {
             return $product->setCurrentCustomer($customer);
         });
         return view('customers.edit', compact('customer', 'products'));
@@ -110,7 +110,7 @@ class CustomerController extends Controller
                 }
 
                 // if price is same as previous price, skip
-                if(!$this->isProductPriceValid($product->price, $price)){
+                if (!$this->isProductPriceValid($product->price, $price)) {
                     continue;
                 }
 
@@ -152,11 +152,8 @@ class CustomerController extends Controller
     {
         $products = Product::query()
             ->select(['product_id', 'product_name', 'product_weight_g'])
-            ->orderByDesc('product_name')
             ->get()
             ->map(function ($product) use ($customer) {
-                // set customer for each product to show custom prices for current customer
-                // only available if set
                 return $product->setCurrentCustomer($customer);
             });
         return view('customers.edit-custom-price', compact('customer', 'products'));
@@ -168,18 +165,24 @@ class CustomerController extends Controller
     public function updateCustomPrice(Request $request, Customer $customer)
     {
         foreach ($request->array('products') as $product_id => $price) {
-            $product = Product::find($product_id)->setCurrentCustomer($customer);
-            if (!$this->isProductPriceValid(0, $price)) {
-                // if price is 0 or empty, delete the custom price
-                $customPrice = CustomerProductPrice::query()
-                    ->where('product_id', $product_id)
-                    ->where('customer_id', $customer->customer_id)
-                    ->first();
-                if ($customPrice) {
-                    $customPrice->delete();
+            DB::beginTransaction();
+            try {
+                $product = Product::find($product_id)->setCurrentCustomer($customer);
+                if (!$this->isProductPriceValid(0, $price)) {
+                    // if price is 0 or empty, delete the custom price
+                    CustomerProductPrice::query()
+                        ->where('product_id', $product_id)
+                        ->where('customer_id', $customer->customer_id)
+                        ->delete();
+                    continue;
                 }
-                continue;
+                DB::commit();
+            } catch (Throwable $e) {
+                DB::rollBack();
+                Log::error($e->getMessage());
+                return redirect()->route('customers.edit.custom-price', compact('customer'))->withErrors(['server_error' => $e->getMessage()]);
             }
+
 
             DB::beginTransaction();
             try {
