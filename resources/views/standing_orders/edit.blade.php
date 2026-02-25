@@ -40,17 +40,17 @@
                         @if($orderHasDay)
                             @foreach($products as $product)
                                 @php
-                                    $qty = 0;
+                                    $qty = null;
                                     // if the day contains the current product
                                     if($dayProducts->contains(fn($v) => $v->product_id == $product->product_id)){
-                                        $qty =  $dayProducts->where('product_id', $product->product_id)->first()->product_qty;
+                                        $qty = $dayProducts->where('product_id', $product->product_id)->first()->product_qty;
                                     }
                                 @endphp
                                 <x-form.form-wrapper>
                                     <x-form.form-label id="products[{{$i}}][{{$product->product_id}}]">
                                         {{$product->product_name}} {{$product->product_weight_g}}g
                                     </x-form.form-label>
-                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" value="{{$qty}}"/>
+                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" value="{{$qty}}" placeholder="0"/>
                                 </x-form.form-wrapper>
                             @endforeach
                         @else
@@ -60,7 +60,7 @@
                                     <x-form.form-label id="products[{{$i}}][{{$product->product_id}}]">
                                         {{$product->product_name}} {{$product->product_weight_g}}g
                                     </x-form.form-label>
-                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" value="0"/>
+                                    <x-form.form-input type="number" id="products[{{$i}}][{{$product->product_id}}]" name="products[{{$i}}][{{$product->product_id}}]" placeholder="0"/>
                                 </x-form.form-wrapper>
                             @endforeach
                         @endif
