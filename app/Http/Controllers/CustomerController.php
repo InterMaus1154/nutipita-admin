@@ -164,6 +164,13 @@ class CustomerController extends Controller
      */
     public function updateCustomPrice(Request $request, Customer $customer)
     {
+        $request->validate([
+            'products' => 'required|array',
+            'products.*' => 'nullable|numeric|min:0'
+        ], [
+            'products.*.min' => 'A product price must be at least 0 if set'
+        ]);
+
         foreach ($request->array('products') as $product_id => $price) {
             DB::beginTransaction();
             try {

@@ -25,8 +25,8 @@ class UpdateCustomerRequest extends FormRequest
         $customer = $this->route('customer');
         return [
             'customer_name' => ['required', 'string', 'max:250',
-                    Rule::unique('customers', 'customer_name')->ignore($customer->customer_id, 'customer_id')
-                ],
+                Rule::unique('customers', 'customer_name')->ignore($customer->customer_id, 'customer_id')
+            ],
             'customer_email' => 'nullable|string|email|max:250',
             'customer_phone' => 'nullable|string|max:20',
             'customer_address_1' => 'required|string|max:300',
@@ -38,7 +38,15 @@ class UpdateCustomerRequest extends FormRequest
             'customer_business_owner_name' => 'required|string|max:150',
             'customer_trading_name' => 'nullable|string|max:250',
             'customer_delivery_address' => 'nullable|string|max:300',
-            'products' => 'array'
+            'products' => 'array|required',
+            'products.*' => 'nullable|numeric|min:0'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'products.*.min' => 'A product price has to be at least 0 if set'
         ];
     }
 }
