@@ -35,7 +35,7 @@ class CreateOrderFromStanding extends Command
         // database days use numbering 0 .. 6
         // so what is today, in database that is tomorrow (which we need for this)
         // why? fuck knows...
-        $nextDay = now()->isoFormat('E');
+        $nextDay = now()->dayOfWeek;
 
         // fetch active orders for today
         $standingOrders = StandingOrder::query()
