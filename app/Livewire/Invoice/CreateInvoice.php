@@ -39,6 +39,8 @@ class CreateInvoice extends Component
     public string $invoice_due_date;
 
     public float|null $invoice_delivery_charge = null;
+    public float|null $invoice_credit = null;
+
 
     public $customer_id = null;
     public array $invoiceProducts = [];
@@ -148,7 +150,8 @@ class CreateInvoice extends Component
             'due_from' => 'required|date',
             'due_to' => 'required|date',
             'invoice_number' => 'required|string|unique:invoices,invoice_number',
-            'invoice_delivery_charge' => 'nullable|numeric|min:0'
+            'invoice_delivery_charge' => 'nullable|numeric|min:0',
+            'invoice_credit' => 'nullable|numeric|min:0'
         ]);
 
 
@@ -169,7 +172,8 @@ class CreateInvoice extends Component
                 invoiceOrdersFrom: $firstOrderDate,
                 invoiceOrdersTo: $lastOrderDate,
                 invoiceNumber: $this->invoice_number,
-                invoiceDeliveryCharge: $this->invoice_delivery_charge
+                invoiceDeliveryCharge: $this->invoice_delivery_charge,
+                invoiceCredit: $this->invoice_credit
             );
 
             $invoice = $invoiceService->generateInvoice($invoiceDto);

@@ -67,7 +67,7 @@
                     <x-form.form-input type="date" id="due_to" wireModelLive="due_to"/>
                 </x-form.form-wrapper>
             </div>
-            <div class="flex gap-6 justify-self-end">
+            <div class="flex gap-6 justify-self-end flex-wrap">
                 {{--invoice total--}}
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_total" text="Invoice Total"/>
@@ -80,6 +80,13 @@
                     </x-form.form-label>
                     <x-form.form-input type="number" id="invoice_delivery_charge" name="invoice_delivery_charge"
                                        wireModelLive="invoice_delivery_charge" placeholder="0" class="max-w-[100px]!"/>
+                </x-form.form-wrapper>
+                {{--invoice credit--}}
+                <x-form.form-wrapper>
+                    <x-form.form-label id="invoice_credit" text="Invoice Credit">
+                    </x-form.form-label>
+                    <x-form.form-input type="number" id="invoice_credit" name="invoice_credit"
+                                       wireModelLive="invoice_credit" placeholder="0" class="max-w-[100px]!"/>
                 </x-form.form-wrapper>
                 {{--invoice number--}}
                 <x-form.form-wrapper>
