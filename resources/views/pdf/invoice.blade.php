@@ -168,10 +168,6 @@
             border-bottom: 1px solid #000;
         }
 
-        /*td{*/
-        /*    border: 1px solid red;*/
-        /*}*/
-
     </style>
 </head>
 <div class="invoice-wrapper">
@@ -381,7 +377,7 @@
                 </tr>
                 </tfoot>
             </table>
-            <div style="line-height: 1.6;">
+            <div style="line-height: 1.6; margin-top: 18px;">
                 <span style="display:block;">Bank Details</span>
                 <span style="display:block;">Nuti Pita Limited</span>
                 <span style="display:block;">Sort Code: 30-99-50</span>
