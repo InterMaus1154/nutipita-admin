@@ -79,14 +79,14 @@
                     <x-form.form-label id="invoice_delivery_charge" text="Delivery Charge">
                     </x-form.form-label>
                     <x-form.form-input type="number" id="invoice_delivery_charge" name="invoice_delivery_charge"
-                                       wireModelLive="invoice_delivery_charge" placeholder="0" class="max-w-[100px]!"/>
+                                       wireModel="invoice_delivery_charge" placeholder="0" class="max-w-[100px]!" step="0.01"/>
                 </x-form.form-wrapper>
                 {{--invoice credit--}}
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_credit" text="Invoice Credit">
                     </x-form.form-label>
                     <x-form.form-input type="number" id="invoice_credit" name="invoice_credit"
-                                       wireModelLive="invoice_credit" placeholder="0" class="max-w-[100px]!"/>
+                                       wireModel="invoice_credit" placeholder="0" class="max-w-[100px]!" step="0.01"/>
                 </x-form.form-wrapper>
                 {{--invoice number--}}
                 <x-form.form-wrapper>

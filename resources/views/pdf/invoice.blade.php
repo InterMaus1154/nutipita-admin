@@ -160,9 +160,13 @@
         }
 
         .invoice-items tfoot td {
-            border-bottom: 1px solid #000;
+            /*border-bottom: 1px solid #000;*/
             padding: 0.5rem;
         }
+
+        /*td{*/
+        /*    border: 1px solid red;*/
+        /*}*/
 
     </style>
 </head>
@@ -349,21 +353,36 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="2" class="footer-left">
-                        <span>Bank Details</span>
-                        <span>Nuti Pita Limited</span>
-                        <span>Sort Code: 30-99-50</span>
-                        <span>Account Number: 72269963</span>
-                    </td>
-                    <td class="footer-right text-right">
-                        <strong style="font-size: 1.25rem;">
-                            <span>Total:</span>
-                            @moneyFormat($invoice->invoice_total)
-                        </strong>
-                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="col-amount text-right" style="white-space: nowrap;">
+                        Sub Total:
+                        @moneyFormat($invoice->invoice_total)</td>
+                </tr>
+                @if($invoice->invoice_credit)
+                    <tr>
+                        <td></td>
+                        <td class="text-left">Account Credit Applied:</td>
+                        <td class="col-amount text-right">
+                            - @moneyFormat($invoice->invoice_credit)</td>
+                    </tr>
+                @endif
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="col-amount text-right"
+                        style="font-weight: bold; font-size: 1.25rem; white-space: nowrap;">
+                        Total:
+                        @moneyFormat($invoice->invoice_total - ($invoice->invoice_credit ?? 0))</td>
                 </tr>
                 </tfoot>
             </table>
+            <div style="line-height: 1.6;">
+                <span style="display:block;">Bank Details</span>
+                <span style="display:block;">Nuti Pita Limited</span>
+                <span style="display:block;">Sort Code: 30-99-50</span>
+                <span style="display:block;">Account Number: 72269963</span>
+            </div>
         </div>
     </main>
 </div>
