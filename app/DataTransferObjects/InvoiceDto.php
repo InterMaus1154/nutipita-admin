@@ -25,7 +25,8 @@ final readonly class InvoiceDto
                                  private string        $invoiceNumber,
                                  private string        $invoiceName,
                                  private int|null      $orderId,
-                                 private float|null    $invoiceDeliveryCharge
+                                 private float|null    $invoiceDeliveryCharge,
+                                 private float|null    $invoiceCredit
 
     )
     {
@@ -41,6 +42,8 @@ final readonly class InvoiceDto
      * @param InvoiceStatus|string $invoiceStatus
      * @param string|null $invoiceNumber
      * @param Order|string|int|null $order - single order to which the invoice might belong
+     * @param float|null $invoiceDeliveryCharge
+     * @param float|null $invoiceCredit
      * @return InvoiceDto
      */
     public
@@ -52,7 +55,8 @@ final readonly class InvoiceDto
                          InvoiceStatus|string  $invoiceStatus = InvoiceStatus::due,
                          string|null           $invoiceNumber = null,
                          Order|string|int|null $order = null,
-                         float|null            $invoiceDeliveryCharge = null
+                         float|null            $invoiceDeliveryCharge = null,
+                         float|null            $invoiceCredit = null
     ): InvoiceDto
     {
         // check what type of customer is provided
@@ -117,7 +121,8 @@ final readonly class InvoiceDto
             invoiceNumber: $invoiceNumber,
             invoiceName: $invoiceName,
             orderId: $order,
-            invoiceDeliveryCharge: $invoiceDeliveryCharge);
+            invoiceDeliveryCharge: $invoiceDeliveryCharge,
+            invoiceCredit: $invoiceCredit);
     }
 
     /*
@@ -232,6 +237,14 @@ final readonly class InvoiceDto
     function invoiceDeliveryCharge(): float|null
     {
         return $this->invoiceDeliveryCharge;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function invoiceCredit(): float|null
+    {
+        return $this->invoiceCredit;
     }
 
 
