@@ -164,6 +164,10 @@
             padding: 0.5rem;
         }
 
+        .invoice-items tfoot tr:last-child {
+            border-bottom: 1px solid #000;
+        }
+
         /*td{*/
         /*    border: 1px solid red;*/
         /*}*/
