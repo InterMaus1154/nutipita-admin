@@ -508,4 +508,8 @@
             transform: scale(0);
         }
     }
+
+    [data-laravel-dd], #livewire-error {
+        z-index: 9999 !important;
+    }
 }

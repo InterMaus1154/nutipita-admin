@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Helpers\ModelResolver;
 use App\Models\Scopes\Product\SortByName;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,13 +45,20 @@ class Product extends Model
         return $this->hasMany(CustomerProductPrice::class, 'product_id', 'product_id');
     }
 
+    public function scopeForCustomer(Builder $query, Customer|int|string $customer)
+    {
+        $query->afterQuery(function (Collection $products) use ($customer) {
+            $products->each(fn(Product $p) => $p->setCurrentCustomer($customer));
+        });
+    }
+
     /*
      * Define attributes
      */
     public function getPriceAttribute()
     {
         if (!$this->currentCustomer) {
-            abort(500, "Price without customer called on product");
+            abort(418, "Price without customer called on product");
         }
         $price = $this->customPrices
             ->firstWhere('customer_id', $this->currentCustomer->customer_id);
