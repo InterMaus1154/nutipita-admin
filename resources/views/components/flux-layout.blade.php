@@ -8,7 +8,7 @@
     $themeMode = $settings?->user_theme_mode->value ?? 0;
 @endphp
 
-<!doctype html>
+    <!doctype html>
 <html lang="en"
       data-theme="{{UserColorMode::colorFromValue($colorMode)}}"
       class="{{UserThemeMode::themeFromValue($themeMode)}}"
@@ -28,10 +28,12 @@
     <title>Nuti Pita: Order Management</title>
 </head>
 <body class="bg-white dark:bg-zinc-800 min-h-screen dark:text-white">
-<x-sidebar />
+<x-sidebar/>
 <flux:main>
     {{$slot}}
 </flux:main>
+{{--modal stack container--}}
+<livewire:modal.modal-container/>
 @fluxScripts
 @livewireScripts
 </body>
