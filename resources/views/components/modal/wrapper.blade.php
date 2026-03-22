@@ -40,11 +40,11 @@
 @endphp
 
 {{--modal skeleton--}}
-<div class="{{$sizes[$size]}} bg-slate-700 rounded-md divide-y divide-slate-500">
+<div class="{{$sizes[$size]}} bg-slate-700 rounded-md divide-y divide-slate-500" @click.stop>
 
     <header class="relative {{$sectionPadding}}">
         <h1 class="text-4xl text-center font-bold text-accent">{{$title}}</h1>
-        <flux:button variant="primary" class="absolute! right-2 top-2">X</flux:button>
+        <flux:button @click="$dispatch('modal-close')" variant="primary" class="absolute! right-2 top-2">X</flux:button>
     </header>
 
     @if(isset($content))
