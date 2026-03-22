@@ -11,6 +11,19 @@ class ModalContainer extends Component
 
     public array $modalStack = [];
 
+    public function mount()
+    {
+        // for testing only
+        if (true) {
+            $this->modalStack[] = [
+                'component' => 'modal.order-create',
+                'data' => [],
+                'key' => uniqid()
+            ];
+        }
+
+    }
+
     #[On('modal-open')]
     public function add(string $component, array $componentData = []): void
     {

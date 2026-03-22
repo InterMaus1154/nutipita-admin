@@ -7,40 +7,28 @@
 
 @php
     $sizes = [
-        '3xs'    => 'w-3xs',
-        '2xs'    => 'w-2xs',
-        'xs'     => 'w-xs',
-        'sm'     => 'w-sm',
-        'md'     => 'w-md',
-        'lg'     => 'w-lg',
-        'xl'     => 'w-xl',
-        '2xl'    => 'w-2xl',
-        '3xl'    => 'w-3xl',
-        '4xl'    => 'w-4xl',
-        '5xl'    => 'w-5xl',
-        '6xl'    => 'w-6xl',
-        '7xl'    => 'w-7xl',
-        'auto'   => 'w-auto',
-        'px'     => 'w-px',
-        'full'   => 'w-full',
-        'screen' => 'w-screen',
-        'dvw'    => 'w-dvw',
-        'dvh'    => 'w-dvh',
-        'lvw'    => 'w-lvw',
-        'lvh'    => 'w-lvh',
-        'svw'    => 'w-svw',
-        'svh'    => 'w-svh',
-        'min'    => 'w-min',
-        'max'    => 'w-max',
-        'fit'    => 'w-fit',
-    ];
+    '3xs' => 'max-w-3xs',
+    '2xs' => 'max-w-2xs',
+    'xs'  => 'max-w-xs',
+    'sm'  => 'max-w-sm',
+    'md'  => 'max-w-md',
+    'lg'  => 'max-w-lg',
+    'xl'  => 'max-w-xl',
+    '2xl' => 'max-w-2xl',
+    '3xl' => 'max-w-3xl',
+    '4xl' => 'max-w-4xl',
+    '5xl' => 'max-w-5xl',
+    '6xl' => 'max-w-6xl',
+    '7xl' => 'max-w-7xl',
+    'full' => 'max-w-full',
+];
 
     $sectionPadding = 'p-4';
 
 @endphp
 
 {{--modal skeleton--}}
-<div class="{{$sizes[$size]}} bg-slate-700 rounded-md divide-y divide-slate-500" @click.stop>
+<div class="w-full {{$sizes[$size]}} bg-slate-700 rounded-md divide-y divide-slate-500 mx-auto" @click.stop>
 
     <header class="relative {{$sectionPadding}}">
         <h1 class="text-4xl text-center font-bold text-accent">{{$title}}</h1>
