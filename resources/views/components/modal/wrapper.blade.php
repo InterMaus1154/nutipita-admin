@@ -28,7 +28,7 @@
 @endphp
 
 {{--modal skeleton--}}
-<div class="w-full {{$sizes[$size]}} bg-zinc-800 rounded-md divide-y divide-zinc-500 mx-auto" @click.stop>
+<div class="w-full {{$sizes[$size]}} bg-zinc-800 rounded-md divide-y divide-zinc-500 mx-auto">
 
     <header class="relative {{$sectionPadding}}">
         <h1 class="text-4xl text-center font-bold text-accent">{{$title}}</h1>

@@ -1,4 +1,4 @@
-<div class="w-full">
+<div>
     <x-modal.wrapper title="Place New Order" size="4xl">
         <x-slot:content>
             <div class="py-8 flex justify-between flex-wrap gap-4 sm:grid grid-cols-[1fr_1fr_1fr]">
