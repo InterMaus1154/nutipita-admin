@@ -3,8 +3,14 @@
 namespace App\Services;
 
 use App\DataTransferObjects\OrderSummaryDto;
+use App\Models\Customer;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
+use Exception;
 
 class OrderService
 {
@@ -29,7 +35,7 @@ class OrderService
             ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
                 return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
             })
-            ->when(!empty($filters['both']), function($builder) use($filters){
+            ->when(!empty($filters['both']), function ($builder) use ($filters) {
                 return $builder->whereDate('order_due_at', '=', today()->toDateString())
                     ->where('is_daytime', true)
                     ->orWhereDate('order_due_at', '=', today()->addDay()->toDateString());
@@ -38,5 +44,45 @@ class OrderService
             ->get();
 
         return OrderSummaryDto::from($orders);
+    }
+
+    public function createOrder(int|string|Customer $customer_id,
+                                string|Carbon       $order_due_at,
+                                string|Carbon       $order_placed_at,
+                                array|Collection    $products,
+                                string              $shift = 'night'): Order
+    {
+        $customer = resolveModel($customer_id, Customer::class);
+
+        if (is_array($products)) {
+            $products = collect($products);
+        }
+
+        $products = $products->filter(fn(int $qty) => $qty > 0);
+
+        if ($products->isEmpty()) throw new InvalidArgumentException('All products cannot be empty!');
+
+        DB::beginTransaction();
+        try {
+
+            $order = $customer->orders()->create([
+                'customer_id' => $customer_id,
+                'order_placed_at' => $order_placed_at,
+                'order_due_at' => $order_due_at,
+                'is_daytime' => $shift === 'day'
+            ]);
+
+
+
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Error at creating order');
+            Log::error($e->getMessage());
+            throw new Exception('Error at creating order');
+        }
+
+        return new Order();
     }
 }

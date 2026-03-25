@@ -4,10 +4,13 @@ namespace App\Livewire\Modal;
 
 use App\Models\Customer;
 use App\Models\Product;
+use App\Services\OrderService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Livewire\Attributes\Validate;
+use Exception;
 use Livewire\Component;
 
 class OrderCreate extends Component
@@ -19,6 +22,7 @@ class OrderCreate extends Component
     public string $shift;
 
     public array $selectedProducts = [];
+
 
     public function mount(): void
     {
@@ -34,9 +38,26 @@ class OrderCreate extends Component
     }
 
 
-    public function save(): void
+    public function save(OrderService $orderService): void
     {
+        $this->validate([
+            'order_due_at' => 'required|date|after_or_equal:order_placed_at',
+            'order_placed_at' => 'required|date|before_or_equal:order_due_at',
+            'customer_id' => 'required|exists:customers,customer_id',
+            'shift' => 'required|in:day,night'
+        ]);
 
+        try {
+            $order = $orderService->createOrder(customer_id: $this->customer_id,
+                order_due_at: $this->order_due_at,
+                order_placed_at: $this->order_placed_at,
+                products: $this->selectedProducts,
+                shift: $this->shift);
+        } catch (InvalidArgumentException $e) {
+            $this->addError('products', $e->getMessage());
+        }catch (Exception $e){
+            $this->addError('general_error', $e->getMessage());
+        }
     }
 
     public function render()

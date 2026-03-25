@@ -1,9 +1,15 @@
 <div>
     <x-modal.wrapper title="Place New Order" size="4xl">
         <x-slot:content>
+            @error('general_error')
+            <p class="text-red-600">{{$message}}</p>
+            @enderror
             <div class="py-8 flex justify-between flex-wrap gap-4 sm:grid grid-cols-[1fr_1fr_1fr]">
                 <div class="flex flex-col gap-4">
                     <x-form.customer-select :has-wire="true"/>
+                    @error('customer_id')
+                    <p class="text-red-600">{{$message}}</p>
+                    @enderror
                     <div class="flex flex-col gap-4 items-start">
                         @forelse($products as $product)
                             <x-form.form-wrapper>
@@ -22,6 +28,9 @@
                             @endif
                         @endforelse
                     </div>
+                    @error('products')
+                    <p class="text-red-600">{{$message}}</p>
+                    @enderror
                 </div>
                 <x-form.form-wrapper>
                     <x-form.form-label id="shift" text="Shift"/>
