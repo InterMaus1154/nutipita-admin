@@ -42,7 +42,7 @@ class OrderCreate extends Component
     {
         $this->validate([
             'order_due_at' => 'required|date|after_or_equal:order_placed_at',
-            'order_placed_at' => 'required|date|before_or_equal:order_due_at',
+            'order_placed_at' => 'required|date',
             'customer_id' => 'required|exists:customers,customer_id',
             'shift' => 'required|in:day,night'
         ], [
