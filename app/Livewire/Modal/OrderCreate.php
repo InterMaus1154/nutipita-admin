@@ -45,6 +45,8 @@ class OrderCreate extends Component
             'order_placed_at' => 'required|date|before_or_equal:order_due_at',
             'customer_id' => 'required|exists:customers,customer_id',
             'shift' => 'required|in:day,night'
+        ], [
+            'customer_id.required' => 'Select a customer'
         ]);
 
         try {
@@ -55,7 +57,7 @@ class OrderCreate extends Component
                 shift: $this->shift);
         } catch (InvalidArgumentException $e) {
             $this->addError('products', $e->getMessage());
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->addError('general_error', $e->getMessage());
         }
     }

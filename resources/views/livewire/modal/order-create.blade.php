@@ -2,13 +2,13 @@
     <x-modal.wrapper title="Place New Order" size="4xl">
         <x-slot:content>
             @error('general_error')
-            <p class="text-red-600">{{$message}}</p>
+            <x-form.input-error :message="$message"/>
             @enderror
             <div class="py-8 flex justify-between flex-wrap gap-4 sm:grid grid-cols-[1fr_1fr_1fr]">
                 <div class="flex flex-col gap-4">
                     <x-form.customer-select :has-wire="true"/>
                     @error('customer_id')
-                    <p class="text-red-600">{{$message}}</p>
+                    <x-form.input-error :message="$message"/>
                     @enderror
                     <div class="flex flex-col gap-4 items-start">
                         @forelse($products as $product)
@@ -29,7 +29,7 @@
                         @endforelse
                     </div>
                     @error('products')
-                    <p class="text-red-600">{{$message}}</p>
+                    <x-form.input-error :message="$message"/>
                     @enderror
                 </div>
                 <x-form.form-wrapper>
@@ -53,6 +53,12 @@
                                            wire-model-live="order_due_at"/>
                     </x-form.form-wrapper>
                 </div>
+                @error('order_due_at')
+                    <x-form.input-error :message="$message"/>
+                @enderror
+                @error('order_placed_at')
+                <x-form.input-error :message="$message"/>
+                @enderror
             </div>
         </x-slot:content>
         <x-slot:footer>
