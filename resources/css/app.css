@@ -35,9 +35,23 @@
 
     --form-field-width: 250px;
 
+
+
 }
 
 @layer theme {
+
+    @keyframes shake {
+        0% { transform: translateX(-4px); }
+        10% { transform: translateX(4px); }
+        25% { transform: translateX(-4px); }
+        50% { transform: translateX(4px); }
+        75% { transform: translateX(-4px); }
+        100% { transform: translateY(0); }
+    }
+    .animate-shake {
+        animation: shake 0.4s ease-out forwards;
+    }
 
     /*
         define font sizes
