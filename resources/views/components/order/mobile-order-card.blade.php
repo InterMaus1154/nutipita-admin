@@ -27,7 +27,8 @@
             <x-ui.mobile-card-dropdown-link href="{{route('orders.show', compact('order'))}}">View
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link title="Edit Order" x-data
-                                            @click="$dispatch('modal-open', {component: 'modal.order-edit'})">Edit
+                                            @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })">
+                Edit
             </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
                 <x-ui.mobile-card-dropdown-link wire:confirm="Are you sure to generate this invoice?"
@@ -133,7 +134,9 @@
         </div>
         {{--action buttons--}}
         <div class="flex gap-6 justify-center justify-self-end">
-            <button x-data @click="$dispatch('modal-open', {component: 'modal.order-edit'})" title="Edit order">
+            <button x-data
+                    @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })"
+                    title="Edit order">
                 <flux:icon.pencil-square class="size-7 text-accent"/>
             </button>
             @unless($order->invoice)
