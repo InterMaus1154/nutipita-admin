@@ -4,9 +4,9 @@
             <div class="flex gap-4">
                 <livewire:order-summary-download/>
                 <livewire:order.mobile-order-sort/>
-                <flux:link href="{{route('orders.create')}}" class="cursor-pointer" title="Add new order">
-                    <flux:icon.plus-circle class="size-8"/>
-                </flux:link>
+                <button class="cursor-pointer" x-data @click="$dispatch('modal-open', {component: 'modal.order-create'})">
+                    <flux:icon.plus-circle class="size-8 text-accent"/>
+                </button>
             </div>
         </x-page-heading>
         <div class="flex flex-col gap-8">

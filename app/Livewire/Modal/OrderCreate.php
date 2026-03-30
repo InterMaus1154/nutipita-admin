@@ -63,9 +63,10 @@ class OrderCreate extends Component
             $this->addError('products', $e->getMessage());
         } catch (Exception $e) {
             $this->addError('general_error', $e->getMessage());
+        } finally {
+            $this->dispatch('modal-clear')->to(ModalContainer::class);
         }
 
-        $this->dispatch('modal-clear')->to(ModalContainer::class);
     }
 
     public function render()
