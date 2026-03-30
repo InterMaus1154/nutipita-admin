@@ -31,7 +31,7 @@ class OrderEdit extends Component
 
     public function save(): void
     {
-
+        dd($this->fields);
     }
 
     public function cancel(): void

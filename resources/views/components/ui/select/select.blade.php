@@ -15,7 +15,7 @@
 ])
 <div
     {{$wireKey ? " wire:key='$wireKey' " : ''}}
-    class="cursor-pointer select-none relative min-w-[150px] {{$wrapperClass}}"
+    class="cursor-pointer select-none relative min-w-[150px] mx-auto {{$wrapperClass}}"
     @if($shadowColor)
         style="--glow-color: {{ $shadowColor }};"
     @endif

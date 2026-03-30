@@ -19,7 +19,7 @@
                                 <x-form.form-input type="number" id="products-{{$product->product_id}}"
                                                    placeholder="0"
                                                    wire-model="selectedProducts.{{$product->product_id}}"
-                                                   />
+                                />
                             </x-form.form-wrapper>
                         @endforeach
                     </div>
@@ -29,10 +29,12 @@
                 </div>
                 <x-form.form-wrapper>
                     <x-form.form-label id="shift" text="Shift"/>
-                    <x-form.form-select id="shift" name="shift" wire-model-live="fields.shift">
-                        <option value="night" {{!$order->is_daytime ? 'selected' : ''}}>Night</option>
-                        <option value="day" {{$order->is_daytime ? 'selected': ''}}>Day</option>
-                    </x-form.form-select>
+                    <x-ui.select :has-wire="true" wire-model="fields.shift" wrapper-class="max-w-[150px]">
+                        <x-slot:options>
+                            <x-ui.select.option value="night" text="Night"></x-ui.select.option>
+                            <x-ui.select.option value="day" text="Day"></x-ui.select.option>
+                        </x-slot:options>
+                    </x-ui.select>
                 </x-form.form-wrapper>
                 <div class="flex gap-2">
                     {{--placed date--}}
