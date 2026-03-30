@@ -144,7 +144,7 @@ class OrderList extends Component
 
     }
 
-    #[On('order-created')]
+    #[On('refresh')]
     public function refresh(): void
     {
         $this->dispatch('$refresh');

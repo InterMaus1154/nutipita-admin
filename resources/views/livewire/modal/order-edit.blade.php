@@ -42,7 +42,7 @@
                         <x-form.form-label text="Placed At" id="order_placed_at"/>
                         <x-form.form-input id="order_placed_at" type="date" name="order_placed_at"
                                            wire-model-live="fields.order_placed_at"/>
-                        @error('order_placed_at')
+                        @error('fields.order_placed_at')
                         <x-form.input-error :message="$message"/>
                         @enderror
                     </x-form.form-wrapper>
@@ -52,7 +52,7 @@
                         <x-form.form-input id="order_due_at" type="date" name="order_due_at"
                                            wire-model-live="fields.order_due_at"/>
 
-                        @error('order_due_at')
+                        @error('fields.order_due_at')
                         <x-form.input-error :message="$message"/>
                         @enderror
                     </x-form.form-wrapper>

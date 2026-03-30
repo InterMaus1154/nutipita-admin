@@ -94,4 +94,41 @@ class OrderService
 
         return $order;
     }
+
+    public function updateOrder(Order $order, array $fields, array $products): Order
+    {
+        $products = collect($products)->filter(fn(int $qty) => $qty > 0);
+
+        if ($products->isEmpty()) throw new InvalidArgumentException('Products cannot be empty!');
+
+        DB::beginTransaction();
+        try {
+
+            $order->update([
+                'order_due_at' => $fields['order_due_at'],
+                'order_placed_at' => $fields['order_placed_at'],
+                'is_daytime' => $fields['shift'] === 'day'
+            ]);
+
+            $syncData = [];
+
+            foreach ($products as $id => $qty) {
+                $product = Product::find($id)->setCurrentCustomer($order->customer_id);
+
+                $syncData[$id] = [
+                    'product_qty' => $qty,
+                    'order_product_unit_price' => $product->price
+                ];
+            }
+
+            $order->products()->sync($syncData);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Error at updating order with id: ' . $order->order_id);
+            Log::error($e->getMessage());
+        }
+
+        return $order;
+    }
 }

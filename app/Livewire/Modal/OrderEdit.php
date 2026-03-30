@@ -2,11 +2,17 @@
 
 namespace App\Livewire\Modal;
 
+use App\Livewire\OrderList;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\OrderService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use InvalidArgumentException;
+use Exception;
 
 class OrderEdit extends Component
 {
@@ -29,9 +35,23 @@ class OrderEdit extends Component
 
     }
 
-    public function save(): void
+    public function save(OrderService $orderService): void
     {
-        dd($this->fields);
+        $this->validate([
+            'fields.order_due_at' => 'required|date|after_or_equal:fields.order_placed_at',
+            'fields.order_placed_at' => 'required|date',
+            'fields.shift' => 'required|in:day,night'
+        ]);
+
+        try{
+            $orderService->updateOrder($this->order, $this->fields, $this->selectedProducts);
+            $this->dispatch('refresh')->to(OrderList::class);
+        }catch (InvalidArgumentException $e){
+            $this->addError('products', $e->getMessage());
+        }catch (Exception $e){
+            $this->addError('general_error', $e->getMessage());
+        }
+        $this->dispatch('modal-clear')->to(ModalContainer::class);
     }
 
     public function cancel(): void
