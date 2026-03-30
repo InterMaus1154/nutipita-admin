@@ -14,7 +14,7 @@ class ModalContainer extends Component
     public function mount()
     {
         // for testing only
-        if (true) {
+        if (false) {
             $this->modalStack[] = [
                 'component' => 'modal.order-create',
                 'data' => [],

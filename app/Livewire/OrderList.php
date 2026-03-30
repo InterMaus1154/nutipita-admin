@@ -92,7 +92,6 @@ class OrderList extends Component
             'invoice_delivery_charge' => $deliveryCharge
         ]));
 
-
     }
 
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
@@ -143,6 +142,12 @@ class OrderList extends Component
             Log::error($e->getMessage());
         }
 
+    }
+
+    #[On('order-created')]
+    public function refresh(): void
+    {
+        $this->dispatch('$refresh');
     }
 
     public function render(): View

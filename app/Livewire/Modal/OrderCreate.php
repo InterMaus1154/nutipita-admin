@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Modal;
 
+use App\Livewire\OrderList;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Services\OrderService;
@@ -50,16 +51,21 @@ class OrderCreate extends Component
         ]);
 
         try {
-            $order = $orderService->createOrder(customer_id: $this->customer_id,
+            $orderService->createOrder(customer_id: $this->customer_id,
                 order_due_at: $this->order_due_at,
                 order_placed_at: $this->order_placed_at,
                 products: $this->selectedProducts,
                 shift: $this->shift);
+
+            $this->dispatch('order-created')->to(OrderList::class);
+
         } catch (InvalidArgumentException $e) {
             $this->addError('products', $e->getMessage());
         } catch (Exception $e) {
             $this->addError('general_error', $e->getMessage());
         }
+
+        $this->dispatch('modal-clear')->to(ModalContainer::class);
     }
 
     public function render()

@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\DataTransferObjects\OrderSummaryDto;
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -69,11 +71,18 @@ class OrderService
                 'customer_id' => $customer_id,
                 'order_placed_at' => $order_placed_at,
                 'order_due_at' => $order_due_at,
-                'is_daytime' => $shift === 'day'
+                'is_daytime' => $shift === 'day',
+                'order_status' => OrderStatus::Y_CONFIRMED->name
             ]);
 
+            foreach ($products as $id => $qty) {
+                $product = Product::find($id)->setCurrentCustomer($customer_id);
 
-
+                $order->products()->attach($id, [
+                    'product_qty' => $qty,
+                    'order_product_unit_price' => $product->price
+                ]);
+            }
 
             DB::commit();
         } catch (Exception $e) {
@@ -83,6 +92,6 @@ class OrderService
             throw new Exception('Error at creating order');
         }
 
-        return new Order();
+        return $order;
     }
 }
