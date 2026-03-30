@@ -121,9 +121,9 @@
                                 @moneyFormat($order->total_price)
                             </x-table.data>
                             <x-table.data link>
-                                <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
-                                    <flux:icon.pencil-square class="!inline"/>
-                                </flux:link>
+                                <button x-data @click="$dispatch('modal-open', {component: 'modal.order-edit'})" title="Edit order">
+                                    <flux:icon.pencil-square class="!inline text-accent cursor-pointer"/>
+                                </button>
                                 @unless($order->invoice)
                                     <flux:link class="cursor-pointer"
                                                title="Create invoice"

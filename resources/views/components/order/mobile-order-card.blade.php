@@ -26,10 +26,12 @@
         <x-ui.mobile-card-dropdown-menu>
             <x-ui.mobile-card-dropdown-link href="{{route('orders.show', compact('order'))}}">View
             </x-ui.mobile-card-dropdown-link>
-            <x-ui.mobile-card-dropdown-link href="{{route('orders.edit', compact('order'))}}">Edit
+            <x-ui.mobile-card-dropdown-link title="Edit Order" x-data
+                                            @click="$dispatch('modal-open', {component: 'modal.order-edit'})">Edit
             </x-ui.mobile-card-dropdown-link>
             @unless($order->invoice)
-                <x-ui.mobile-card-dropdown-link wire:confirm="Are you sure to generate this invoice?" wire:click="createInvoice({{$order->order_id}})">Generate
+                <x-ui.mobile-card-dropdown-link wire:confirm="Are you sure to generate this invoice?"
+                                                wire:click="createInvoice({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
@@ -131,9 +133,9 @@
         </div>
         {{--action buttons--}}
         <div class="flex gap-6 justify-center justify-self-end">
-            <flux:link href="{{route('orders.edit', compact('order'))}}" title="Edit order">
-                <flux:icon.pencil-square class="size-7"/>
-            </flux:link>
+            <button x-data @click="$dispatch('modal-open', {component: 'modal.order-edit'})" title="Edit order">
+                <flux:icon.pencil-square class="size-7 text-accent"/>
+            </button>
             @unless($order->invoice)
                 <flux:link class="cursor-pointer"
                            title="Create invoice"
