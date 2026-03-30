@@ -69,7 +69,8 @@
                     {{--order due--}}
                     <x-form.form-wrapper>
                         <x-form.form-label id="order_due_at" text="Due At"/>
-                        <x-form.form-input type="date" id="order_due_at" name="order_due_at" value="{{$order->order_due_at}}"/>
+                        <x-form.form-input type="date" id="order_due_at" name="order_due_at"
+                                           value="{{$order->order_due_at}}"/>
                     </x-form.form-wrapper>
                 </div>
             </div>

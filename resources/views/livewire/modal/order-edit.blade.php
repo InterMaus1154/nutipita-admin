@@ -1,17 +1,16 @@
 <div>
-    <x-modal.wrapper title="Edit" size="4xl">
+    <x-modal.wrapper title="Edit Order" size="4xl">
         <x-slot:content>
             @error('general_error')
             <x-form.input-error :message="$message"/>
             @enderror
             <div class="py-8 flex justify-between flex-wrap gap-4 sm:grid grid-cols-[1fr_1fr_1fr]">
                 <div class="flex flex-col gap-4">
-                    <x-form.customer-select :has-wire="true"/>
-                    @error('customer_id')
-                    <x-form.input-error :message="$message"/>
-                    @enderror
                     <div class="flex flex-col gap-4 items-start">
-                        @forelse($products as $product)
+                        @foreach($customerProducts as $product)
+                            @php
+                                $qty = $order->products->find($product->product_id)?->pivot->product_qty ?? 0;
+                            @endphp
                             <x-form.form-wrapper>
                                 <x-form.form-label id="products-{{$product->product_id}}">
                                     {{$product->product_name}} {{$product->product_weight_g}}g
@@ -20,13 +19,9 @@
                                 <x-form.form-input type="number" id="products-{{$product->product_id}}"
                                                    placeholder="0"
                                                    wire-model="selectedProducts.{{$product->product_id}}"
-                                                   value="{{old('selectedProducts.'.$product->product_id)}}"/>
+                                                   />
                             </x-form.form-wrapper>
-                        @empty
-                            @if(isset($customer_id) && $products->isEmpty())
-                                <p class="text-red-500">This customer has no prices set for any product!</p>
-                            @endif
-                        @endforelse
+                        @endforeach
                     </div>
                     @error('products')
                     <x-form.input-error :message="$message"/>
@@ -34,9 +29,9 @@
                 </div>
                 <x-form.form-wrapper>
                     <x-form.form-label id="shift" text="Shift"/>
-                    <x-form.form-select id="shift" name="shift" wire-model-live="shift">
-                        <option value="night" selected>Night</option>
-                        <option value="day">Day</option>
+                    <x-form.form-select id="shift" name="shift" wire-model-live="fields.shift">
+                        <option value="night" {{!$order->is_daytime ? 'selected' : ''}}>Night</option>
+                        <option value="day" {{$order->is_daytime ? 'selected': ''}}>Day</option>
                     </x-form.form-select>
                 </x-form.form-wrapper>
                 <div class="flex gap-2">
@@ -44,7 +39,7 @@
                     <x-form.form-wrapper>
                         <x-form.form-label text="Placed At" id="order_placed_at"/>
                         <x-form.form-input id="order_placed_at" type="date" name="order_placed_at"
-                                           wire-model-live="order_placed_at"/>
+                                           wire-model-live="fields.order_placed_at"/>
                         @error('order_placed_at')
                         <x-form.input-error :message="$message"/>
                         @enderror
@@ -53,7 +48,7 @@
                     <x-form.form-wrapper>
                         <x-form.form-label text="Due At" id="order_due_at"/>
                         <x-form.form-input id="order_due_at" type="date" name="order_due_at"
-                                           wire-model-live="order_due_at"/>
+                                           wire-model-live="fields.order_due_at"/>
 
                         @error('order_due_at')
                         <x-form.input-error :message="$message"/>
@@ -66,7 +61,7 @@
         </x-slot:content>
         <x-slot:footer>
             <div class="flex justify-end gap-4">
-                <flux:button variant="primary" wire:click="save">Save</flux:button>
+                <flux:button variant="primary" wire:click="save">Edit</flux:button>
                 <flux:button variant="danger" wire:click="cancel">Cancel</flux:button>
             </div>
         </x-slot:footer>
