@@ -60,7 +60,7 @@ class OrderService
             $products = collect($products);
         }
 
-        $products = $products->filter(fn(int $qty) => $qty > 0);
+        $products = $products->filter(fn($qty) => (int)$qty > 0);
 
         if ($products->isEmpty()) throw new InvalidArgumentException('All products cannot be empty!');
 
@@ -97,7 +97,7 @@ class OrderService
 
     public function updateOrder(Order $order, array $fields, array $products): Order
     {
-        $products = collect($products)->filter(fn(int $qty) => $qty > 0);
+        $products = collect($products)->filter(fn($qty) => (int)$qty > 0);
 
         if ($products->isEmpty()) throw new InvalidArgumentException('Products cannot be empty!');
 

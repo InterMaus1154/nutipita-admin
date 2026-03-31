@@ -58,13 +58,13 @@ class OrderCreate extends Component
                 shift: $this->shift);
 
             $this->dispatch('refresh')->to(OrderList::class);
-
+            $this->dispatch('modal-clear')->to(ModalContainer::class);
         } catch (InvalidArgumentException $e) {
             $this->addError('products', $e->getMessage());
         } catch (Exception $e) {
             $this->addError('general_error', $e->getMessage());
         }
-        $this->dispatch('modal-clear')->to(ModalContainer::class);
+
     }
 
     public function render()
