@@ -63,7 +63,7 @@
         </x-slot:content>
         <x-slot:footer>
             <div class="flex justify-end gap-4">
-                <flux:button variant="primary" wire:click="save">Edit</flux:button>
+                <flux:button variant="primary" wire:click="save">Save</flux:button>
                 <flux:button variant="danger" wire:click="cancel">Cancel</flux:button>
             </div>
         </x-slot:footer>

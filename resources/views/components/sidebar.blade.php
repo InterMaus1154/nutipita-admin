@@ -82,7 +82,8 @@
             </span>
         </div>
         <flux:dropdown position="top" align="right">
-            <flux:profile avatar="{{asset('images/icon_96x96.png?v=3')}}"/>
+            <flux:profile circle avatar="{{asset('images/icon_96x96.png?v=3')}}"/>
+
             <flux:menu>
                 <flux:menu.item icon="arrow-right-start-on-rectangle" class="w-full">
                     <form method="POST" action="{{route('auth.logout')}}" class="w-full">
