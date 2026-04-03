@@ -31,8 +31,8 @@
 <div class="w-full {{$sizes[$size]}} bg-zinc-800 rounded-md divide-y divide-zinc-500 mx-auto">
 
     <header class="relative {{$sectionPadding}}">
-        <h1 class="text-3xl text-center font-bold text-accent">{{$title}}</h1>
-        <flux:button @click="$dispatch('modal-close')" variant="primary" class="absolute! right-2 top-2">X</flux:button>
+        <h1 class="text-xl text-center font-bold text-accent">{{$title}}</h1>
+        <flux:button size="sm" @click="$dispatch('modal-close')" variant="primary" class="absolute! right-2 top-4">X</flux:button>
     </header>
 
     @if(isset($content))
