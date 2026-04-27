@@ -181,6 +181,7 @@ class CustomerController extends Controller
                         ->where('product_id', $product_id)
                         ->where('customer_id', $customer->customer_id)
                         ->delete();
+                    DB::commit();
                     continue;
                 }
                 DB::commit();
