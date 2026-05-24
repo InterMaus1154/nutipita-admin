@@ -97,7 +97,7 @@ class OrderList extends Component
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
     {
         $this->resetPage();
-        $this->initSort('order_id', 'desc', 'resetPage');
+        $this->initSort('order_due_at', 'desc', 'resetPage');
         $this->withSummaryData = $withSummaryData;
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
         $this->withSummaryPdf = $withSummaryPdf;
