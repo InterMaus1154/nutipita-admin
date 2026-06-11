@@ -19,7 +19,6 @@ class OrderFilter extends Component
     public bool $daytime_only = false;
 
 
-
     public function updated(): void
     {
         $this->dispatchEvent();
@@ -27,8 +26,8 @@ class OrderFilter extends Component
 
     public function mount(): void
     {
-        /*set current week as default*/
-        $this->setCurrentWeek();
+        /*set current week as default, prevent dispatching to prevent flash in orderlist*/
+        $this->setCurrentWeek(dispatch: false);
         $this->year = now()->year;
     }
 

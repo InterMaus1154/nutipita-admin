@@ -12,10 +12,12 @@
         "laravel/tinker": "^2.9",
         "livewire/flux": "^2.1",
         "livewire/livewire": "^3.6",
+        "mobiledetect/mobiledetectlib": "^4.11",
         "yaza/laravel-google-drive-storage": "^4.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "fruitcake/laravel-debugbar": "^4.3",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",

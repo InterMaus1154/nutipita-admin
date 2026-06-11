@@ -76,13 +76,13 @@ trait HasQuickDueFilter
         $this->afterChangeAction();
     }
 
-    public function setCurrentWeek(): void
+    public function setCurrentWeek(bool $dispatch = true): void
     {
         $this->due_from = now()->startOfWeek()->format('Y-m-d');
         $this->due_to = now()->endOfWeek()->format('Y-m-d');
 
         $this->activePeriod = "week";
-        $this->afterChangeAction();
+        if($dispatch) $this->afterChangeAction();
     }
 
     public function setYear(int $year): void
