@@ -124,17 +124,20 @@ class OrderList extends Component
 
     public function render(): View
     {
-        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
 
         if ($this->disabled) {
-            $query = Order::query()->whereRaw('1 = 0');
-        } else {
-            $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
+            return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
+
+        $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
             ->paginate(50);
+
+        // load only present products
+
+        $products = $orders->map(fn(Order $order) => $order->products)->unique('product_id')->values();
 
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
