@@ -45,28 +45,17 @@
         }
 
         function getYears(){
-            // get years, where order exists
 
-            $firstYearDate = Order::orderBy('order_due_at', 'asc')->take(1)->first('order_due_at');
-            $firstYearDate = $firstYearDate ? $firstYearDate->value('order_due_at') : null;
+            $range = Order::selectRaw('MIN(order_due_at) as first, MAX(order_due_at) AS last')->first();
 
-            $hasYear = false;
-
-            $firstYear = null;
-            if(!is_null($firstYearDate)){
-                $firstYear = Format::getYearFromDate($firstYearDate);
+            if(is_null($range->first)){
+                return [now()->year];
             }
 
-            $latestYearDate = Order::orderBy('order_due_at', 'desc')->take(1);
-            $latestYearDate = $latestYearDate ? $latestYearDate->value('order_due_at') : null;
-
-            $latestYear = null;
-            if(!is_null($latestYearDate)){
-                $latestYear = Format::getYearFromDate($latestYearDate);
-                $hasYear = true;
-            }
-
-            return $hasYear ? range($firstYear, $latestYear, 1) : array(now()->year);
+            return range(
+                Format::getYearFromDate($range->first),
+                Format::getYearFromDate($range->last)
+            );
         }
     @endphp
     <div class="relative"

@@ -136,8 +136,7 @@ class OrderList extends Component
             ->paginate(50);
 
         // load only present products
-
-        $products = $orders->map(fn(Order $order) => $order->products)->unique('product_id')->values();
+        $products = $orders->flatMap(fn(Order $order) => $order->products)->unique('product_id')->values();
 
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
