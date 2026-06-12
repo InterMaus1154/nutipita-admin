@@ -36,9 +36,8 @@ class OrderList extends Component
     public array $propFilters = [];
 
     #[Reactive]
-    public ?bool $disabled = false;
+    public ?bool $disabled = false; // when set to true, orderlist is disabled, no orders are rendered
 
-    public bool $hasLoading = true;
 
     /*
      * Variables for summary
@@ -59,39 +58,12 @@ class OrderList extends Component
     public bool $withMobileSort = false;
 
 
-    // for single invoice creation
-    public bool $modalVisible = false;
-    public ?int $selectedOrderId = null;
-    public float|null $invoice_delivery_charge = null;
-
-    public function openInvoiceModal(int $selectedOrderId): void
-    {
-        $this->selectedOrderId = $selectedOrderId;
-        $this->modalVisible = true;
-    }
-
-    public function closeInvoiceModal(): void
-    {
-        $this->reset('modalVisible', 'selectedOrderId', 'invoice_delivery_charge');
-    }
 
     public function createInvoice(int $orderId): void
     {
-        $this->validate([
-            'invoice_delivery_charge' => 'nullable|numeric|min:0'
-        ]);
-
-        $deliveryCharge = $this->invoice_delivery_charge;
-
-//        $this->closeInvoiceModal();
-
-        $this->dispatch('$refresh');
-
         $this->redirect(route('invoices.create-single', [
-            'order' => $orderId,
-            'invoice_delivery_charge' => $deliveryCharge
+            'order' => $orderId
         ]));
-
     }
 
     public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
