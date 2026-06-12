@@ -58,7 +58,6 @@ class OrderList extends Component
     public bool $withMobileSort = false;
 
 
-
     public function createInvoice(int $orderId): void
     {
         $this->redirect(route('invoices.create-single', [
@@ -66,13 +65,11 @@ class OrderList extends Component
         ]));
     }
 
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
+    public function mount(): void
     {
         $this->resetPage();
         $this->initSort('order_due_at', 'desc', 'resetPage');
-        $this->withSummaryData = $withSummaryData;
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
-        $this->withSummaryPdf = $withSummaryPdf;
     }
 
     #[On('update-filter')]
@@ -125,6 +122,8 @@ class OrderList extends Component
     public function render(): View
     {
 
+        Log::info(static::class. '::render', ['time' => microtime(true), 'filters' => $this->filters ?? null]);
+
         if ($this->disabled) {
             return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
@@ -145,7 +144,7 @@ class OrderList extends Component
         ]);
 
         if (!empty($this->filters['customer_id']) && $orders->isNotEmpty()) {
-            $orderIds = (clone $query)->pluck('orders.order_id')->toArray();
+            $orderIds = (clone $query)->toBase()->pluck('orders.order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => OrderListService::getOrderSummaryPdfUrl($orderIds)])->to(OrderSummaryDownload::class);
         }

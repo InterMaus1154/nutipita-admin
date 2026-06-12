@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Queries\OrderQueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -29,7 +30,7 @@ class OrderSummary extends Component
     public $productTotals = [];
     public int|null $totalPita = 0;
 
-    public function mount(Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
+    public function mount(bool $visibleByDefault = false, bool $withIncome = false): void
     {
         $this->visible = $visibleByDefault;
         $this->withIncome = $withIncome;
@@ -72,6 +73,8 @@ class OrderSummary extends Component
 
     public function render(): View
     {
+        Log::info(static::class. '::render', ['time' => microtime(true)]);
+
         if(!$this->disabled){
             $this->calculateSummaries();
         }
