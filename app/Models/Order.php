@@ -128,4 +128,15 @@ class Order extends Model
         ]);
     }
 
+    public function scopeDueBetween(Builder $query, string $start, string $end): Builder
+    {
+        return $query->whereBetween('order_due_at', [$start, $end]);
+    }
+
+    public function scopeForCustomer(Builder $query, Customer|int $customer_id): Builder
+    {
+        $id = $customer_id instanceof Customer ? $customer_id->customer_id : $customer_id;
+        return $query->where('customer_id', $id);
+    }
+
 }

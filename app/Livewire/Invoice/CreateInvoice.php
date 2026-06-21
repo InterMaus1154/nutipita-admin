@@ -165,6 +165,7 @@ class CreateInvoice extends Component
                 ->whereDate('order_due_at', '>=', $firstOrderDate)
                 ->whereDate('order_due_at', '<=', $lastOrderDate);
 
+
             $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
                 invoiceIssueDate: $this->invoice_issue_date,
