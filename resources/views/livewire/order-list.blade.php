@@ -169,4 +169,5 @@
     @else
         <div></div>
     @endif
+    <x-loading-indicator />
 </div>

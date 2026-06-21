@@ -13,11 +13,11 @@ class OrderQueryBuilder
             ->when(!empty($filters['active_period']) && $filters['active_period'] === 'today', function (Builder $query) {
                 $query->where(function ($q) {
                     $q->where(function ($q2) {
-                        $q2->whereDate('orders.order_due_at', now()->toDateString())
+                        $q2->where('orders.order_due_at', now()->toDateString())
                             ->where('orders.is_daytime', true);
                     })
                         ->orWhere(function ($q2) {
-                            $q2->whereDate('orders.order_due_at', now()->addDay()->toDateString())
+                            $q2->where('orders.order_due_at', now()->addDay()->toDateString())
                                 ->where('orders.is_daytime', false);
                         });
                 });
@@ -38,10 +38,10 @@ class OrderQueryBuilder
 
         if (empty($filters['active_period']) || $filters['active_period'] !== 'today') {
             $query->when(!empty($filters['due_from']), function ($builder) use ($filters) {
-                return $builder->whereDate('order_due_at', '>=', $filters['due_from']);
+                return $builder->where('order_due_at', '>=', $filters['due_from']);
             })
                 ->when(!empty($filters['due_to']), function ($builder) use ($filters) {
-                    return $builder->whereDate('order_due_at', '<=', $filters['due_to']);
+                    return $builder->where('order_due_at', '<=', $filters['due_to']);
                 });
         }
 
