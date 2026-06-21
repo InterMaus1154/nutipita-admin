@@ -40,15 +40,10 @@ class InvoiceList extends Component
             abort(403);
         }
 
-        $orderQuery = Order::query()
-            ->where('customer_id', $invoice->customer_id)
-            ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-            ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
         if ($newValue === InvoiceStatus::due->name) {
-            $this->markOrdersAsUnpaid($orderQuery);
+            Order::forInvoice($invoice)->markUnpaid();
         } else if ($newValue === InvoiceStatus::paid->name) {
-            $this->markOrdersAsPaid($orderQuery);
+            Order::forInvoice($invoice)->markPaid();
         }
 
         $invoice->update([
@@ -75,18 +70,10 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => 'paid'
+                'invoice_status' =>  InvoiceStatus::paid->name
             ]);
 
-            // mark orders in the invoice as "paid"
-
-            // fetch orders based on invoice from/to dates
-            $orderQuery = Order::query()
-                ->where('customer_id', $invoice->customer_id)
-                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-            $this->markOrdersAsPaid($orderQuery);
+            Order::forInvoice($invoice)->markPaid();
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -107,18 +94,10 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => 'due'
+                'invoice_status' => InvoiceStatus::due->name
             ]);
 
-            // mark orders in the invoice as "unpaid"
-
-            // fetch orders based on invoice from/to dates
-            $orderQuery = Order::query()
-                ->where('customer_id', $invoice->customer_id)
-                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-            $this->markOrdersAsUnpaid($orderQuery);
+            Order::forInvoice($invoice)->markUnpaid();
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -126,37 +105,6 @@ class InvoiceList extends Component
             Log::error($e->getMessage());
             session()->flash('error', 'Error at updating invoice or orders');
         }
-    }
-
-    /**
-     * Mark selected orders as paid
-     * @param Builder $query
-     * @return void
-     */
-    public function markOrdersAsPaid(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::G_PAID->name
-        ]);
-    }
-
-    /**
-     * Mark selected orders as unpaid
-     * @param Builder $query
-     * @return void
-     */
-    public function markOrdersAsUnpaid(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
-        ]);
-    }
-
-    public function markOrdersAsConfirmed(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::Y_CONFIRMED->name
-        ]);
     }
 
     /*
@@ -176,12 +124,7 @@ class InvoiceList extends Component
                    'order_status' => OrderStatus::Y_CONFIRMED->name
                 ]);
             }else{
-                $orderQuery = Order::query()
-                    ->where('customer_id', $invoice->customer_id)
-                    ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                    ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-                $this->markOrdersAsConfirmed($orderQuery);
+                Order::forInvoice($invoice)->markConfirmed();
             }
 
             $invoice->delete();

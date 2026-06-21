@@ -97,9 +97,35 @@ class Order extends Model
         return 0;
     }
 
-    /*
-     * Other
-     */
+    public function scopeForInvoice(Builder $query, Invoice $invoice): Builder
+    {
+        return $query
+            ->where('customer_id', $invoice->customer_id)
+            ->whereBetween('order_due_at', [
+                $invoice->invoice_from,
+                $invoice->invoice_to
+            ]);
+    }
 
+    public function scopeMarkPaid(Builder $builder): int
+    {
+        return $builder->update([
+           'order_status' => OrderStatus::G_PAID->name
+        ]);
+    }
+
+    public function scopeMarkUnpaid(Builder $builder): int
+    {
+        return $builder->update([
+           'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
+        ]);
+    }
+
+    public function scopeMarkConfirmed(Builder $builder): int
+    {
+        return $builder->update([
+           'order_status' => OrderStatus::Y_CONFIRMED->name
+        ]);
+    }
 
 }
