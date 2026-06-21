@@ -1,5 +1,5 @@
 @props(['order'])
-<x-ui.mobile-card-skeleton>
+<x-ui.mobile-card-skeleton {{$attributes}}>
     {{--card header--}}
     <div class="flex gap-4 justify-between">
         {{--status badges--}}
@@ -69,6 +69,7 @@
             <span class="text-base">@moneyFormat($order->total_price)</span>
         </div>
     </div>
+
     <x-ui.detail-popup-card>
         <div class="flex justify-center">
             <span class="text-lg text-accent font-bold">{{$order->customer->customer_name}}</span>

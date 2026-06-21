@@ -36,9 +36,8 @@ class OrderList extends Component
     public array $propFilters = [];
 
     #[Reactive]
-    public ?bool $disabled = false;
+    public ?bool $disabled = false; // when set to true, orderlist is disabled, no orders are rendered
 
-    public bool $hasLoading = true;
 
     /*
      * Variables for summary
@@ -59,48 +58,18 @@ class OrderList extends Component
     public bool $withMobileSort = false;
 
 
-    // for single invoice creation
-    public bool $modalVisible = false;
-    public ?int $selectedOrderId = null;
-    public float|null $invoice_delivery_charge = null;
-
-    public function openInvoiceModal(int $selectedOrderId): void
-    {
-        $this->selectedOrderId = $selectedOrderId;
-        $this->modalVisible = true;
-    }
-
-    public function closeInvoiceModal(): void
-    {
-        $this->reset('modalVisible', 'selectedOrderId', 'invoice_delivery_charge');
-    }
-
     public function createInvoice(int $orderId): void
     {
-        $this->validate([
-            'invoice_delivery_charge' => 'nullable|numeric|min:0'
-        ]);
-
-        $deliveryCharge = $this->invoice_delivery_charge;
-
-//        $this->closeInvoiceModal();
-
-        $this->dispatch('$refresh');
-
         $this->redirect(route('invoices.create-single', [
-            'order' => $orderId,
-            'invoice_delivery_charge' => $deliveryCharge
+            'order' => $orderId
         ]));
-
     }
 
-    public function mount(bool $withSummaryData = true, bool $summaryVisibleByDefault = false, ?bool $withSummaryPdf = false): void
+    public function mount(): void
     {
         $this->resetPage();
         $this->initSort('order_due_at', 'desc', 'resetPage');
-        $this->withSummaryData = $withSummaryData;
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
-        $this->withSummaryPdf = $withSummaryPdf;
     }
 
     #[On('update-filter')]
@@ -152,26 +121,30 @@ class OrderList extends Component
 
     public function render(): View
     {
-        $products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
+
+        Log::info(static::class. '::render', ['time' => microtime(true), 'filters' => $this->filters ?? null]);
 
         if ($this->disabled) {
-            $query = Order::query()->whereRaw('1 = 0');
-        } else {
-            $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
+            return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
+
+        $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
             ->paginate(50);
 
+        // load only present products
+        $products = $orders->flatMap(fn(Order $order) => $order->products)->unique('product_id')->values();
+
         $this->dispatch('order-count-details', [
             'is_nighttime' => $this->filters['nighttime_only'],
             'is_daytime' => $this->filters['daytime_only'],
-            'hasOrders' => $query->exists()
+            'hasOrders' => $orders->isNotEmpty()
         ]);
 
-        if (!empty($this->filters['customer_id'])) {
-            $orderIds = (clone $query)->pluck('orders.order_id')->toArray();
+        if (!empty($this->filters['customer_id']) && $orders->isNotEmpty()) {
+            $orderIds = (clone $query)->toBase()->pluck('orders.order_id')->toArray();
             // send an event to the download component with the already made download link
             $this->dispatch('order-summary-link', ['url' => OrderListService::getOrderSummaryPdfUrl($orderIds)])->to(OrderSummaryDownload::class);
         }

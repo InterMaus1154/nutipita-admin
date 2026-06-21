@@ -113,4 +113,5 @@
     <div>
         {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
     </div>
+    <x-loading-indicator />
 </div>

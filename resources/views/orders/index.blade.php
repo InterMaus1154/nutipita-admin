@@ -14,8 +14,8 @@
             @php
                 // set week as default
                     $filters = [
-                        'due_from' => now()->startOfWeek(\Carbon\WeekDay::Sunday)->format('Y-m-d'),
-                        'due_to' => now()->endOfWeek(\Carbon\WeekDay::Saturday)->format('Y-m-d')
+                        'due_from' => now()->startOfWeek()->format('Y-m-d'),
+                        'due_to' => now()->endOfWeek()->format('Y-m-d')
                         ];
             @endphp
             <livewire:order-list :withSummaryPdf="true" :summary-visible-by-default="true" :prop-filters="$filters"/>

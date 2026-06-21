@@ -2,10 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Database\Console\Migrations\FreshCommand;
-use Illuminate\Database\Console\Migrations\RefreshCommand;
-use Illuminate\Database\Console\Migrations\ResetCommand;
-use Illuminate\Database\Console\WipeCommand;
+use Detection\MobileDetect;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -29,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands(app()->isProduction());
 
         require_once app_path('Helpers/helpers.php');
+
+        $browser = new MobileDetect;
+
+        View::share('browser', $browser);
 
         Blade::directive('dayDate', function($expression){
             return "<?php echo dayDate($expression); ?>";

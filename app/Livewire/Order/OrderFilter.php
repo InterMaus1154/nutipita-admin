@@ -5,6 +5,7 @@ namespace App\Livewire\Order;
 use App\Livewire\OrderList;
 use App\Models\Customer;
 use App\Traits\HasQuickDueFilter;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -19,7 +20,6 @@ class OrderFilter extends Component
     public bool $daytime_only = false;
 
 
-
     public function updated(): void
     {
         $this->dispatchEvent();
@@ -27,8 +27,8 @@ class OrderFilter extends Component
 
     public function mount(): void
     {
-        /*set current week as default*/
-        $this->setCurrentWeek();
+        /*set current week as default, prevent dispatching to prevent flash in orderlist*/
+        $this->setCurrentWeek(dispatch: false);
         $this->year = now()->year;
     }
 
@@ -64,7 +64,7 @@ class OrderFilter extends Component
 
     public function render(): View
     {
-        $customers = Customer::select(['customer_id', 'customer_name', 'customer_business_owner_name'])->get();
-        return view('livewire.order.order-filter', compact('customers'));
+        Log::info(static::class. '::render', ['time' => microtime(true), 'filters' => $this->filters ?? null]);
+        return view('livewire.order.order-filter');
     }
 }

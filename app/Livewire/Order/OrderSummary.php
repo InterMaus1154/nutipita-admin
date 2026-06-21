@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Queries\OrderQueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -21,8 +22,6 @@ class OrderSummary extends Component
     #[Reactive]
     public $disabled = false;
 
-    public bool $hasLoading = true;
-
     public bool $visible = false;
     public bool $withIncome = false;
 
@@ -31,7 +30,7 @@ class OrderSummary extends Component
     public $productTotals = [];
     public int|null $totalPita = 0;
 
-    public function mount(Collection|null $products = null, bool $visibleByDefault = false, bool $withIncome = false): void
+    public function mount(bool $visibleByDefault = false, bool $withIncome = false): void
     {
         $this->visible = $visibleByDefault;
         $this->withIncome = $withIncome;
@@ -45,16 +44,21 @@ class OrderSummary extends Component
     {
         $this->reset(['totalPita', 'productTotals', 'totalIncome']);
 
-        $query = OrderQueryBuilder::build($this->filters);
+        $query = OrderQueryBuilder::build($this->filters)->toBase();
 
         $this->ordersCount = (clone $query)
             ->selectRaw('COUNT(*) AS total_orders')
             ->first()->total_orders;
 
-        $this->totalIncome = (clone $query)
+        $result = (clone $query)
             ->join('order_product', 'order_product.order_id', '=', 'orders.order_id')
-            ->selectRaw('SUM(order_product.order_product_unit_price * order_product.product_qty) AS total_income')
-            ->first()->total_income;
+            ->selectRaw('SUM(order_product.order_product_unit_price * order_product.product_qty) AS total_income,
+                                   SUM(order_product.product_qty) AS total_pita
+            ')
+            ->first();
+
+        $this->totalPita = $result->total_pita;
+        $this->totalIncome = $result->total_income;
 
         $this->productTotals = (clone $query)
             ->join('order_product', 'orders.order_id', '=', 'order_product.order_id')
@@ -64,18 +68,13 @@ class OrderSummary extends Component
             ->groupBy('products.product_id', 'products.product_name', 'products.product_weight_g')
             ->orderBy('products.product_name', 'DESC')
             ->get();
-
-        $this->totalPita = (clone $query)
-            ->join('order_product', 'orders.order_id', '=', 'order_product.order_id')
-            ->selectRaw('SUM(order_product.product_qty) AS total_pita')
-            ->getQuery()
-            ->value('total_pita');
-
     }
 
 
     public function render(): View
     {
+        Log::info(static::class. '::render', ['time' => microtime(true)]);
+
         if(!$this->disabled){
             $this->calculateSummaries();
         }
