@@ -122,8 +122,6 @@ class OrderList extends Component
     public function render(): View
     {
 
-        Log::info(static::class. '::render', ['time' => microtime(true), 'filters' => $this->filters ?? null]);
-
         if ($this->disabled) {
             return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
@@ -132,7 +130,7 @@ class OrderList extends Component
 
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
-            ->paginate(50);
+            ->paginate(20);
 
         // load only present products
         $products = $orders->flatMap(fn(Order $order) => $order->products)->unique('product_id')->values();

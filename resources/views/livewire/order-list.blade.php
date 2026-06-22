@@ -97,7 +97,7 @@
                                         @dayDate($order->order_due_at)
                                     </x-table.data>
                                     <x-table.data>
-                                        <x-order.order-status-select :order="$order"/>
+                                        <x-order.order-status-select :order_id="$order->order_id" :order_status="$order->order_status"/>
                                     </x-table.data>
                                     @foreach($products as $product)
                                         @php
