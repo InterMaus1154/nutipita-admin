@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Services\LivewireHelpers\OrderListService;
 use App\Traits\HasSort;
+use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,8 @@ class OrderList extends Component
 
     public bool $withMobileSort = false;
 
+    public bool $isMobile = false;
+
 
     public function createInvoice(int $orderId): void
     {
@@ -70,6 +73,8 @@ class OrderList extends Component
         $this->resetPage();
         $this->initSort('order_due_at', 'desc', 'resetPage');
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
+        $browser = new MobileDetect;
+        $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
     #[On('update-filter')]
@@ -119,6 +124,12 @@ class OrderList extends Component
         $this->dispatch('$refresh');
     }
 
+    public function renderOrderProducts(int $orderId): string
+    {
+        $order = Order::with('products')->findOrFail($orderId);
+        return view('components.order.partials.order-products', compact('order'))->render();
+    }
+
     public function render(): View
     {
 
@@ -128,9 +139,13 @@ class OrderList extends Component
 
         $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
+        if(!$this->isMobile){
+            $query->with('customer:customer_id,customer_name', 'products', 'invoice');
+        }
+
         // clone query for pagination only, as it contains everything from the filter
         $orders = (clone $query)
-            ->paginate(20);
+            ->paginate(50);
 
         // load only present products
         $products = $orders->flatMap(fn(Order $order) => $order->products)->unique('product_id')->values();

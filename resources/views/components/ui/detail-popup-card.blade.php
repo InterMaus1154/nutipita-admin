@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4" x-data="{detailsMenuOpen: false}" x-effect="
+<div class="flex flex-col gap-4" x-data="{detailsMenuOpen: @js($visible)}" x-effect="
         if(detailsMenuOpen) {
             document.body.setAttribute('data-menu-open', '');
 
@@ -7,8 +7,6 @@
 
         }
      ">
-    {{--extra info section--}}
-    {{--backdrop--}}
     <div class="fixed inset-0 min-h-screen z-101 bg-black/60" x-show="detailsMenuOpen"
          x-transition x-cloak></div>
     <div
@@ -25,7 +23,4 @@
         </div>
         {{$slot}}
     </div>
-    <flux:button x-on:click="detailsMenuOpen = !detailsMenuOpen">
-        <flux:icon.chevron-double-up class="text-accent"/>
-    </flux:button>
 </div>
