@@ -39,24 +39,12 @@ class OrderList extends Component
     #[Reactive]
     public ?bool $disabled = false; // when set to true, orderlist is disabled, no orders are rendered
 
-
-    /*
-     * Variables for summary
-     */
     public bool $withSummaryData = true;
     public bool $withSummaryPdf = false;
     public bool $withIncome = true;
     public bool $summaryVisibleByDefault = false;
-    /*
-     * End
-     */
 
-    /*
-     * Sorting variables
-     */
     public string $mobileSort = "desc:order_id";
-
-    public bool $withMobileSort = false;
 
     public bool $isMobile = false;
 

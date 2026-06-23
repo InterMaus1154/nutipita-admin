@@ -13,7 +13,6 @@
     @if(!$disabled && $orders->isNotEmpty())
         <x-success/>
         <x-error/>
-        {{--order summary--}}
         @if(!$disabled && $withSummaryData)
             <livewire:order.order-summary :filters="$filters" :withIncome="$withIncome"
                                           :visibleByDefault="$summaryVisibleByDefault"
@@ -30,8 +29,6 @@
         <div>
             {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
         </div>
-    @else
-        <div></div>
     @endif
-    <x-loading-indicator />
+    <x-loading-indicator/>
 </div>
