@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <flux:button @click="$dispatch('show-order-popup', { orderId: {{$order->order_id}} })">
+    <flux:button @click="$dispatch('modal-open', { component: 'order.order-popup-card', componentData: { orderId: {{$order->order_id}} } })">
         <flux:icon.chevron-double-up class="text-accent"/>
     </flux:button>
 </x-ui.mobile-card-skeleton>

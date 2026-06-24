@@ -1,13 +1,10 @@
 <div>
     @if(!is_null($orderId))
-        <x-ui.detail-popup-card :visible="$visible">
+        <x-ui.detail-popup-card>
             <div class="flex justify-center">
                 <span class="text-lg text-accent font-bold">{{$order->customer->customer_name}}</span>
             </div>
             <div class="flex justify-between gap-4">
-                status badge
-                <x-order.order-status-select :order_id="$order->order_id" :order_status="$order->order_status"/>
-                other badges
                 <div class="flex gap-2">
                     @if($order->is_daytime)
                         <flux:badge color="yellow" variant="solid" size="sm">
