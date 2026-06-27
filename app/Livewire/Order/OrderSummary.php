@@ -73,8 +73,6 @@ class OrderSummary extends Component
 
     public function render(): View
     {
-        Log::info(static::class. '::render', ['time' => microtime(true)]);
-
         if(!$this->disabled){
             $this->calculateSummaries();
         }
