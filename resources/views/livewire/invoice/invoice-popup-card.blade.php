@@ -1,16 +1,10 @@
 <div>
     @if(!is_null($invoiceId))
         <x-ui.detail-popup-card>
-            <div class="grid grid-cols-[1fr_auto_1fr] gap-2">
-                <div class="justify-self-start">
-                    <x-invoice.invoice-status-select :invoice="$invoice"/>
-                </div>
-                <div class="justify-self-center text-center">
+            <div class="flex justify-center">
                 <span class="text-lg text-accent text-center font-bold">
-                {{$invoice->customer->customer_name}}
-            </span>
-                </div>
-                <div></div>
+                    {{$invoice->customer->customer_name}}
+                </span>
             </div>
             <div class="flex justify-between gap-4 items-center">
                 <div class="flex gap-2 items-center">
