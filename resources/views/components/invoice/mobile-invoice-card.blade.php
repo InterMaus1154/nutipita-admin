@@ -6,7 +6,6 @@
 * @var \App\Models\Invoice $invoice
  */
     @endphp
-    {{--card header--}}
     <div class="grid grid-cols-[1fr_auto_1fr]">
         <div class="justify-self-start">
             <x-invoice.invoice-status-select :invoice="$invoice"/>

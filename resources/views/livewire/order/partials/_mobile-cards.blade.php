@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4 sm:hidden">
+<div class="flex flex-col gap-4">
     @foreach($mobileOrders as $orderData)
         <x-order.mobile-order-card wire:key="order-mobile-card-{{$orderData['order_id']}}"
                                    :order="(object) $orderData"/>

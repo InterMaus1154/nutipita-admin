@@ -1,10 +1,7 @@
 @props(['order'])
 <x-ui.mobile-card-skeleton {{$attributes}}>
-    {{--card header--}}
     <div class="flex gap-4 justify-between">
-        {{--status badges--}}
         <div class="flex gap-2">
-            {{--normal status badge--}}
             <x-order.order-status-select :order_id="$order->order_id" :order_status="$order->order_status"/>
             @if($order->is_daytime)
                 <flux:badge color="yellow" variant="solid" size="sm">
@@ -22,7 +19,6 @@
                 </flux:badge>
             @endif
         </div>
-        {{--dropdown menu for actions--}}
         <x-ui.mobile-card-dropdown-menu>
             <x-ui.mobile-card-dropdown-link href="{{route('orders.show', ['order' => $order->order_id])}}">View
             </x-ui.mobile-card-dropdown-link>
@@ -47,7 +43,6 @@
             </x-ui.mobile-card-dropdown-link>
         </x-ui.mobile-card-dropdown-menu>
     </div>
-    {{--customer and due date info--}}
     <div class="flex justify-between gap-4 items-center">
                         <span class="text-accent">
                             {{$order->customer_name}}
@@ -58,7 +53,6 @@
                         </span>
         </div>
     </div>
-    {{--total pita and price info--}}
     <div class="flex justify-between gap-4 items-center flex-wrap">
         <div class="flex gap-2 items-center">
             <flux:icon.pita class="size-5 text-accent"/>
@@ -69,7 +63,6 @@
             <span class="text-base">@moneyFormat($order->total_price)</span>
         </div>
     </div>
-
     <flux:button @click="$dispatch('modal-open', { component: 'order.order-popup-card', componentData: { orderId: {{$order->order_id}} } })">
         <flux:icon.chevron-double-up class="text-accent"/>
     </flux:button>
