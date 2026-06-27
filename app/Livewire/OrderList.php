@@ -221,11 +221,6 @@ class OrderList extends Component
         }
     }
 
-    public function renderOrderProducts(int $orderId): string
-    {
-        $order = Order::with('products')->findOrFail($orderId);
-        return view('components.order.partials.order-products', compact('order'))->render();
-    }
 
     public function render(): View
     {

@@ -4,6 +4,9 @@
             @error('general_error')
             <x-form.input-error :message="$message"/>
             @enderror
+            @if($order->order_status === \App\Enums\OrderStatus::G_PAID->name)
+                <span class="text-red-700 text-xl font-bold text-center block">You are editing a paid order!</span>
+            @endif
             <div class="py-8 flex justify-between flex-wrap gap-4 sm:grid grid-cols-[1fr_1fr_1fr]">
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-col gap-4 items-start">
