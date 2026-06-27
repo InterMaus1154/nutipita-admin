@@ -7,6 +7,7 @@ use App\Enums\OrderStatus;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Traits\HasSort;
+use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,15 +24,17 @@ class InvoiceList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-
     public array $filters = [
         'customer_id' => null
     ];
 
+    public bool $isMobile = false;
 
     public function mount(): void
     {
         $this->initSort('invoice_number', 'desc', 'resetPage');
+        $browser = new MobileDetect;
+        $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
     public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
@@ -58,10 +61,6 @@ class InvoiceList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
-
-    /*
-     * Mark an invoice status "paid"
-     */
     public function markPaid(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -83,9 +82,6 @@ class InvoiceList extends Component
         }
     }
 
-    /*
-     * Mark an invoice status "due"
-     */
     public function markDue(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -107,9 +103,6 @@ class InvoiceList extends Component
         }
     }
 
-    /*
-     * Delete an invoice
-     */
     public function delete(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -164,7 +157,8 @@ class InvoiceList extends Component
             ->when(!empty($filters['invoice_to']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoices.invoice_due_date', '<=', $filters['invoice_to']);
             })
-            ->with('customer:customer_id,customer_name', 'products', 'products.product');
+            ->with('customer:customer_id,customer_name');
+
 
         $invoiceTotals = $query->clone()->selectRaw('SUM(invoice_total) AS invoice_totals')->value('invoice_totals');
         $invoiceCount = $query->clone()->selectRaw('COUNT(*) AS invoice_count')->value('invoice_count');
