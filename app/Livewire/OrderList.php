@@ -87,7 +87,7 @@ class OrderList extends Component
     private function refetchLoadedMobileOrders(): void
     {
         $query = $this->applySort(
-          OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection)
+            OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection)
         );
 
         $rows = $query
@@ -201,7 +201,7 @@ class OrderList extends Component
             ]);
             DB::commit();
 
-            if($this->isMobile){
+            if ($this->isMobile) {
                 $this->refetchLoadedMobileOrders();
             }
 
@@ -216,7 +216,7 @@ class OrderList extends Component
     #[On('refresh')]
     public function refresh(): void
     {
-        if($this->isMobile){
+        if ($this->isMobile) {
             $this->refetchLoadedMobileOrders();
         }
     }
