@@ -58,31 +58,6 @@
                     <span class="text-lg font-semibold">@moneyFormat($order->total_price)</span>
                 </div>
             </div>
-            <div class="flex gap-6 justify-center justify-self-end">
-                <button x-data
-                        @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })"
-                        title="Edit order">
-                    <flux:icon.pencil-square class="size-7 text-accent"/>
-                </button>
-                @unless($order->invoice)
-                    <flux:link class="cursor-pointer"
-                               title="Create invoice"
-                               wire:confirm="Are you sure to generate invoice?"
-                               wire:click="createInvoice({{$order->order_id}})"
-                    >
-                        <flux:icon.clipboard-document-list class="!inline"/>
-                    </flux:link>
-                @else
-                    <flux:link href="{{route('invoices.download', ['invoice' => $order->invoice])}}"
-                               title="Download invoice">
-                        <flux:icon.clipboard-document-check class="size-7"/>
-                    </flux:link>
-                @endunless
-                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
-                           wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
-                    <flux:icon.trash class="size-7"/>
-                </flux:link>
-            </div>
         </x-ui.detail-popup-card>
     @endif
 </div>
