@@ -1,4 +1,4 @@
-<div class="hidden sm:block">
+<div>
     <x-table.table>
         <x-table.head>
             <x-table.header sort-field="invoice_number">
