@@ -105,8 +105,8 @@ class OrderList extends Component
 
     public function mount(): void
     {
-        $this->resetPage();
-        $this->initSort('order_due_at', 'desc', 'resetPage');
+        $this->fullPageReset();
+        $this->initSort('order_due_at', 'desc', 'fullPageReset');
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
         $browser = new MobileDetect;
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
@@ -120,7 +120,17 @@ class OrderList extends Component
     {
         $this->resetPage();
         $this->filters = array_replace($this->defaultFilters, $filters);
+        $this->mobilePageReset();
+    }
 
+    public function fullPageReset(): void
+    {
+        $this->resetPage();
+        $this->mobilePageReset();
+    }
+
+    public function mobilePageReset(): void
+    {
         if($this->isMobile){
             $this->mobileOrders = [];
             $this->mobileHasMore = true;
