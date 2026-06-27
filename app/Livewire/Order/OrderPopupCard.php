@@ -13,7 +13,6 @@ class OrderPopupCard extends Component
 
     public function render()
     {
-
         $order = Order::query()
             ->where('order_id', $this->orderId)
             ->with('products', 'customer', 'invoice')
