@@ -48,6 +48,53 @@ class OrderList extends Component
 
     public bool $isMobile = false;
 
+    // for mobile infinite scroll
+    public array $mobileOrders = [];
+    public bool $mobileHasMore = true;
+    public bool $mobileLoading = false;
+    public int $mobilePage = 1;
+
+    private function fetchMobileOrders(): void
+    {
+        $query = $this->applySort(
+            OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection)
+        );
+
+        $rows = $query
+            ->with('customer:customer_id,customer_name', 'invoice:invoice_id,order_id')
+            ->forPage($this->mobilePage, 12)
+            ->get()
+            ->map(function (Order $order) {
+                return [
+                    'order_id' => $order->order_id,
+                    'order_status' => $order->order_status,
+                    'is_daytime' => $order->is_daytime,
+                    'is_standing' => $order->is_standing,
+                    'order_due_at' => $order->order_due_at,
+                    'total_pita' => $order->total_pita,
+                    'total_price' => $order->total_price,
+                    'customer_name' => $order->customer->customer_name,
+                    'invoice_id' => $order->invoice?->invoice_id
+                ];
+            })
+            ->toArray();
+
+        $this->mobileOrders = array_merge($this->mobileOrders, $rows);
+        $this->mobileHasMore = count($rows) === 12;
+        $this->mobileLoading = false;
+    }
+
+    public function loadMore(): void
+    {
+        if(!$this->mobileHasMore || $this->mobileLoading){
+            return;
+        }
+
+        $this->mobileLoading = true;
+        $this->mobilePage++;
+        $this->fetchMobileOrders();
+    }
+
 
     public function createInvoice(int $orderId): void
     {
@@ -63,6 +110,9 @@ class OrderList extends Component
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
         $browser = new MobileDetect;
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
+        if($this->isMobile){
+            $this->fetchMobileOrders();
+        }
     }
 
     #[On('update-filter')]
@@ -70,6 +120,14 @@ class OrderList extends Component
     {
         $this->resetPage();
         $this->filters = array_replace($this->defaultFilters, $filters);
+
+        if($this->isMobile){
+            $this->mobileOrders = [];
+            $this->mobileHasMore = true;
+            $this->mobileLoading = false;
+            $this->mobilePage = 1;
+            $this->fetchMobileOrders();
+        }
     }
 
     public function deleteOrder(Order $order): void
@@ -127,8 +185,12 @@ class OrderList extends Component
 
         $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
-        if(!$this->isMobile){
-            $query->with('customer:customer_id,customer_name', 'products', 'invoice');
+        if ($this->isMobile) {
+            return view('livewire.order-list', [
+                'withSummaries' => true,
+                'filters' => $this->filters,
+                'orders' => collect($this->mobileOrders)
+            ]);
         }
 
         // clone query for pagination only, as it contains everything from the filter

@@ -24,19 +24,19 @@
         </div>
         {{--dropdown menu for actions--}}
         <x-ui.mobile-card-dropdown-menu>
-            <x-ui.mobile-card-dropdown-link href="{{route('orders.show', compact('order'))}}">View
+            <x-ui.mobile-card-dropdown-link href="{{route('orders.show', ['order' => $order->order_id])}}">View
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link title="Edit Order" x-data
                                             @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })">
                 Edit
             </x-ui.mobile-card-dropdown-link>
-            @unless($order->invoice)
+            @unless($order->invoice_id)
                 <x-ui.mobile-card-dropdown-link wire:confirm="Are you sure to generate this invoice?"
                                                 wire:click="createInvoice({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
-                <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoice' => $order->invoice])}}">
+                <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoice' => $order->invoice_id])}}">
                     Download
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
@@ -50,7 +50,7 @@
     {{--customer and due date info--}}
     <div class="flex justify-between gap-4 items-center">
                         <span class="text-accent">
-                            {{$order->customer->customer_name}}
+                            {{$order->customer_name}}
                         </span>
         <div class="flex gap-2">
                         <span class="text-base">

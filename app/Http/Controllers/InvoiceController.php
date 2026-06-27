@@ -100,8 +100,11 @@ class InvoiceController extends Controller
     /*
      * Download a PDF from an invoice
      */
-    public function download(Invoice $invoice)
+    public function download(Invoice|int $invoice)
     {
+        if(is_int($invoice)){
+            $invoice = Invoice::find($invoice);
+        }
         $filename = 'INV-' . $invoice->invoice_number . 'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
         return response()->download($path, 'INV-' . $invoice->invoice_number . '.pdf', [

@@ -13,22 +13,22 @@
     @if(!$disabled && $orders->isNotEmpty())
         <x-success/>
         <x-error/>
-        @if(!$disabled && $withSummaryData)
+        @if($withSummaryData)
             <livewire:order.order-summary :filters="$filters" :withIncome="$withIncome"
                                           :visibleByDefault="$summaryVisibleByDefault"
                                           :disabled="$disabled"
             />
         @endif
-        @if(!$disabled && $orders->isNotEmpty())
-            @if(!$browser->isMobile() || $browser->isTablet())
-                @include('livewire.order.partials._desktop-table')
-            @else
-                @include('livewire.order.partials._mobile-cards')
-            @endif
+        @if(!$browser->isMobile() || $browser->isTablet())
+            @include('livewire.order.partials._desktop-table')
+        @else
+            @include('livewire.order.partials._mobile-cards')
         @endif
-        <div>
-            {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
-        </div>
+        @unless($isMobile)
+            <div>
+                {{$orders->onEachSide(3)->links(data: ['scrollTo' => false])}}
+            </div>
+        @endunless
     @endif
     <x-loading-indicator/>
 </div>
