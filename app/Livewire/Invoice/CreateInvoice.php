@@ -165,6 +165,7 @@ class CreateInvoice extends Component
                 ->whereDate('order_due_at', '>=', $firstOrderDate)
                 ->whereDate('order_due_at', '<=', $lastOrderDate);
 
+
             $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
                 invoiceIssueDate: $this->invoice_issue_date,
@@ -191,7 +192,7 @@ class CreateInvoice extends Component
             $invoiceService->generateInvoiceProductRecords($invoiceProductDtos);
             $invoiceService->generateInvoicePdfFromDtos($invoiceProductDtos)->save($invoice->invoice_path, 'local');
 
-            $this->markOrdersAsUnpaid($orderQuery);
+            Order::forInvoice($invoice)->markUnpaid();
 
             DB::commit();
 
@@ -321,22 +322,10 @@ class CreateInvoice extends Component
         $this->invoice_number = Invoice::getNextInvoiceNumber();
     }
 
-    /**
-     * Mark selected orders as unpaid
-     * @param Builder $query
-     * @return void
-     */
-    public function markOrdersAsUnpaid(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
-        ]);
-    }
 
     // ====
     // End Helper methods for save()
     // ====
-
 
     public function render(): View
     {

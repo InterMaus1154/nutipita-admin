@@ -5,6 +5,7 @@
     {{$attributes->merge([
     'class' => 'relative'
 ])}}
+    x-data="{actionMenuOpen: false}"
 >
     @if($withIcon)
         <flux:icon.adjustments-horizontal x-on:click="actionMenuOpen = !actionMenuOpen"/>

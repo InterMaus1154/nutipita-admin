@@ -7,6 +7,7 @@ use App\Enums\OrderStatus;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Traits\HasSort;
+use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,15 +24,17 @@ class InvoiceList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-
     public array $filters = [
         'customer_id' => null
     ];
 
+    public bool $isMobile = false;
 
     public function mount(): void
     {
         $this->initSort('invoice_number', 'desc', 'resetPage');
+        $browser = new MobileDetect;
+        $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
     public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
@@ -40,15 +43,10 @@ class InvoiceList extends Component
             abort(403);
         }
 
-        $orderQuery = Order::query()
-            ->where('customer_id', $invoice->customer_id)
-            ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-            ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
         if ($newValue === InvoiceStatus::due->name) {
-            $this->markOrdersAsUnpaid($orderQuery);
+            Order::forInvoice($invoice)->markUnpaid();
         } else if ($newValue === InvoiceStatus::paid->name) {
-            $this->markOrdersAsPaid($orderQuery);
+            Order::forInvoice($invoice)->markPaid();
         }
 
         $invoice->update([
@@ -63,10 +61,6 @@ class InvoiceList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
-
-    /*
-     * Mark an invoice status "paid"
-     */
     public function markPaid(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -75,18 +69,10 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => 'paid'
+                'invoice_status' =>  InvoiceStatus::paid->name
             ]);
 
-            // mark orders in the invoice as "paid"
-
-            // fetch orders based on invoice from/to dates
-            $orderQuery = Order::query()
-                ->where('customer_id', $invoice->customer_id)
-                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-            $this->markOrdersAsPaid($orderQuery);
+            Order::forInvoice($invoice)->markPaid();
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -96,9 +82,6 @@ class InvoiceList extends Component
         }
     }
 
-    /*
-     * Mark an invoice status "due"
-     */
     public function markDue(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -107,18 +90,10 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => 'due'
+                'invoice_status' => InvoiceStatus::due->name
             ]);
 
-            // mark orders in the invoice as "unpaid"
-
-            // fetch orders based on invoice from/to dates
-            $orderQuery = Order::query()
-                ->where('customer_id', $invoice->customer_id)
-                ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-            $this->markOrdersAsUnpaid($orderQuery);
+            Order::forInvoice($invoice)->markUnpaid();
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -128,40 +103,6 @@ class InvoiceList extends Component
         }
     }
 
-    /**
-     * Mark selected orders as paid
-     * @param Builder $query
-     * @return void
-     */
-    public function markOrdersAsPaid(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::G_PAID->name
-        ]);
-    }
-
-    /**
-     * Mark selected orders as unpaid
-     * @param Builder $query
-     * @return void
-     */
-    public function markOrdersAsUnpaid(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
-        ]);
-    }
-
-    public function markOrdersAsConfirmed(Builder $query): void
-    {
-        $query->update([
-            'order_status' => OrderStatus::Y_CONFIRMED->name
-        ]);
-    }
-
-    /*
-     * Delete an invoice
-     */
     public function delete(Invoice $invoice): void
     {
         if (!auth()->check()) {
@@ -176,12 +117,7 @@ class InvoiceList extends Component
                    'order_status' => OrderStatus::Y_CONFIRMED->name
                 ]);
             }else{
-                $orderQuery = Order::query()
-                    ->where('customer_id', $invoice->customer_id)
-                    ->whereDate('order_due_at', '>=', $invoice->invoice_from)
-                    ->whereDate('order_due_at', '<=', $invoice->invoice_to);
-
-                $this->markOrdersAsConfirmed($orderQuery);
+                Order::forInvoice($invoice)->markConfirmed();
             }
 
             $invoice->delete();
@@ -221,7 +157,8 @@ class InvoiceList extends Component
             ->when(!empty($filters['invoice_to']), function (Builder $builder) use ($filters) {
                 return $builder->where('invoices.invoice_due_date', '<=', $filters['invoice_to']);
             })
-            ->with('customer:customer_id,customer_name', 'products', 'products.product');
+            ->with('customer:customer_id,customer_name');
+
 
         $invoiceTotals = $query->clone()->selectRaw('SUM(invoice_total) AS invoice_totals')->value('invoice_totals');
         $invoiceCount = $query->clone()->selectRaw('COUNT(*) AS invoice_count')->value('invoice_count');

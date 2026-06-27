@@ -8,4 +8,5 @@
             @endforeach
         </div>
     @endunless
+    <x-loading-indicator />
 </div>
