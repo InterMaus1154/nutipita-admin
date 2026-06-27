@@ -84,9 +84,38 @@ class OrderList extends Component
         $this->mobileLoading = false;
     }
 
+    private function refetchLoadedMobileOrders(): void
+    {
+        $query = $this->applySort(
+          OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection)
+        );
+
+        $rows = $query
+            ->with('customer:customer_id,customer_name', 'invoice:invoice_id,order_id')
+            ->forPage(1, 12 * $this->mobilePage)
+            ->get()
+            ->map(function (Order $order) {
+                return [
+                    'order_id' => $order->order_id,
+                    'order_status' => $order->order_status,
+                    'is_daytime' => $order->is_daytime,
+                    'is_standing' => $order->is_standing,
+                    'order_due_at' => $order->order_due_at,
+                    'total_pita' => $order->total_pita,
+                    'total_price' => $order->total_price,
+                    'customer_name' => $order->customer->customer_name,
+                    'invoice_id' => $order->invoice?->invoice_id
+                ];
+            })
+            ->toArray();
+
+        $this->mobileOrders = $rows;
+        $this->mobileHasMore = count($rows) === 12 * $this->mobilePage;
+    }
+
     public function loadMore(): void
     {
-        if(!$this->mobileHasMore || $this->mobileLoading){
+        if (!$this->mobileHasMore || $this->mobileLoading) {
             return;
         }
 
@@ -110,7 +139,7 @@ class OrderList extends Component
         $this->filters = array_replace($this->defaultFilters, $this->propFilters);
         $browser = new MobileDetect;
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
-        if($this->isMobile){
+        if ($this->isMobile) {
             $this->fetchMobileOrders();
         }
     }
@@ -131,7 +160,7 @@ class OrderList extends Component
 
     public function mobilePageReset(): void
     {
-        if($this->isMobile){
+        if ($this->isMobile) {
             $this->mobileOrders = [];
             $this->mobileHasMore = true;
             $this->mobileLoading = false;
@@ -151,6 +180,11 @@ class OrderList extends Component
             $order->delete();
             session()->flash('success', "Order #{$order->order_id} deleted successfully");
             DB::commit();
+
+            if ($this->isMobile) {
+                $this->refetchLoadedMobileOrders();
+            }
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Error at deleting order. Check log');
@@ -166,6 +200,11 @@ class OrderList extends Component
                 'order_status' => $value
             ]);
             DB::commit();
+
+            if($this->isMobile){
+                $this->refetchLoadedMobileOrders();
+            }
+
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Error updating status');
@@ -177,7 +216,9 @@ class OrderList extends Component
     #[On('refresh')]
     public function refresh(): void
     {
-        $this->dispatch('$refresh');
+        if($this->isMobile){
+            $this->refetchLoadedMobileOrders();
+        }
     }
 
     public function renderOrderProducts(int $orderId): string
