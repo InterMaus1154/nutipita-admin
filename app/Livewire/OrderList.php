@@ -225,6 +225,7 @@ class OrderList extends Component
     public function render(): View
     {
 
+
         if ($this->disabled) {
             return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
@@ -232,6 +233,18 @@ class OrderList extends Component
         $query = $this->applySort(OrderQueryBuilder::build($this->filters), OrderListService::customSorts($this->sortDirection));
 
         if ($this->isMobile) {
+            $this->dispatch('order-count-details', [
+                'is_nighttime' => $this->filters['nighttime_only'],
+                'is_daytime' => $this->filters['daytime_only'],
+                'hasOrders' => !empty($this->mobileOrders)
+            ]);
+
+            if (!empty($this->filters['customer_id']) && !empty($this->mobileOrders)) {
+                $orderIds = (clone $query)->toBase()->pluck('orders.order_id')->toArray();
+                // send an event to the download component with the already made download link
+                $this->dispatch('order-summary-link', ['url' => OrderListService::getOrderSummaryPdfUrl($orderIds)])->to(OrderSummaryDownload::class);
+            }
+
             return view('livewire.order-list', [
                 'withSummaries' => true,
                 'filters' => $this->filters,
