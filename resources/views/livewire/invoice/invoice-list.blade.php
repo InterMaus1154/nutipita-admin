@@ -8,10 +8,8 @@
     @else
         @include('livewire.invoice.partials._desktop-table')
     @endif
-    @unless($isMobile)
-        <div>
-            {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
-        </div>
-    @endunless
+    <div>
+        {{$invoices->onEachSide(3)->links(data: ['scrollTo' => false])}}
+    </div>
     <x-loading-indicator/>
 </div>
