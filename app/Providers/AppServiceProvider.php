@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace NutiPita\Providers;
 
 use Detection\MobileDetect;
 use Illuminate\Support\Facades\Blade;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace NutiPita\Livewire\Product;
 
-use App\Models\Product;
-use App\Traits\HasSort;
+use NutiPita\Models\Product;
+use NutiPita\Traits\HasSort;
 use Illuminate\View\View;
 use Livewire\Component;
 

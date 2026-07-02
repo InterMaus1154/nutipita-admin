@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Models\Order;
+use NutiPita\Models\Order;
 use Illuminate\Http\Request;
 
 class TestController extends Controller

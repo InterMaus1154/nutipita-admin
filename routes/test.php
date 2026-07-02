@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\TestController;
+use NutiPita\Http\Controllers\TestController;
 /*
  * Test routes for testing different stuff
  */

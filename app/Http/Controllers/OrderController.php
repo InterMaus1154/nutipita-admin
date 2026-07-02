@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Enums\OrderStatus;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
-use App\Models\Customer;
-use App\Models\Order;
-use App\Models\Product;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Http\Requests\StoreOrderRequest;
+use NutiPita\Http\Requests\UpdateOrderRequest;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Carbon\WeekDay;

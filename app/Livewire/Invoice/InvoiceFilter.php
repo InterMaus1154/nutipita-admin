@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace NutiPita\Livewire\Invoice;
 
-use App\Models\Customer;
+use NutiPita\Models\Customer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 use Livewire\Component;

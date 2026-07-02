@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\FinRecord;
+namespace NutiPita\Livewire\FinRecord;
 
-use App\Enums\FinancialRecordType;
+use NutiPita\Enums\FinancialRecordType;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;

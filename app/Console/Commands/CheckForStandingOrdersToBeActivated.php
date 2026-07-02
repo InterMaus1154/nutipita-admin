@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace NutiPita\Console\Commands;
 
-use App\Models\StandingOrder;
+use NutiPita\Models\StandingOrder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

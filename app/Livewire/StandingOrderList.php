@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace NutiPita\Livewire;
 
-use App\Models\StandingOrder;
-use App\Traits\HasSort;
+use NutiPita\Models\StandingOrder;
+use NutiPita\Traits\HasSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

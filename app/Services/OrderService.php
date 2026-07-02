@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace NutiPita\Services;
 
-use App\DataTransferObjects\OrderSummaryDto;
-use App\Enums\OrderStatus;
-use App\Models\Customer;
-use App\Models\Order;
-use App\Models\Product;
+use NutiPita\DataTransferObjects\OrderSummaryDto;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

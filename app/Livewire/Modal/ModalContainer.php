@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Modal;
+namespace NutiPita\Livewire\Modal;
 
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;

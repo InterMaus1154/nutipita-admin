@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\FinRecord;
+namespace NutiPita\Livewire\FinRecord;
 
-use App\Enums\FinancialRecordType;
-use App\Models\FinancialRecord;
-use App\Traits\HasSort;
+use NutiPita\Enums\FinancialRecordType;
+use NutiPita\Models\FinancialRecord;
+use NutiPita\Traits\HasSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Attributes\On;

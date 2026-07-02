@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace NutiPita\Livewire\Invoice;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Enums\OrderStatus;
-use App\Helpers\Format;
-use App\Models\Customer;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\InvoiceService;
-use App\Traits\HasQuickDueFilter;
+use NutiPita\DataTransferObjects\InvoiceDto;
+use NutiPita\DataTransferObjects\InvoiceProductDto;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Helpers\Format;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Invoice;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
+use NutiPita\Services\InvoiceService;
+use NutiPita\Traits\HasQuickDueFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

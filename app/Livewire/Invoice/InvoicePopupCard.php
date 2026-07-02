@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace NutiPita\Livewire\Invoice;
 
-use App\Models\Invoice;
+use NutiPita\Models\Invoice;
 use Livewire\Component;
 
 class InvoicePopupCard extends Component

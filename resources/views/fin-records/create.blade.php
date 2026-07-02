@@ -1,4 +1,4 @@
-@use(App\Enums\FinancialRecordType)
+@use(NutiPita\Enums\FinancialRecordType)
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Add New Record"></x-page-heading>

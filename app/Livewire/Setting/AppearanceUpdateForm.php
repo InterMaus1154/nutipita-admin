@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Setting;
+namespace NutiPita\Livewire\Setting;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

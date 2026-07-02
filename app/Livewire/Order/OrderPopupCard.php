@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Order;
+namespace NutiPita\Livewire\Order;
 
-use App\Models\Order;
+use NutiPita\Models\Order;
 use Livewire\Attributes\On;
 use Livewire\Component;
 

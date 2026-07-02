@@ -1,6 +1,6 @@
 @php
     /**
-* @var \App\Models\FinancialRecord $record
+* @var \NutiPita\Models\FinancialRecord $record
  */
 @endphp
 <div class="space-y-4">

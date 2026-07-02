@@ -2,7 +2,7 @@
 <x-ui.mobile-card-skeleton>
     @php
         /**
-* @var \App\Models\Customer $customer
+* @var \NutiPita\Models\Customer $customer
  */
     @endphp
     {{--card header--}}

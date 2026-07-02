@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Queries;
+namespace NutiPita\Queries;
 
-use App\Models\Order;
+use NutiPita\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 
 class OrderQueryBuilder

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Models\Product;
+use NutiPita\Http\Requests\ProductRequest;
+use NutiPita\Http\Requests\StoreProductRequest;
+use NutiPita\Http\Requests\UpdateProductRequest;
+use NutiPita\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;

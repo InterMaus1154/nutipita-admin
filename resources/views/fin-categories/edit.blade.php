@@ -1,6 +1,6 @@
 @php
     /**
-* @var \App\Models\FinancialCategory $category
+* @var \NutiPita\Models\FinancialCategory $category
  */
 @endphp
 <x-flux-layout>

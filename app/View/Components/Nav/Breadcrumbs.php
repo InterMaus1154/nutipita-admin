@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Nav;
+namespace NutiPita\View\Components\Nav;
 
 use Closure;
 use Illuminate\Contracts\View\View;

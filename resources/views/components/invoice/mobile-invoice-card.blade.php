@@ -1,9 +1,9 @@
 @props(['invoice'])
-@use(App\Enums\InvoiceStatus)
+@use(NutiPita\Enums\InvoiceStatus)
 <x-ui.mobile-card-skeleton>
     @php
         /**
-* @var \App\Models\Invoice $invoice
+* @var \NutiPita\Models\Invoice $invoice
  */
     @endphp
     <div class="grid grid-cols-[1fr_auto_1fr]">

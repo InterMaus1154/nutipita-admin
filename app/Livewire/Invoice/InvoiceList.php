@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace NutiPita\Livewire\Invoice;
 
-use App\Enums\InvoiceStatus;
-use App\Enums\OrderStatus;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Traits\HasSort;
+use NutiPita\Enums\InvoiceStatus;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Models\Invoice;
+use NutiPita\Models\Order;
+use NutiPita\Traits\HasSort;
 use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;

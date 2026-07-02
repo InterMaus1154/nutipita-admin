@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Customer;
-use App\Models\Product;
-use App\Models\User;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Product;
+use NutiPita\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Exceptions\HttpResponseException;

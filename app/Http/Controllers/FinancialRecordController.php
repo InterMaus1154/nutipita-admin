@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Http\Requests\FinancialRecordRequest;
-use App\Models\FinancialCategory;
-use App\Models\FinancialRecord;
+use NutiPita\Http\Requests\FinancialRecordRequest;
+use NutiPita\Models\FinancialCategory;
+use NutiPita\Models\FinancialRecord;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

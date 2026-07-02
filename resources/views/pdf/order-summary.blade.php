@@ -1,4 +1,4 @@
-@php use App\Models\Order; @endphp
+@php use NutiPita\Models\Order; @endphp
 <html>
 <head>
     <title>Order Summary</title>

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace NutiPita\Models;
 
-use App\Enums\OrderStatus;
+use NutiPita\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

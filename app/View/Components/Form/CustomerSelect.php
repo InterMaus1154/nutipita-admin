@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View\Components\Form;
+namespace NutiPita\View\Components\Form;
 
-use App\Models\Customer;
+use NutiPita\Models\Customer;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace NutiPita\Livewire\Product;
 
-use App\Models\Customer;
-use App\Models\Product;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use Livewire\Component;

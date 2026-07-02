@@ -1,8 +1,8 @@
 @use(Illuminate\Support\Carbon)
 @use(Illuminate\Support\Facades\Request)
 @use(Illuminate\Database\Eloquent\Collection as EloquentCollection)
-@use(App\Enums\OrderStatus)
-@use(App\Models\Order)
+@use(NutiPita\Enums\OrderStatus)
+@use(NutiPita\Models\Order)
 @use(Illuminate\Support\Str)
 @php
     /**

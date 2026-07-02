@@ -1,7 +1,7 @@
-@use(App\Enums\FinancialRecordType)
+@use(NutiPita\Enums\FinancialRecordType)
 @php
     /**
-* @var \App\Models\FinancialRecord $record
+* @var \NutiPita\Models\FinancialRecord $record
  */
 @endphp
 <x-flux-layout>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
 abstract class Controller
 {

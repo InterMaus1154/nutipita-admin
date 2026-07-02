@@ -1,6 +1,6 @@
 @php
-    use App\Enums\settings\UserColorMode;
-    use App\Enums\settings\UserThemeMode;
+    use NutiPita\Enums\settings\UserColorMode;
+    use NutiPita\Enums\settings\UserThemeMode;
 
     $settings = auth()->user()?->settings;
     $fontSize = $settings?->user_font_size->value ?? 16;

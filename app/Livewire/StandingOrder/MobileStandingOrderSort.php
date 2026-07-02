@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\StandingOrder;
+namespace NutiPita\Livewire\StandingOrder;
 
-use App\Livewire\StandingOrderList;
+use NutiPita\Livewire\StandingOrderList;
 use Illuminate\View\View;
 use Livewire\Component;
 

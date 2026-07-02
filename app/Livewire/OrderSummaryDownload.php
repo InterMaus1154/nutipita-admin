@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace NutiPita\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Attributes\On;

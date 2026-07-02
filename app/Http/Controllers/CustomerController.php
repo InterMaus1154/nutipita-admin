@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
-use App\Models\Customer;
-use App\Models\CustomerProductPrice;
-use App\Models\Product;
+use NutiPita\Http\Requests\StoreCustomerRequest;
+use NutiPita\Http\Requests\UpdateCustomerRequest;
+use NutiPita\Models\Customer;
+use NutiPita\Models\CustomerProductPrice;
+use NutiPita\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

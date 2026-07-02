@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace NutiPita\Models;
 
-use App\Enums\settings\UserColorMode;
-use App\Enums\settings\UserFontSize;
-use App\Enums\settings\UserThemeMode;
+use NutiPita\Enums\settings\UserColorMode;
+use NutiPita\Enums\settings\UserFontSize;
+use NutiPita\Enums\settings\UserThemeMode;
 use Illuminate\Database\Eloquent\Model;
 
 class UserSetting extends Model

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DataTransferObjects;
+namespace NutiPita\DataTransferObjects;
 
-use App\Helpers\ModelResolver;
-use App\Models\Invoice;
-use App\Models\Product;
+use NutiPita\Helpers\ModelResolver;
+use NutiPita\Models\Invoice;
+use NutiPita\Models\Product;
 
 /**
  * Data transfer object for invoice - product details

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Livewire\_discard;
+namespace NutiPita\Livewire\_discard;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Models\Customer;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\InvoiceService;
-use App\Traits\HasQuickDueFilter;
+use NutiPita\DataTransferObjects\InvoiceDto;
+use NutiPita\DataTransferObjects\InvoiceProductDto;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Invoice;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
+use NutiPita\Services\InvoiceService;
+use NutiPita\Traits\HasQuickDueFilter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

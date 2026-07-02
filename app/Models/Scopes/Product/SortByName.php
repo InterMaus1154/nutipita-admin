@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Scopes\Product;
+namespace NutiPita\Models\Scopes\Product;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

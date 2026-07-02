@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Models\User;
+use NutiPita\Http\Requests\LoginRequest;
+use NutiPita\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 

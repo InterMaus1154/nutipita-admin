@@ -1,4 +1,4 @@
-@use(App\Enums\FinancialRecordType)
+@use(NutiPita\Enums\FinancialRecordType)
 <div class="mx-auto mt-10" x-data="{isEditMode: @entangle('isEditMode'), isLoading: @entangle('isLoading')}">
     <div class="relative">
         <label for="file"

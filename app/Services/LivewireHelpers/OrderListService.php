@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\LivewireHelpers;
+namespace NutiPita\Services\LivewireHelpers;
 
 use Illuminate\Database\Eloquent\Builder;
 

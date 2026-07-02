@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace NutiPita\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 

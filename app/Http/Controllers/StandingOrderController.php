@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Http\Requests\StandingOrderRequest;
-use App\Models\Customer;
-use App\Models\Product;
-use App\Models\StandingOrder;
+use NutiPita\Http\Requests\StandingOrderRequest;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Product;
+use NutiPita\Models\StandingOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

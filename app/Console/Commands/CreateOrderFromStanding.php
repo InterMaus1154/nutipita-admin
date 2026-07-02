@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace NutiPita\Console\Commands;
 
-use App\Enums\OrderStatus;
-use App\Models\Order;
-use App\Models\StandingOrder;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Models\Order;
+use NutiPita\Models\StandingOrder;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;

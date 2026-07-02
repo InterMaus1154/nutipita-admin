@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTransferObjects;
+namespace NutiPita\DataTransferObjects;
 
 /**
  * Contains product name, id, and total number

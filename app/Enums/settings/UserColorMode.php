@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\settings;
+namespace NutiPita\Enums\settings;
 
 enum UserColorMode: int
 {

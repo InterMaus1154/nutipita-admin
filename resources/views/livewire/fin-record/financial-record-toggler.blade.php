@@ -1,4 +1,4 @@
-@use(App\Enums\FinancialRecordType)
+@use(NutiPita\Enums\FinancialRecordType)
 <div x-data="{selectedType: @entangle('selectedType')}">
     {{--show both--}}
     <div

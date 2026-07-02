@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire\Order;
+namespace NutiPita\Livewire\Order;
 
-use App\Enums\OrderStatus;
-use App\Livewire\OrderList;
-use App\Models\Product;
-use App\Queries\OrderQueryBuilder;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Livewire\OrderList;
+use NutiPita\Models\Product;
+use NutiPita\Queries\OrderQueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;

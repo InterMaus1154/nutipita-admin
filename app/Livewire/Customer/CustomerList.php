@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Customer;
+namespace NutiPita\Livewire\Customer;
 
-use App\Models\Customer;
-use App\Models\Product;
-use App\Traits\HasSort;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Product;
+use NutiPita\Traits\HasSort;
 use Illuminate\View\View;
 use Livewire\Component;
 

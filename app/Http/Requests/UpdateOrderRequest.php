@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace NutiPita\Http\Requests;
 
-use App\Enums\OrderStatus;
+use NutiPita\Enums\OrderStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Livewire\Attributes\Rule;
 

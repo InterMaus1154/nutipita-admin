@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Homepage;
+namespace NutiPita\Livewire\Homepage;
 
-use App\Livewire\OrderList;
-use App\Services\OrderService;
+use NutiPita\Livewire\OrderList;
+use NutiPita\Services\OrderService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\View;
 use Livewire\Attributes\On;

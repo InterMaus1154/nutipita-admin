@@ -1,11 +1,11 @@
 <?php
 // custom helpers
 
-use App\Helpers\ModelResolver;
+use NutiPita\Helpers\ModelResolver;
 use Carbon\Carbon;
 use Carbon\WeekDay;
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\Format;
+use NutiPita\Helpers\Format;
 
 if (!function_exists('dayDate')) {
     /**

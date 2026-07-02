@@ -1,5 +1,5 @@
 @props(['activePeriod', 'months', 'class' => ''])
-@use(App\Helpers\Format;use App\Models\Order;use Carbon\Carbon)
+@use(NutiPita\Helpers\Format;use NutiPita\Models\Order;use Carbon\Carbon)
 @use(Carbon\WeekDay)
 @use(Illuminate\Support\Str)
 <div class="{{$class}}">

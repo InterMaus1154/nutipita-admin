@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Enums\OrderStatus;
-use App\Models\Customer;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\InvoiceService;
+use NutiPita\DataTransferObjects\InvoiceDto;
+use NutiPita\DataTransferObjects\InvoiceProductDto;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Invoice;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
+use NutiPita\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

@@ -1,7 +1,7 @@
 @use(Illuminate\Support\Carbon)
 @php
     /**
-* @var \App\Models\CreditNote $creditNote
+* @var \NutiPita\Models\CreditNote $creditNote
  */
 @endphp
 <head>

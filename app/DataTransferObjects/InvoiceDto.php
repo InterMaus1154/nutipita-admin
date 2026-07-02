@@ -1,15 +1,15 @@
 <?php
 
-namespace App\DataTransferObjects;
+namespace NutiPita\DataTransferObjects;
 
-use App\Enums\InvoiceStatus;
-use App\Helpers\Format;
-use App\Models\Customer;
-use App\Models\Invoice;
+use NutiPita\Enums\InvoiceStatus;
+use NutiPita\Helpers\Format;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Invoice;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Carbon\Carbon;
-use App\Models\Order;
+use NutiPita\Models\Order;
 
 /**
  * Data transfer object for invoice details

@@ -1,4 +1,4 @@
-@use(App\Enums\OrderStatus)
+@use(NutiPita\Enums\OrderStatus)
 <x-flux-layout>
     <x-page-section>
         <x-page-heading title="Edit Order"/>

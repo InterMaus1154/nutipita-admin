@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace NutiPita\Livewire;
 
-use App\Models\Customer;
-use App\Models\CustomerProductPrice;
+use NutiPita\Models\Customer;
+use NutiPita\Models\CustomerProductPrice;
 use Illuminate\Support\Facades\Crypt;
 use Livewire\Component;
 

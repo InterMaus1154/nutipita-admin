@@ -3,9 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Enums\settings\UserColorMode;
-use App\Enums\settings\UserThemeMode;
-use App\Enums\settings\UserFontSize;
+use NutiPita\Enums\settings\UserColorMode;
+use NutiPita\Enums\settings\UserThemeMode;
+use NutiPita\Enums\settings\UserFontSize;
 
 return new class extends Migration
 {

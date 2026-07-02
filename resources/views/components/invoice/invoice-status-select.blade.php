@@ -1,4 +1,4 @@
-@use(App\Enums\InvoiceStatus)
+@use(NutiPita\Enums\InvoiceStatus)
 @props(['invoice'])
 <div class="cursor-pointer">
     @php

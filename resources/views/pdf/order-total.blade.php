@@ -1,4 +1,4 @@
-@php use App\DataTransferObjects\OrderSummaryDto; @endphp
+@php use NutiPita\DataTransferObjects\OrderSummaryDto; @endphp
 @php
     /**
 * @var OrderSummaryDto $summaryDto

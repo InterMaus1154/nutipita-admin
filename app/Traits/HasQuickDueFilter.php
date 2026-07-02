@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace NutiPita\Traits;
 
 use Carbon\Carbon;
 use Carbon\WeekDay;

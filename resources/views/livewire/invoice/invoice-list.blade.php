@@ -1,4 +1,4 @@
-@use(App\Enums\InvoiceStatus)
+@use(NutiPita\Enums\InvoiceStatus)
 <div class="space-y-4">
     <x-success/>
     <x-error/>

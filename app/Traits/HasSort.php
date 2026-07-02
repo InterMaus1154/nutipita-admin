@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace NutiPita\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;

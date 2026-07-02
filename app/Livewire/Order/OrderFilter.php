@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Order;
+namespace NutiPita\Livewire\Order;
 
-use App\Livewire\OrderList;
-use App\Models\Customer;
-use App\Traits\HasQuickDueFilter;
+use NutiPita\Livewire\OrderList;
+use NutiPita\Models\Customer;
+use NutiPita\Traits\HasQuickDueFilter;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;

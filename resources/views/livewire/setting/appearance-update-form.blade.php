@@ -1,6 +1,6 @@
-@use(App\Enums\settings\UserColorMode)
-@use(App\Enums\settings\UserThemeMode)
-@use(App\Enums\settings\UserFontSize)
+@use(NutiPita\Enums\settings\UserColorMode)
+@use(NutiPita\Enums\settings\UserThemeMode)
+@use(NutiPita\Enums\settings\UserFontSize)
 <div>
     <div>
         <x-error />

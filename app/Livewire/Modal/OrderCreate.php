@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire\Modal;
+namespace NutiPita\Livewire\Modal;
 
-use App\Livewire\OrderList;
-use App\Models\Customer;
-use App\Models\Product;
-use App\Services\OrderService;
+use NutiPita\Livewire\OrderList;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Product;
+use NutiPita\Services\OrderService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;

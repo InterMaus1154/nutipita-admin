@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\DataTransferObjects\OrderSummaryDto;
-use App\Models\Order;
-use App\Models\Product;
+use NutiPita\DataTransferObjects\OrderSummaryDto;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 

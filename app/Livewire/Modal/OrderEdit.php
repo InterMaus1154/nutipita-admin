@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire\Modal;
+namespace NutiPita\Livewire\Modal;
 
-use App\Livewire\OrderList;
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\OrderService;
+use NutiPita\Livewire\OrderList;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
+use NutiPita\Services\OrderService;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use InvalidArgumentException;

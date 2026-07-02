@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\AuthMiddleware;
+use NutiPita\Http\Middleware\AuthMiddleware;
 
 Route::get('/login', 'showLogin')->name('auth.view.login');
 Route::post('/login', 'login')->name('auth.login');

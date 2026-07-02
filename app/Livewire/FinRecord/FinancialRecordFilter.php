@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\FinRecord;
+namespace NutiPita\Livewire\FinRecord;
 
-use App\Enums\FinancialRecordType;
-use App\Models\FinancialCategory;
-use App\Traits\HasQuickDueFilter;
+use NutiPita\Enums\FinancialRecordType;
+use NutiPita\Models\FinancialCategory;
+use NutiPita\Traits\HasQuickDueFilter;
 use Illuminate\View\View;
 use Livewire\Component;
 

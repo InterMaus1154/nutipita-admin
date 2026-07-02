@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\FinancialCategoryController;
-use App\Http\Controllers\FinancialRecordController;
+use NutiPita\Http\Controllers\FinancialCategoryController;
+use NutiPita\Http\Controllers\FinancialRecordController;
 use Illuminate\Support\Facades\Route;
 // with financial categories
 

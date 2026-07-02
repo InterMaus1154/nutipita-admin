@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\StandingOrder;
+namespace NutiPita\Livewire\StandingOrder;
 
-use App\Models\Product;
+use NutiPita\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 

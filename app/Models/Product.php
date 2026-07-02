@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace NutiPita\Models;
 
-use App\Helpers\ModelResolver;
-use App\Models\Scopes\Product\SortByName;
+use NutiPita\Helpers\ModelResolver;
+use NutiPita\Models\Scopes\Product\SortByName;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

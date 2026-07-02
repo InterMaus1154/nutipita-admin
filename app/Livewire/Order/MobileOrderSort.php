@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Order;
+namespace NutiPita\Livewire\Order;
 
-use App\Livewire\OrderList;
+use NutiPita\Livewire\OrderList;
 use Illuminate\View\View;
 use Livewire\Component;
 

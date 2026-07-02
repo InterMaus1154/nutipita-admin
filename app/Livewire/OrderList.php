@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire;
+namespace NutiPita\Livewire;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Services\LivewireHelpers\OrderListService;
-use App\Traits\HasSort;
+use NutiPita\Models\Order;
+use NutiPita\Models\Product;
+use NutiPita\Services\LivewireHelpers\OrderListService;
+use NutiPita\Traits\HasSort;
 use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Queries\OrderQueryBuilder;
+use NutiPita\Queries\OrderQueryBuilder;
 
 class OrderList extends Component
 {

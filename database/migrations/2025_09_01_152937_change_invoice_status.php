@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $enumNames = implode("','", array_map(fn($case) => $case->name, \App\Enums\InvoiceStatus::cases()));
+            $enumNames = implode("','", array_map(fn($case) => $case->name, \NutiPita\Enums\InvoiceStatus::cases()));
 
             DB::statement("ALTER TABLE invoices MODIFY COLUMN invoice_status ENUM('$enumNames')");
         });

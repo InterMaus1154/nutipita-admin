@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire;
+namespace NutiPita\Livewire;
 
-use App\Enums\OrderStatus;
-use App\Models\Customer;
-use App\Models\Order;
-use App\Traits\HasQuickDueFilter;
+use NutiPita\Enums\OrderStatus;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Order;
+use NutiPita\Traits\HasQuickDueFilter;
 use Carbon\WeekDay;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;

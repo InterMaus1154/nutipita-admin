@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace NutiPita\Services;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Models\Customer;
-use App\Models\Invoice;
+use NutiPita\DataTransferObjects\InvoiceDto;
+use NutiPita\DataTransferObjects\InvoiceProductDto;
+use NutiPita\Models\Customer;
+use NutiPita\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

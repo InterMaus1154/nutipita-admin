@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\FinCategories;
+namespace NutiPita\Livewire\FinCategories;
 
-use App\Models\FinancialCategory;
+use NutiPita\Models\FinancialCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;

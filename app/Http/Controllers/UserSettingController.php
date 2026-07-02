@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;

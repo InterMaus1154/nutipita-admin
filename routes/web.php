@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Middleware\AuthMiddleware;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\StandingOrderController;
-use App\Http\Controllers\CreditNoteController;
-use App\Http\Controllers\UserSettingController;
+use NutiPita\Http\Controllers\AuthController;
+use NutiPita\Http\Controllers\DashboardController;
+use NutiPita\Http\Middleware\AuthMiddleware;
+use NutiPita\Http\Controllers\CustomerController;
+use NutiPita\Http\Controllers\ProductController;
+use NutiPita\Http\Controllers\OrderController;
+use NutiPita\Http\Controllers\InvoiceController;
+use NutiPita\Http\Controllers\StandingOrderController;
+use NutiPita\Http\Controllers\CreditNoteController;
+use NutiPita\Http\Controllers\UserSettingController;
 
 
 // auth routes

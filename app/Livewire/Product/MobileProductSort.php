@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace NutiPita\Livewire\Product;
 
 use Illuminate\View\View;
 use Livewire\Component;

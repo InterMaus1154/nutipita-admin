@@ -1,4 +1,4 @@
-@use(App\Enums\OrderStatus)
+@use(NutiPita\Enums\OrderStatus)
 <div class="flex flex-col gap-4 ">
     <div class="flex gap-8 justify-center sm:justify-between 2xl:justify-evenly flex-wrap sm:grid grid-cols-3 items-center">
         <div class="flex gap-4 items-center 2xl:justify-self-end">

@@ -1,5 +1,5 @@
 @props(['order_id', 'order_status'])
-@use(App\Enums\OrderStatus)
+@use(NutiPita\Enums\OrderStatus)
 <div {{$attributes->merge([
     'class' => 'cursor_pointer'
 ])}}>

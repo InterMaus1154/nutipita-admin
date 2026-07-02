@@ -1,4 +1,4 @@
-@use(App\Enums\OrderStatus)
+@use(NutiPita\Enums\OrderStatus)
 <div class="flex flex-col gap-4">
     <x-error/>
     <x-success/>

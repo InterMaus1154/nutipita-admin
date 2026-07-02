@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Customer;
+namespace NutiPita\Livewire\Customer;
 
 use Illuminate\View\View;
 use Livewire\Component;
-use App\Livewire\Customer\CustomerList;
+use NutiPita\Livewire\Customer\CustomerList;
 
 
 class MobileCustomerSort extends Component

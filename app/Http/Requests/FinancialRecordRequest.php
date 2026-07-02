@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace NutiPita\Http\Requests;
 
-use App\Enums\FinancialRecordType;
+use NutiPita\Enums\FinancialRecordType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

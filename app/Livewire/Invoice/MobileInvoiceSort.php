@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace NutiPita\Livewire\Invoice;
 
 use Livewire\Component;
-use App\Livewire\Invoice\InvoiceList;
+use NutiPita\Livewire\Invoice\InvoiceList;
 
 class MobileInvoiceSort extends Component
 {

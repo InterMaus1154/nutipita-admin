@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace NutiPita\Http\Controllers;
 
-use App\Models\CreditNote;
-use App\Models\Invoice;
+use NutiPita\Models\CreditNote;
+use NutiPita\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
