@@ -5,6 +5,7 @@ namespace App\Livewire\Customer;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Traits\HasSort;
+use Detection\MobileDetect;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -14,11 +15,15 @@ class CustomerList extends Component
     use HasSort;
 
     public $products;
+    public bool $isMobile = false;
 
     public function mount(): void
     {
         $this->initSort('customer_name', 'asc');
-        $this->products = Product::all();
+        $this->products = Product::whereHas('customPrices')->get();
+
+        $browser = new MobileDetect;
+        $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
     public function render(): View
