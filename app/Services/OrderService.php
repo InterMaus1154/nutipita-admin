@@ -131,4 +131,31 @@ class OrderService
 
         return $order;
     }
+
+    public function deleteOrder(Order|int $order_): void
+    {
+        $order = resolveModel($order_, Order::class);
+
+        if(is_null($order)){
+            session()->flash('Order was null');
+            Log::error('Attempt to delete null order');
+            return;
+        }
+
+        if (!auth()->check()){
+            abort(401);
+        }
+
+        DB::beginTransaction();
+        try{
+            $order->delete();
+            session()->flash('Order deleted');
+            DB::commit();
+        }catch (Exception $e){
+            DB::rollBack();
+            session()->flash('Error at deleting order');
+            Log::error('Error at deleting order');
+            Log::error($e->getMessage());
+        }
+    }
 }

@@ -106,12 +106,10 @@ class InvoiceList extends Component
     public function delete(Invoice $invoice): void
     {
         if (!auth()->check()) {
-            abort(403);
+            abort(401);
         }
         DB::beginTransaction();
         try {
-            Storage::disk('local')->delete($invoice->invoice_path);
-
             if($invoice->order){
                 $invoice->order->update([
                    'order_status' => OrderStatus::Y_CONFIRMED->name
@@ -122,12 +120,19 @@ class InvoiceList extends Component
 
             $invoice->delete();
             DB::commit();
+            Storage::disk('local')->delete($invoice->invoice_path);
             session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             session()->flash('error', 'Error at deleting invoice. Check logs for more info.');
         }
+
+    }
+
+    #[On('refresh')]
+    public function refresh(): void
+    {
 
     }
 

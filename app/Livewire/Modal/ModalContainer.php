@@ -20,6 +20,12 @@ class ModalContainer extends Component
                 'data' => [],
                 'key' => uniqid()
             ];
+
+            $this->modalStack[] = [
+                'component' => 'modal.order-edit',
+                'data' => ['order_id' => '650'],
+                'key' => uniqid()
+            ];
         }
 
     }

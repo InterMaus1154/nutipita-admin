@@ -51,6 +51,20 @@
                     <flux:separator/>
                 @endforeach
             </div>
+            <div class="flex gap-6 justify-center justify-self-end">
+                <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
+                    <flux:icon.eye class="size-7"/>
+                </flux:link>
+                <flux:link href="{{route('invoices.download', compact('invoice'))}}">
+                    <flux:icon.arrow-down-tray class="size-7"/>
+                </flux:link>
+                <flux:link class="cursor-pointer"
+                           wire:click="deleteInvoice()"
+                           wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"
+                >
+                    <flux:icon.trash class="size-7"/>
+                </flux:link>
+            </div>
         </x-ui.detail-popup-card>
     @endif
 </div>

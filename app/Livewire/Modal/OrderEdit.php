@@ -42,18 +42,19 @@ class OrderEdit extends Component
 
         try{
             $orderService->updateOrder($this->order, $this->fields, $this->selectedProducts);
-            $this->dispatch('refresh')->to(OrderList::class);
             $this->dispatch('modal-clear')->to(ModalContainer::class);
+            $this->dispatch('refresh');
         }catch (InvalidArgumentException $e){
             $this->addError('products', $e->getMessage());
         }catch (Exception $e){
             $this->addError('general_error', $e->getMessage());
         }
+        $this->dispatch('modal-close')->to(ModalContainer::class);
     }
 
     public function cancel(): void
     {
-        $this->dispatch('modal-clear');
+        $this->dispatch('modal-close');
     }
 
     public function render()
