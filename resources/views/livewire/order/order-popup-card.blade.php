@@ -61,8 +61,7 @@
             <div class="flex gap-6 justify-center justify-self-end">
                 <flux:link
                     class="cursor-pointer"
-                    x-data
-                    @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })"
+                    wire:click="editOrder()"
                     title="Edit order">
                     <flux:icon.pencil-square class="size-7 text-accent"/>
                 </flux:link>

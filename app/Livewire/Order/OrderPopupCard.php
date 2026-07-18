@@ -21,17 +21,17 @@ class OrderPopupCard extends Component
 
     public function createInvoice(): void
     {
-        if(is_null($this->orderId)){
+        if (is_null($this->orderId)) {
             return;
         }
         $this->redirect(route('invoices.create-single',
-            ['order' =>  $this->orderId]
+            ['order' => $this->orderId]
         ));
     }
 
     public function deleteOrder(): void
     {
-        if(is_null($this->orderId)){
+        if (is_null($this->orderId)) {
             return;
         }
 
@@ -39,6 +39,21 @@ class OrderPopupCard extends Component
         $this->orderId = null;
         $this->dispatch('modal-clear');
         $this->dispatch('refresh');
+    }
+
+    public function editOrder(): void
+    {
+        if (is_null($this->orderId)) {
+            return;
+        }
+
+        $this->dispatch('modal-open', 'modal.order-edit', ['order_id' => $this->orderId]);
+    }
+
+    #[On('refresh')]
+    public function refresh(): void
+    {
+
     }
 
     public function render(): View
