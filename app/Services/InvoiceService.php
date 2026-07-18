@@ -4,11 +4,16 @@ namespace App\Services;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceService
 {
@@ -111,6 +116,43 @@ class InvoiceService
             'totalPrice' => $invoiceTotal,
             'invoice' => $invoiceProductDtos->first()->invoice()
         ]);
+    }
+
+    public function deleteInvoice(Invoice|int $invoice_): void
+    {
+        if(!auth()->check()){
+            abort(401);
+        }
+
+        /** @var Invoice $invoice */
+        $invoice = resolveModel($invoice_, Invoice::class);
+
+        if(is_null($invoice)){
+            session()->flash('Attempting to delete null invoice');
+            Log::error('Attempting to delete null invoice');
+            return;
+        }
+
+        DB::beginTransaction();
+        try {
+            if($invoice->order){
+                $invoice->order->update([
+                    'order_status' => OrderStatus::Y_CONFIRMED->name
+                ]);
+            }else{
+                Order::forInvoice($invoice)->markConfirmed();
+            }
+
+            $invoice->delete();
+            DB::commit();
+            Storage::disk('local')->delete($invoice->invoice_path);
+            session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error at deleting invoice. Check logs for more info.');
+        }
+
     }
 
 }
