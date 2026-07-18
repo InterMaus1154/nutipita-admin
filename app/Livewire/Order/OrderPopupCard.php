@@ -8,8 +8,17 @@ use Livewire\Component;
 
 class OrderPopupCard extends Component
 {
-
     public ?int $orderId = null;
+
+    public function createInvoice(): void
+    {
+        if(is_null(!$this->orderId)){
+            return;
+        }
+        $this->redirect(route('invoices.create-single',
+            ['order' =>  $this->orderId]
+        ));
+    }
 
     public function render()
     {
