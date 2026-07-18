@@ -3,6 +3,8 @@
 namespace App\Livewire\Order;
 
 use App\Models\Order;
+use App\Services\OrderService;
+use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -10,9 +12,16 @@ class OrderPopupCard extends Component
 {
     public ?int $orderId = null;
 
+    private OrderService $orderService;
+
+    public function boot(OrderService $orderService): void
+    {
+        $this->orderService = $orderService;
+    }
+
     public function createInvoice(): void
     {
-        if(is_null(!$this->orderId)){
+        if(is_null($this->orderId)){
             return;
         }
         $this->redirect(route('invoices.create-single',
@@ -20,7 +29,19 @@ class OrderPopupCard extends Component
         ));
     }
 
-    public function render()
+    public function deleteOrder(): void
+    {
+        if(is_null($this->orderId)){
+            return;
+        }
+
+        $this->orderService->deleteOrder($this->orderId);
+        $this->orderId = null;
+        $this->dispatch('modal-clear');
+        $this->dispatch('refresh');
+    }
+
+    public function render(): View
     {
         $order = Order::query()
             ->where('order_id', $this->orderId)

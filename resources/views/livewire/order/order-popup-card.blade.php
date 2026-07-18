@@ -80,7 +80,7 @@
                         <flux:icon.clipboard-document-check class="size-7"/>
                     </flux:link>
                 @endunless
-                <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
+                <flux:link class="cursor-pointer" wire:click="deleteOrder()"
                            wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
                     <flux:icon.trash class="size-7"/>
                 </flux:link>
