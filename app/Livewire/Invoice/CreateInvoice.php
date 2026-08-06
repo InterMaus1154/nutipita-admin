@@ -296,7 +296,7 @@ class CreateInvoice extends Component
             ->with(['orders' => $orderFilter])
             ->get();
 
-        if ($products->isEmpty()) return null;
+        if ($products->isEmpty()) return Collection::empty();
 
         // map each product to a dto
         return $products
