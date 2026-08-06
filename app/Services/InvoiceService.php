@@ -72,7 +72,7 @@ class InvoiceService
 
     /**
      * Generate invoice_products record from a collection of invoice product dtos
-     * @param Collection $invoiceProductDTOs
+     * @param Collection<int, InvoiceProductDto> $invoiceProductDTOs
      * @return void
      */
     public function generateInvoiceProductRecords(Collection $invoiceProductDTOs): void
@@ -87,7 +87,7 @@ class InvoiceService
         });
     }
 
-    public function generateInvoicePdfFromDtos(Collection $invoiceProductDtos)
+    public function generateInvoicePdfFromDtos(Collection $invoiceProductDtos, ?Invoice $invoice = null)
     {
         $invoiceTotal = 0;
         $productTotals = [];
@@ -108,13 +108,18 @@ class InvoiceService
             }
         });
 
+        if($invoiceProductDtos->isNotEmpty()){
+            $invoice = $invoiceProductDtos->first()->invoice();
+        }
+
+        $customer = $invoice->customer;
 
         return $this->generateInvoicePdf([
             'fromBulk' => true,
-            'customer' => $invoiceProductDtos->first()->invoice()->customer,
+            'customer' => $customer,
             'products' => $productTotals,
             'totalPrice' => $invoiceTotal,
-            'invoice' => $invoiceProductDtos->first()->invoice()
+            'invoice' => $invoice
         ]);
     }
 

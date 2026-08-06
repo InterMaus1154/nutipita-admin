@@ -190,7 +190,7 @@ class CreateInvoice extends Component
             ]);
 
             $invoiceService->generateInvoiceProductRecords($invoiceProductDtos);
-            $invoiceService->generateInvoicePdfFromDtos($invoiceProductDtos)->save($invoice->invoice_path, 'local');
+            $invoiceService->generateInvoicePdfFromDtos($invoiceProductDtos, $invoice)->save($invoice->invoice_path, 'local');
 
             Order::forInvoice($invoice)->markUnpaid();
 
@@ -258,7 +258,7 @@ class CreateInvoice extends Component
             });
 
         // do not create invoice if all products are empty (0 qty)
-        if ($selectedProducts->isEmpty()) return null;
+        if ($selectedProducts->isEmpty()) return Collection::empty();
 
         // create dtos from products
         $invoiceProductDtos = collect();
