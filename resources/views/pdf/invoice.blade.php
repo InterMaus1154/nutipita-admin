@@ -243,9 +243,11 @@
                     <p>
                         {{$customer->customer_postcode}}
                     </p>
-                    <p>
-                        {{$customer->customer_country}}
-                    </p>
+                    @if($customer->customer_address_1)
+                        <p>
+                            {{$customer->customer_country}}
+                        </p>
+                    @endif
                 </td>
                 {{--invoice data--}}
                 <td class="text-right">

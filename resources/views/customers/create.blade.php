@@ -8,7 +8,7 @@
             @csrf
             {{--Customer name--}}
             <x-form.form-wrapper>
-                <x-form.form-label id="customer_name" text="Business Name"/>
+                <x-form.form-label id="customer_name" text="Business/Customer Name"/>
                 <x-form.form-input id="customer_name" name="customer_name" value="{{old('customer_name', '')}}" placeholder="Business Name"/>
             </x-form.form-wrapper>
             {{--trading name--}}
