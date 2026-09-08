@@ -64,7 +64,6 @@ class OrderFilter extends Component
 
     public function render(): View
     {
-        Log::info(static::class. '::render', ['time' => microtime(true), 'filters' => $this->filters ?? null]);
         return view('livewire.order.order-filter');
     }
 }

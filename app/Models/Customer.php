@@ -53,6 +53,9 @@ class Customer extends Model
 
     public function getIsHidden(): bool
     {
+        if(is_null($this->getAttribute('is_hidden'))){
+            return false;
+        }
         return $this->getAttribute('is_hidden');
     }
 

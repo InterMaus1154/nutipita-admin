@@ -11,6 +11,11 @@
         <div class="justify-self-center text-center">
             <span class="text-lg text-center font-bold text-accent">
             {{$customer->customer_name}}
+                @if($customer->getIsHidden())
+                    <flux:icon.eye-slash />
+                @else
+                    <flux:icon.eye />
+                @endif
             </span>
         </div>
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
