@@ -13,6 +13,7 @@ class Customer extends Model
     protected $primaryKey = 'customer_id';
     protected $guarded = [];
 
+
     /*
      * Define relationships
      */
@@ -38,6 +39,35 @@ class Customer extends Model
     public function getShortAddressAttribute()
     {
         return $this->customer_address_1 . ", " . $this->customer_city . ", " . $this->customer_postcode;
+    }
+
+    public function markHidden(): void
+    {
+        $this->setAttribute('is_hidden', true);
+    }
+
+    public function markVisible(): void
+    {
+        $this->setAttribute('is_hidden', false);
+    }
+
+    public function getIsHidden(): bool
+    {
+        return $this->getAttribute('is_hidden');
+    }
+
+    public function toggleHidden(): void
+    {
+        if($this->getIsHidden()){
+            $this->markVisible();
+        }else{
+            $this->markHidden();
+        }
+    }
+
+    public function getId(): int
+    {
+        return $this->getAttribute('customer_id');
     }
 
 }

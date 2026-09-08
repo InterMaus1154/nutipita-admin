@@ -16,6 +16,13 @@
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('customers.edit', compact('customer'))}}">Edit
             </x-ui.mobile-card-dropdown-link>
+            <x-ui.mobile-card-dropdown-link wire:click="toggleCustomerVisibility({{$customer->getId()}})">
+                @if($customer->getIsHidden())
+                    Show
+                @else
+                    Hide
+                @endif
+            </x-ui.mobile-card-dropdown-link>
         </x-ui.mobile-card-dropdown-menu>
     </div>
     {{--card body--}}
@@ -58,7 +65,8 @@
             </div>
         @endif
     </div>
-    <flux:button @click="$dispatch('modal-open', { component: 'customer.customer-popup-card', componentData: { customerId: {{$customer->customer_id}} } })">
+    <flux:button
+        @click="$dispatch('modal-open', { component: 'customer.customer-popup-card', componentData: { customerId: {{$customer->customer_id}} } })">
         <flux:icon.chevron-double-up class="text-accent"/>
     </flux:button>
 </x-ui.mobile-card-skeleton>

@@ -93,6 +93,14 @@
                         <flux:link href="{{route('customers.edit', compact('customer'))}}" title="Edit customer">
                             <flux:icon.pencil-square/>
                         </flux:link>
+                        <flux:link class="cursor-pointer!"
+                                   wire:click="toggleCustomerVisibility({{$customer->getId()}})" title="{{$customer->getIsHidden() ? 'Show' : 'Hide'}}">
+                            @if($customer->getIsHidden())
+                                <flux:icon.eye-slash />
+                            @else
+                                <flux:icon.eye />
+                            @endif
+                        </flux:link>
                     </x-table.data>
                 </x-table.row>
             @endforeach
