@@ -25,6 +25,7 @@ class CustomerSelect extends Component
         $customers = Customer::query()
             ->select('customers.customer_id', 'customers.customer_name')
             ->where('is_hidden', false)
+            ->orderBy('customer_name')
             ->get();
         return view('components.form.customer-select', compact('customers'));
     }
