@@ -13,6 +13,10 @@ class Invoice extends Model
     protected $primaryKey = 'invoice_id';
     protected $guarded = [];
 
+    protected $casts = [
+        'invoice_status_new' => InvoiceStatus::class,
+    ];
+
     /*
      * Define relationships
      */
@@ -34,6 +38,16 @@ class Invoice extends Model
     public function creditNote()
     {
         return $this->hasOne(CreditNote::class, 'invoice_id', 'invoice_id');
+    }
+
+    public function getInvoiceStatus(): InvoiceStatus
+    {
+        return $this->getAttribute('invoice_status_new');
+    }
+
+    public function setInvoiceStatus(InvoiceStatus $status): void
+    {
+        $this->setAttribute('invoice_status_new', $status);
     }
 
     /*

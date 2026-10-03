@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $enumNames = implode("','", array_map(fn($case) => $case->name, \App\Enums\LegacyInvoiceStatus::cases()));
-
-            DB::statement("ALTER TABLE invoices MODIFY COLUMN invoice_status ENUM('$enumNames')");
+            $table->unsignedTinyInteger('invoice_status_new')->nullable();
         });
     }
 
@@ -24,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('invoice_status');
+            $table->dropColumn('invoice_status_new');
         });
     }
 };

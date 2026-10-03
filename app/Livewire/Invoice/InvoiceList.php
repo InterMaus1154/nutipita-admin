@@ -4,7 +4,7 @@ namespace App\Livewire\Invoice;
 
 use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceRepository;
-use App\Enums\InvoiceStatus;
+use App\Enums\LegacyInvoiceStatus;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Traits\HasSort;
@@ -51,9 +51,9 @@ class InvoiceList extends Component
             abort(403);
         }
 
-        if ($newValue === InvoiceStatus::due->name) {
+        if ($newValue === LegacyInvoiceStatus::due->name) {
             Order::forInvoice($invoice)->markUnpaid();
-        } else if ($newValue === InvoiceStatus::paid->name) {
+        } else if ($newValue === LegacyInvoiceStatus::paid->name) {
             Order::forInvoice($invoice)->markPaid();
         }
 
@@ -77,7 +77,7 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' =>  InvoiceStatus::paid->name
+                'invoice_status' =>  LegacyInvoiceStatus::paid->name
             ]);
 
             Order::forInvoice($invoice)->markPaid();
@@ -98,7 +98,7 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => InvoiceStatus::due->name
+                'invoice_status' => LegacyInvoiceStatus::due->name
             ]);
 
             Order::forInvoice($invoice)->markUnpaid();

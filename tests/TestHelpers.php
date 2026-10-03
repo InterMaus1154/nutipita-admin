@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\Domain\Invoice\Invoice;
-use App\Enums\InvoiceStatus;
+use App\Enums\LegacyInvoiceStatus;
 use App\Models\Customer;
 
 trait TestHelpers
@@ -19,7 +19,7 @@ trait TestHelpers
         ]);
     }
 
-    protected function createInvoice(InvoiceStatus $status = InvoiceStatus::due, float $total = 100.00): Invoice
+    protected function createInvoice(LegacyInvoiceStatus $status = LegacyInvoiceStatus::due, float $total = 100.00): Invoice
     {
         return Invoice::create([
             'invoice_number' => Invoice::getNextInvoiceNumber(),

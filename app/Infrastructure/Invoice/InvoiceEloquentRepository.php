@@ -4,7 +4,7 @@ namespace App\Infrastructure\Invoice;
 
 use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceRepository;
-use App\Enums\InvoiceStatus;
+use App\Enums\LegacyInvoiceStatus;
 use Illuminate\Database\Eloquent\Builder;
 
 class InvoiceEloquentRepository implements InvoiceRepository
@@ -13,7 +13,7 @@ class InvoiceEloquentRepository implements InvoiceRepository
     public function allUnpaidSum(): float
     {
         $result = $this->query()
-            ->where('invoices.invoice_status', InvoiceStatus::due->name)
+            ->where('invoices.invoice_status', LegacyInvoiceStatus::due->name)
             ->selectRaw('SUM(invoices.invoice_total) as sum')
             ->first();
 

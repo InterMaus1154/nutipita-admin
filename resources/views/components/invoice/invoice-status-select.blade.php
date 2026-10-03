@@ -1,15 +1,15 @@
-@use(App\Enums\InvoiceStatus)
+@use(App\Enums\LegacyInvoiceStatus)
 @props(['invoice'])
 <div class="cursor-pointer">
     @php
         // match color
-        if($invoice->invoice_status === InvoiceStatus::paid->name){
+        if($invoice->invoice_status === LegacyInvoiceStatus::paid->name){
             $bgColor = "bg-green-500!";
             $shadowColor = "oklch(72.3% 0.219 149.579)";
-        }else if($invoice->invoice_status === InvoiceStatus::cancelled->name){
+        }else if($invoice->invoice_status === LegacyInvoiceStatus::cancelled->name){
             $bgColor = "bg-orange-400!";
             $shadowColor = "oklch(75% 0.183 55.934)";
-        }else if($invoice->invoice_status === InvoiceStatus::due->name){
+        }else if($invoice->invoice_status === LegacyInvoiceStatus::due->name){
             $bgColor = "bg-red-500!";
             $shadowColor = "oklch(63.7% 0.237 25.331)";
         }
@@ -27,7 +27,7 @@
 
         >
             <x-slot:options>
-                @foreach(InvoiceStatus::cases() as $status)
+                @foreach(LegacyInvoiceStatus::cases() as $status)
                     <x-ui.select.option :value="$status->name" :text="$status->value"/>
                 @endforeach
             </x-slot:options>

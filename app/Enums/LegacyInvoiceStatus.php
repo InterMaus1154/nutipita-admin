@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum InvoiceStatus: string
+enum LegacyInvoiceStatus: string
 {
     CASE paid = "Paid";
     CASE due = "Unpaid";

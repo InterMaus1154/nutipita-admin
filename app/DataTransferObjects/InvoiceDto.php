@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects;
 
-use App\Enums\InvoiceStatus;
+use App\Enums\LegacyInvoiceStatus;
 use App\Helpers\Format;
 use App\Models\Customer;
 use App\Domain\Invoice\Invoice;
@@ -16,17 +16,17 @@ use App\Models\Order;
  */
 final readonly class InvoiceDto
 {
-    private function __construct(private Customer      $customer,
-                                 private Carbon        $invoiceIssueDate,
-                                 private Carbon        $invoiceDueDate,
-                                 private Carbon|null   $invoiceOrdersFrom,
-                                 private Carbon|null   $invoiceOrdersTo,
-                                 private InvoiceStatus $invoiceStatus,
-                                 private string        $invoiceNumber,
-                                 private string        $invoiceName,
-                                 private int|null      $orderId,
-                                 private float|null    $invoiceDeliveryCharge,
-                                 private float|null    $invoiceCredit
+    private function __construct(private Customer            $customer,
+                                 private Carbon              $invoiceIssueDate,
+                                 private Carbon              $invoiceDueDate,
+                                 private Carbon|null         $invoiceOrdersFrom,
+                                 private Carbon|null         $invoiceOrdersTo,
+                                 private LegacyInvoiceStatus $invoiceStatus,
+                                 private string              $invoiceNumber,
+                                 private string              $invoiceName,
+                                 private int|null            $orderId,
+                                 private float|null          $invoiceDeliveryCharge,
+                                 private float|null          $invoiceCredit
 
     )
     {
@@ -39,7 +39,7 @@ final readonly class InvoiceDto
      * @param Carbon|string|null $invoiceDueDate
      * @param Carbon|string|null $invoiceOrdersFrom
      * @param Carbon|string|null $invoiceOrdersTo
-     * @param InvoiceStatus|string $invoiceStatus
+     * @param LegacyInvoiceStatus|string $invoiceStatus
      * @param string|null $invoiceNumber
      * @param Order|string|int|null $order - single order to which the invoice might belong
      * @param float|null $invoiceDeliveryCharge
@@ -47,16 +47,16 @@ final readonly class InvoiceDto
      * @return InvoiceDto
      */
     public
-    static function from(Customer|int|string   $customer,
-                         Carbon|string|null    $invoiceIssueDate = null,
-                         Carbon|string|null    $invoiceDueDate = null,
-                         Carbon|string         $invoiceOrdersFrom = null,
-                         Carbon|string|null    $invoiceOrdersTo = null,
-                         InvoiceStatus|string  $invoiceStatus = InvoiceStatus::due,
-                         string|null           $invoiceNumber = null,
-                         Order|string|int|null $order = null,
-                         float|null            $invoiceDeliveryCharge = null,
-                         float|null            $invoiceCredit = null
+    static function from(Customer|int|string        $customer,
+                         Carbon|string|null         $invoiceIssueDate = null,
+                         Carbon|string|null         $invoiceDueDate = null,
+                         Carbon|string              $invoiceOrdersFrom = null,
+                         Carbon|string|null         $invoiceOrdersTo = null,
+                         LegacyInvoiceStatus|string $invoiceStatus = LegacyInvoiceStatus::due,
+                         string|null                $invoiceNumber = null,
+                         Order|string|int|null      $order = null,
+                         float|null                 $invoiceDeliveryCharge = null,
+                         float|null                 $invoiceCredit = null
     ): InvoiceDto
     {
         // check what type of customer is provided
@@ -100,7 +100,7 @@ final readonly class InvoiceDto
         $invoiceName = 'INV-' . $invoiceNumber . '.pdf';
 
         if (is_string($invoiceStatus)) {
-            $invoiceStatus = InvoiceStatus::tryFrom($invoiceStatus);
+            $invoiceStatus = LegacyInvoiceStatus::tryFrom($invoiceStatus);
             if (is_null($invoiceStatus)) {
                 throw new \InvalidArgumentException('Invalid invoice status provided', 422);
             }
@@ -189,10 +189,10 @@ final readonly class InvoiceDto
     /**
      * Return the status of an invoice - which is paid or due.
      * Returns an InvoiceStatus enum
-     * @return InvoiceStatus
+     * @return LegacyInvoiceStatus
      */
     public
-    function invoiceStatus(): InvoiceStatus
+    function invoiceStatus(): LegacyInvoiceStatus
     {
         return $this->invoiceStatus;
     }
