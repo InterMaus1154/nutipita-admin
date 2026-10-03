@@ -5,7 +5,7 @@ namespace App\DataTransferObjects;
 use App\Enums\InvoiceStatus;
 use App\Helpers\Format;
 use App\Models\Customer;
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Carbon\Carbon;

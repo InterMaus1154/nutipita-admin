@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Domain\Invoice\Invoice;
 use App\Enums\InvoiceStatus;
 use App\Enums\OrderStatus;
-use App\Models\Invoice;
 use App\Models\Order;
 use App\Traits\HasSort;
 use Detection\MobileDetect;

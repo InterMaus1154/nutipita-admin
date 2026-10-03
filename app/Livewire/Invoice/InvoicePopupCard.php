@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Invoice;
 
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use App\Services\InvoiceService;
 use Illuminate\View\View;
 use Livewire\Component;

@@ -5,7 +5,7 @@ namespace App\Livewire\_discard;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Models\Customer;
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;

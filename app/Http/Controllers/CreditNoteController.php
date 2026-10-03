@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CreditNote;
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 

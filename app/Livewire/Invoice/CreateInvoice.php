@@ -7,7 +7,7 @@ use App\DataTransferObjects\InvoiceProductDto;
 use App\Enums\OrderStatus;
 use App\Helpers\Format;
 use App\Models\Customer;
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\InvoiceService;

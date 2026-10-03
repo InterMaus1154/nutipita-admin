@@ -1,7 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Invoice;
 
+use App\Models\CreditNote;
+use App\Models\Customer;
+use App\Models\InvoiceProduct;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model

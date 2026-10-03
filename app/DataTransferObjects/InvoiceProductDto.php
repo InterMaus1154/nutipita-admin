@@ -3,7 +3,7 @@
 namespace App\DataTransferObjects;
 
 use App\Helpers\ModelResolver;
-use App\Models\Invoice;
+use App\Domain\Invoice\Invoice;
 use App\Models\Product;
 
 /**

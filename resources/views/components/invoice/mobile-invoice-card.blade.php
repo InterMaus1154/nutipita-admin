@@ -3,7 +3,7 @@
 <x-ui.mobile-card-skeleton>
     @php
         /**
-* @var \App\Models\Invoice $invoice
+* @var \App\Domain\Invoice\Invoice $invoice
  */
     @endphp
     <div class="grid grid-cols-[1fr_auto_1fr]">

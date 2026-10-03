@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Invoice\Invoice;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
