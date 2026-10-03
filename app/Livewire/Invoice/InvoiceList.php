@@ -3,6 +3,7 @@
 namespace App\Livewire\Invoice;
 
 use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\InvoiceRepository;
 use App\Enums\InvoiceStatus;
 use App\Enums\OrderStatus;
 use App\Models\Order;
@@ -24,6 +25,8 @@ class InvoiceList extends Component
 
     protected $paginationTheme = 'tailwind';
 
+    private InvoiceRepository $invoices;
+
     public array $filters = [
         'customer_id' => null
     ];
@@ -35,6 +38,11 @@ class InvoiceList extends Component
         $this->initSort('invoice_number', 'desc', 'resetPage');
         $browser = new MobileDetect;
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
+    }
+
+    public function boot(InvoiceRepository $invoices): void
+    {
+        $this->invoices = $invoices;
     }
 
     public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
@@ -167,6 +175,7 @@ class InvoiceList extends Component
 
         $invoiceTotals = $query->clone()->selectRaw('SUM(invoice_total) AS invoice_totals')->value('invoice_totals');
         $invoiceCount = $query->clone()->selectRaw('COUNT(*) AS invoice_count')->value('invoice_count');
+        $unpaidSum = $this->invoices->allUnpaidSum();
 
         $this->applySort($query, $this->customSorts());
 
@@ -174,7 +183,8 @@ class InvoiceList extends Component
         return view('livewire.invoice.invoice-list', [
             'invoices' => $invoices,
             'invoiceTotals' => $invoiceTotals,
-            'invoiceCount' => $invoiceCount
+            'invoiceCount' => $invoiceCount,
+            'unpaidSum' => $unpaidSum,
         ]);
     }
 }
