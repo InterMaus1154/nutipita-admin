@@ -4,4 +4,5 @@
     @if($unpaidSum > 0)
         <x-data-box data-box-header="Unpaid Sum" :data-box-value="moneyFormat($unpaidSum)"/>
     @endif
+    <p>hello</p>
 </div>
