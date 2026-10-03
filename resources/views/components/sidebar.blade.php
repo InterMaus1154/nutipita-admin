@@ -76,8 +76,14 @@
     <div class="justify-self-start! max-sm:justify-self-end! flex gap-2 items-center sm:flex-row-reverse">
         <div>
             <span class="font-bold ">
-                Week {{getCurrentWeekNumber()}} @if(!app()->isProduction()) <span class="text-red-500">DEBUG</span>
-
+                Week {{getCurrentWeekNumber()}}
+                @if(!app()->isProduction())
+                    @if(app()->isLocal())
+                        <span class="text-red-500">DEBUG</span>
+                    @endif
+                    @if(app()->environment('staging'))
+                        <span class="text-amber-500">STAGING</span>
+                    @endif
                 @endif
             </span>
         </div>
