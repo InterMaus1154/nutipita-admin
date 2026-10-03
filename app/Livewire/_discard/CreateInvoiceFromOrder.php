@@ -4,11 +4,11 @@ namespace App\Livewire\_discard;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
-use App\Models\Customer;
 use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\InvoiceService;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
-use App\Services\InvoiceService;
 use App\Traits\HasQuickDueFilter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

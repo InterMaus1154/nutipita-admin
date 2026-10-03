@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory;
-
     protected $primaryKey = 'customer_id';
     protected $guarded = [];
 

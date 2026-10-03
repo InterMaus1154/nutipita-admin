@@ -4,13 +4,11 @@ namespace App\Livewire\Invoice;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
-use App\Enums\OrderStatus;
-use App\Helpers\Format;
-use App\Models\Customer;
 use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\InvoiceService;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
-use App\Services\InvoiceService;
 use App\Traits\HasQuickDueFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -18,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Component;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class CreateInvoice extends Component
 {

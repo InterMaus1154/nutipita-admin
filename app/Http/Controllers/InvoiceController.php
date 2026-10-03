@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
-use App\Enums\OrderStatus;
 use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\InvoiceService;
+use App\Enums\OrderStatus;
 use App\Models\Order;
-use App\Services\InvoiceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

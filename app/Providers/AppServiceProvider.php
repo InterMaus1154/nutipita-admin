@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Invoice\InvoiceRepository;
+use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use Detection\MobileDetect;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(InvoiceRepository::class, InvoiceEloquentRepository::class);
     }
 
     /**

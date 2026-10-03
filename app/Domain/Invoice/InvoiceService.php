@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Domain\Invoice;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Enums\OrderStatus;
-use App\Domain\Invoice\Invoice;
 use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;

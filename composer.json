@@ -13,7 +13,8 @@
         "livewire/flux": "^2.1",
         "livewire/livewire": "^3.6",
         "mobiledetect/mobiledetectlib": "^4.11",
-        "yaza/laravel-google-drive-storage": "^4.1"
+        "yaza/laravel-google-drive-storage": "^4.1",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
