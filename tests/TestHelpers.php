@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\Domain\Invoice\Invoice;
-use App\Enums\LegacyInvoiceStatus;
+use App\Domain\Invoice\InvoiceStatus;
 use App\Models\Customer;
 
 trait TestHelpers
@@ -19,7 +19,7 @@ trait TestHelpers
         ]);
     }
 
-    protected function createInvoice(LegacyInvoiceStatus $status = LegacyInvoiceStatus::due, float $total = 100.00): Invoice
+    protected function createInvoice(InvoiceStatus $status = InvoiceStatus::UNPAID, float $total = 100.00): Invoice
     {
         return Invoice::create([
             'invoice_number' => Invoice::getNextInvoiceNumber(),
@@ -28,7 +28,7 @@ trait TestHelpers
             'invoice_due_date' => now()->addDays(30),
             'invoice_path' => 'invoices/test.pdf',
             'invoice_name' => 'Test Invoice',
-            'invoice_status' => $status->name,
+            'invoice_status_new' => $status->value,
             'invoice_total' => $total,
         ]);
     }

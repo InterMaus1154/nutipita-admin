@@ -19,7 +19,7 @@
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', compact('invoice'))}}">Download PDF
             </x-ui.mobile-card-dropdown-link>
-            @if($invoice->invoice_status == "due")
+            @if($invoice->getInvoiceStatus() === \App\Domain\Invoice\InvoiceStatus::UNPAID->value)
                 <x-ui.mobile-card-dropdown-link wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                 </x-ui.mobile-card-dropdown-link>
             @else

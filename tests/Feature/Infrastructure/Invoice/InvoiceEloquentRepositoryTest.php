@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Infrastructure\Invoice;
 
-use App\Enums\LegacyInvoiceStatus;
+use App\Domain\Invoice\InvoiceStatus;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,10 +24,10 @@ class InvoiceEloquentRepositoryTest extends TestCase
 
     public function test_all_unpaid_sum_returns_sum_of_due_invoices_only(): void
     {
-        $this->createInvoice(LegacyInvoiceStatus::due, 100.50);
-        $this->createInvoice(LegacyInvoiceStatus::due, 49.50);
-        $this->createInvoice(LegacyInvoiceStatus::paid, 200.00);
-        $this->createInvoice(LegacyInvoiceStatus::cancelled, 75.00);
+        $this->createInvoice(InvoiceStatus::UNPAID, 100.50);
+        $this->createInvoice(InvoiceStatus::UNPAID, 49.50);
+        $this->createInvoice(InvoiceStatus::PAID, 200.00);
+        $this->createInvoice(InvoiceStatus::CANCELLED, 75.00);
 
         $sum = $this->repository->allUnpaidSum();
 
@@ -36,8 +36,8 @@ class InvoiceEloquentRepositoryTest extends TestCase
 
     public function test_all_unpaid_sum_returns_zero_when_no_due_invoices_exist(): void
     {
-        $this->createInvoice(LegacyInvoiceStatus::paid, 200.00);
-        $this->createInvoice(LegacyInvoiceStatus::cancelled, 75.00);
+        $this->createInvoice(InvoiceStatus::PAID, 200.00);
+        $this->createInvoice(InvoiceStatus::CANCELLED, 75.00);
 
         $sum = $this->repository->allUnpaidSum();
 
