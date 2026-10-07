@@ -1,4 +1,3 @@
-@use(App\Enums\LegacyInvoiceStatus)
 <div class="space-y-4">
     <x-success/>
     <x-error/>

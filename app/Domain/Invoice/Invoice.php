@@ -6,7 +6,9 @@ use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+
 
 class Invoice extends Model
 {
@@ -65,4 +67,5 @@ class Invoice extends Model
 
         return str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
+
 }

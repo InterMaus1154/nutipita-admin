@@ -1,5 +1,4 @@
 @props(['invoice'])
-@use(App\Enums\LegacyInvoiceStatus)
 <x-ui.mobile-card-skeleton>
     @php
         /**

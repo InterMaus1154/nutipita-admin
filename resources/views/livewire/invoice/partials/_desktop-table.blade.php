@@ -1,3 +1,4 @@
+@use(App\Domain\Invoice\InvoiceStatus)
 <div>
     <x-table.table>
         <x-table.head>
@@ -70,17 +71,6 @@
                         <flux:link href="{{route('invoices.download', compact('invoice'))}}">
                             <flux:icon.arrow-down-tray class="!inline"/>
                         </flux:link>
-                        @if($invoice->invoice_status == "due")
-                            <flux:link class="cursor-pointer"
-                                       wire:click="markPaid({{$invoice->invoice_id}})">
-                                <flux:icon.exclamation-circle class="!inline"/>
-                            </flux:link>
-                        @else
-                            <flux:link class="cursor-pointer"
-                                       wire:click="markDue({{$invoice->invoice_id}})">
-                                <flux:icon.check-circle class="!inline"/>
-                            </flux:link>
-                        @endif
                         <flux:link class="cursor-pointer"
                                    wire:click="delete({{$invoice->invoice_id}})"
                                    wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"

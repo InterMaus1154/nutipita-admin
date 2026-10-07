@@ -4,7 +4,7 @@ namespace App\Livewire\Invoice;
 
 use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceRepository;
-use App\Enums\LegacyInvoiceStatus;
+use App\Domain\Invoice\InvoiceStatus;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Traits\HasSort;
@@ -45,21 +45,28 @@ class InvoiceList extends Component
         $this->invoices = $invoices;
     }
 
-    public function updateInvoiceStatus(string $newValue, Invoice $invoice): void
+    public function updateInvoiceStatus(int $newValue, Invoice $invoice): void
     {
         if (!auth()->check()) {
             abort(403);
         }
 
-        if ($newValue === LegacyInvoiceStatus::due->name) {
-            Order::forInvoice($invoice)->markUnpaid();
-        } else if ($newValue === LegacyInvoiceStatus::paid->name) {
-            Order::forInvoice($invoice)->markPaid();
-        }
+        DB::beginTransaction();
+        try{
+            if ($newValue === InvoiceStatus::UNPAID->value) {
+                Order::forInvoice($invoice)->markUnpaid();
+            } else if ($newValue === InvoiceStatus::PAID->value) {
+                Order::forInvoice($invoice)->markPaid();
+            }
 
-        $invoice->update([
-            'invoice_status' => $newValue
-        ]);
+            $invoice->update([
+                'invoice_status_new' => $newValue
+            ]);
+            DB::commit();
+        }catch (\Throwable $e){
+            DB::rollBack();
+            Log::error($e->getMessage());
+        }
     }
 
     #[On('update-filter')]
@@ -77,7 +84,7 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' =>  LegacyInvoiceStatus::paid->name
+                'invoice_status_new' => InvoiceStatus::PAID->value,
             ]);
 
             Order::forInvoice($invoice)->markPaid();
@@ -98,7 +105,7 @@ class InvoiceList extends Component
         DB::beginTransaction();
         try {
             $invoice->update([
-                'invoice_status' => LegacyInvoiceStatus::due->name
+                'invoice_status_new' => InvoiceStatus::UNPAID->value,
             ]);
 
             Order::forInvoice($invoice)->markUnpaid();
