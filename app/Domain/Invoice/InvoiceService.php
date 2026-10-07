@@ -27,7 +27,7 @@ class InvoiceService
             'invoice_due_date' => $invoiceDto->invoiceDueDate()->toDateString(),
             'invoice_from' => $invoiceDto->invoiceOrdersFrom()?->toDateString(),
             'invoice_to' => $invoiceDto->invoiceOrdersTo()?->toDateString(),
-            'invoice_status' => $invoiceDto->invoiceStatus()->name,
+            'invoice_status_new' => $invoiceDto->invoiceStatus()->value,
             'invoice_name' => $invoiceDto->invoiceName(),
             'invoice_path' => 'invoices/' . $invoiceDto->invoiceName(),
             'order_id' => $invoiceDto->orderId(),

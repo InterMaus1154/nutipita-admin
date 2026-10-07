@@ -14,9 +14,9 @@
                   wire:click="setMobileSort($event.target.getAttribute('data-value'))" x-on:click="open = false">Customer (cba)</span>
             <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="asc:customer"
                   wire:click="setMobileSort($event.target.getAttribute('data-value'))" x-on:click="open = false">Customer (abc)</span>
-            <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="desc:invoice_status"
+            <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="desc:invoice_status_new"
                   wire:click="setMobileSort($event.target.getAttribute('data-value'))" x-on:click="open = false">Status (cba)</span>
-            <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="asc:invoice_status"
+            <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="asc:invoice_status_new"
                   wire:click="setMobileSort($event.target.getAttribute('data-value'))" x-on:click="open = false">Status (abc)</span>
             <span class="py-1 px-1 rounded-sm hover:bg-accent/90 hover:text-black transition-all cursor-pointer" data-value="desc:invoice_issue_date"
                   wire:click="setMobileSort($event.target.getAttribute('data-value'))" x-on:click="open = false">Issue Date (cba)</span>

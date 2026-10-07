@@ -8,7 +8,7 @@
             <x-table.header sort-field="customer">
                 Customer
             </x-table.header>
-            <x-table.header sort-field="invoice_status">
+            <x-table.header sort-field="invoice_status_new">
                 Status
             </x-table.header>
             <x-table.header sort-field="invoice_issue_date">
