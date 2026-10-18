@@ -39,13 +39,17 @@ Route::group(['middleware' => AuthMiddleware::class], function () {
     Route::prefix('settings')->controller(UserSettingController::class)->group(base_path('routes/route-groups/user-settings.php'));
 
     // credit notes
-    Route::group(['prefix' => 'credit-notes', 'controller' => CreditNoteController::class], function(){
+    Route::group(['prefix' => 'credit-notes', 'controller' => CreditNoteController::class], function () {
         Route::get('/test', 'test')->name('credit-notes.test');
     });
 
-    Route::get('/test/select', function(){
+    Route::get('/test/select', function () {
         return view('_test.select');
     });
 
     require __DIR__ . '/errors.php';
+
+    Route::get('/_react', function () {
+        return view('client.index');
+    });
 });

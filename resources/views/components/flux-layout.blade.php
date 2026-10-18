@@ -22,7 +22,8 @@
     <link rel="icon" href="{{asset('images/icon_96x96.png?v=3')}}">
     <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
     <meta name="robots" content="noindex">
-    @vite(['resources/css/app.css'])
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'client/main.tsx'])
     @livewireStyles
     <title>Nuti Pita: Order Management</title>
 </head>
