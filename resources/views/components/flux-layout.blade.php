@@ -23,15 +23,18 @@
     <link rel="apple-touch-icon" href="{{asset('images/icon_96x96.png?v=3')}}" sizes="96x96">
     <meta name="robots" content="noindex">
     @viteReactRefresh
-    @vite(['resources/css/app.css', 'client/main.tsx'])
+    @vite(['resources/css/app.css'])
     @livewireStyles
     <title>Nuti Pita: Order Management</title>
 </head>
 <body class="bg-white dark:bg-zinc-800 min-h-screen dark:text-white">
 <x-sidebar/>
-<flux:main>
-    {{$slot}}
-</flux:main>
+<main>
+    <flux:main>
+        @stack('react')
+        {{$slot}}
+    </flux:main>
+</main>
 {{--modal stack container--}}
 <livewire:modal.modal-container/>
 @fluxScripts

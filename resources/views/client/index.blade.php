@@ -1,3 +1,7 @@
 <x-flux-layout>
-    <div id="react-root"></div>
+    @push('react')
+        @viteReactRefresh
+        @vite(['client/main.tsx'])
+        <div id="react-root"></div>
+    @endpush
 </x-flux-layout>
