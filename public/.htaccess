@@ -23,3 +23,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+php_flag file_uploads off
+php_flag session.upload_progress.enabled off
