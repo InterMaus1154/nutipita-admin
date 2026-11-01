@@ -5,17 +5,27 @@ namespace App\Http\Controllers;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\InvoiceRepository;
 use App\Domain\Invoice\InvoiceService;
 use App\Enums\OrderStatus;
+use App\Models\InvoiceProduct;
 use App\Models\Order;
+use App\Models\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
+    public function __construct(private InvoiceRepository $invoices)
+    {
+    }
+
     /**
      * Create an invoice for a single order - from order list
      * @param Order $order
@@ -122,5 +132,17 @@ class InvoiceController extends Controller
             'Content-Disposition' => "inline; filename=$filename",
             'Cache-Control' => 'no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0'
         ]);
+    }
+
+    public function createInvoiceSummary(int $id): Response|View
+    {
+        $invoice = $this->invoices->findById($id);
+
+        abort_if(is_null($invoice), 404, 'Invoice not found');
+
+        $customer = $invoice->customer;
+        $products = $invoice->products;
+
+        return Pdf::loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->stream();
     }
 }

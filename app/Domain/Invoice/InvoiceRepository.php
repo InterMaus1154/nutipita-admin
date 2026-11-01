@@ -10,4 +10,6 @@ interface InvoiceRepository
      * @return float
      */
     public function allUnpaidSum(): float;
+
+    public function findById(int $id): ?Invoice;
 }

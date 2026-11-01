@@ -71,4 +71,9 @@ class Customer extends Model
         return $this->getAttribute('customer_id');
     }
 
+    public function getName(): string
+    {
+        return $this->getAttribute('customer_name');
+    }
+
 }

@@ -64,4 +64,14 @@ class Product extends Model
             ->firstWhere('customer_id', $this->currentCustomer->customer_id);
         return $price ? $price->customer_product_price : 0;
     }
+
+    public function getName(): string
+    {
+        return $this->getAttribute('product_name');
+    }
+
+    public function getWeight(): int
+    {
+        return $this->getAttribute('product_weight_g');
+    }
 }
