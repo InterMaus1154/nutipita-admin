@@ -85,6 +85,11 @@ class Invoice extends Model
         return null;
     }
 
+    public function getInvoiceTotal(): float
+    {
+        return $this->getAttribute('invoice_total');
+    }
+
     /*
      * Custom methods
      */

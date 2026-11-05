@@ -143,6 +143,8 @@ class InvoiceController extends Controller
         $customer = $invoice->customer;
         $products = $invoice->products;
 
-        return Pdf::loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->stream();
+        $documentName = sprintf('Invoice-%s-summary.pdf', $invoice->getInvoiceNumber());
+
+        return Pdf::loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->download($documentName);
     }
 }

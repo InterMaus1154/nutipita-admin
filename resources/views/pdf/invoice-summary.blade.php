@@ -4,7 +4,7 @@
 @endphp
 <html>
 <head>
-    <title>Invoice {{$invoice->getInvoiceNumber()}} Summary</title>
+    <title>Invoice #{{$invoice->getInvoiceNumber()}} Summary</title>
     <style>
         * {
             margin: 0;
@@ -34,7 +34,7 @@
 </head>
 <body>
 <header>
-    <h1 style="text-align: center">Invoice {{$invoice->getInvoiceNumber()}} Summary</h1>
+    <h1 style="text-align: center">Invoice #{{$invoice->getInvoiceNumber()}} Summary</h1>
     <p style="text-align: center">(This is not the invoice)</p>
     <table style="width: 100%; border: none">
         <tr>
@@ -53,20 +53,19 @@
     <thead>
     <tr>
         <th>#</th>
-        <th>Product</th>
+        <th>Item</th>
         <th>Quantity</th>
         <th>Unit Price</th>
-        <th>Product Total</th>
+        <th>Item Total</th>
     </tr>
     </thead>
     <tbody>
     @foreach($products as $index => $invoiceProduct)
         <tr>
             <td style="text-align: center">{{$index+1}}</td>
-            <td style="text-align: center">{{$invoiceProduct->product->getName()}} {{$invoiceProduct->product->getWeight()}}
-                g
+            <td style="text-align: center">{{$invoiceProduct->product->getName()}} {{$invoiceProduct->product->getWeight()}}g
             </td>
-            <td style="text-align: center">{{$invoiceProduct->product_qty}}</td>
+            <td style="text-align: center">{{numberFormat($invoiceProduct->product_qty, 0)}}</td>
             <td style="text-align: center">{{moneyFormat($invoiceProduct->product_unit_price)}}</td>
             <td style="text-align: center">{{moneyFormat($invoiceProduct->product_qty * $invoiceProduct->product_unit_price)}}</td>
         </tr>
@@ -75,21 +74,16 @@
         <tr>
             <td>#</td>
             <td style="text-align: center">Delivery Charge</td>
-            <td></td>
-            <td></td>
+            <td style="text-align: center;">-</td>
+            <td style="text-align: center;">-</td>
             <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge())}}</td>
         </tr>
     @endif
     </tbody>
     <tfoot>
     <tr>
-        <td>#</td>
-        <td></td>
-        <td></td>
-        <td style="text-align: center; font-weight: bold">
-            <br>
-        </td>
-        <td></td>
+        <td style="font-weight: bold" colspan="4">Invoice Total</td>
+        <td style="text-align: center;"> {{moneyFormat($invoice->getInvoiceTotal())}} </td>
     </tr>
     </tfoot>
 </table>
