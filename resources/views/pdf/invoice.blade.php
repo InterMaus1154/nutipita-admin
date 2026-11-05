@@ -352,6 +352,8 @@
                                 class="product-data-name">
                                 @moneyFormat($invoice->getDeliveryCharge()->getCalculated())
                             </span>
+                            <br>
+                            <span class="product-data-desc">{{number_format($invoice->getDeliveryCharge()->getModifier())}} x @unitPriceFormat($invoice->getDeliveryCharge()->toFloat())</span>
                         </td>
                     </tr>
                 @endif
