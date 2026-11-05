@@ -75,14 +75,14 @@ class Invoice extends Model
         return $this->getAttribute('invoice_to');
     }
 
-    public function getDeliveryCharge(): ?float
+    public function getRawDeliveryCharge(): ?string
     {
-        $charge = $this->getAttribute('invoice_delivery_charge');
-        if ($charge > 0) {
-            return $charge;
-        }
+        return $this->getAttribute('invoice_delivery_charge');
+    }
 
-        return null;
+    public function getDeliveryCharge(): DeliveryCharge
+    {
+        return DeliveryCharge::fromString($this->getRawDeliveryCharge());
     }
 
     public function getInvoiceTotal(): float

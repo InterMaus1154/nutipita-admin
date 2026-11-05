@@ -4,6 +4,7 @@ namespace App\Livewire\Invoice;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
+use App\Domain\Invoice\DeliveryCharge;
 use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceService;
 use App\Models\Customer;
@@ -35,7 +36,7 @@ class CreateInvoice extends Component
     public string $invoice_issue_date;
     public string $invoice_due_date;
 
-    public float|null $invoice_delivery_charge = null;
+    public string|null $invoice_delivery_charge = null;
     public float|null $invoice_credit = null;
 
 
@@ -147,7 +148,7 @@ class CreateInvoice extends Component
             'due_from' => 'required|date',
             'due_to' => 'required|date',
             'invoice_number' => 'required|string|unique:invoices,invoice_number',
-            'invoice_delivery_charge' => 'nullable|numeric|min:0',
+            'invoice_delivery_charge' => 'nullable|string',
             'invoice_credit' => 'nullable|numeric|min:0'
         ]);
 
@@ -162,6 +163,7 @@ class CreateInvoice extends Component
                 ->whereDate('order_due_at', '>=', $firstOrderDate)
                 ->whereDate('order_due_at', '<=', $lastOrderDate);
 
+            $deliveryCharge = DeliveryCharge::fromString($this->invoice_delivery_charge);
 
             $invoiceDto = InvoiceDto::from(
                 customer: $this->customer_id,
@@ -170,7 +172,7 @@ class CreateInvoice extends Component
                 invoiceOrdersFrom: $firstOrderDate,
                 invoiceOrdersTo: $lastOrderDate,
                 invoiceNumber: $this->invoice_number,
-                invoiceDeliveryCharge: $this->invoice_delivery_charge,
+                invoiceDeliveryCharge: $deliveryCharge,
                 invoiceCredit: $this->invoice_credit
             );
 
@@ -180,7 +182,7 @@ class CreateInvoice extends Component
                 ? $this->buildManualDtos($invoice)
                 : $this->buildAutoDtos($orderQuery, $invoice);
 
-            $invoiceTotal = $this->calculateInvoiceTotal($invoiceProductDtos) + ($this->invoice_delivery_charge ?? 0);
+            $invoiceTotal = $this->calculateInvoiceTotal($invoiceProductDtos) + $deliveryCharge->getCalculated();
 
             $invoice->update([
                 'invoice_total' => $invoiceTotal

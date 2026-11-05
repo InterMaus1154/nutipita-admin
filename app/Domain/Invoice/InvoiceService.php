@@ -31,7 +31,7 @@ class InvoiceService
             'invoice_name' => $invoiceDto->invoiceName(),
             'invoice_path' => 'invoices/' . $invoiceDto->invoiceName(),
             'order_id' => $invoiceDto->orderId(),
-            'invoice_delivery_charge' => $invoiceDto->invoiceDeliveryCharge(),
+            'invoice_delivery_charge' => $invoiceDto->invoiceDeliveryCharge()->toDbString(),
             'invoice_credit' => $invoiceDto->invoiceCredit()
         ]);
     }

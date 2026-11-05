@@ -63,20 +63,21 @@
     @foreach($products as $index => $invoiceProduct)
         <tr>
             <td style="text-align: center">{{$index+1}}</td>
-            <td style="text-align: center">{{$invoiceProduct->product->getName()}} {{$invoiceProduct->product->getWeight()}}g
+            <td style="text-align: center">{{$invoiceProduct->product->getName()}} {{$invoiceProduct->product->getWeight()}}
+                g
             </td>
             <td style="text-align: center">{{numberFormat($invoiceProduct->product_qty, 0)}}</td>
             <td style="text-align: center">{{moneyFormat($invoiceProduct->product_unit_price)}}</td>
             <td style="text-align: center">{{moneyFormat($invoiceProduct->product_qty * $invoiceProduct->product_unit_price)}}</td>
         </tr>
     @endforeach
-    @if(! is_null($invoice->getDeliveryCharge()))
+    @if(! $invoice->getDeliveryCharge()->isNull())
         <tr>
             <td>#</td>
             <td style="text-align: center">Delivery Charge</td>
-            <td style="text-align: center;">-</td>
-            <td style="text-align: center;">-</td>
-            <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge())}}</td>
+            <td style="text-align: center;">{{$invoice->getDeliveryCharge()->getModifier()}}</td>
+            <td style="text-align: center;">{{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
+            <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
         </tr>
     @endif
     </tbody>
