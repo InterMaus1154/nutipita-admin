@@ -8,10 +8,8 @@ use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceRepository;
 use App\Domain\Invoice\InvoiceService;
 use App\Enums\OrderStatus;
-use App\Models\InvoiceProduct;
 use App\Models\Order;
-use App\Models\Product;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,7 +20,7 @@ use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
-    public function __construct(private InvoiceRepository $invoices)
+    public function __construct(private InvoiceRepository $invoices, private PDF $pdf)
     {
     }
 
@@ -145,6 +143,6 @@ class InvoiceController extends Controller
 
         $documentName = sprintf('Invoice-%s-summary.pdf', $invoice->getInvoiceNumber());
 
-        return Pdf::loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->stream($documentName);
+        return $this->pdf->loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->download($documentName);
     }
 }
