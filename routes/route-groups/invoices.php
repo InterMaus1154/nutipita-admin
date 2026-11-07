@@ -15,3 +15,5 @@ Route::get('/create', 'createManual')->name('invoices.create');
 
 // create single
 Route::get('/create-single/{order}', 'createSingleInvoice')->name('invoices.create-single');
+
+Route::get('/create-invoice-summary/{id}', 'createInvoiceSummary')->name('invoices.create-summary');

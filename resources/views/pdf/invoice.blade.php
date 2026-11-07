@@ -1,4 +1,7 @@
 @use(Illuminate\Support\Carbon)
+@php
+    /** @var \App\Domain\Invoice\Invoice $invoice */
+@endphp
 <head>
     <title>INV - {{$invoice->invoice_number}}</title>
     <style>
@@ -336,7 +339,7 @@
                         @php($i++)
                     @endforeach
                 @endif
-                @if(!empty($invoice->invoice_delivery_charge))
+                @if(! $invoice->getDeliveryCharge()->isNull())
                     <tr>
                         <td class="col-index">{{$i}}</td>
                         <td class="col-description">
@@ -347,8 +350,10 @@
                         <td class="col-amount">
                             <span
                                 class="product-data-name">
-                                @moneyFormat($invoice->invoice_delivery_charge)
+                                @moneyFormat($invoice->getDeliveryCharge()->getCalculated())
                             </span>
+                            <br>
+                            <span class="product-data-desc">{{number_format($invoice->getDeliveryCharge()->getModifier())}} x @unitPriceFormat($invoice->getDeliveryCharge()->toFloat())</span>
                         </td>
                     </tr>
                 @endif

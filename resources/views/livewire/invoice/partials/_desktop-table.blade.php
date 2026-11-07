@@ -1,4 +1,7 @@
 @use(App\Domain\Invoice\InvoiceStatus)
+@php
+    /** @var App\Domain\Invoice\ $invoice */
+@endphp
 <div>
     <x-table.table>
         <x-table.head>
@@ -76,6 +79,9 @@
                                    wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"
                         >
                             <flux:icon.trash class="!inline"/>
+                        </flux:link>
+                        <flux:link class="cursor-pointer" href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
+                            <flux:icon.document-chart-bar class="inline!"/>
                         </flux:link>
                     </x-table.data>
                 </x-table.row>

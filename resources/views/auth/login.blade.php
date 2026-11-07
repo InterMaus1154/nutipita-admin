@@ -18,6 +18,17 @@
         <div class="p-4 sm:p-7 flex flex-col gap-2">
             <div class="text-center">
                 <h1 class="block text-2xl font-bold text-gray-800 dark:text-white ">Login</h1>
+                @if(! app()->isProduction())
+                    <h2 class="text-lg font-semibold">
+                        @if(app()->environment('local'))
+                            <span class="text-red-500">LOCAL ENVIRONMENT</span>
+                        @endif
+                        @if(app()->environment('staging'))
+                            <span class="text-orange-500">STAGING ENVIRONMENT, REPLICA ONLY</span>
+                        @endif
+                    </h2>
+                @endif
+                <h2 class="text-lg font-semibold dark:text-white"></h2>
             </div>
             <div class="space-y-4">
                 <x-error/>
@@ -25,7 +36,7 @@
             <div>
                 <form method="POST" action="{{route('auth.login')}}">
                     @csrf
-                    <div class="grid gap-6">
+                    <div class="grid gap-6 justify-center">
                         <x-form.form-wrapper>
                             <x-form.form-label id="username" text="Username"/>
                             <x-form.form-input id="username" type="text" name="username" placeholder="Username"/>

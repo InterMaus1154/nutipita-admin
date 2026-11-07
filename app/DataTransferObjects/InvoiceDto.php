@@ -2,6 +2,7 @@
 
 namespace App\DataTransferObjects;
 
+use App\Domain\Invoice\DeliveryCharge;
 use App\Domain\Invoice\InvoiceStatus;
 use App\Helpers\Format;
 use App\Models\Customer;
@@ -16,17 +17,17 @@ use App\Models\Order;
  */
 final readonly class InvoiceDto
 {
-    private function __construct(private Customer      $customer,
-                                 private Carbon        $invoiceIssueDate,
-                                 private Carbon        $invoiceDueDate,
-                                 private Carbon|null   $invoiceOrdersFrom,
-                                 private Carbon|null   $invoiceOrdersTo,
-                                 private InvoiceStatus $invoiceStatus,
-                                 private string        $invoiceNumber,
-                                 private string        $invoiceName,
-                                 private int|null      $orderId,
-                                 private float|null    $invoiceDeliveryCharge,
-                                 private float|null    $invoiceCredit
+    private function __construct(private Customer            $customer,
+                                 private Carbon              $invoiceIssueDate,
+                                 private Carbon              $invoiceDueDate,
+                                 private Carbon|null         $invoiceOrdersFrom,
+                                 private Carbon|null         $invoiceOrdersTo,
+                                 private InvoiceStatus       $invoiceStatus,
+                                 private string              $invoiceNumber,
+                                 private string              $invoiceName,
+                                 private int|null            $orderId,
+                                 private DeliveryCharge|null $invoiceDeliveryCharge,
+                                 private float|null          $invoiceCredit
 
     )
     {
@@ -42,7 +43,7 @@ final readonly class InvoiceDto
      * @param InvoiceStatus|int $invoiceStatus
      * @param string|null $invoiceNumber
      * @param Order|string|int|null $order - single order to which the invoice might belong
-     * @param float|null $invoiceDeliveryCharge
+     * @param DeliveryCharge|null $invoiceDeliveryCharge
      * @param float|null $invoiceCredit
      * @return InvoiceDto
      */
@@ -55,7 +56,7 @@ final readonly class InvoiceDto
                          InvoiceStatus|int     $invoiceStatus = InvoiceStatus::UNPAID,
                          string|null           $invoiceNumber = null,
                          Order|string|int|null $order = null,
-                         float|null            $invoiceDeliveryCharge = null,
+                         ?DeliveryCharge       $invoiceDeliveryCharge = null,
                          float|null            $invoiceCredit = null
     ): InvoiceDto
     {
@@ -231,10 +232,9 @@ final readonly class InvoiceDto
 
     /**
      *
-     * @return float|null
+     * @return DeliveryCharge|null
      */
-    public
-    function invoiceDeliveryCharge(): float|null
+    public function invoiceDeliveryCharge(): DeliveryCharge|null
     {
         return $this->invoiceDeliveryCharge;
     }

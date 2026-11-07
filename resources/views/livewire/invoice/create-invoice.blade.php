@@ -78,7 +78,7 @@
                 <x-form.form-wrapper>
                     <x-form.form-label id="invoice_delivery_charge" text="Delivery Charge">
                     </x-form.form-label>
-                    <x-form.form-input type="number" id="invoice_delivery_charge" name="invoice_delivery_charge"
+                    <x-form.form-input type="text" id="invoice_delivery_charge" name="invoice_delivery_charge"
                                        wireModel="invoice_delivery_charge" placeholder="0" class="max-w-[100px]!" step="0.01"/>
                 </x-form.form-wrapper>
                 {{--invoice credit--}}

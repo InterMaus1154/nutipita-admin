@@ -20,6 +20,14 @@ class InvoiceEloquentRepository implements InvoiceRepository
         return $result->sum ?? 0;
     }
 
+    public function findById(int $id): ?Invoice
+    {
+        return $this->query()
+            ->where('invoice_id', $id)
+            ->with(['products', 'customer', 'products.product'])
+            ->first();
+    }
+
     /**
      * @return Builder<Invoice>
      */

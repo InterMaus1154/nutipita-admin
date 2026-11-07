@@ -19,6 +19,9 @@
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', compact('invoice'))}}">Download PDF
             </x-ui.mobile-card-dropdown-link>
+            <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
+                Summary
+            </x-ui.mobile-card-dropdown-link>
             @if($invoice->getInvoiceStatus() === \App\Domain\Invoice\InvoiceStatus::UNPAID)
                 <x-ui.mobile-card-dropdown-link wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                 </x-ui.mobile-card-dropdown-link>
@@ -47,7 +50,7 @@
         </div>
     </div>
     <flux:button
-            @click="$dispatch('modal-open', { component: 'invoice.invoice-popup-card', componentData: { invoiceId: {{$invoice->invoice_id}} } })">
+        @click="$dispatch('modal-open', { component: 'invoice.invoice-popup-card', componentData: { invoiceId: {{$invoice->invoice_id}} } })">
         <flux:icon.chevron-double-up class="text-accent"/>
     </flux:button>
 </x-ui.mobile-card-skeleton>
