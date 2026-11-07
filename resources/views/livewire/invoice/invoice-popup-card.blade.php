@@ -58,6 +58,9 @@
                 <flux:link href="{{route('invoices.download', compact('invoice'))}}">
                     <flux:icon.arrow-down-tray class="size-7"/>
                 </flux:link>
+                <flux:link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
+                    <flux:icon.document-chart-bar class="size-7" />
+                </flux:link>
                 <flux:link class="cursor-pointer"
                            wire:click="deleteInvoice()"
                            wire:confirm="Are you sure to delete this ({{$invoice->invoice_number}}) invoice for {{$invoice->customer->customer_name}}? This action cannot be undone!"
