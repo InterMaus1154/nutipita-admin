@@ -74,7 +74,7 @@
     @if(! $invoice->getDeliveryCharge()->isNull())
         <tr>
             <td>#</td>
-            <td style="text-align: center">Delivery Charge</td>
+            <td style="text-align: center">Nuti Pita</td>
             <td style="text-align: center;">{{$invoice->getDeliveryCharge()->getModifier()}}</td>
             <td style="text-align: center;">{{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
             <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>

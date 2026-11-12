@@ -344,7 +344,7 @@
                         <td class="col-index">{{$i}}</td>
                         <td class="col-description">
                             <span
-                                class="product-data-name">Delivery Charge</span>
+                                class="product-data-name">Nuti Pita</span>
                             <br>
                         </td>
                         <td class="col-amount">
