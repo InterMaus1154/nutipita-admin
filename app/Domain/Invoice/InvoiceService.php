@@ -31,7 +31,7 @@ class InvoiceService
             'invoice_name' => $invoiceDto->invoiceName(),
             'invoice_path' => 'invoices/' . $invoiceDto->invoiceName(),
             'order_id' => $invoiceDto->orderId(),
-            'invoice_delivery_charge' => $invoiceDto->invoiceDeliveryCharge()->toDbString(),
+            'invoice_delivery_charge' => $invoiceDto->invoiceDeliveryCharge()?->toDbString(),
             'invoice_credit' => $invoiceDto->invoiceCredit()
         ]);
     }
@@ -105,7 +105,7 @@ class InvoiceService
             }
         });
 
-        if($invoiceProductDtos->isNotEmpty()){
+        if ($invoiceProductDtos->isNotEmpty()) {
             $invoice = $invoiceProductDtos->first()->invoice();
         }
 
@@ -122,14 +122,14 @@ class InvoiceService
 
     public function deleteInvoice(Invoice|int $invoice_): void
     {
-        if(!auth()->check()){
+        if (!auth()->check()) {
             abort(401);
         }
 
         /** @var Invoice $invoice */
         $invoice = resolveModel($invoice_, Invoice::class);
 
-        if(is_null($invoice)){
+        if (is_null($invoice)) {
             session()->flash('Attempting to delete null invoice');
             Log::error('Attempting to delete null invoice');
             return;
@@ -137,11 +137,11 @@ class InvoiceService
 
         DB::beginTransaction();
         try {
-            if($invoice->order){
+            if ($invoice->order) {
                 $invoice->order->update([
                     'order_status' => OrderStatus::Y_CONFIRMED->name
                 ]);
-            }else{
+            } else {
                 Order::forInvoice($invoice)->markConfirmed();
             }
 
