@@ -65,6 +65,10 @@ class InvoiceEloquentRepository implements InvoiceRepository
         $builder->with($query->relationships);
         $builder->select($query->columns === ['*'] ? ['invoices.*'] : $query->columns);
 
+        if (isset($query->id)) {
+            $builder->where('invoices.invoice_id', $query->id);
+        }
+
         if (isset($query->customerId)) {
             $builder->where('invoices.customer_id', $query->customerId);
         }
