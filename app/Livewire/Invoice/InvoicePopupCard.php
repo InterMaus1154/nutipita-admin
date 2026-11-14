@@ -33,7 +33,7 @@ class InvoicePopupCard extends Component
     {
         $invoice = Invoice::query()
             ->where('invoice_id', $this->invoiceId)
-            ->with('customer:customer_id,customer_name', 'products')
+            ->with('customer:customer_id,customer_name', 'products', 'products.product')
             ->first();
         return view('livewire.invoice.invoice-popup-card', compact('invoice'));
     }
