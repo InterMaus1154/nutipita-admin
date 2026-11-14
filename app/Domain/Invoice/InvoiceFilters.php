@@ -3,7 +3,6 @@
 namespace App\Domain\Invoice;
 
 use App\Helpers\AbstractFilters;
-use Illuminate\Database\Eloquent\Builder;
 
 class InvoiceFilters extends AbstractFilters
 {

@@ -176,7 +176,7 @@ class InvoiceList extends Component
 
         $unpaidSum = $this->invoices->allUnpaidSum();
 
-        $invoiceQuery->hasCustomerSort(SortOrder::from($this->sortDirection));
+        $invoiceQuery->sortBy($this->sortField, SortOrder::from($this->sortDirection));
 
         $invoices = $this->invoices->paginate(query: $invoiceQuery);
         return view('livewire.invoice.invoice-list', [

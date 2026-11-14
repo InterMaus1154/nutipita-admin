@@ -71,7 +71,7 @@
                         <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
                             <flux:icon.eye class="!inline"/>
                         </flux:link>
-                        <flux:link href="{{route('invoices.download', compact('invoice'))}}">
+                        <flux:link href="{{route('invoices.download', ['invoiceId' => $invoice->getId()])}}">
                             <flux:icon.arrow-down-tray class="!inline"/>
                         </flux:link>
                         <flux:link class="cursor-pointer"

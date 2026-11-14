@@ -4,13 +4,14 @@ namespace App\Helpers;
 
 trait SortableQueryTrait
 {
-    public string $field;
-    public SortOrder $sortOrder;
+    public string $sortField;
+    public SortOrder $sortOrder = SortOrder::DESC;
 
 
-    public function sortBy(string $field, SortOrder $order): self
+    public function sortBy(string $field, SortOrder $order = SortOrder::DESC): self
     {
-        $this->field = $field;
+        $this->sortField = $field;
         $this->sortOrder = $order;
+        return $this;
     }
 }

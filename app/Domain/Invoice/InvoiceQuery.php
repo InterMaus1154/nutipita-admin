@@ -7,7 +7,6 @@ use App\Helpers\QueryCustomerId;
 use App\Helpers\QueryCustomerIdTrait;
 use App\Helpers\SortableQuery;
 use App\Helpers\SortableQueryTrait;
-use App\Helpers\SortOrder;
 
 class InvoiceQuery extends AbstractQuery implements QueryCustomerId, SortableQuery
 {
@@ -16,7 +15,6 @@ class InvoiceQuery extends AbstractQuery implements QueryCustomerId, SortableQue
     public string $invoiceDueFrom;
     public string $invoiceDueTo;
 
-    public bool $hasCustomerSort = false;
 
     public function invoiceDueFrom(string $value): self
     {
@@ -27,13 +25,6 @@ class InvoiceQuery extends AbstractQuery implements QueryCustomerId, SortableQue
     public function invoiceDueTo(string $value): self
     {
         $this->invoiceDueTo = $value;
-        return $this;
-    }
-
-    public function hasCustomerSort(SortOrder $sortOrder): self
-    {
-        $this->sortOrder = $sortOrder;
-        $this->hasCustomerSort = true;
         return $this;
     }
 }

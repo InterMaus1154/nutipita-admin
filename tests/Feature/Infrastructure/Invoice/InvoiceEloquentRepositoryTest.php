@@ -10,6 +10,7 @@ use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Models\InvoiceProduct;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\TestHelpers;
 
@@ -242,10 +243,10 @@ class InvoiceEloquentRepositoryTest extends TestCase
 
         $asc = $this->repository->paginate(10, (new InvoiceQuery())
             ->relationships(['customer'])
-            ->hasCustomerSort(SortOrder::ASC));
+            ->sortBy('customer', SortOrder::ASC));
         $desc = $this->repository->paginate(10, (new InvoiceQuery())
             ->relationships(['customer'])
-            ->hasCustomerSort(SortOrder::DESC));
+            ->sortBy('customer', SortOrder::DESC));
 
         $this->assertSame(['Alpha', 'Bravo', 'Charlie'], collect($asc->items())->map(fn($i) => $i->customer->customer_name)->all());
         $this->assertSame(['Charlie', 'Bravo', 'Alpha'], collect($desc->items())->map(fn($i) => $i->customer->customer_name)->all());
@@ -257,7 +258,7 @@ class InvoiceEloquentRepositoryTest extends TestCase
         // make the customer's timestamp differ from the invoice's, otherwise same-second inserts hide the overwrite
         DB::table('customers')->update(['created_at' => '2001-01-01 00:00:00']);
 
-        $row =$this->repository->paginate(10, (new InvoiceQuery())->hasCustomerSort(SortOrder::ASC))->first();
+        $row =$this->repository->paginate(10, (new InvoiceQuery())->sortBy('customer', SortOrder::ASC))->first();
 
         $this->assertSame($invoice->invoice_id, $row->invoice_id);
         $this->assertSame($invoice->invoice_number, $row->invoice_number);
@@ -276,12 +277,166 @@ class InvoiceEloquentRepositoryTest extends TestCase
             ->customerId($customer->customer_id)
             ->invoiceDueFrom('2026-03-01')
             ->invoiceDueTo('2026-03-31')
-            ->hasCustomerSort(SortOrder::ASC);
+            ->sortBy('customer', SortOrder::ASC);
 
         $page = $this->repository->paginate(10, $query);
 
         $this->assertSame(1, $page->total());
         $this->assertSame($mine->invoice_id, $page->first()->invoice_id);
+    }
+
+    // ====
+    // sorting
+    // ====
+
+    /**
+     * Three invoices whose values differ on every sortable column, created in a different order
+     * than any of the sorted orders (except invoice_number, which follows creation order A, B, C).
+     *
+     * @return array<string, int> label => invoice_id
+     */
+    private function createSortFixture(): array
+    {
+        $a = $this->createInvoice(InvoiceStatus::UNPAID, 30.00, $this->createCustomer('Bravo'), '2026-03-10', '2026-01-03');
+        $b = $this->createInvoice(InvoiceStatus::PAID, 10.00, $this->createCustomer('Charlie'), '2026-05-10', '2026-01-01');
+        $c = $this->createInvoice(InvoiceStatus::CANCELLED, 20.00, $this->createCustomer('Alpha'), '2026-04-10', '2026-01-02');
+
+        return ['A' => $a->invoice_id, 'B' => $b->invoice_id, 'C' => $c->invoice_id];
+    }
+
+    /**
+     * @return int[]
+     */
+    private function sortedIds(InvoiceQuery $query, int $perPage = 100): array
+    {
+        return collect($this->repository->paginate($perPage, $query)->items())->pluck('invoice_id')->all();
+    }
+
+    /**
+     * Each sortable column of the invoice list with the fixture labels in ascending order
+     *
+     * @return array<string, array{string, string[]}>
+     */
+    public static function sortableColumns(): array
+    {
+        return [
+            'invoice_number' => ['invoice_number', ['A', 'B', 'C']],
+            'customer' => ['customer', ['C', 'A', 'B']],
+            'invoice_total' => ['invoice_total', ['B', 'C', 'A']],
+            'invoice_due_date' => ['invoice_due_date', ['A', 'C', 'B']],
+            'invoice_issue_date' => ['invoice_issue_date', ['B', 'C', 'A']],
+            'invoice_status_new' => ['invoice_status_new', ['B', 'A', 'C']],
+        ];
+    }
+
+    /**
+     * @param string[] $ascending
+     */
+    #[DataProvider('sortableColumns')]
+    public function test_paginate_orders_by_column_in_both_directions(string $field, array $ascending): void
+    {
+        $ids = $this->createSortFixture();
+        $expected = array_map(fn(string $label) => $ids[$label], $ascending);
+
+        $asc = $this->sortedIds((new InvoiceQuery())->sortBy($field, SortOrder::ASC));
+        $desc = $this->sortedIds((new InvoiceQuery())->sortBy($field, SortOrder::DESC));
+
+        $this->assertSame($expected, $asc, "$field ascending");
+        $this->assertSame(array_reverse($expected), $desc, "$field descending");
+    }
+
+    public function test_sort_direction_defaults_to_descending(): void
+    {
+        $ids = $this->createSortFixture();
+
+        $sorted = $this->sortedIds((new InvoiceQuery())->sortBy('invoice_total'));
+
+        $this->assertSame([$ids['A'], $ids['C'], $ids['B']], $sorted);
+    }
+
+    public function test_sorting_by_customer_does_not_change_which_invoices_are_returned(): void
+    {
+        $this->createSortFixture();
+        $this->createInvoice(customer: $this->createCustomer('Delta'));
+
+        $unsorted = $this->sortedIds(new InvoiceQuery());
+        $sorted = $this->sortedIds((new InvoiceQuery())->sortBy('customer', SortOrder::ASC));
+
+        $this->assertCount(4, $sorted);
+        $this->assertEqualsCanonicalizing($unsorted, $sorted);
+        $this->assertSame(4, $this->repository->paginate(2, (new InvoiceQuery())->sortBy('customer'))->total());
+    }
+
+    public function test_sorting_is_applied_together_with_filters(): void
+    {
+        $customer = $this->createCustomer();
+        $low = $this->createInvoice(total: 10.00, customer: $customer, dueDate: '2026-03-05');
+        $high = $this->createInvoice(total: 90.00, customer: $customer, dueDate: '2026-03-20');
+        $mid = $this->createInvoice(total: 50.00, customer: $customer, dueDate: '2026-03-12');
+        $this->createInvoice(total: 70.00, customer: $customer, dueDate: '2026-06-01');
+        $this->createInvoice(total: 80.00, dueDate: '2026-03-10');
+
+        $query = (new InvoiceQuery())
+            ->customerId($customer->customer_id)
+            ->invoiceDueFrom('2026-03-01')
+            ->invoiceDueTo('2026-03-31')
+            ->sortBy('invoice_total', SortOrder::DESC);
+
+        $this->assertSame([$high->invoice_id, $mid->invoice_id, $low->invoice_id], $this->sortedIds($query));
+    }
+
+    /**
+     * Sort fields where every row has the same value, so only the tie-breaker decides the order
+     *
+     * @return array<string, array{string, SortOrder}>
+     */
+    public static function tiedSorts(): array
+    {
+        $sets = [];
+        foreach (['customer', 'invoice_total', 'invoice_due_date', 'invoice_issue_date', 'invoice_status_new'] as $field) {
+            foreach ([SortOrder::ASC, SortOrder::DESC] as $order) {
+                $sets["$field {$order->value}"] = [$field, $order];
+            }
+        }
+        return $sets;
+    }
+
+    #[DataProvider('tiedSorts')]
+    public function test_ties_are_ordered_by_newest_invoice_first_and_paginate_consistently(string $field, SortOrder $order): void
+    {
+        // 7 invoices on 2 customers, identical on every column except customer and number
+        $alpha = $this->createCustomer('Alpha');
+        $bravo = $this->createCustomer('Bravo');
+        $customers = [];
+        foreach (range(1, 7) as $n) {
+            $customer = $n % 2 ? $alpha : $bravo;
+            $invoice = $this->createInvoice(InvoiceStatus::UNPAID, 10.00, $customer, '2026-03-10', '2026-03-01');
+            $customers[$invoice->invoice_id] = $customer->customer_name;
+        }
+
+        $query = fn() => (new InvoiceQuery())->sortBy($field, $order);
+
+        // expected: by the sorted value (customer name only for the customer sort), then newest invoice first
+        $expected = array_keys($customers);
+        usort($expected, function (int $x, int $y) use ($field, $order, $customers) {
+            if ($field === 'customer' && $customers[$x] !== $customers[$y]) {
+                $byName = strcmp($customers[$x], $customers[$y]);
+                return $order === SortOrder::ASC ? $byName : -$byName;
+            }
+            return $y <=> $x;
+        });
+
+        $this->assertSame($expected, $this->sortedIds($query()), "$field {$order->value} full list");
+
+        // paging through 4 pages of 2 returns the same sequence, nothing repeated or skipped
+        $paged = [];
+        foreach ([1, 2, 3, 4] as $page) {
+            $this->app['request']->merge(['page' => $page]);
+            $paged = array_merge($paged, $this->sortedIds($query(), 2));
+        }
+
+        $this->assertSame($expected, $paged, "$field {$order->value} paged");
+        $this->assertCount(7, array_unique($paged));
     }
 
     // ====

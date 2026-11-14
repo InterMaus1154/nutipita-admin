@@ -6,6 +6,7 @@ use App\Domain\Invoice\Invoice;
 use App\Domain\Invoice\InvoiceQuery;
 use App\Domain\Invoice\InvoiceRepository;
 use App\Domain\Invoice\InvoiceStatus;
+use App\Helpers\SortOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -76,12 +77,29 @@ class InvoiceEloquentRepository implements InvoiceRepository
             $builder->where('invoices.invoice_due_date', '<=', $query->invoiceDueTo);
         }
 
-        if ($query->hasCustomerSort) {
-            $builder->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
-                ->orderBy('customers.customer_name', $query->sortOrder->value);
+        if (isset($query->sortField)) {
+            if (array_key_exists($query->sortField, $this->customSorts())) {
+                $builder = $this->customSorts()[$query->sortField]($builder, $query->sortOrder);
+            } else {
+                $builder->orderBy($query->sortField, $query->sortOrder->value);
+            }
+
+            $builder->orderBy('invoices.invoice_id', SortOrder::DESC->value);
         }
 
         return $builder;
+    }
+
+    /**
+     * @return array<string, \Closure(Builder, SortOrder): Builder>
+     */
+    private function customSorts(): array
+    {
+        return [
+            'customer' => fn(Builder $builder, SortOrder $order): Builder => $builder
+                ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
+                ->orderBy('customers.customer_name', $order->value),
+        ];
     }
 
     public function paginate(int $perPage = 15, ?InvoiceQuery $query = null): LengthAwarePaginator
