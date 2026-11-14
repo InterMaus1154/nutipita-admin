@@ -7,6 +7,7 @@ use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,11 @@ class Order extends Model
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'order_id', 'order_id');
+    }
+
+    public function invoices(): BelongsToMany
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_orders', 'order_id', 'invoice_id', 'order_id', 'invoice_id');
     }
 
     /*

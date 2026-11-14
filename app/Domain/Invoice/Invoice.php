@@ -9,6 +9,8 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class Invoice extends Model
@@ -38,6 +40,11 @@ class Invoice extends Model
     public function products()
     {
         return $this->hasMany(InvoiceProduct::class, 'invoice_id', 'invoice_id');
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class, 'invoice_orders', 'invoice_id', 'order_id', 'invoice_id', 'order_id');
     }
 
     public function creditNote()
