@@ -146,4 +146,9 @@ class Order extends Model
         return $query->where('customer_id', $id);
     }
 
+    public function getId(): int
+    {
+        return $this->getAttribute('order_id');
+    }
+
 }
