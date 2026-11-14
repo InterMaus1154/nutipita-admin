@@ -17,7 +17,8 @@
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
             </x-ui.mobile-card-dropdown-link>
-            <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', compact('invoice'))}}">Download PDF
+            <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoiceId' => $invoice->getId()])}}">
+                Download PDF
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
                 Summary

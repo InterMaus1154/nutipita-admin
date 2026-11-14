@@ -105,13 +105,20 @@ class InvoiceController extends Controller
     /*
      * Download a PDF from an invoice
      */
-    public function download(Invoice|int $invoice)
+    public function download(Invoice|int $invoiceId)
     {
-        if(is_int($invoice)){
-            $invoice = Invoice::find($invoice);
+        $invoice = Invoice::find($invoiceId);
+        if (is_null($invoice)) {
+            abort(404);
         }
+
         $filename = 'INV-' . $invoice->invoice_number . 'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
+
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
         return response()->download($path, 'INV-' . $invoice->invoice_number . '.pdf', [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => "attachment; filename=$filename"
@@ -141,7 +148,7 @@ class InvoiceController extends Controller
         $customer = $invoice->customer;
         $products = $invoice->products;
 
-        $documentName = sprintf('%s-Invoice-%s-summary.pdf',$customer->getName(), $invoice->getInvoiceNumber());
+        $documentName = sprintf('%s-Invoice-%s-summary.pdf', $customer->getName(), $invoice->getInvoiceNumber());
 
         return $this->pdf->loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->download($documentName);
     }

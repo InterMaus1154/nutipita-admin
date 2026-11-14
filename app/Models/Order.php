@@ -151,4 +151,14 @@ class Order extends Model
         return $this->getAttribute('order_id');
     }
 
+    public function hasInvoice(): bool
+    {
+        return ! is_null($this->invoice) || $this->invoices->isNotEmpty();
+    }
+
+    public function getInvoiceId(): ?int
+    {
+        return $this->invoice?->getId() ?? $this->invoices->first()?->getId();
+    }
+
 }
