@@ -2,8 +2,8 @@
 
 namespace App\DataTransferObjects;
 
+use App\Domain\Invoice\Entities\Invoice;
 use App\Helpers\ModelResolver;
-use App\Domain\Invoice\Invoice;
 use App\Models\Product;
 
 /**

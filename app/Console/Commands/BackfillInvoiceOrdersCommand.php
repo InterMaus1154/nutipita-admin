@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\Entities\Invoice;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;

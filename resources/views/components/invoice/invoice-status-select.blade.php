@@ -1,9 +1,9 @@
-@use(App\Domain\Invoice\InvoiceStatus)
+@use(App\Domain\Invoice\Enums\InvoiceStatus)
 @props(['invoice'])
 <div class="cursor-pointer">
     @php
         /**
-        * @var \App\Domain\Invoice\Invoice $invoice
+        * @var \App\Domain\Invoice\Entities\Invoice $invoice
          */
         $bgColor = $invoice->getInvoiceStatus()->backgroundColor();
         $shadowColor = $invoice->getInvoiceStatus()->shadowColor();

@@ -2,10 +2,10 @@
 
 namespace App\Infrastructure\Invoice;
 
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceQuery;
-use App\Domain\Invoice\InvoiceRepository;
-use App\Domain\Invoice\InvoiceStatus;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Querying\InvoiceQuery;
 use App\Helpers\SortOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -26,10 +26,7 @@ class InvoiceEloquentRepository implements InvoiceRepository
 
     public function findById(int $id): ?Invoice
     {
-        return $this->query()
-            ->where('invoice_id', $id)
-            ->with(['products', 'customer', 'products.product'])
-            ->first();
+        return $this->find(new InvoiceQuery()->id($id))->first();
     }
 
     public function commit(Invoice $invoice): Invoice
@@ -109,7 +106,9 @@ class InvoiceEloquentRepository implements InvoiceRepository
             return $builder;
         }
 
-        $builder->with($query->relationships);
+        $relationships = empty($query->relationships) ? ['customer', 'order', 'orders', 'products', 'products.product'] : $query->relationships;
+
+        $builder->with($relationships);
 
         if (!empty($query->columns)) {
             $builder->select($query->columns === ['*'] ? ['invoices.*'] : $query->columns);
@@ -163,5 +162,12 @@ class InvoiceEloquentRepository implements InvoiceRepository
     {
         return $this->filtered($query)
             ->count();
+    }
+
+    public function delete(int $id): bool
+    {
+        return $this->query()
+            ->where('invoice_id', $id)
+            ->delete();
     }
 }

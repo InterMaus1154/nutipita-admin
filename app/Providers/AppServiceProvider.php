@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Domain\Invoice\InvoiceRepository;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Order\OrderRepository;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
+use App\Infrastructure\Order\OrderEloquentRepository;
 use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\LazyLoadingViolationException;
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(InvoiceRepository::class, InvoiceEloquentRepository::class);
+        $this->app->bind(OrderRepository::class, OrderEloquentRepository::class);
     }
 
     /**

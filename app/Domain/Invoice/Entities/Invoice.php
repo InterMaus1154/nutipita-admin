@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Entities;
 
+use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class Invoice extends Model
@@ -111,6 +110,11 @@ class Invoice extends Model
         }
 
         return str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    }
+
+    public function getInvoicePath(): string
+    {
+        return $this->getAttribute('invoice_path');
     }
 
 }

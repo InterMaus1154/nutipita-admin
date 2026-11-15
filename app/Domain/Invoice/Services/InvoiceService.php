@@ -1,19 +1,26 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Services;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Exceptions\CannotDeleteInvoiceFileException;
+use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
+use App\Domain\Order\OrderRepository;
 use App\Enums\OrderStatus;
-use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceService
 {
+
+    public function __construct(private InvoiceRepository $invoices, private OrderRepository $orders, private ConnectionInterface $db)
+    {
+    }
 
     /**
      * @param InvoiceDto $invoiceDto
@@ -120,41 +127,41 @@ class InvoiceService
         ]);
     }
 
-    public function deleteInvoice(Invoice|int $invoice_): void
+    /**
+     * @param int $id
+     * @return void
+     * @throws \Throwable
+     */
+    public function delete(int $id): void
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
-
-        /** @var Invoice $invoice */
-        $invoice = resolveModel($invoice_, Invoice::class);
-
-        if (is_null($invoice)) {
-            session()->flash('Attempting to delete null invoice');
-            Log::error('Attempting to delete null invoice');
-            return;
-        }
-
-        DB::beginTransaction();
+        $this->db->beginTransaction();
         try {
-            if ($invoice->order) {
-                $invoice->order->update([
-                    'order_status' => OrderStatus::Y_CONFIRMED->name
-                ]);
-            } else {
-                Order::forInvoice($invoice)->markConfirmed();
+            $invoice = $this->invoices->findById($id);
+            if (is_null($invoice)) {
+                throw new InvoiceNotFoundException($id);
             }
 
-            $invoice->delete();
-            DB::commit();
-            Storage::disk('local')->delete($invoice->invoice_path);
-            session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at deleting invoice. Check logs for more info.');
-        }
+            $orderIds = $invoice->orders->pluck('order_id')->all();
 
+            $this->orders->updateStatusByIds($orderIds, OrderStatus::Y_CONFIRMED);
+            $this->invoices->delete($id);
+            $this->deleteInvoiceFile($invoice->getInvoicePath());
+            $this->db->commit();
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+            report($e);
+            throw $e;
+        }
+    }
+
+    private function deleteInvoiceFile(string $path): void
+    {
+        try {
+            Storage::disk('local')->delete($path);
+        } catch (\Throwable $e) {
+            $exception = new CannotDeleteInvoiceFileException($e->getMessage());
+            throw $exception;
+        }
     }
 
 }

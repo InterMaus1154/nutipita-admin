@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Querying;
 
 use App\Helpers\AbstractQuery;
 use App\Helpers\QueryCustomerId;

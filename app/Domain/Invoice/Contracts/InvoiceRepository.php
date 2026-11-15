@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Contracts;
 
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Querying\InvoiceQuery;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -45,4 +46,6 @@ interface InvoiceRepository
      * @return int
      */
     public function getInvoiceCount(?InvoiceQuery $query = null): int;
+
+    public function delete(int $id): bool;
 }

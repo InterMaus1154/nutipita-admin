@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Infrastructure\Invoice;
 
-use App\Domain\Invoice\InvoiceFilters;
-use App\Domain\Invoice\InvoiceQuery;
-use App\Domain\Invoice\InvoiceStatus;
+use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Querying\InvoiceFilters;
+use App\Domain\Invoice\Querying\InvoiceQuery;
 use App\Helpers\SortOrder;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Models\InvoiceProduct;
@@ -83,6 +83,83 @@ class InvoiceEloquentRepositoryTest extends TestCase
     public function test_find_by_id_returns_null_when_invoice_does_not_exist(): void
     {
         $this->assertNull($this->repository->findById(999999));
+    }
+
+    public function test_find_by_id_loads_the_orders_attached_through_the_pivot(): void
+    {
+        $invoice = $this->createInvoice();
+        $a = $this->createOrder($invoice->customer_id);
+        $b = $this->createOrder($invoice->customer_id);
+        $this->createOrder($invoice->customer_id); // not on the invoice
+        $invoice->orders()->attach([$a->order_id, $b->order_id]);
+
+        $found = $this->repository->findById($invoice->invoice_id);
+
+        $this->assertTrue($found->relationLoaded('orders'));
+        $this->assertEqualsCanonicalizing([$a->order_id, $b->order_id], $found->orders->pluck('order_id')->all());
+    }
+
+    public function test_find_by_id_does_not_return_other_invoices(): void
+    {
+        $wanted = $this->createInvoice();
+        $this->createInvoice();
+        $this->createInvoice();
+
+        $found = $this->repository->findById($wanted->invoice_id);
+
+        $this->assertSame($wanted->invoice_id, $found->invoice_id);
+    }
+
+    // ====
+    // delete
+    // ====
+
+    public function test_delete_removes_the_invoice_and_returns_true(): void
+    {
+        $invoice = $this->createInvoice();
+
+        $this->assertTrue($this->repository->delete($invoice->invoice_id));
+        $this->assertDatabaseMissing('invoices', ['invoice_id' => $invoice->invoice_id]);
+    }
+
+    public function test_delete_returns_false_when_the_invoice_does_not_exist(): void
+    {
+        $this->createInvoice();
+
+        $this->assertFalse($this->repository->delete(999999));
+        $this->assertDatabaseCount('invoices', 1);
+    }
+
+    public function test_delete_leaves_other_invoices_untouched(): void
+    {
+        $gone = $this->createInvoice();
+        $kept = $this->createInvoice();
+
+        $this->repository->delete($gone->invoice_id);
+
+        $this->assertDatabaseHas('invoices', ['invoice_id' => $kept->invoice_id]);
+        $this->assertDatabaseCount('invoices', 1);
+    }
+
+    public function test_delete_removes_the_pivot_rows_and_invoice_products_but_keeps_the_orders(): void
+    {
+        $invoice = $this->createInvoice();
+        $order = $this->createOrder($invoice->customer_id);
+        $invoice->orders()->attach($order->order_id);
+        $product = $this->createProduct();
+        InvoiceProduct::create([
+            'invoice_id' => $invoice->invoice_id,
+            'product_id' => $product->product_id,
+            'product_qty' => 3,
+            'product_unit_price' => 0.35,
+        ]);
+
+        $this->repository->delete($invoice->invoice_id);
+
+        $this->assertDatabaseMissing('invoice_orders', ['invoice_id' => $invoice->invoice_id]);
+        $this->assertDatabaseMissing('invoice_products', ['invoice_id' => $invoice->invoice_id]);
+        $this->assertDatabaseHas('orders', ['order_id' => $order->order_id]);
+        $this->assertDatabaseHas('products', ['product_id' => $product->product_id]);
     }
 
     // ====

@@ -4,9 +4,9 @@ namespace App\Livewire\Invoice;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
-use App\Domain\Invoice\DeliveryCharge;
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceService;
+use App\Domain\Invoice\Entities\DeliveryCharge;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Services\InvoiceService;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Enums;
 
 use Illuminate\Support\Str;
 

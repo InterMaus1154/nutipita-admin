@@ -1,4 +1,4 @@
-@use(App\Domain\Invoice\InvoiceStatus)
+@use(App\Domain\Invoice\Enums\InvoiceStatus)
 @php
     /** @var App\Domain\Invoice\ $invoice */
 @endphp
@@ -80,7 +80,8 @@
                         >
                             <flux:icon.trash class="!inline"/>
                         </flux:link>
-                        <flux:link class="cursor-pointer" href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
+                        <flux:link class="cursor-pointer"
+                                   href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
                             <flux:icon.document-chart-bar class="inline!"/>
                         </flux:link>
                     </x-table.data>

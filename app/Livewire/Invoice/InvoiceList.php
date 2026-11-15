@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Invoice;
 
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceFilters;
-use App\Domain\Invoice\InvoiceRepository;
-use App\Domain\Invoice\InvoiceStatus;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Querying\InvoiceFilters;
+use App\Domain\Invoice\Services\InvoiceService;
 use App\Enums\OrderStatus;
 use App\Helpers\SortOrder;
 use App\Models\Order;
 use App\Traits\HasSort;
 use Detection\MobileDetect;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +28,7 @@ class InvoiceList extends Component
     protected $paginationTheme = 'tailwind';
 
     private InvoiceRepository $invoices;
+    private InvoiceService $invoiceService;
 
     public array $filters = [
         'customer_id' => null
@@ -42,9 +43,10 @@ class InvoiceList extends Component
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
-    public function boot(InvoiceRepository $invoices): void
+    public function boot(InvoiceRepository $invoices, InvoiceService $invoiceService): void
     {
         $this->invoices = $invoices;
+        $this->invoiceService = $invoiceService;
     }
 
     public function updateInvoiceStatus(int $newValue, Invoice $invoice): void
@@ -120,49 +122,24 @@ class InvoiceList extends Component
         }
     }
 
-    public function delete(Invoice $invoice): void
+    public function delete(int $id): void
     {
         if (!auth()->check()) {
             abort(401);
         }
-        DB::beginTransaction();
-        try {
-            if ($invoice->order) {
-                $invoice->order->update([
-                    'order_status' => OrderStatus::Y_CONFIRMED->name
-                ]);
-            } else {
-                Order::forInvoice($invoice)->markConfirmed();
-            }
 
-            $invoice->delete();
-            DB::commit();
-            Storage::disk('local')->delete($invoice->invoice_path);
-            session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
+        try {
+            $this->invoiceService->delete($id);
+            session()->flash('success', "Invoice successfully deleted");
+        } catch (\Throwable $e) {
             session()->flash('error', 'Error at deleting invoice. Check logs for more info.');
         }
-
     }
 
     #[On('refresh')]
     public function refresh(): void
     {
 
-    }
-
-    public function customSorts(): array
-    {
-        return [
-            'customer' => function (Builder $query) {
-                $query
-                    ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
-                    ->orderBy('customers.customer_name', $this->sortDirection)
-                    ->select('invoices.*');
-            }
-        ];
     }
 
     public function render(): View

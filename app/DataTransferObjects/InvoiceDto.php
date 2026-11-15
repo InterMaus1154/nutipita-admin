@@ -2,15 +2,15 @@
 
 namespace App\DataTransferObjects;
 
-use App\Domain\Invoice\DeliveryCharge;
-use App\Domain\Invoice\InvoiceStatus;
+use App\Domain\Invoice\Entities\DeliveryCharge;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Helpers\Format;
 use App\Models\Customer;
-use App\Domain\Invoice\Invoice;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Carbon\Carbon;
-use App\Models\Order;
 
 /**
  * Data transfer object for invoice details

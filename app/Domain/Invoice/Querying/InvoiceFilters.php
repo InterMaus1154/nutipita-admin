@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Querying;
 
 use App\Helpers\AbstractFilters;
 
@@ -27,7 +27,7 @@ class InvoiceFilters extends AbstractFilters
             $query->invoiceDueTo($filters['invoice_to']);
         }
 
-        $query->relationships(['customer', 'orders', 'order']);
+        $query->relationships(['customer', 'orders', 'order', 'products', 'products.product']);
 
         return $query;
     }

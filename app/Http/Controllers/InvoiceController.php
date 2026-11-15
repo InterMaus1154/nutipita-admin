@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceRepository;
-use App\Domain\Invoice\InvoiceService;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Services\InvoiceService;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use Barryvdh\DomPDF\PDF;
