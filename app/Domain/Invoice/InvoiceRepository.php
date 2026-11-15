@@ -26,12 +26,6 @@ interface InvoiceRepository
     public function commit(Invoice $invoice): Invoice;
 
     /**
-     * @param InvoiceQuery|null $query
-     * @return Builder<Invoice>
-     */
-    public function usingQuery(?InvoiceQuery $query = null): Builder;
-
-    /**
      * @param int $perPage
      * @param InvoiceQuery|null $query
      * @return LengthAwarePaginator<int, Invoice>

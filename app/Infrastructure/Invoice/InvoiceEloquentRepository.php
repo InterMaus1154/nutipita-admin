@@ -54,16 +54,29 @@ class InvoiceEloquentRepository implements InvoiceRepository
         return Invoice::query();
     }
 
-    public function usingQuery(?InvoiceQuery $query = null): Builder
+    /**
+     * A query shaped for listing: filters plus the select list, eager loads and sorting
+     * @param InvoiceQuery|null $query
+     * @return Builder<Invoice>
+     */
+    private function usingQuery(?InvoiceQuery $query = null): Builder
+    {
+        return $this->shaped($this->filtered($query), $query);
+    }
+
+    /**
+     * Only the where clauses of the query. No select list, eager loads, joins or ordering,
+     * so aggregates and raw selects can be appended freely.
+     * @param InvoiceQuery|null $query
+     * @return Builder<Invoice>
+     */
+    private function filtered(?InvoiceQuery $query = null): Builder
     {
         $builder = $this->query();
 
         if (is_null($query)) {
             return $builder;
         }
-
-        $builder->with($query->relationships);
-        $builder->select($query->columns === ['*'] ? ['invoices.*'] : $query->columns);
 
         if (isset($query->id)) {
             $builder->where('invoices.invoice_id', $query->id);
@@ -79,6 +92,27 @@ class InvoiceEloquentRepository implements InvoiceRepository
 
         if (isset($query->invoiceDueTo)) {
             $builder->where('invoices.invoice_due_date', '<=', $query->invoiceDueTo);
+        }
+
+        return $builder;
+    }
+
+    /**
+     * Listing-only parts: eager loads, select list and sorting
+     * @param Builder<Invoice> $builder
+     * @param InvoiceQuery|null $query
+     * @return Builder<Invoice>
+     */
+    private function shaped(Builder $builder, ?InvoiceQuery $query = null): Builder
+    {
+        if (is_null($query)) {
+            return $builder;
+        }
+
+        $builder->with($query->relationships);
+
+        if (!empty($query->columns)) {
+            $builder->select($query->columns === ['*'] ? ['invoices.*'] : $query->columns);
         }
 
         if (isset($query->sortField)) {
@@ -100,9 +134,16 @@ class InvoiceEloquentRepository implements InvoiceRepository
     private function customSorts(): array
     {
         return [
-            'customer' => fn(Builder $builder, SortOrder $order): Builder => $builder
-                ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
-                ->orderBy('customers.customer_name', $order->value),
+            'customer' => function (Builder $builder, SortOrder $order): Builder {
+                // without explicit columns the join would return the customer's columns too and overwrite the invoice's
+                if (is_null($builder->getQuery()->columns)) {
+                    $builder->select('invoices.*');
+                }
+
+                return $builder
+                    ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
+                    ->orderBy('customers.customer_name', $order->value);
+            },
         ];
     }
 
@@ -114,13 +155,13 @@ class InvoiceEloquentRepository implements InvoiceRepository
 
     public function getInvoiceTotals(?InvoiceQuery $query = null): float
     {
-        return $this->usingQuery($query)
+        return $this->filtered($query)
             ->sum('invoices.invoice_total');
     }
 
     public function getInvoiceCount(?InvoiceQuery $query = null): int
     {
-        return $this->usingQuery($query)
+        return $this->filtered($query)
             ->count();
     }
 }

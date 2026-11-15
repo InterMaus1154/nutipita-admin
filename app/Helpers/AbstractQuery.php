@@ -14,7 +14,7 @@ abstract class AbstractQuery
     /**
      * @var string[]
      */
-    public array $columns = ['*'];
+    public array $columns = [];
 
     public function id(int $id): self
     {
@@ -36,7 +36,7 @@ abstract class AbstractQuery
      * @param string[] $columns
      * @return $this
      */
-    public function columns(array $columns = ['*']): self
+    public function columns(array $columns = []): self
     {
         $this->columns = $columns;
         return $this;
