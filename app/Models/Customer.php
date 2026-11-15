@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Domain\Invoice\Invoice;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Domain\Invoice\Entities\Invoice;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model

@@ -55,11 +55,11 @@
                 <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
                     <flux:icon.eye class="size-7"/>
                 </flux:link>
-                <flux:link href="{{route('invoices.download', compact('invoice'))}}">
+                <flux:link href="{{route('invoices.download', ['invoiceId' => $invoice->getId()])}}">
                     <flux:icon.arrow-down-tray class="size-7"/>
                 </flux:link>
                 <flux:link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
-                    <flux:icon.document-chart-bar class="size-7" />
+                    <flux:icon.document-chart-bar class="size-7"/>
                 </flux:link>
                 <flux:link class="cursor-pointer"
                            wire:click="deleteInvoice()"

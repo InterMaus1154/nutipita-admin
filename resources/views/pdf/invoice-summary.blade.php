@@ -1,6 +1,6 @@
-@php use App\Models\Order; @endphp
+@php @endphp
 @php
-    /** @var \App\Domain\Invoice\Invoice $invoice */
+    /** @var \App\Domain\Invoice\Entities\Invoice $invoice */
 @endphp
 <html>
 <head>

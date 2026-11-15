@@ -2,7 +2,7 @@
 <x-ui.mobile-card-skeleton>
     @php
         /**
-* @var \App\Domain\Invoice\Invoice $invoice
+* @var \App\Domain\Invoice\Entities\Invoice $invoice
  */
     @endphp
     <div class="grid grid-cols-[1fr_auto_1fr]">
@@ -17,12 +17,13 @@
         <x-ui.mobile-card-dropdown-menu class="justify-self-end">
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.view-inline', compact('invoice'))}}">View PDF
             </x-ui.mobile-card-dropdown-link>
-            <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', compact('invoice'))}}">Download PDF
+            <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoiceId' => $invoice->getId()])}}">
+                Download PDF
             </x-ui.mobile-card-dropdown-link>
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
                 Summary
             </x-ui.mobile-card-dropdown-link>
-            @if($invoice->getInvoiceStatus() === \App\Domain\Invoice\InvoiceStatus::UNPAID)
+            @if($invoice->getInvoiceStatus() === \App\Domain\Invoice\Enums\InvoiceStatus::UNPAID)
                 <x-ui.mobile-card-dropdown-link wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
                 </x-ui.mobile-card-dropdown-link>
             @else

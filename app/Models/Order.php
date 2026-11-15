@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Domain\Invoice\Invoice;
+use App\Domain\Invoice\Entities\Invoice;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,11 @@ class Order extends Model
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'order_id', 'order_id');
+    }
+
+    public function invoices(): BelongsToMany
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_orders', 'order_id', 'invoice_id', 'order_id', 'invoice_id');
     }
 
     /*
@@ -138,6 +144,21 @@ class Order extends Model
     {
         $id = $customer_id instanceof Customer ? $customer_id->customer_id : $customer_id;
         return $query->where('customer_id', $id);
+    }
+
+    public function getId(): int
+    {
+        return $this->getAttribute('order_id');
+    }
+
+    public function hasInvoice(): bool
+    {
+        return ! is_null($this->invoice) || $this->invoices->isNotEmpty();
+    }
+
+    public function getInvoiceId(): ?int
+    {
+        return $this->invoice?->getId() ?? $this->invoices->first()?->getId();
     }
 
 }

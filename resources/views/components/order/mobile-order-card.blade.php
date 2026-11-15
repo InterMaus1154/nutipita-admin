@@ -26,17 +26,17 @@
                                             @click="$dispatch('modal-open', {component: 'modal.order-edit', componentData: { order_id: {{$order->order_id}} } })">
                 Edit
             </x-ui.mobile-card-dropdown-link>
-            @unless($order->invoice_id)
+            @if(! $order->hasInvoice)
                 <x-ui.mobile-card-dropdown-link wire:confirm="Are you sure to generate this invoice?"
                                                 wire:click="createInvoice({{$order->order_id}})">Generate
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
             @else
-                <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoice' => $order->invoice_id])}}">
+                <x-ui.mobile-card-dropdown-link href="{{route('invoices.download', ['invoiceId' => $order->invoice_id])}}">
                     Download
                     Invoice
                 </x-ui.mobile-card-dropdown-link>
-            @endunless
+            @endif
             <x-ui.mobile-card-dropdown-link wire:click="deleteOrder({{$order->order_id}})"
                                             wire:confirm="Are you sure to delete order # {{$order->order_id}} ? This action cannot be undone!">
                 Delete

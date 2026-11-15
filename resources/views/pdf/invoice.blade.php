@@ -1,6 +1,6 @@
 @use(Illuminate\Support\Carbon)
 @php
-    /** @var \App\Domain\Invoice\Invoice $invoice */
+    /** @var \App\Domain\Invoice\Entities\Invoice $invoice */
 @endphp
 <head>
     <title>INV - {{$invoice->invoice_number}}</title>

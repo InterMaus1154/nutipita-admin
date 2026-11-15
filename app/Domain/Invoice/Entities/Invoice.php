@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Domain\Invoice;
+namespace App\Domain\Invoice\Entities;
 
+use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\InvoiceProduct;
 use App\Models\Order;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 
 class Invoice extends Model
@@ -38,6 +39,11 @@ class Invoice extends Model
     public function products()
     {
         return $this->hasMany(InvoiceProduct::class, 'invoice_id', 'invoice_id');
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class, 'invoice_orders', 'invoice_id', 'order_id', 'invoice_id', 'order_id');
     }
 
     public function creditNote()
@@ -104,6 +110,11 @@ class Invoice extends Model
         }
 
         return str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    }
+
+    public function getInvoicePath(): string
+    {
+        return $this->getAttribute('invoice_path');
     }
 
 }

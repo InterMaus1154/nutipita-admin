@@ -10,6 +10,7 @@ class OrderQueryBuilder
     public static function build(array $filters): Builder
     {
         $query = Order::query()
+            ->with(['invoices', 'invoice', 'customer', 'products'])
             ->when(!empty($filters['active_period']) && $filters['active_period'] === 'today', function (Builder $query) {
                 $query->where(function ($q) {
                     $q->where(function ($q2) {
