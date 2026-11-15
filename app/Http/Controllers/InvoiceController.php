@@ -115,7 +115,7 @@ class InvoiceController extends Controller
         $filename = 'INV-' . $invoice->invoice_number . 'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
 
-        if (!Storage::disk('local')->exists($path)) {
+        if (!Storage::disk('local')->exists($invoice->invoice_path)) {
             abort(404);
         }
 

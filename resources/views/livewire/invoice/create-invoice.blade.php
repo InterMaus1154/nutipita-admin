@@ -3,8 +3,11 @@
     <x-error/>
     <x-success/>
     @if(session()->has('invoice'))
+        @php
+            $id = session()->get('invoice')->getId();
+        @endphp
         <div class="flex gap-4">
-            <flux:link href="{{route('invoices.download', ['invoice' => session()->get('invoice')])}}">
+            <flux:link href="{{route('invoices.download', ['invoiceId' => $id])}}">
                 Download invoice
             </flux:link>
             <flux:link href="{{route('invoices.view-inline', ['invoice' => session()->get('invoice')])}}">View

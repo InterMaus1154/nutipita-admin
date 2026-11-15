@@ -65,7 +65,7 @@ class CreateInvoice extends Component
 
         // init that don't change throughout cycle
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
-        $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
+        $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->with('customPrices')->get();
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
@@ -292,7 +292,7 @@ class CreateInvoice extends Component
         // get products that appear in orders for the selected period
         $products = Product::query()
             ->whereHas('orders', $orderFilter)
-            ->with(['orders' => $orderFilter])
+            ->with(['orders' => $orderFilter, 'customPrices'])
             ->get();
 
         if ($products->isEmpty()) return Collection::empty();
@@ -321,6 +321,11 @@ class CreateInvoice extends Component
         $this->invoice_number = Invoice::getNextInvoiceNumber();
     }
 
+
+    public function hydrate(): void
+    {
+        $this->products->loadMissing('customPrices');
+    }
 
     // ====
     // End Helper methods for save()
