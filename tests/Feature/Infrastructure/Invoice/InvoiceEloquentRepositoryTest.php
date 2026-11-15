@@ -132,11 +132,11 @@ class InvoiceEloquentRepositoryTest extends TestCase
 
     public function test_find_filters_by_due_date_range_inclusive(): void
     {
-        $before = $this->createInvoice(dueDate: '2026-02-28');
+        $this->createInvoice(dueDate: '2026-02-28'); // before the range
         $first = $this->createInvoice(dueDate: '2026-03-01');
         $middle = $this->createInvoice(dueDate: '2026-03-15');
         $last = $this->createInvoice(dueDate: '2026-03-31');
-        $after = $this->createInvoice(dueDate: '2026-04-01');
+        $this->createInvoice(dueDate: '2026-04-01'); // after the range
 
         $found = $this->repository->find(
             (new InvoiceQuery())->invoiceDueFrom('2026-03-01')->invoiceDueTo('2026-03-31')
@@ -207,24 +207,23 @@ class InvoiceEloquentRepositoryTest extends TestCase
     }
 
     // ====
-    // usingQuery
-    // ====
-
-    public function test_using_query_without_a_query_returns_an_unfiltered_builder(): void
-    {
-        $this->createInvoice();
-        $this->createInvoice();
-
-        $this->assertSame(2, $this->repository->usingQuery()->count());
-    }
-
-    // ====
     // paginate
     // ====
 
+    public function test_paginate_without_a_query_returns_all_invoices_unfiltered(): void
+    {
+        $this->createInvoice();
+        $this->createInvoice();
+
+        $page = $this->repository->paginate();
+
+        $this->assertSame(2, $page->total());
+        $this->assertCount(2, $page->items());
+    }
+
     public function test_paginate_respects_per_page_and_reports_the_total(): void
     {
-        foreach (range(1, 5) as $ignored) {
+        for ($n = 0; $n < 5; $n++) {
             $this->createInvoice();
         }
 
@@ -241,12 +240,13 @@ class InvoiceEloquentRepositoryTest extends TestCase
         $this->createInvoice(customer: $this->createCustomer('Alpha'));
         $this->createInvoice(customer: $this->createCustomer('Bravo'));
 
-        $asc = $this->repository->paginate(10, (new InvoiceQuery())
-            ->relationships(['customer'])
-            ->sortBy('customer', SortOrder::ASC));
-        $desc = $this->repository->paginate(10, (new InvoiceQuery())
-            ->relationships(['customer'])
-            ->sortBy('customer', SortOrder::DESC));
+        $ascQuery = (new InvoiceQuery())->sortBy('customer', SortOrder::ASC);
+        $ascQuery->relationships(['customer']);
+        $descQuery = (new InvoiceQuery())->sortBy('customer', SortOrder::DESC);
+        $descQuery->relationships(['customer']);
+
+        $asc = $this->repository->paginate(10, $ascQuery);
+        $desc = $this->repository->paginate(10, $descQuery);
 
         $this->assertSame(['Alpha', 'Bravo', 'Charlie'], collect($asc->items())->map(fn($i) => $i->customer->customer_name)->all());
         $this->assertSame(['Charlie', 'Bravo', 'Alpha'], collect($desc->items())->map(fn($i) => $i->customer->customer_name)->all());

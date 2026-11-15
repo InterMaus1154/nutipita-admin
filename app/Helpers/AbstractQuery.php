@@ -16,7 +16,7 @@ abstract class AbstractQuery
      */
     public array $columns = [];
 
-    public function id(int $id): self
+    public function id(int $id): static
     {
         $this->id = $id;
         return $this;
@@ -26,7 +26,7 @@ abstract class AbstractQuery
      * @param string[] $relationships
      * @return self
      */
-    public function relationships(array $relationships): self
+    public function relationships(array $relationships): static
     {
         $this->relationships = $relationships;
         return $this;
@@ -36,7 +36,7 @@ abstract class AbstractQuery
      * @param string[] $columns
      * @return $this
      */
-    public function columns(array $columns = []): self
+    public function columns(array $columns = []): static
     {
         $this->columns = $columns;
         return $this;

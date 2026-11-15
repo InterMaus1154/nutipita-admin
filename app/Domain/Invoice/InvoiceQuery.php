@@ -8,7 +8,7 @@ use App\Helpers\QueryCustomerIdTrait;
 use App\Helpers\SortableQuery;
 use App\Helpers\SortableQueryTrait;
 
-class InvoiceQuery extends AbstractQuery implements QueryCustomerId, SortableQuery
+final class InvoiceQuery extends AbstractQuery implements QueryCustomerId, SortableQuery
 {
     use QueryCustomerIdTrait, SortableQueryTrait;
 

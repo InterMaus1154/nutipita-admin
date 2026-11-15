@@ -8,7 +8,7 @@ trait SortableQueryTrait
     public SortOrder $sortOrder = SortOrder::DESC;
 
 
-    public function sortBy(string $field, SortOrder $order = SortOrder::DESC): self
+    public function sortBy(string $field, SortOrder $order = SortOrder::DESC): static
     {
         $this->sortField = $field;
         $this->sortOrder = $order;

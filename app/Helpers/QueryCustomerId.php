@@ -4,5 +4,5 @@ namespace App\Helpers;
 
 interface QueryCustomerId
 {
-    public function customerId(int $customerId): self;
+    public function customerId(int $customerId): static;
 }
