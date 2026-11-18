@@ -1,6 +1,6 @@
 @props(['invoice'])
 @use(App\Domain\Invoice\Enums\InvoiceStatus)
-<x-ui.mobile-card-skeleton>
+<x-ui.mobile-card-skeleton {{$attributes}}>
     @php
         /**
 * @var \App\Domain\Invoice\Entities\Invoice $invoice
