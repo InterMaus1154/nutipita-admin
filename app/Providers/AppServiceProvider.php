@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
 use App\Domain\Order\OrderRepository;
+use App\Http\Middleware\AuthMiddleware;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Infrastructure\Order\OrderEloquentRepository;
 use Detection\MobileDetect;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Livewire\LivewireManager;
 use Psr\Log\LoggerInterface;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         DB::prohibitDestructiveCommands(app()->isProduction());
+
+        $this->app->make(LivewireManager::class)->addPersistentMiddleware([AuthMiddleware::class]);
 
         Model::preventLazyLoading();
 

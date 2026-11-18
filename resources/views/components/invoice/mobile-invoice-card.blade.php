@@ -1,4 +1,5 @@
 @props(['invoice'])
+@use(App\Domain\Invoice\Enums\InvoiceStatus)
 <x-ui.mobile-card-skeleton>
     @php
         /**
@@ -23,11 +24,14 @@
             <x-ui.mobile-card-dropdown-link href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
                 Summary
             </x-ui.mobile-card-dropdown-link>
-            @if($invoice->getInvoiceStatus() === \App\Domain\Invoice\Enums\InvoiceStatus::UNPAID)
-                <x-ui.mobile-card-dropdown-link wire:click="markPaid({{$invoice->invoice_id}})">Mark Paid
+            @if($invoice->getInvoiceStatus() === InvoiceStatus::UNPAID)
+                <x-ui.mobile-card-dropdown-link
+                    wire:click="updateInvoiceStatus({{InvoiceStatus::PAID}}, {{$invoice->getId()}})">Mark Paid
                 </x-ui.mobile-card-dropdown-link>
             @else
-                <x-ui.mobile-card-dropdown-link wire:click="markDue({{$invoice->invoice_id}})">Mark Unpaid
+                <x-ui.mobile-card-dropdown-link
+                    wire:click="updateInvoiceStatus({{InvoiceStatus::UNPAID}}, {{$invoice->getId()}})">
+                    Mark Unpaid
                 </x-ui.mobile-card-dropdown-link>
             @endif
             <x-ui.mobile-card-dropdown-link wire:click="delete({{$invoice->invoice_id}})"

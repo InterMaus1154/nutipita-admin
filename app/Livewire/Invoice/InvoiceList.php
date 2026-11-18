@@ -3,18 +3,13 @@
 namespace App\Livewire\Invoice;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
-use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Querying\InvoiceFilters;
 use App\Domain\Invoice\Services\InvoiceService;
-use App\Enums\OrderStatus;
 use App\Helpers\SortOrder;
-use App\Models\Order;
 use App\Traits\HasSort;
 use Detection\MobileDetect;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -49,27 +44,19 @@ class InvoiceList extends Component
         $this->invoiceService = $invoiceService;
     }
 
-    public function updateInvoiceStatus(int $newValue, Invoice $invoice): void
+    public function updateInvoiceStatus(int $newValue, int $invoiceId): void
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
-
-        DB::beginTransaction();
         try {
-            if ($newValue === InvoiceStatus::UNPAID->value) {
-                Order::forInvoice($invoice)->markUnpaid();
-            } else if ($newValue === InvoiceStatus::PAID->value) {
-                Order::forInvoice($invoice)->markPaid();
+            $status = InvoiceStatus::tryFrom($newValue);
+
+            if(is_null($status)) {
+                throw new CannotUpdateInvoiceStatusException("Invalid status value");
             }
 
-            $invoice->update([
-                'invoice_status_new' => $newValue
-            ]);
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
+            $this->invoiceService->updateStatus($invoiceId, $status);
+            session()->flash('success', 'Invoice updated');
+        } catch (CannotUpdateInvoiceStatusException $e) {
+            session()->flash('error', $e->getMessage());
         }
     }
 
@@ -80,54 +67,8 @@ class InvoiceList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
-    public function markPaid(Invoice $invoice): void
-    {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        DB::beginTransaction();
-        try {
-            $invoice->update([
-                'invoice_status_new' => InvoiceStatus::PAID->value,
-            ]);
-
-            Order::forInvoice($invoice)->markPaid();
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at updating invoice or orders');
-        }
-    }
-
-    public function markDue(Invoice $invoice): void
-    {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        DB::beginTransaction();
-        try {
-            $invoice->update([
-                'invoice_status_new' => InvoiceStatus::UNPAID->value,
-            ]);
-
-            Order::forInvoice($invoice)->markUnpaid();
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at updating invoice or orders');
-        }
-    }
-
     public function delete(int $id): void
     {
-        if (!auth()->check()) {
-            abort(401);
-        }
-
         try {
             $this->invoiceService->delete($id);
             session()->flash('success', "Invoice successfully deleted");

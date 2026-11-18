@@ -117,4 +117,12 @@ class Invoice extends Model
         return $this->getAttribute('invoice_path');
     }
 
+    /**
+     * @return array
+     */
+    public function getOrderIds(): array
+    {
+        return $this->orders->pluck('order_id')->all();
+    }
+
 }

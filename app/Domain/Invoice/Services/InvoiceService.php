@@ -6,7 +6,9 @@ use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Contracts\InvoiceRepository;
 use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Domain\Invoice\Exceptions\CannotDeleteInvoiceFileException;
+use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
 use App\Domain\Order\OrderRepository;
 use App\Enums\OrderStatus;
@@ -14,11 +16,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Psr\Log\LoggerInterface;
 
 class InvoiceService
 {
 
-    public function __construct(private InvoiceRepository $invoices, private OrderRepository $orders, private ConnectionInterface $db)
+    public function __construct(private InvoiceRepository $invoices, private OrderRepository $orders, private ConnectionInterface $db, private LoggerInterface $logger)
     {
     }
 
@@ -141,7 +144,7 @@ class InvoiceService
                 throw new InvoiceNotFoundException($id);
             }
 
-            $orderIds = $invoice->orders->pluck('order_id')->all();
+            $orderIds = $invoice->getOrderIds();
 
             $this->orders->updateStatusByIds($orderIds, OrderStatus::Y_CONFIRMED);
             $this->invoices->delete($id);
@@ -161,6 +164,49 @@ class InvoiceService
         } catch (\Throwable $e) {
             $exception = new CannotDeleteInvoiceFileException($e->getMessage());
             throw $exception;
+        }
+    }
+
+    /**
+     * Updates invoice status and the status of orders belonging to it
+     * @param int $invoiceId
+     * @param InvoiceStatus $status
+     * @return void
+     * @throws CannotUpdateInvoiceStatusException
+     */
+    public function updateStatus(int $invoiceId, InvoiceStatus $status): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $invoice = $this->invoices->findById($invoiceId);
+            if (is_null($invoice)) {
+                throw new InvoiceNotFoundException($invoiceId);
+            }
+
+            $orderIds = $invoice->getOrderIds();
+            $invoice->setInvoiceStatus($status);
+
+            $orderStatus = match ($status) {
+                InvoiceStatus::UNPAID, InvoiceStatus::LOSS => OrderStatus::O_DELIVERED_UNPAID,
+                InvoiceStatus::PAID => OrderStatus::G_PAID,
+                InvoiceStatus::CANCELLED => OrderStatus::Y_CONFIRMED,
+            };
+
+            $this->orders->updateStatusByIds($orderIds, $orderStatus);
+
+            $this->invoices->commit($invoice);
+            $this->db->commit();
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+
+            if ($e instanceof InvoiceNotFoundException) {
+                $message = sprintf("Couldn't update invoice status #%s as invoice not found", $invoiceId);
+                $this->logger->error($message);
+            } else {
+                $message = sprintf("Couldn't update invoice status #%s", $invoiceId);
+                $this->logger->error($message, ['e' => $e->getMessage()]);
+            }
+            throw new CannotUpdateInvoiceStatusException($message, $e);
         }
     }
 

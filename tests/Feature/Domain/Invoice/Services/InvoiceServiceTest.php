@@ -2,10 +2,17 @@
 
 namespace Tests\Feature\Domain\Invoice\Services;
 
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
 use App\Domain\Invoice\Services\InvoiceService;
 use App\Enums\OrderStatus;
+use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Models\CreditNote;
+use Illuminate\Support\Facades\DB;
+use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Exceptions;
@@ -190,5 +197,131 @@ class InvoiceServiceTest extends TestCase
         $this->assertDatabaseHas('invoice_orders', ['invoice_id' => $invoice->invoice_id, 'order_id' => $order->order_id]);
         $this->assertSame('G_PAID', $this->storedOrderStatus($order), 'the order status update must be rolled back');
         Storage::disk('local')->assertExists($invoice->invoice_path);
+    }
+
+    // ====
+    // updateStatus
+    // ====
+
+    private function storedInvoiceStatus(int $invoiceId): int
+    {
+        return (int)DB::table('invoices')->where('invoice_id', $invoiceId)->value('invoice_status_new');
+    }
+
+    /**
+     * @return array<string, array{InvoiceStatus, OrderStatus}>
+     */
+    public static function statusToOrderStatusProvider(): array
+    {
+        return [
+            'paid' => [InvoiceStatus::PAID, OrderStatus::G_PAID],
+            'unpaid' => [InvoiceStatus::UNPAID, OrderStatus::O_DELIVERED_UNPAID],
+            'loss' => [InvoiceStatus::LOSS, OrderStatus::O_DELIVERED_UNPAID],
+            'cancelled' => [InvoiceStatus::CANCELLED, OrderStatus::Y_CONFIRMED],
+        ];
+    }
+
+    #[DataProvider('statusToOrderStatusProvider')]
+    public function test_update_status_updates_the_invoice_and_maps_the_order_status(InvoiceStatus $status, OrderStatus $expectedOrderStatus): void
+    {
+        // start from a status different from the expected one so every case is a real change
+        $startStatus = $expectedOrderStatus === OrderStatus::G_PAID ? OrderStatus::Y_CONFIRMED : OrderStatus::G_PAID;
+        $invoice = $this->createInvoice($status === InvoiceStatus::PAID ? InvoiceStatus::UNPAID : InvoiceStatus::PAID);
+        $first = $this->createOrder($invoice->customer_id, $startStatus);
+        $second = $this->createOrder($invoice->customer_id, $startStatus);
+        $invoice->orders()->attach([$first->order_id, $second->order_id]);
+
+        $this->service->updateStatus($invoice->invoice_id, $status);
+
+        $this->assertSame($status->value, $this->storedInvoiceStatus($invoice->invoice_id));
+        $this->assertSame($expectedOrderStatus->name, $this->storedOrderStatus($first));
+        $this->assertSame($expectedOrderStatus->name, $this->storedOrderStatus($second));
+    }
+
+    public function test_update_status_does_not_touch_orders_that_are_not_on_the_invoice(): void
+    {
+        $invoice = $this->createInvoice(InvoiceStatus::UNPAID);
+        $onInvoice = $this->createOrder($invoice->customer_id, OrderStatus::O_DELIVERED_UNPAID);
+        $sameCustomerOther = $this->createOrder($invoice->customer_id, OrderStatus::Y_CONFIRMED);
+        $otherCustomer = $this->createOrder(status: OrderStatus::Y_CONFIRMED);
+        $invoice->orders()->attach($onInvoice->order_id);
+
+        $this->service->updateStatus($invoice->invoice_id, InvoiceStatus::PAID);
+
+        $this->assertSame('Y_CONFIRMED', $this->storedOrderStatus($sameCustomerOther));
+        $this->assertSame('Y_CONFIRMED', $this->storedOrderStatus($otherCustomer));
+    }
+
+    public function test_update_status_does_not_touch_other_invoices(): void
+    {
+        $invoice = $this->createInvoice(InvoiceStatus::UNPAID);
+        $other = $this->createInvoice(InvoiceStatus::UNPAID);
+        $otherOrder = $this->createOrder($other->customer_id, OrderStatus::O_DELIVERED_UNPAID);
+        $other->orders()->attach($otherOrder->order_id);
+
+        $this->service->updateStatus($invoice->invoice_id, InvoiceStatus::PAID);
+
+        $this->assertSame(InvoiceStatus::UNPAID->value, $this->storedInvoiceStatus($other->invoice_id));
+        $this->assertSame('O_DELIVERED_UNPAID', $this->storedOrderStatus($otherOrder));
+    }
+
+    public function test_update_status_works_for_an_invoice_without_orders(): void
+    {
+        $invoice = $this->createInvoice(InvoiceStatus::UNPAID);
+
+        $this->service->updateStatus($invoice->invoice_id, InvoiceStatus::PAID);
+
+        $this->assertSame(InvoiceStatus::PAID->value, $this->storedInvoiceStatus($invoice->invoice_id));
+    }
+
+    public function test_update_status_throws_cannot_update_for_an_unknown_id_and_keeps_the_cause(): void
+    {
+        try {
+            $this->service->updateStatus(999999, InvoiceStatus::PAID);
+            $this->fail('Expected CannotUpdateInvoiceStatusException');
+        } catch (CannotUpdateInvoiceStatusException $e) {
+            $this->assertStringContainsString('999999', $e->getMessage());
+            $this->assertInstanceOf(InvoiceNotFoundException::class, $e->getPrevious());
+        }
+    }
+
+    public function test_update_status_of_an_unknown_id_changes_nothing(): void
+    {
+        $invoice = $this->createInvoice(InvoiceStatus::UNPAID);
+        $order = $this->createOrder($invoice->customer_id, OrderStatus::O_DELIVERED_UNPAID);
+        $invoice->orders()->attach($order->order_id);
+
+        try {
+            $this->service->updateStatus(999999, InvoiceStatus::PAID);
+        } catch (CannotUpdateInvoiceStatusException) {
+        }
+
+        $this->assertSame(InvoiceStatus::UNPAID->value, $this->storedInvoiceStatus($invoice->invoice_id));
+        $this->assertSame('O_DELIVERED_UNPAID', $this->storedOrderStatus($order));
+    }
+
+    public function test_update_status_rolls_back_the_order_update_when_saving_the_invoice_fails(): void
+    {
+        $invoice = $this->createInvoice(InvoiceStatus::UNPAID);
+        $order = $this->createOrder($invoice->customer_id, OrderStatus::O_DELIVERED_UNPAID);
+        $invoice->orders()->attach($order->order_id);
+
+        // orders are updated first, then the commit of the invoice blows up
+        $failing = Mockery::mock(InvoiceEloquentRepository::class)->makePartial();
+        $failing->shouldReceive('commit')->once()->andThrow(new \RuntimeException('boom'));
+        $this->app->instance(InvoiceRepository::class, $failing);
+        $levelBefore = DB::transactionLevel();
+        $service = $this->app->make(InvoiceService::class);
+
+        try {
+            $service->updateStatus($invoice->invoice_id, InvoiceStatus::PAID);
+            $this->fail('Expected CannotUpdateInvoiceStatusException');
+        } catch (CannotUpdateInvoiceStatusException $e) {
+            $this->assertSame('boom', $e->getPrevious()->getMessage());
+        }
+
+        $this->assertSame(InvoiceStatus::UNPAID->value, $this->storedInvoiceStatus($invoice->invoice_id));
+        $this->assertSame('O_DELIVERED_UNPAID', $this->storedOrderStatus($order), 'the order status update must be rolled back');
+        $this->assertSame($levelBefore, DB::transactionLevel(), 'the transaction must be closed');
     }
 }
