@@ -19,9 +19,17 @@ class BackfillInvoiceOrdersCommand extends Command
     public function handle(): int
     {
         $invoiceCount = 0;
-        $rowCount = 0;
+
+        // invoices with an order_id belong to that single order, the legacy invoices.order_id is the exact link.
+        // They are handled here only and excluded from the date range match below
+        $rowCount = DB::table('invoice_orders')->insertOrIgnoreUsing(
+            ['invoice_id', 'order_id'],
+            DB::table('invoices')->whereNotNull('order_id')->select('invoice_id', 'order_id')
+        );
+        $singleOrderRows = $rowCount;
 
         Invoice::query()
+            ->whereNull('order_id')
             ->whereNotNull('invoice_from')
             ->whereNotNull('invoice_to')
             ->whereDoesntHave('orders')
@@ -38,7 +46,8 @@ class BackfillInvoiceOrdersCommand extends Command
                 }
             }, 'invoice_id');
 
-        $message = "Backfilled invoice_orders: {$rowCount} rows inserted for {$invoiceCount} invoices";
+        $message = "Backfilled invoice_orders: {$singleOrderRows} rows from invoices.order_id, "
+            . ($rowCount - $singleOrderRows) . " rows from date ranges for {$invoiceCount} invoices";
         $this->info($message);
         Log::info($message);
 
