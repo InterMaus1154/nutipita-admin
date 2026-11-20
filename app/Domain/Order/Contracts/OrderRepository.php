@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Domain\Order;
+namespace App\Domain\Order\Contracts;
 
 use App\Enums\OrderStatus;
+use App\Models\Order;
 
 interface OrderRepository
 {
@@ -12,4 +13,6 @@ interface OrderRepository
      * @return int
      */
     public function updateStatusByIds(array $ids, OrderStatus $status): int;
+
+    public function findById(int $id): ?Order;
 }

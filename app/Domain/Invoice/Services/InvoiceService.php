@@ -10,7 +10,8 @@ use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Domain\Invoice\Exceptions\CannotDeleteInvoiceFileException;
 use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
-use App\Domain\Order\OrderRepository;
+use App\Domain\Invoice\Strategies\AbstractCreateInvoiceStrategy;
+use App\Domain\Order\Contracts\OrderRepository;
 use App\Enums\OrderStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\ConnectionInterface;
@@ -210,4 +211,9 @@ class InvoiceService
         }
     }
 
+    public function createUsingStrategy(AbstractCreateInvoiceStrategy $strategy)
+    {
+        $data = $strategy->normalize();
+
+    }
 }

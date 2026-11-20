@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
@@ -13,9 +12,6 @@ use Illuminate\Support\Str;
 
 class Order extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderFactory> */
-    use HasFactory;
-
     protected $primaryKey = 'order_id';
     protected $guarded = [];
 
@@ -159,6 +155,17 @@ class Order extends Model
     public function getInvoiceId(): ?int
     {
         return $this->invoice?->getId() ?? $this->invoices->first()?->getId();
+    }
+
+    public function getCustomerId(): int
+    {
+        return $this->getAttribute('customer_id');
+    }
+
+    public function getDueDate(): Carbon
+    {
+        $due = $this->getAttribute('order_due_at');
+        return Carbon::parse($due);
     }
 
 }

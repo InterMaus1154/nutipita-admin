@@ -2,6 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Domain\Invoice\Services\InvoiceService;
+use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
+use App\Domain\Invoice\Strategies\CreateSingleInvoiceStrategy;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\LivewireHelpers\OrderListService;
@@ -53,6 +56,16 @@ class OrderList extends Component
     public bool $mobileHasMore = true;
     public bool $mobileLoading = false;
     public int $mobilePage = 1;
+
+    private InvoiceService $invoiceService;
+
+    private CreateInvoiceStrategyFactory $strategies;
+
+    public function boot(InvoiceService $invoiceService, CreateInvoiceStrategyFactory $strategyFactory): void
+    {
+        $this->invoiceService = $invoiceService;
+        $this->strategies = $strategyFactory;
+    }
 
     private function fetchMobileOrders(): void
     {
@@ -127,9 +140,7 @@ class OrderList extends Component
 
     public function createInvoice(int $orderId): void
     {
-        $this->redirect(route('invoices.create-single', [
-            'order' => $orderId
-        ]));
+        $this->invoiceService->createUsingStrategy($this->strategies->single($orderId));
     }
 
     public function mount(): void

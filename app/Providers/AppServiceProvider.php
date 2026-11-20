@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
-use App\Domain\Order\OrderRepository;
+use App\Domain\Order\Contracts\OrderRepository;
 use App\Http\Middleware\AuthMiddleware;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Infrastructure\Order\OrderEloquentRepository;

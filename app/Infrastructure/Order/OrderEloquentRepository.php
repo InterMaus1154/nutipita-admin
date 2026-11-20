@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Order;
 
-use App\Domain\Order\OrderRepository;
+use App\Domain\Order\Contracts\OrderRepository;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,5 +29,13 @@ class OrderEloquentRepository implements OrderRepository
     private function query(): Builder
     {
         return Order::query();
+    }
+
+    public function findById(int $id): ?Order
+    {
+        return $this->query()
+            ->where('order_id', $id)
+            ->with(['products', 'products.customPrices', 'invoice', 'invoices'])
+            ->first();
     }
 }
