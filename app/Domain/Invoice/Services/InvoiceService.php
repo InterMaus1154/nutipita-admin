@@ -7,11 +7,14 @@ use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Contracts\InvoiceRepository;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
 use App\Domain\Invoice\Exceptions\CannotDeleteInvoiceFileException;
 use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
+use App\Domain\Invoice\Exceptions\NoProductLineException;
 use App\Domain\Invoice\Strategies\AbstractCreateInvoiceStrategy;
 use App\Domain\Order\Contracts\OrderRepository;
+use App\Domain\Order\Exceptions\OrderAlreadyInvoicedException;
 use App\Enums\OrderStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\ConnectionInterface;
@@ -211,9 +214,24 @@ class InvoiceService
         }
     }
 
-    public function createUsingStrategy(AbstractCreateInvoiceStrategy $strategy)
+    /**
+     * @param AbstractCreateInvoiceStrategy $strategy
+     * @return void
+     */
+    public function createUsingStrategy(AbstractCreateInvoiceStrategy $strategy): void
     {
-        $data = $strategy->normalize();
+        $this->db->beginTransaction();
+        try {
+            $data = $strategy->normalize();
+
+            $invoice = Invoice::make();
+
+        } catch (OrderAlreadyInvoicedException|NoProductLineException $e) {
+            $this->db->rollBack();
+            $message = sprintf('[Create Invoice] Using strategy: %s failed with message: %s', $strategy->mode()->value, $e->getMessage());
+            $this->logger->error($message, ['strategy' => $strategy]);
+            throw new CannotCreateInvoiceException($e->getMessage(), $e);
+        }
 
     }
 }

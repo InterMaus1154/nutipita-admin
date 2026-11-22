@@ -24,6 +24,10 @@ final class CreateSingleInvoiceStrategy extends AbstractCreateInvoiceStrategy
         return CreateInvoiceMode::SINGLE;
     }
 
+    /**
+     * @return CreateInvoiceData
+     * @throws OrderNotFoundException
+     */
     public function makeCreateInvoiceData(): CreateInvoiceData
     {
         $order = $this->orders->findById($this->orderId);

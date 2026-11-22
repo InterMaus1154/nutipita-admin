@@ -21,7 +21,34 @@ class Invoice extends Model
         'invoice_status_new' => InvoiceStatus::class,
         'invoice_from' => 'date',
         'invoice_to' => 'date',
+        'invoice_issue_date' => 'date',
+        'invoice_due_date' => 'date',
     ];
+
+    public static function make(
+        int $customerId,
+        Carbon $dueDate,
+        Carbon $issueDate,
+        string $number,
+        float $total,
+        InvoiceStatus $status = InvoiceStatus::UNPAID,
+        ?DeliveryCharge $deliveryCharge = null): Invoice
+    {
+
+        $name = sprintf('INV-%s.pdf', $number);
+        $path = sprintf('invoices/%s', $name);
+
+        return new Invoice([
+            'customer_id' => $customerId,
+            'invoice_due_date' => $dueDate,
+            'invoice_issue_date' => $issueDate,
+            'invoice_number' => $number,
+            'invoice_delivery_charge' => is_null($deliveryCharge) ? null : $deliveryCharge->toDbString(),
+            'invoice_name' => $name,
+            'invoice_path' => $path,
+            'invoice_status_new' => $status,
+        ]);
+    }
 
     /*
      * Define relationships
