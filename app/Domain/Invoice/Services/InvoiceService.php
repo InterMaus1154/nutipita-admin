@@ -5,6 +5,7 @@ namespace App\Domain\Invoice\Services;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Data\InvoiceProductData;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
@@ -15,7 +16,9 @@ use App\Domain\Invoice\Exceptions\NoProductLineException;
 use App\Domain\Invoice\Strategies\AbstractCreateInvoiceStrategy;
 use App\Domain\Order\Contracts\OrderRepository;
 use App\Domain\Order\Exceptions\OrderAlreadyInvoicedException;
+use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Enums\OrderStatus;
+use App\Helpers\UserDisplayable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
@@ -216,22 +219,53 @@ class InvoiceService
 
     /**
      * @param AbstractCreateInvoiceStrategy $strategy
-     * @return void
+     * @return Invoice
      */
-    public function createUsingStrategy(AbstractCreateInvoiceStrategy $strategy): void
+    public function createRecordUsingStrategy(AbstractCreateInvoiceStrategy $strategy): Invoice
     {
         $this->db->beginTransaction();
         try {
             $data = $strategy->normalize();
 
-            $invoice = Invoice::make();
+            $total = 0;
+            foreach ($data->products as $product) {
+                $total += ($product->quantity * $product->unitPrice);
+            }
 
-        } catch (OrderAlreadyInvoicedException|NoProductLineException $e) {
+            if (!is_null($data->deliveryCharge)) {
+                $total += $data->deliveryCharge->getCalculated();
+            }
+
+            $invoice = Invoice::make(
+                customerId: $data->customerId,
+                dueDate: $data->dueDate,
+                issueDate: $data->issueDate,
+                number: $data->number,
+                total: $total,
+                from: $data->from,
+                to: $data->to,
+                deliveryCharge: $data->deliveryCharge);
+
+            $invoice = $this->invoices->commit($invoice);
+
+            $this->invoices->linkToOrders($invoice->getId(), $data->orderIds);
+            $this->invoices->linkToProducts($invoice->getId(), $data->products);
+
+            $this->orders->updateStatusByIds($data->orderIds, OrderStatus::O_DELIVERED_UNPAID);
+            $this->db->commit();
+
+            return $invoice;
+        } catch (\Throwable $e) {
             $this->db->rollBack();
             $message = sprintf('[Create Invoice] Using strategy: %s failed with message: %s', $strategy->mode()->value, $e->getMessage());
-            $this->logger->error($message, ['strategy' => $strategy]);
-            throw new CannotCreateInvoiceException($e->getMessage(), $e);
+            $userFriendlyMessage = 'There was an error generating invoice.';
+            if ($e instanceof UserDisplayable) {
+                $userFriendlyMessage = $userFriendlyMessage . ' ' . $e->getMessage();
+                $this->logger->info($message, ['exception' => $e, 'mode' => $strategy->mode()]);
+            } else {
+                $this->logger->error($message, ['exception' => $e, 'mode' => $strategy->mode()]);
+            }
+            throw new CannotCreateInvoiceException($userFriendlyMessage, previous: $e);
         }
-
     }
 }

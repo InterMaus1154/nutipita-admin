@@ -140,7 +140,7 @@ class OrderList extends Component
 
     public function createInvoice(int $orderId): void
     {
-        $this->invoiceService->createUsingStrategy($this->strategies->single($orderId));
+        $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
     }
 
     public function mount(): void

@@ -3,16 +3,22 @@
 namespace App\Infrastructure\Invoice;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Data\InvoiceProductData;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Enums\InvoiceStatus;
 use App\Domain\Invoice\Querying\InvoiceQuery;
 use App\Helpers\SortOrder;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class InvoiceEloquentRepository implements InvoiceRepository
 {
+
+    public function __construct(private ConnectionInterface $db)
+    {
+    }
 
     public function allUnpaidSum(): float
     {
@@ -169,5 +175,42 @@ class InvoiceEloquentRepository implements InvoiceRepository
         return $this->query()
             ->where('invoice_id', $id)
             ->delete();
+    }
+
+    /**
+     * @param int $invoiceId
+     * @param int[] $orderIds
+     * @return bool
+     */
+    public function linkToOrders(int $invoiceId, array $orderIds): bool
+    {
+        $mapped = collect($orderIds)
+            ->map(fn(int $orderId) => ['invoice_id' => $invoiceId, 'order_id' => $orderId])
+            ->all();
+
+        return $this->db
+            ->table('invoice_orders')
+            ->insert($mapped);
+    }
+
+    /**
+     * @param int $invoiceId
+     * @param InvoiceProductData[] $invoiceProductData
+     * @return bool
+     */
+    public function linkToProducts(int $invoiceId, array $invoiceProductData): bool
+    {
+        $mapped = collect($invoiceProductData)
+            ->map(fn(InvoiceProductData $data) => [
+                'invoice_id' => $invoiceId,
+                'product_id' => $data->productId,
+                'product_qty' => $data->quantity,
+                'product_unit_price' => $data->unitPrice,
+            ])
+            ->all();
+
+        return $this->db
+            ->table('invoice_products')
+            ->insert($mapped);
     }
 }

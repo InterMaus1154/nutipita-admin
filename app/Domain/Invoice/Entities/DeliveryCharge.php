@@ -63,6 +63,10 @@ class DeliveryCharge
         return $this->modifier ? (int)$this->modifier : 1;
     }
 
+    /**
+     * Calculated using the modifier
+     * @return float
+     */
     public function getCalculated(): float
     {
         if (is_null($this->getRawModifier())) {

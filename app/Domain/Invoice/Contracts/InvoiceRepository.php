@@ -3,6 +3,7 @@
 namespace App\Domain\Invoice\Contracts;
 
 
+use App\Domain\Invoice\Data\InvoiceProductData;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Querying\InvoiceQuery;
 use Illuminate\Database\Eloquent\Collection;
@@ -48,4 +49,18 @@ interface InvoiceRepository
     public function getInvoiceCount(?InvoiceQuery $query = null): int;
 
     public function delete(int $id): bool;
+
+    /**
+     * @param int $invoiceId
+     * @param int[] $orderIds
+     * @return bool
+     */
+    public function linkToOrders(int $invoiceId, array $orderIds): bool;
+
+    /**
+     * @param int $invoiceId
+     * @param InvoiceProductData[] $invoiceProductData
+     * @return bool
+     */
+    public function linkToProducts(int $invoiceId, array $invoiceProductData): bool;
 }

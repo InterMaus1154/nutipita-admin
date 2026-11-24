@@ -32,6 +32,8 @@ class Invoice extends Model
         string $number,
         float $total,
         InvoiceStatus $status = InvoiceStatus::UNPAID,
+        ?Carbon $from = null,
+        ?Carbon $to = null,
         ?DeliveryCharge $deliveryCharge = null): Invoice
     {
 
@@ -47,6 +49,9 @@ class Invoice extends Model
             'invoice_name' => $name,
             'invoice_path' => $path,
             'invoice_status_new' => $status,
+            'invoice_total' => $total,
+            'invoice_from' => $from,
+            'invoice_to' => $to,
         ]);
     }
 

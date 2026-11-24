@@ -2,9 +2,10 @@
 
 namespace App\Domain\Order\Exceptions;
 
+use App\Helpers\UserDisplayable;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
-class OrderAlreadyInvoicedException extends ConflictHttpException
+class OrderAlreadyInvoicedException extends ConflictHttpException implements UserDisplayable
 {
     public function __construct(int $orderId, string $invoiceNumber)
     {
