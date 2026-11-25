@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
 use App\Domain\Invoice\Services\InvoiceService;
 use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
 use App\Models\Order;
@@ -137,7 +138,19 @@ class OrderList extends Component
 
     public function createInvoice(int $orderId): void
     {
-        $invoice = $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
+        try {
+            $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
+            session()->flash('success', 'Invoice created');
+        } catch (CannotCreateInvoiceException $e) {
+            session()->flash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unknown error when generating invoice');
+            Log::error($e->getMessage(), ['exception' => $e]);
+        }
+
+        if ($this->isMobile) {
+            $this->refetchLoadedMobileOrders();
+        }
     }
 
     public function mount(): void
