@@ -48,9 +48,9 @@ class GeneratedPdf
     {
         $name = preg_replace('/\.pdf$/i', '', trim($this->filename)) ?? '';
         $name = preg_replace('/[\x00-\x1F\x7F\/\\\\:*?"<>|]+/u', '-', $name) ?? '';
-        $name = preg_replace('/\s+/u', ' ', $name) ?? '';
-        $name = preg_replace('/-{2,}/', '-', $name) ?? '';
-        $name = trim($name, " .-_");
+        $name = preg_replace('/\s+/u', '_', $name) ?? '';
+        $name = preg_replace('/[-_]{2,}/', '_', $name) ?? '';
+        $name = trim($name, ' .-_');
         $name = mb_substr($name, 0, 120);
 
         return ($name === '' ? 'document' : $name) . '.pdf';
