@@ -17,6 +17,7 @@ final readonly class CreateInvoiceData
      * @param array $orderIds
      * @param Carbon|null $from
      * @param Carbon|null $to
+     * @param float|null $credit
      */
     public function __construct(public int $customerId,
                                 public Carbon $issueDate,
@@ -27,6 +28,7 @@ final readonly class CreateInvoiceData
                                 public array $orderIds = [],
                                 public ?Carbon $from = null,
                                 public ?Carbon $to = null,
+                                public ?float $credit = null,
     )
     {
     }

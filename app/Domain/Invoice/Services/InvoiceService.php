@@ -244,7 +244,9 @@ class InvoiceService
                 total: $total,
                 from: $data->from,
                 to: $data->to,
-                deliveryCharge: $data->deliveryCharge);
+                deliveryCharge: $data->deliveryCharge,
+                credit: $data->credit,
+            );
 
             $invoice = $this->invoices->commit($invoice);
 

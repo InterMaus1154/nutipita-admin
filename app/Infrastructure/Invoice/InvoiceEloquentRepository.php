@@ -11,6 +11,7 @@ use App\Helpers\SortOrder;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class InvoiceEloquentRepository implements InvoiceRepository
@@ -114,7 +115,23 @@ class InvoiceEloquentRepository implements InvoiceRepository
 
         $relationships = empty($query->relationships) ? ['customer', 'order', 'orders', 'products', 'products.product'] : $query->relationships;
 
-        $builder->with($relationships);
+        $with = [];
+
+        foreach ($relationships as $relationship) {
+            if ($relationship === 'products') {
+                $with['products'] = fn(HasMany $builder) => $builder
+                    ->select('invoice_products.*')
+                    ->join('products', 'products.product_id', '=', 'invoice_products.product_id')
+                    ->orderByDesc('invoice_products.product_qty')
+                    ->orderBy('products.product_name')
+                    ->orderByDesc('products.product_weight_g')
+                    ->orderByDesc('invoice_products.product_unit_price');
+            } else {
+                $with[] = $relationship;
+            }
+        }
+
+        $builder->with($with);
 
         if (!empty($query->columns)) {
             $builder->select($query->columns === ['*'] ? ['invoices.*'] : $query->columns);

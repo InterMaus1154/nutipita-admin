@@ -26,15 +26,16 @@ class Invoice extends Model
     ];
 
     public static function make(
-        int $customerId,
-        Carbon $dueDate,
-        Carbon $issueDate,
-        string $number,
-        float $total,
-        InvoiceStatus $status = InvoiceStatus::UNPAID,
-        ?Carbon $from = null,
-        ?Carbon $to = null,
-        ?DeliveryCharge $deliveryCharge = null): Invoice
+        int             $customerId,
+        Carbon          $dueDate,
+        Carbon          $issueDate,
+        string          $number,
+        float           $total,
+        InvoiceStatus   $status = InvoiceStatus::UNPAID,
+        ?Carbon         $from = null,
+        ?Carbon         $to = null,
+        ?DeliveryCharge $deliveryCharge = null,
+        ?float          $credit = null): Invoice
     {
 
         $name = sprintf('INV-%s.pdf', $number);
@@ -52,6 +53,7 @@ class Invoice extends Model
             'invoice_total' => $total,
             'invoice_from' => $from,
             'invoice_to' => $to,
+            'invoice_credit' => $credit,
         ]);
     }
 
@@ -157,4 +159,29 @@ class Invoice extends Model
         return $this->orders->pluck('order_id')->all();
     }
 
+    public function getFilename(): string
+    {
+        return $this->getAttribute('invoice_name');
+    }
+
+    public function getCustomer(): Customer
+    {
+        return $this->customer;
+    }
+
+    public function hasCredit(): bool
+    {
+        $col = $this->getCredit();
+        return !is_null($col) && $col > 0;
+    }
+
+    public function getCredit(): ?float
+    {
+        return $this->getAttribute('invoice_credit');
+    }
+
+    public function getTotal(): InvoiceTotal
+    {
+        return new InvoiceTotal($this);
+    }
 }
