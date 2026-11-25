@@ -4,13 +4,10 @@ namespace App\Livewire;
 
 use App\Domain\Invoice\Services\InvoiceService;
 use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
-use App\Domain\Invoice\Strategies\CreateSingleInvoiceStrategy;
 use App\Models\Order;
-use App\Models\Product;
 use App\Services\LivewireHelpers\OrderListService;
 use App\Traits\HasSort;
 use Detection\MobileDetect;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -140,7 +137,7 @@ class OrderList extends Component
 
     public function createInvoice(int $orderId): void
     {
-        $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
+        $invoice = $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
     }
 
     public function mount(): void

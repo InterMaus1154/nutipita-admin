@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Events\InvoiceCreated;
 use App\Domain\Order\Contracts\OrderRepository;
+use App\Domain\Pdf\Listeners\InvoiceCreatedGeneratePdf;
+use App\Helpers\Dispatcher;
+use App\Helpers\DispatcherInterface;
 use App\Http\Middleware\AuthMiddleware;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Infrastructure\Order\OrderEloquentRepository;
@@ -26,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(InvoiceRepository::class, InvoiceEloquentRepository::class);
         $this->app->bind(OrderRepository::class, OrderEloquentRepository::class);
+        $this->app->singleton(DispatcherInterface::class, Dispatcher::class);
     }
 
     /**
@@ -73,5 +78,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('amountFormat', function ($expression) {
             return "<?php echo amountFormat($expression); ?>";
         });
+
+        $dispatcher = $this->app->make(DispatcherInterface::class);
+
+        $dispatcher->listen(InvoiceCreated::class, InvoiceCreatedGeneratePdf::class);
     }
 }

@@ -5,19 +5,17 @@ namespace App\Domain\Invoice\Services;
 use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Contracts\InvoiceRepository;
-use App\Domain\Invoice\Data\InvoiceProductData;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Events\InvoiceCreated;
 use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
 use App\Domain\Invoice\Exceptions\CannotDeleteInvoiceFileException;
 use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
-use App\Domain\Invoice\Exceptions\NoProductLineException;
 use App\Domain\Invoice\Strategies\AbstractCreateInvoiceStrategy;
 use App\Domain\Order\Contracts\OrderRepository;
-use App\Domain\Order\Exceptions\OrderAlreadyInvoicedException;
-use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Enums\OrderStatus;
+use App\Helpers\DispatcherInterface;
 use App\Helpers\UserDisplayable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\ConnectionInterface;
@@ -28,7 +26,7 @@ use Psr\Log\LoggerInterface;
 class InvoiceService
 {
 
-    public function __construct(private InvoiceRepository $invoices, private OrderRepository $orders, private ConnectionInterface $db, private LoggerInterface $logger)
+    public function __construct(private InvoiceRepository $invoices, private OrderRepository $orders, private ConnectionInterface $db, private LoggerInterface $logger, private DispatcherInterface $dispatcher)
     {
     }
 
@@ -255,6 +253,12 @@ class InvoiceService
 
             $this->orders->updateStatusByIds($data->orderIds, OrderStatus::O_DELIVERED_UNPAID);
             $this->db->commit();
+
+            try {
+                $this->dispatcher->dispatch(new InvoiceCreated($invoice));
+            }catch (\Throwable $e){
+                $this->logger->warning('[InvoiceService] Failed to dispatch InvoiceCreated: ' . $e->getMessage(), ['e' => $e]);
+            }
 
             return $invoice;
         } catch (\Throwable $e) {

@@ -595,14 +595,17 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame('0002', $b->invoice_number);
     }
 
-    public function test_create_does_not_log_anything_on_success(): void
+    public function test_create_only_logs_the_dispatched_event_on_success(): void
     {
         $logger = $this->recordLogs();
         $order = $this->orderWithLines();
 
         $this->service->createRecordUsingStrategy($this->singleStrategy($order->order_id));
 
-        $this->assertSame([], $logger->records);
+        // the event dispatcher logs one info line, and nothing else is logged: no warnings, no errors
+        $this->assertCount(1, $logger->records);
+        $this->assertSame('info', $logger->records[0]['level']);
+        $this->assertStringContainsString('InvoiceCreated Dispatched', $logger->records[0]['message']);
     }
 
     public function test_a_created_invoice_can_be_loaded_with_everything_the_pdf_needs(): void
