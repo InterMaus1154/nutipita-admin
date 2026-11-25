@@ -184,4 +184,14 @@ class Invoice extends Model
     {
         return new InvoiceTotal($this);
     }
+
+    public function getIssueDate(): Carbon
+    {
+        return $this->getAttribute('invoice_issue_date');
+    }
+
+    public function getDueDate(): Carbon
+    {
+        return $this->getAttribute('invoice_due_date');
+    }
 }
