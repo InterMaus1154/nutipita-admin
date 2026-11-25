@@ -46,16 +46,14 @@ class GeneratedPdf
 
     private function getFilename(): string
     {
-        $finalFilename = '';
-        if (str_ends_with($this->filename, '.pdf')) {
-            $finalFilename = $this->filename;
-        } else {
-            $finalFilename = sprintf('%s.pdf', $this->filename);
-        }
-        if ($finalFilename === '.pdf') {
-            return 'document.pdf';
-        }
-        return $finalFilename;
+        $name = preg_replace('/\.pdf$/i', '', trim($this->filename)) ?? '';
+        $name = preg_replace('/[\x00-\x1F\x7F\/\\\\:*?"<>|]+/u', '-', $name) ?? '';
+        $name = preg_replace('/\s+/u', ' ', $name) ?? '';
+        $name = preg_replace('/-{2,}/', '-', $name) ?? '';
+        $name = trim($name, " .-_");
+        $name = mb_substr($name, 0, 120);
+
+        return ($name === '' ? 'document' : $name) . '.pdf';
     }
 
 }
