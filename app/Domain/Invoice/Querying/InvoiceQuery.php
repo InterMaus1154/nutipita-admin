@@ -15,6 +15,7 @@ final class InvoiceQuery extends AbstractQuery implements QueryCustomerId, Sorta
     public string $invoiceDueFrom;
     public string $invoiceDueTo;
 
+    public string $invoiceNumber;
 
     public function invoiceDueFrom(string $value): self
     {
@@ -25,6 +26,12 @@ final class InvoiceQuery extends AbstractQuery implements QueryCustomerId, Sorta
     public function invoiceDueTo(string $value): self
     {
         $this->invoiceDueTo = $value;
+        return $this;
+    }
+
+    public function invoiceNumber(string $invoiceNumber): self
+    {
+        $this->invoiceNumber = $invoiceNumber;
         return $this;
     }
 }

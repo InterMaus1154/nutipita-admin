@@ -6,11 +6,14 @@ use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Entities\DeliveryCharge;
 use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Enums\CreateInvoiceMode;
 use App\Domain\Invoice\Services\InvoiceService;
+use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Traits\HasQuickDueFilter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +28,7 @@ class CreateInvoice extends Component
     public $customers;
     public $products;
 
-    // auto / manual
-    public string $formMode = "auto";
+    public CreateInvoiceMode $formMode = CreateInvoiceMode::AUTO;
 
     public $ordersAll = [];
 
@@ -50,13 +52,18 @@ class CreateInvoice extends Component
 
     public ?string $order_status = null;
 
-    /**
-     * Toggle form mode between manual and auto
-     * @return void
-     */
+    private InvoiceService $invoiceService;
+    private CreateInvoiceStrategyFactory $strategies;
+
+    public function boot(CreateInvoiceStrategyFactory $strategies, InvoiceService $invoiceService): void
+    {
+        $this->invoiceService = $invoiceService;
+        $this->strategies = $strategies;
+    }
+
     public function toggleMode(): void
     {
-        $this->formMode = $this->formMode === "auto" ? "manual" : "auto";
+        $this->formMode = $this->formMode === CreateInvoiceMode::AUTO ? CreateInvoiceMode::MANUAL : CreateInvoiceMode::AUTO;
     }
 
     public function mount(): void
@@ -97,7 +104,7 @@ class CreateInvoice extends Component
     public function calculateLiveInvoiceTotal(): void
     {
         $this->liveInvoiceTotal = "£----";
-        if ($this->formMode == 'auto') {
+        if ($this->formMode == CreateInvoiceMode::AUTO) {
             if (isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)) {
                 $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
                     ->where('customer_id', $this->customer_id)
@@ -152,9 +159,24 @@ class CreateInvoice extends Component
             'invoice_credit' => 'nullable|numeric|min:0'
         ]);
 
-
         DB::beginTransaction();
         try {
+
+            if ($this->formMode === CreateInvoiceMode::AUTO) {
+                $this->invoiceService->createRecordUsingStrategy($this->strategies->auto(
+                    customerId: $this->customer_id,
+                    dueDate: new Carbon($this->invoice_due_date),
+                    issueDate: new Carbon($this->invoice_issue_date),
+                    periodFrom: new Carbon($this->due_from),
+                    periodTo: new Carbon($this->due_to),
+                    invoiceNumber: $this->invoice_number,
+                    deliveryCharge: DeliveryCharge::fromString($this->invoice_delivery_charge),
+                    credit: $this->invoice_credit
+                ));
+            } else {
+                $this->invoiceService->createRecordUsingStrategy($this->strategies->manual());
+            }
+
 
             [$firstOrderDate, $lastOrderDate] = $this->resolveOrderDateRange();
 

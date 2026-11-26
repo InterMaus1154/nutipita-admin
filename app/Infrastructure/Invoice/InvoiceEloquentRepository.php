@@ -98,6 +98,10 @@ class InvoiceEloquentRepository implements InvoiceRepository
             $builder->where('invoices.invoice_due_date', '<=', $query->invoiceDueTo);
         }
 
+        if (isset($query->invoiceNumber)) {
+            $builder->where('invoices.invoice_number', $query->invoiceNumber);
+        }
+
         return $builder;
     }
 
