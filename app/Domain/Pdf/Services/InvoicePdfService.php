@@ -3,7 +3,6 @@
 namespace App\Domain\Pdf\Services;
 
 use App\Domain\Invoice\Contracts\InvoiceRepository;
-use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Exceptions\InvoiceNotFoundException;
 use App\Domain\Pdf\Entities\GeneratedPdf;
 use App\Domain\Pdf\Entities\InvoicePdfData;
@@ -11,12 +10,13 @@ use App\Domain\Pdf\Entities\InvoicePdfProductData;
 use App\Domain\Pdf\Exceptions\NoProductLinesForInvoicePdfException;
 use App\Domain\Pdf\Factories\PdfRendererFactory;
 use App\Models\InvoiceProduct;
+use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
 class InvoicePdfService extends AbstractPdfService
 {
-    public function __construct(PdfRendererFactory $pdfRendererFactory, private InvoiceRepository $invoices)
+    public function __construct(PdfRendererFactory $pdfRendererFactory, private InvoiceRepository $invoices, Filesystem $filesystem)
     {
-        parent::__construct($pdfRendererFactory);
+        parent::__construct($pdfRendererFactory, $filesystem);
     }
 
     public function forId(int $invoiceId): GeneratedPdf

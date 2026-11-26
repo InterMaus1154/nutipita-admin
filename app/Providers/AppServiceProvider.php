@@ -5,6 +5,10 @@ namespace App\Providers;
 use App\Domain\Invoice\Contracts\InvoiceRepository;
 use App\Domain\Invoice\Events\InvoiceCreated;
 use App\Domain\Order\Contracts\OrderRepository;
+use App\Domain\Pdf\Events\FileFailed;
+use App\Domain\Pdf\Events\FileSaved;
+use App\Domain\Pdf\Listeners\FileFailedListener;
+use App\Domain\Pdf\Listeners\FileSavedListener;
 use App\Domain\Pdf\Listeners\InvoiceCreatedGeneratePdf;
 use App\Helpers\Dispatcher;
 use App\Helpers\DispatcherInterface;
@@ -82,5 +86,7 @@ class AppServiceProvider extends ServiceProvider
         $dispatcher = $this->app->make(DispatcherInterface::class);
 
         $dispatcher->listen(InvoiceCreated::class, InvoiceCreatedGeneratePdf::class);
+        $dispatcher->listen(FileSaved::class, FileSavedListener::class);
+        $dispatcher->listen(FileFailed::class, FileFailedListener::class);
     }
 }

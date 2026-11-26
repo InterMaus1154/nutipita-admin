@@ -2,12 +2,15 @@
 
 namespace App\Domain\Pdf\Entities;
 
+use App\Domain\Pdf\Exceptions\CannotGeneratePdfException;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Filesystem\Factory as Filesystem;
+use Psr\Log\LoggerInterface;
 
 class GeneratedPdf
 {
-    public function __construct(private PDF $loadedPdf, private string $filename)
+    public function __construct(private PDF $loadedPdf, private string $filename, private Filesystem $filesystem)
     {
     }
 
@@ -27,9 +30,10 @@ class GeneratedPdf
      *
      * @param string $finalPath
      * @param bool $bindWithFilename - Whether to append the filename to the given path
-     * @return void
+     * @param string $disk
+     * @return string
      */
-    public function saveToLocal(string $finalPath, bool $bindWithFilename = false): void
+    public function saveToLocal(string $finalPath, bool $bindWithFilename = false, string $disk = 'local'): string
     {
         $filename = $this->getFilename();
         if ($bindWithFilename) {
@@ -41,7 +45,14 @@ class GeneratedPdf
         } else {
             $resolvedPath = $finalPath;
         }
-        $this->loadedPdf->save($resolvedPath, 'local');
+
+        try {
+            $output = $this->loadedPdf->output();
+            $this->filesystem->disk($disk)->put($resolvedPath, $output);
+            return $resolvedPath;
+        } catch (\Throwable $e) {
+            throw new CannotGeneratePdfException('Pdf generation failed', previous: $e);
+        }
     }
 
     private function getFilename(): string

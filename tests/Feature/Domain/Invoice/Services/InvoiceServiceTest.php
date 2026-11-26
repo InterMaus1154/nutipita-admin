@@ -49,6 +49,7 @@ class InvoiceServiceTest extends TestCase
         parent::setUp();
 
         Storage::fake('local');
+        Storage::fake('invoices');
         $this->service = $this->app->make(InvoiceService::class);
     }
 
@@ -595,17 +596,21 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame('0002', $b->invoice_number);
     }
 
-    public function test_create_only_logs_the_dispatched_event_on_success(): void
+    public function test_create_only_logs_info_messages_on_success(): void
     {
         $logger = $this->recordLogs();
         $order = $this->orderWithLines();
 
         $this->service->createRecordUsingStrategy($this->singleStrategy($order->order_id));
 
-        // the event dispatcher logs one info line, and nothing else is logged: no warnings, no errors
-        $this->assertCount(1, $logger->records);
-        $this->assertSame('info', $logger->records[0]['level']);
-        $this->assertStringContainsString('InvoiceCreated Dispatched', $logger->records[0]['message']);
+        // the whole chain runs: InvoiceCreated, the pdf is saved, FileSaved. Only info lines are logged, no warnings, no errors
+        $levels = array_unique(array_column($logger->records, 'level'));
+        $this->assertSame(['info'], array_values($levels));
+
+        $messages = implode("\n", array_column($logger->records, 'message'));
+        $this->assertStringContainsString('InvoiceCreated Dispatched', $messages);
+        $this->assertStringContainsString('FileSaved Dispatched', $messages);
+        $this->assertStringContainsString('New file saved to invoices/INV-0001.pdf', $messages);
     }
 
     public function test_a_created_invoice_can_be_loaded_with_everything_the_pdf_needs(): void

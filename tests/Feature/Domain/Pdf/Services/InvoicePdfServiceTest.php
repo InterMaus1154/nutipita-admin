@@ -37,6 +37,7 @@ class InvoicePdfServiceTest extends TestCase
         parent::setUp();
 
         Storage::fake('local');
+        Storage::fake('invoices');
         View::getFinder()->prependLocation(base_path('tests/Fixtures/views'));
         View::composer('pdf.invoice', function ($view) {
             $this->captured = $view->getData()['data'] ?? null;
