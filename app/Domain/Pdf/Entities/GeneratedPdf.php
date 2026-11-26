@@ -6,7 +6,6 @@ use App\Domain\Pdf\Exceptions\CannotGeneratePdfException;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
-use Psr\Log\LoggerInterface;
 
 class GeneratedPdf
 {

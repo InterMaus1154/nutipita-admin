@@ -2,8 +2,6 @@
 
 namespace App\Domain\Invoice\Exceptions;
 
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 class CannotDeleteInvoiceFileException extends \RuntimeException
 {
     public function __construct(int $id)

@@ -13,7 +13,4 @@ Route::get('/view-inline/{invoice}', 'viewInline')->name('invoices.view-inline')
 // create manual invoice form
 Route::get('/create', 'createManual')->name('invoices.create');
 
-// create single
-Route::get('/create-single/{order}', 'createSingleInvoice')->name('invoices.create-single');
-
 Route::get('/create-invoice-summary/{id}', 'createInvoiceSummary')->name('invoices.create-summary');

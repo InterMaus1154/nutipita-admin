@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Invoice;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Entities\DeliveryCharge;
 use App\Domain\Invoice\Entities\Invoice;
 use App\Domain\Invoice\Entities\ManualInvoiceProductData;
@@ -12,12 +10,9 @@ use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
 use App\Domain\Invoice\Services\InvoiceService;
 use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
 use App\Models\Customer;
-use App\Models\Order;
 use App\Models\Product;
 use App\Traits\HasQuickDueFilter;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -108,7 +103,7 @@ class CreateInvoice extends Component
         $this->liveInvoiceTotal = "£----";
         if ($this->formMode == CreateInvoiceMode::AUTO) {
             if (isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)) {
-                $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
+                $this->liveInvoiceTotal = moneyFormat((float)DB::table('orders')
                     ->where('customer_id', $this->customer_id)
                     ->whereDate('order_due_at', '>=', $this->due_from)
                     ->whereDate('order_due_at', '<=', $this->due_to)

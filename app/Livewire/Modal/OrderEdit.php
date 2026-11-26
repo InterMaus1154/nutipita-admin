@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Modal;
 
-use App\Livewire\OrderList;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\OrderService;
