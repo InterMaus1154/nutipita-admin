@@ -84,6 +84,10 @@
                     <flux:icon.trash class="size-7"/>
                 </flux:link>
             </div>
+            <div class="my-2">
+                <x-success />
+                <x-error />
+            </div>
         </x-ui.detail-popup-card>
     @endif
 </div>
