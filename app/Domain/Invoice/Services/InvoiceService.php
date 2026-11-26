@@ -248,7 +248,10 @@ class InvoiceService
 
             $invoice = $this->invoices->commit($invoice);
 
-            $this->invoices->linkToOrders($invoice->getId(), $data->orderIds);
+            if(!empty($data->orderIds)) {
+                $this->invoices->linkToOrders($invoice->getId(), $data->orderIds);
+            }
+
             $this->invoices->linkToProducts($invoice->getId(), $data->products);
 
             $this->orders->updateStatusByIds($data->orderIds, OrderStatus::O_DELIVERED_UNPAID);

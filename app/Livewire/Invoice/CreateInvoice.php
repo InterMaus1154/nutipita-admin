@@ -6,6 +6,7 @@ use App\DataTransferObjects\InvoiceDto;
 use App\DataTransferObjects\InvoiceProductDto;
 use App\Domain\Invoice\Entities\DeliveryCharge;
 use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Entities\ManualInvoiceProductData;
 use App\Domain\Invoice\Enums\CreateInvoiceMode;
 use App\Domain\Invoice\Services\InvoiceService;
 use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
@@ -174,7 +175,24 @@ class CreateInvoice extends Component
                     credit: $this->invoice_credit
                 ));
             } else {
-                $this->invoiceService->createRecordUsingStrategy($this->strategies->manual());
+
+                $products = [];
+                foreach ($this->invoiceProducts as $id => $qty) {
+                    $products[] = new ManualInvoiceProductData(productId: $id, qty: $qty);
+                }
+
+                $this->invoiceService->createRecordUsingStrategy($this->strategies->manual(
+                    customerId: $this->customer_id,
+                    dueDate: new Carbon($this->invoice_due_date),
+                    issueDate: new Carbon($this->invoice_issue_date),
+                    periodFrom: new Carbon($this->due_from),
+                    periodTo: new Carbon($this->due_to),
+                    invoiceNumber: $this->invoice_number,
+                    products: $products,
+                    attachOrders: true,
+                    deliveryCharge: DeliveryCharge::fromString($this->invoice_delivery_charge),
+                    credit: $this->invoice_credit,
+                ));
             }
 
 

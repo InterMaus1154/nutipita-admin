@@ -10,11 +10,13 @@ use App\Domain\Pdf\Events\FileSaved;
 use App\Domain\Pdf\Listeners\FileFailedListener;
 use App\Domain\Pdf\Listeners\FileSavedListener;
 use App\Domain\Pdf\Listeners\InvoiceCreatedGeneratePdf;
+use App\Domain\Product\Contracts\ProductRepository;
 use App\Helpers\Dispatcher;
 use App\Helpers\DispatcherInterface;
 use App\Http\Middleware\AuthMiddleware;
 use App\Infrastructure\Invoice\InvoiceEloquentRepository;
 use App\Infrastructure\Order\OrderEloquentRepository;
+use App\Infrastructure\Product\ProductEloquentRepository;
 use Detection\MobileDetect;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\LazyLoadingViolationException;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(InvoiceRepository::class, InvoiceEloquentRepository::class);
         $this->app->bind(OrderRepository::class, OrderEloquentRepository::class);
         $this->app->singleton(DispatcherInterface::class, Dispatcher::class);
+        $this->app->bind(ProductRepository::class, ProductEloquentRepository::class);
     }
 
     /**
