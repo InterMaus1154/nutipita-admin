@@ -1,6 +1,9 @@
-@php @endphp
+@use(App\Domain\Pdf\Enums\InvoiceSummaryDisplayMode)
 @php
-    /** @var \App\Domain\Invoice\Entities\Invoice $invoice */
+    /** @var \App\Domain\Pdf\Entities\InvoiceSummaryData $data */
+    $invoice = $data->invoice;
+    $renderOrders = $data->displayMode === InvoiceSummaryDisplayMode::RENDER_ORDERS;
+    $renderProducts = $data->displayMode === InvoiceSummaryDisplayMode::RENDER_PRODUCTS;
 @endphp
 <html>
 <head>
