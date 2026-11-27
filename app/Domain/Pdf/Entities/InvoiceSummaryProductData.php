@@ -6,7 +6,7 @@ use App\Models\Product;
 
 class InvoiceSummaryProductData
 {
-    public function __construct(Product $product, int $qty, float $unitPrice, float $total)
+    public function __construct(public Product $product, public int $qty, public float $unitPrice, public float $total)
     {
     }
 }

@@ -4,6 +4,21 @@
     $invoice = $data->invoice;
     $renderOrders = $data->displayMode === InvoiceSummaryDisplayMode::RENDER_ORDERS;
     $renderProducts = $data->displayMode === InvoiceSummaryDisplayMode::RENDER_PRODUCTS;
+    $customer = $invoice->getCustomer();
+
+    // orders mode: one column per product that appears in any of the orders, in name order
+    $productColumns = collect();
+    if ($renderOrders) {
+        $productColumns = collect($data->orderData)
+            ->flatMap(fn($order) => $order->products)
+            ->map(fn($line) => $line->product)
+            ->unique('product_id')
+            ->sortBy(fn($product) => [strtolower($product->getName()), $product->getWeight() ?? 0])
+            ->values();
+    }
+
+    // the label cells of the footer span every column except the last (the amount)
+    $footerSpan = $renderOrders ? $productColumns->count() : 4;
 @endphp
 <html>
 <head>
@@ -54,40 +69,88 @@
 </header>
 <table style="width: 100%; margin-bottom: 1rem">
     <thead>
-    <tr>
-        <th>#</th>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Unit Price</th>
-        <th>Item Total</th>
-    </tr>
+    @if($renderOrders)
+        <tr>
+            <th>Order Due Date</th>
+            @foreach($productColumns as $column)
+                <th>{{$column->getName()}}@if($column->hasWeight()) {{$column->getWeight()}}g @endif</th>
+            @endforeach
+        </tr>
+    @else
+        <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Item Total</th>
+        </tr>
+    @endif
     </thead>
     <tbody>
-    @foreach($products as $index => $invoiceProduct)
-        <tr>
-            <td style="text-align: center">{{$index+1}}</td>
-            <td style="text-align: center">{{$invoiceProduct->product->getName()}} {{$invoiceProduct->product->getWeight()}}
-                g
-            </td>
-            <td style="text-align: center">{{numberFormat($invoiceProduct->product_qty, 0)}}</td>
-            <td style="text-align: center">{{moneyFormat($invoiceProduct->product_unit_price)}}</td>
-            <td style="text-align: center">{{moneyFormat($invoiceProduct->product_qty * $invoiceProduct->product_unit_price)}}</td>
-        </tr>
-    @endforeach
-    @if(! $invoice->getDeliveryCharge()->isNull())
-        <tr>
-            <td>#</td>
-            <td style="text-align: center">Nuti Pita</td>
-            <td style="text-align: center;">{{$invoice->getDeliveryCharge()->getModifier()}}</td>
-            <td style="text-align: center;">{{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
-            <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
-        </tr>
+    @if($renderOrders)
+        @foreach($data->orderData as $order)
+            @php
+                $lines = collect($order->products)->keyBy(fn($line) => $line->product->product_id);
+            @endphp
+            <tr>
+                <td style="text-align: center">{{dayDate($order->due)}}</td>
+                @foreach($productColumns as $column)
+                    @php
+                        $line = $lines->get($column->product_id);
+                    @endphp
+                    @if(is_null($line))
+                        <td style="text-align: center">-</td>
+                    @else
+                        <td style="text-align: center">
+                            {{amountFormat($line->qty)}} x {{unitPriceFormat($line->unitPrice)}}
+                            <br>
+                            {{moneyFormat($line->total)}}
+                        </td>
+                    @endif
+                @endforeach
+            </tr>
+        @endforeach
+        @if(! $invoice->getDeliveryCharge()->isNull())
+            <tr>
+                <td colspan="{{$footerSpan}}" style="text-align: right">Nuti Pita / Delivery Charge ({{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}})</td>
+                <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
+            </tr>
+        @endif
+    @else
+        @foreach($data->productData as $index => $line)
+            <tr>
+                <td style="text-align: center">{{$index+1}}</td>
+                <td style="text-align: center">{{$line->product->getName()}}@if($line->product->hasWeight()) {{$line->product->getWeight()}}g @endif</td>
+                <td style="text-align: center">{{numberFormat($line->qty, 0)}}</td>
+                <td style="text-align: center">{{moneyFormat($line->unitPrice)}}</td>
+                <td style="text-align: center">{{moneyFormat($line->total)}}</td>
+            </tr>
+        @endforeach
+        @if(! $invoice->getDeliveryCharge()->isNull())
+            <tr>
+                <td>#</td>
+                <td style="text-align: center">Nuti Pita / Delivery Charge</td>
+                <td style="text-align: center;">{{$invoice->getDeliveryCharge()->getModifier()}}</td>
+                <td style="text-align: center;">{{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
+                <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
+            </tr>
+        @endif
     @endif
     </tbody>
     <tfoot>
     <tr>
-        <td style="font-weight: bold" colspan="4">Invoice Total</td>
-        <td style="text-align: center;"> {{moneyFormat($invoice->getInvoiceTotal())}} </td>
+        <td style="font-weight: bold" colspan="{{$footerSpan}}">Sub Total</td>
+        <td style="text-align: center;"> {{moneyFormat($invoice->getTotal()->subtotal())}} </td>
+    </tr>
+    @if($invoice->getTotal()->hasCredit())
+        <tr>
+            <td style="font-weight: bold" colspan="{{$footerSpan}}">Credit Applied</td>
+            <td style="text-align: center;"> {{moneyFormat($invoice->getTotal()->credit())}} </td>
+        </tr>
+    @endif
+    <tr>
+        <td style="font-weight: bold" colspan="{{$footerSpan}}">Total</td>
+        <td style="text-align: center;"> {{moneyFormat($invoice->getTotal()->total())}} </td>
     </tr>
     </tfoot>
 </table>
@@ -100,16 +163,6 @@
 
         </td>
     </tr>
-    @if($customer->getId() === 101)
-        {{--only for Arik--}}
-        <tr>
-            <td style="text-align: left; font-weight: bold; border: 0; padding: 0; font-size: 1.5rem;">
-            </td>
-            <td style="text-align: right; font-weight: normal; border: 0; padding: 0; font-size: 1.125rem">
-
-            </td>
-        </tr>
-    @endif
 </table>
 </body>
 </html>

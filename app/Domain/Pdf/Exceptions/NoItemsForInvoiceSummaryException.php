@@ -6,7 +6,7 @@ class NoItemsForInvoiceSummaryException extends \RuntimeException
 {
     public function __construct(string $invoiceNumber)
     {
-        $message = sprintf('Invoice #%s has no items to product a summary');
+        $message = sprintf('Invoice #%s has no items to produce a summary', $invoiceNumber);
         parent::__construct($message);
     }
 }

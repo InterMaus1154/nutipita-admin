@@ -117,7 +117,7 @@ class InvoiceEloquentRepository implements InvoiceRepository
             return $builder;
         }
 
-        $relationships = empty($query->relationships) ? ['customer', 'order', 'orders', 'products', 'products.product'] : $query->relationships;
+        $relationships = empty($query->relationships) ? ['customer', 'order', 'orders', 'products', 'products.product', 'orders.products'] : $query->relationships;
 
         $with = [];
 

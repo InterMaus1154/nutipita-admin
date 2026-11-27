@@ -49,7 +49,7 @@ class InvoiceList extends Component
         try {
             $status = InvoiceStatus::tryFrom($newValue);
 
-            if(is_null($status)) {
+            if (is_null($status)) {
                 throw new CannotUpdateInvoiceStatusException("Invalid status value");
             }
 

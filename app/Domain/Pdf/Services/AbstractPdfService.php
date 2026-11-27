@@ -20,6 +20,7 @@ abstract class AbstractPdfService
             $pdfEngine = $this->pdfRendererFactory->pdfEngine();
             $loaded = $pdfEngine->loadView($bladeView, $data)->setPaper($size, $orientation->value);
         } catch (\Throwable $e) {
+            report($e);
             throw new CannotGeneratePdfException('Pdf generation failed', previous: $e);
         }
 

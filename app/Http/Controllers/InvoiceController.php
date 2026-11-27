@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Invoice\Contracts\InvoiceRepository;
 use App\Domain\Invoice\Entities\Invoice;
-use Barryvdh\DomPDF\PDF;
+use App\Domain\Pdf\Exceptions\CannotGeneratePdfException;
+use App\Domain\Pdf\Exceptions\NoItemsForInvoiceSummaryException;
+use App\Domain\Pdf\Services\InvoiceSummaryPdfService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
-    public function __construct(private InvoiceRepository $invoices, private PDF $pdf)
+    public function __construct(private InvoiceSummaryPdfService $summaryPdf)
     {
     }
 
@@ -73,17 +74,13 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function createInvoiceSummary(int $id): Response|View
+    public function createInvoiceSummary(int $id): Response|RedirectResponse
     {
-        $invoice = $this->invoices->findById($id);
-
-        abort_if(is_null($invoice), 404, 'Invoice not found');
-
-        $customer = $invoice->customer;
-        $products = $invoice->products;
-
-        $documentName = sprintf('%s-Invoice-%s-summary.pdf', $customer->getName(), $invoice->getInvoiceNumber());
-
-        return $this->pdf->loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->download($documentName);
+        try {
+            // an unknown invoice throws InvoiceNotFoundException, which is a 404 and handled as such
+            return $this->summaryPdf->forId($id)->download();
+        } catch (NoItemsForInvoiceSummaryException|CannotGeneratePdfException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
