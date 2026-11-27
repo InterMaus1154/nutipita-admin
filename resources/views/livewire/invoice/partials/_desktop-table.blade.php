@@ -1,4 +1,4 @@
-@use(App\Domain\Invoice\InvoiceStatus)
+@use(App\Domain\Invoice\Enums\InvoiceStatus)
 @php
     /** @var App\Domain\Invoice\ $invoice */
 @endphp
@@ -71,7 +71,7 @@
                         <flux:link href="{{route('invoices.view-inline', compact('invoice'))}}">
                             <flux:icon.eye class="!inline"/>
                         </flux:link>
-                        <flux:link href="{{route('invoices.download', compact('invoice'))}}">
+                        <flux:link href="{{route('invoices.download', ['invoiceId' => $invoice->getId()])}}">
                             <flux:icon.arrow-down-tray class="!inline"/>
                         </flux:link>
                         <flux:link class="cursor-pointer"
@@ -80,7 +80,8 @@
                         >
                             <flux:icon.trash class="!inline"/>
                         </flux:link>
-                        <flux:link class="cursor-pointer" href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
+                        <flux:link class="cursor-pointer"
+                                   href="{{route('invoices.create-summary', ['id' => $invoice->getId()])}}">
                             <flux:icon.document-chart-bar class="inline!"/>
                         </flux:link>
                     </x-table.data>

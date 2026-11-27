@@ -76,6 +76,7 @@ class OrderCreate extends Component
                     $q->where('customer_id', $this->customer_id);
                 })
                 ->select('product_name', 'product_id', 'product_weight_g')
+                ->with(['customPrices', 'customPrices.product'])
                 ->forCustomer($this->customer_id)
                 ->get();
         }

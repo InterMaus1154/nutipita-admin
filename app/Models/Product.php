@@ -70,8 +70,13 @@ class Product extends Model
         return $this->getAttribute('product_name');
     }
 
-    public function getWeight(): int
+    public function getWeight(): ?int
     {
         return $this->getAttribute('product_weight_g');
+    }
+
+    public function hasWeight(): bool
+    {
+        return !is_null($this->getWeight());
     }
 }

@@ -1,10 +1,14 @@
 @use(App\Enums\OrderStatus)
+@use(App\Domain\Invoice\Enums\CreateInvoiceMode)
 <div class="flex flex-col gap-4">
     <x-error/>
     <x-success/>
     @if(session()->has('invoice'))
+        @php
+            $id = session()->get('invoice')->getId();
+        @endphp
         <div class="flex gap-4">
-            <flux:link href="{{route('invoices.download', ['invoice' => session()->get('invoice')])}}">
+            <flux:link href="{{route('invoices.download', ['invoiceId' => $id])}}">
                 Download invoice
             </flux:link>
             <flux:link href="{{route('invoices.view-inline', ['invoice' => session()->get('invoice')])}}">View
@@ -30,7 +34,7 @@
                     </x-ui.select.select>
                 </x-form.form-wrapper>
                 {{--auto/manual toggle--}}
-                <flux:button :variant="$formMode === 'manual' ? 'primary': 'filled'" class="self-center mt-7"
+                <flux:button :variant="$formMode === CreateInvoiceMode::MANUAL ? 'primary': 'filled'" class="self-center mt-7"
                              wire:click="toggleMode()">
                     <flux:icon.hand/>
                 </flux:button>
@@ -97,7 +101,7 @@
             </div>
         </div>
         <div class="flex gap-4">
-            @if(!empty($customer_id) && $formMode === "manual")
+            @if(!empty($customer_id) && $formMode === CreateInvoiceMode::MANUAL)
                 @foreach($products as $product)
                     @php
                         $product->setCurrentCustomer($customer_id)

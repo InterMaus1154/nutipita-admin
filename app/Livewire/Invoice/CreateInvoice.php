@@ -2,17 +2,17 @@
 
 namespace App\Livewire\Invoice;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Domain\Invoice\DeliveryCharge;
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceService;
+use App\Domain\Invoice\Entities\DeliveryCharge;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Invoice\Entities\ManualInvoiceProductData;
+use App\Domain\Invoice\Enums\CreateInvoiceMode;
+use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
+use App\Domain\Invoice\Services\InvoiceService;
+use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
 use App\Models\Customer;
-use App\Models\Order;
 use App\Models\Product;
 use App\Traits\HasQuickDueFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -25,8 +25,7 @@ class CreateInvoice extends Component
     public $customers;
     public $products;
 
-    // auto / manual
-    public string $formMode = "auto";
+    public CreateInvoiceMode $formMode = CreateInvoiceMode::AUTO;
 
     public $ordersAll = [];
 
@@ -50,13 +49,18 @@ class CreateInvoice extends Component
 
     public ?string $order_status = null;
 
-    /**
-     * Toggle form mode between manual and auto
-     * @return void
-     */
+    private InvoiceService $invoiceService;
+    private CreateInvoiceStrategyFactory $strategies;
+
+    public function boot(CreateInvoiceStrategyFactory $strategies, InvoiceService $invoiceService): void
+    {
+        $this->invoiceService = $invoiceService;
+        $this->strategies = $strategies;
+    }
+
     public function toggleMode(): void
     {
-        $this->formMode = $this->formMode === "auto" ? "manual" : "auto";
+        $this->formMode = $this->formMode === CreateInvoiceMode::AUTO ? CreateInvoiceMode::MANUAL : CreateInvoiceMode::AUTO;
     }
 
     public function mount(): void
@@ -65,7 +69,7 @@ class CreateInvoice extends Component
 
         // init that don't change throughout cycle
         $this->customers = Customer::select(['customer_id', 'customer_name'])->get();
-        $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->get();
+        $this->products = Product::select(['product_id', 'product_name', 'product_weight_g'])->with('customPrices')->get();
 
         $this->invoice_issue_date = now()->toDateString();
         $this->invoice_due_date = now()->addDay()->toDateString();
@@ -97,9 +101,9 @@ class CreateInvoice extends Component
     public function calculateLiveInvoiceTotal(): void
     {
         $this->liveInvoiceTotal = "£----";
-        if ($this->formMode == 'auto') {
+        if ($this->formMode == CreateInvoiceMode::AUTO) {
             if (isset($this->due_from) && isset($this->due_to) && isset($this->customer_id)) {
-                $this->liveInvoiceTotal = moneyFormat((double)DB::table('orders')
+                $this->liveInvoiceTotal = moneyFormat((float)DB::table('orders')
                     ->where('customer_id', $this->customer_id)
                     ->whereDate('order_due_at', '>=', $this->due_from)
                     ->whereDate('order_due_at', '<=', $this->due_to)
@@ -133,13 +137,7 @@ class CreateInvoice extends Component
         ]);
     }
 
-    /**
-     * Submit form
-     * @param InvoiceService $invoiceService
-     * @return void
-     * @throws \Throwable
-     */
-    public function save(InvoiceService $invoiceService): void
+    public function save(): void
     {
         $this->validate([
             'customer_id' => 'required|integer',
@@ -152,164 +150,55 @@ class CreateInvoice extends Component
             'invoice_credit' => 'nullable|numeric|min:0'
         ]);
 
-
-        DB::beginTransaction();
         try {
 
-            [$firstOrderDate, $lastOrderDate] = $this->resolveOrderDateRange();
+            if ($this->formMode === CreateInvoiceMode::AUTO) {
+                $invoice = $this->invoiceService->createRecordUsingStrategy($this->strategies->auto(
+                    customerId: $this->customer_id,
+                    dueDate: new Carbon($this->invoice_due_date),
+                    issueDate: new Carbon($this->invoice_issue_date),
+                    periodFrom: new Carbon($this->due_from),
+                    periodTo: new Carbon($this->due_to),
+                    invoiceNumber: $this->invoice_number,
+                    deliveryCharge: DeliveryCharge::fromString($this->invoice_delivery_charge),
+                    credit: $this->invoice_credit
+                ));
+            } else {
 
-            $orderQuery = Order::query()
-                ->where('customer_id', $this->customer_id)
-                ->whereDate('order_due_at', '>=', $firstOrderDate)
-                ->whereDate('order_due_at', '<=', $lastOrderDate);
+                $products = [];
+                foreach ($this->invoiceProducts as $id => $qty) {
+                    if (!is_numeric($qty) || (int)$qty <= 0) {
+                        continue;
+                    }
+                    $products[] = new ManualInvoiceProductData(productId: $id, qty: $qty);
+                }
 
-            $deliveryCharge = DeliveryCharge::fromString($this->invoice_delivery_charge);
-
-            $invoiceDto = InvoiceDto::from(
-                customer: $this->customer_id,
-                invoiceIssueDate: $this->invoice_issue_date,
-                invoiceDueDate: $this->invoice_due_date,
-                invoiceOrdersFrom: $firstOrderDate,
-                invoiceOrdersTo: $lastOrderDate,
-                invoiceNumber: $this->invoice_number,
-                invoiceDeliveryCharge: $deliveryCharge,
-                invoiceCredit: $this->invoice_credit
-            );
-
-            $invoice = $invoiceService->generateInvoice($invoiceDto);
-
-            $invoiceProductDtos = $this->formMode == 'manual'
-                ? $this->buildManualDtos($invoice)
-                : $this->buildAutoDtos($orderQuery, $invoice);
-
-            $invoiceTotal = $this->calculateInvoiceTotal($invoiceProductDtos) + $deliveryCharge->getCalculated();
-
-            $invoice->update([
-                'invoice_total' => $invoiceTotal
-            ]);
-
-            $invoiceService->generateInvoiceProductRecords($invoiceProductDtos);
-            $invoiceService->generateInvoicePdfFromDtos($invoiceProductDtos, $invoice)->save($invoice->invoice_path, 'local');
-
-            Order::forInvoice($invoice)->markUnpaid();
-
-            DB::commit();
+                $invoice = $this->invoiceService->createRecordUsingStrategy($this->strategies->manual(
+                    customerId: $this->customer_id,
+                    dueDate: new Carbon($this->invoice_due_date),
+                    issueDate: new Carbon($this->invoice_issue_date),
+                    periodFrom: new Carbon($this->due_from),
+                    periodTo: new Carbon($this->due_to),
+                    invoiceNumber: $this->invoice_number,
+                    products: $products,
+                    attachOrders: true,
+                    deliveryCharge: DeliveryCharge::fromString($this->invoice_delivery_charge),
+                    credit: $this->invoice_credit,
+                ));
+            }
 
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
 
             $this->resetInvoiceForm();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at creating invoice. Check log for more info!');
+        } catch (CannotCreateInvoiceException $e) {
             session()->flash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unknown error when generating invoice');
+            Log::error($e->getMessage(), ['exception' => $e]);
         }
     }
 
-    // ====
-    // Helper methods for save()
-    // ====
-
-    /**
-     * Calculate invoice total without delivery charge
-     * @param Collection $invoiceProductDtos
-     * @return float
-     */
-    private function calculateInvoiceTotal(Collection $invoiceProductDtos): float
-    {
-        return $invoiceProductDtos->sum(function (InvoiceProductDto $invoiceProductDto) {
-            return $invoiceProductDto->productUnitPrice() * $invoiceProductDto->productQty();
-        });
-
-    }
-
-
-    /**
-     * Build reusable order date range
-     * @return array
-     */
-    private function resolveOrderDateRange(): array
-    {
-        $dateRange = Order::query()
-            ->where('customer_id', $this->customer_id)
-            ->whereBetween('order_due_at', [$this->due_from, $this->due_to])
-            ->selectRaw('MIN(order_due_at) AS first_date, MAX(order_due_at) AS last_date')
-            ->first();
-
-        $firstOrderDateRange = $dateRange->first_date ?? $this->due_from;
-        $lastOrderDateRange = $dateRange->last_date ?? $this->due_to;
-
-        return [$firstOrderDateRange, $lastOrderDateRange];
-    }
-
-    /**
-     * Build InvoiceProductDTOs when manual mode
-     * @param Invoice $invoice
-     * @return Collection|null
-     */
-    private function buildManualDtos(Invoice $invoice): ?Collection
-    {
-        // prepare products
-        $selectedProducts = collect($this->invoiceProducts)
-            ->filter(function ($qty) {
-                return $qty > 0;
-            });
-
-        // do not create invoice if all products are empty (0 qty)
-        if ($selectedProducts->isEmpty()) return Collection::empty();
-
-        // create dtos from products
-        $invoiceProductDtos = collect();
-
-        collect($selectedProducts)->each(function (int $qty, int $productId) use (&$invoiceProductDtos, $invoice) {
-            $product = Product::find($productId);
-            $product->setCurrentCustomer($this->customer_id);
-            $invoiceProductDtos->add(InvoiceProductDto::from(
-                invoice: $invoice,
-                product: $product,
-                productQty: $qty,
-                productUnitPrice: $product->price
-            ));
-        });
-
-        return $invoiceProductDtos;
-    }
-
-    /**
-     * Build InvoiceProductDTOs when auto mode
-     * @param Builder $orderQuery
-     * @return Collection|null
-     */
-    private function buildAutoDtos(Builder $orderQuery, Invoice $invoice): ?Collection
-    {
-        // --- ON AUTO MODE
-
-        $orderFilter = function ($query) use ($orderQuery) {
-            $query->mergeConstraintsFrom($orderQuery);
-        };
-
-        // get products that appear in orders for the selected period
-        $products = Product::query()
-            ->whereHas('orders', $orderFilter)
-            ->with(['orders' => $orderFilter])
-            ->get();
-
-        if ($products->isEmpty()) return Collection::empty();
-
-        // map each product to a dto
-        return $products
-            ->map(function (Product $product) use (&$invoice) {
-                $unitPrice = $product->setCurrentCustomer($this->customer_id)->price;
-                $totalQty = $product->orders->sum('pivot.product_qty');
-                return InvoiceProductDto::from(
-                    invoice: $invoice,
-                    product: $product->product_id,
-                    productQty: $totalQty,
-                    productUnitPrice: $unitPrice
-                );
-            });
-    }
 
     /**
      * Resets form to its default state
@@ -322,9 +211,10 @@ class CreateInvoice extends Component
     }
 
 
-    // ====
-    // End Helper methods for save()
-    // ====
+    public function hydrate(): void
+    {
+        $this->products->loadMissing('customPrices');
+    }
 
     public function render(): View
     {

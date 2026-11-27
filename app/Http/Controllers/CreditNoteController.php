@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Invoice\Entities\Invoice;
 use App\Models\CreditNote;
-use App\Domain\Invoice\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 

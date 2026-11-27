@@ -98,7 +98,7 @@
                                 title="Edit order">
                             <flux:icon.pencil-square class="!inline text-accent cursor-pointer"/>
                         </button>
-                        @unless($order->invoice)
+                        @if(! $order->hasInvoice())
                             <flux:link class="cursor-pointer"
                                        title="Create invoice"
                                        wire:confirm="Are you sure to generate this invoice?"
@@ -108,11 +108,11 @@
                             </flux:link>
                         @else
                             <flux:link
-                                href="{{route('invoices.download', ['invoice' => $order->invoice])}}"
+                                href="{{route('invoices.download', ['invoiceId' => $order->getInvoiceId()])}}"
                                 title="Download invoice">
                                 <flux:icon.clipboard-document-check class="!inline"/>
                             </flux:link>
-                        @endunless
+                        @endif
                         <flux:link class="cursor-pointer" wire:click="deleteOrder({{$order->order_id}})"
                                    wire:confirm="Are you sure to delete order #{{$order->order_id}} for {{$order->customer->customer_name}}? This action cannot be undone!">
                             <flux:icon.trash class="!inline"/>
