@@ -65,6 +65,10 @@ class InvoiceController extends Controller
      */
     public function viewInline(Invoice $invoice)
     {
+        if (!Storage::disk('local')->exists($invoice->invoice_path)) {
+            abort(404);
+        }
+
         $path = Storage::disk('local')->path($invoice->invoice_path);
         $filename = 'INV-' . $invoice->invoice_number . '.pdf';
         return response()->file($path, [

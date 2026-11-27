@@ -15,7 +15,7 @@ class DeliveryCharge
 
     public static function fromString(?string $value): self
     {
-        $trimmed = mb_trim($value);
+        $trimmed = mb_trim($value ?? '');
 
         if (empty($trimmed)) {
             return self::empty();
