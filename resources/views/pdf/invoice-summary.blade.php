@@ -18,7 +18,7 @@
     }
 
     // the label cells of the footer span every column except the last (the amount)
-    $footerSpan = $renderOrders ? $productColumns->count() : 4;
+    $footerSpan = $renderOrders ? $productColumns->count() + 1 : 4;
 @endphp
 <html>
 <head>
@@ -75,6 +75,7 @@
             @foreach($productColumns as $column)
                 <th>{{$column->getName()}}@if($column->hasWeight()) {{$column->getWeight()}}g @endif</th>
             @endforeach
+            <th>Order Total</th>
         </tr>
     @else
         <tr>
@@ -108,8 +109,26 @@
                         </td>
                     @endif
                 @endforeach
+                <td style="text-align: center">{{moneyFormat(collect($order->products)->sum('total'))}}</td>
             </tr>
         @endforeach
+        <tr style="font-weight: bold">
+            <td style="text-align: center">Total</td>
+            @foreach($productColumns as $column)
+                @php
+                    $columnLines = collect($data->orderData)
+                        ->flatMap(fn($order) => $order->products)
+                        ->filter(fn($line) => $line->product->product_id === $column->product_id);
+                    $prices = $columnLines->pluck('unitPrice')->unique();
+                @endphp
+                <td style="text-align: center">
+                    {{amountFormat($columnLines->sum('qty'))}}@if($prices->count() === 1) x {{unitPriceFormat($prices->first())}}@endif
+                    <br>
+                    {{moneyFormat($columnLines->sum('total'))}}
+                </td>
+            @endforeach
+            <td style="text-align: center">{{moneyFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('total'))}}</td>
+        </tr>
         @if(! $invoice->getDeliveryCharge()->isNull())
             <tr>
                 <td colspan="{{$footerSpan}}" style="text-align: right">Nuti Pita / Delivery Charge ({{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}})</td>
