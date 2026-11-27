@@ -109,7 +109,11 @@
                         </td>
                     @endif
                 @endforeach
-                <td style="text-align: center">{{moneyFormat(collect($order->products)->sum('total'))}}</td>
+                <td style="text-align: center">
+                    {{amountFormat(collect($order->products)->sum('qty'))}}
+                    <br>
+                    {{moneyFormat(collect($order->products)->sum('total'))}}
+                </td>
             </tr>
         @endforeach
         <tr style="font-weight: bold">
@@ -127,7 +131,11 @@
                     {{moneyFormat($columnLines->sum('total'))}}
                 </td>
             @endforeach
-            <td style="text-align: center">{{moneyFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('total'))}}</td>
+            <td style="text-align: center">
+                {{amountFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('qty'))}}
+                <br>
+                {{moneyFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('total'))}}
+            </td>
         </tr>
         @if(! $invoice->getDeliveryCharge()->isNull())
             <tr>
