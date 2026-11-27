@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Modal;
 
-use App\Livewire\OrderList;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\OrderService;
@@ -40,13 +39,13 @@ class OrderEdit extends Component
             'fields.shift' => 'required|in:day,night'
         ]);
 
-        try{
+        try {
             $orderService->updateOrder($this->order, $this->fields, $this->selectedProducts);
             $this->dispatch('refresh');
             $this->dispatch('modal-close')->to(ModalContainer::class);
-        }catch (InvalidArgumentException $e){
+        } catch (InvalidArgumentException $e) {
             $this->addError('products', $e->getMessage());
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->addError('general_error', $e->getMessage());
         }
     }
@@ -61,6 +60,7 @@ class OrderEdit extends Component
         $customerProducts = collect();
         if (!is_null($this->order)) {
             $customerProducts = Product::query()
+                ->with('customPrices')
                 ->whereHas('customPrices', function (Builder $q) {
                     $q->where('customer_id', $this->order->customer_id);
                 })

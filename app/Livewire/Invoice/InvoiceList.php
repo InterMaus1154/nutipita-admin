@@ -2,17 +2,14 @@
 
 namespace App\Livewire\Invoice;
 
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceRepository;
-use App\Domain\Invoice\InvoiceStatus;
-use App\Enums\OrderStatus;
-use App\Models\Order;
+use App\Domain\Invoice\Contracts\InvoiceRepository;
+use App\Domain\Invoice\Enums\InvoiceStatus;
+use App\Domain\Invoice\Exceptions\CannotUpdateInvoiceStatusException;
+use App\Domain\Invoice\Querying\InvoiceFilters;
+use App\Domain\Invoice\Services\InvoiceService;
+use App\Helpers\SortOrder;
 use App\Traits\HasSort;
 use Detection\MobileDetect;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -26,6 +23,7 @@ class InvoiceList extends Component
     protected $paginationTheme = 'tailwind';
 
     private InvoiceRepository $invoices;
+    private InvoiceService $invoiceService;
 
     public array $filters = [
         'customer_id' => null
@@ -40,32 +38,25 @@ class InvoiceList extends Component
         $this->isMobile = $browser->isMobile() && !$browser->isTablet();
     }
 
-    public function boot(InvoiceRepository $invoices): void
+    public function boot(InvoiceRepository $invoices, InvoiceService $invoiceService): void
     {
         $this->invoices = $invoices;
+        $this->invoiceService = $invoiceService;
     }
 
-    public function updateInvoiceStatus(int $newValue, Invoice $invoice): void
+    public function updateInvoiceStatus(int $newValue, int $invoiceId): void
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
+        try {
+            $status = InvoiceStatus::tryFrom($newValue);
 
-        DB::beginTransaction();
-        try{
-            if ($newValue === InvoiceStatus::UNPAID->value) {
-                Order::forInvoice($invoice)->markUnpaid();
-            } else if ($newValue === InvoiceStatus::PAID->value) {
-                Order::forInvoice($invoice)->markPaid();
+            if (is_null($status)) {
+                throw new CannotUpdateInvoiceStatusException("Invalid status value");
             }
 
-            $invoice->update([
-                'invoice_status_new' => $newValue
-            ]);
-            DB::commit();
-        }catch (\Throwable $e){
-            DB::rollBack();
-            Log::error($e->getMessage());
+            $this->invoiceService->updateStatus($invoiceId, $status);
+            session()->flash('success', 'Invoice updated');
+        } catch (CannotUpdateInvoiceStatusException $e) {
+            session()->flash('error', $e->getMessage());
         }
     }
 
@@ -76,73 +67,14 @@ class InvoiceList extends Component
         $this->filters = array_merge($this->filters, $filters);
     }
 
-    public function markPaid(Invoice $invoice): void
+    public function delete(int $id): void
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        DB::beginTransaction();
         try {
-            $invoice->update([
-                'invoice_status_new' => InvoiceStatus::PAID->value,
-            ]);
-
-            Order::forInvoice($invoice)->markPaid();
-
-            DB::commit();
+            $this->invoiceService->delete($id);
+            session()->flash('success', "Invoice successfully deleted");
         } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at updating invoice or orders');
-        }
-    }
-
-    public function markDue(Invoice $invoice): void
-    {
-        if (!auth()->check()) {
-            abort(403);
-        }
-        DB::beginTransaction();
-        try {
-            $invoice->update([
-                'invoice_status_new' => InvoiceStatus::UNPAID->value,
-            ]);
-
-            Order::forInvoice($invoice)->markUnpaid();
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            session()->flash('error', 'Error at updating invoice or orders');
-        }
-    }
-
-    public function delete(Invoice $invoice): void
-    {
-        if (!auth()->check()) {
-            abort(401);
-        }
-        DB::beginTransaction();
-        try {
-            if($invoice->order){
-                $invoice->order->update([
-                   'order_status' => OrderStatus::Y_CONFIRMED->name
-                ]);
-            }else{
-                Order::forInvoice($invoice)->markConfirmed();
-            }
-
-            $invoice->delete();
-            DB::commit();
-            Storage::disk('local')->delete($invoice->invoice_path);
-            session()->flash('success', "Invoice {$invoice->invoice_number} successfully deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
             session()->flash('error', 'Error at deleting invoice. Check logs for more info.');
         }
-
     }
 
     #[On('refresh')]
@@ -151,42 +83,20 @@ class InvoiceList extends Component
 
     }
 
-    public function customSorts(): array
-    {
-        return [
-            'customer' => function (Builder $query) {
-                $query
-                    ->join('customers', 'customers.customer_id', '=', 'invoices.customer_id')
-                    ->orderBy('customers.customer_name', $this->sortDirection)
-                    ->select('invoices.*');
-            }
-        ];
-    }
-
     public function render(): View
     {
         $filters = $this->filters;
 
-        $query = Invoice::query()
-            ->when(!empty($filters['customer_id']), function (Builder $builder) use ($filters) {
-                return $builder->where('invoices.customer_id', $filters['customer_id']);
-            })
-            ->when(!empty($filters['invoice_from']), function (Builder $builder) use ($filters) {
-                return $builder->where('invoices.invoice_due_date', '>=', $filters['invoice_from']);
-            })
-            ->when(!empty($filters['invoice_to']), function (Builder $builder) use ($filters) {
-                return $builder->where('invoices.invoice_due_date', '<=', $filters['invoice_to']);
-            })
-            ->with('customer:customer_id,customer_name');
+        $invoiceQuery = InvoiceFilters::from($filters);
 
+        $invoiceTotals = $this->invoices->getInvoiceTotals($invoiceQuery);
+        $invoiceCount = $this->invoices->getInvoiceCount($invoiceQuery);
 
-        $invoiceTotals = $query->clone()->selectRaw('SUM(invoice_total) AS invoice_totals')->value('invoice_totals');
-        $invoiceCount = $query->clone()->selectRaw('COUNT(*) AS invoice_count')->value('invoice_count');
         $unpaidSum = $this->invoices->allUnpaidSum();
 
-        $this->applySort($query, $this->customSorts());
+        $invoiceQuery->sortBy($this->sortField, SortOrder::from($this->sortDirection));
 
-        $invoices = $query->paginate(15);
+        $invoices = $this->invoices->paginate(query: $invoiceQuery);
         return view('livewire.invoice.invoice-list', [
             'invoices' => $invoices,
             'invoiceTotals' => $invoiceTotals,

@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Domain\Invoice\Invoice;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Domain\Invoice\Entities\Invoice;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
@@ -51,7 +50,7 @@ class Customer extends Model
 
     public function getIsHidden(): bool
     {
-        if(is_null($this->getAttribute('is_hidden'))){
+        if (is_null($this->getAttribute('is_hidden'))) {
             return false;
         }
         return $this->getAttribute('is_hidden');
@@ -59,9 +58,9 @@ class Customer extends Model
 
     public function toggleHidden(): void
     {
-        if($this->getIsHidden()){
+        if ($this->getIsHidden()) {
             $this->markVisible();
-        }else{
+        } else {
             $this->markHidden();
         }
     }
@@ -74,6 +73,16 @@ class Customer extends Model
     public function getName(): string
     {
         return $this->getAttribute('customer_name');
+    }
+
+    public function getTradingName(): ?string
+    {
+        return $this->getAttribute('customer_trading_name');
+    }
+
+    public function hasTradingName(): bool
+    {
+        return !empty($this->getTradingName());
     }
 
 }

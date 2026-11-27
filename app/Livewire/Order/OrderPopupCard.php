@@ -2,8 +2,13 @@
 
 namespace App\Livewire\Order;
 
+use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
+use App\Domain\Invoice\Services\InvoiceService;
+use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
+use App\Livewire\OrderList;
 use App\Models\Order;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -14,9 +19,15 @@ class OrderPopupCard extends Component
 
     private OrderService $orderService;
 
-    public function boot(OrderService $orderService): void
+    private InvoiceService $invoiceService;
+    private CreateInvoiceStrategyFactory $strategies;
+
+    public function boot(OrderService $orderService, InvoiceService $invoiceService, CreateInvoiceStrategyFactory $createInvoiceStrategyFactory): void
     {
         $this->orderService = $orderService;
+        $this->invoiceService = $invoiceService;
+        $this->strategies = $createInvoiceStrategyFactory;
+
     }
 
     public function createInvoice(): void
@@ -24,9 +35,18 @@ class OrderPopupCard extends Component
         if (is_null($this->orderId)) {
             return;
         }
-        $this->redirect(route('invoices.create-single',
-            ['order' => $this->orderId]
-        ));
+
+        try {
+            $this->invoiceService->createRecordUsingStrategy($this->strategies->single($this->orderId));
+            session()->flash('success', 'Invoice created');
+        } catch (CannotCreateInvoiceException $e) {
+            session()->flash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unknown error when generating invoice');
+            Log::error($e->getMessage(), ['exception' => $e]);
+        }
+
+        $this->dispatch('refresh')->to(OrderList::class);
     }
 
     public function deleteOrder(): void
@@ -60,7 +80,7 @@ class OrderPopupCard extends Component
     {
         $order = Order::query()
             ->where('order_id', $this->orderId)
-            ->with('products', 'customer', 'invoice')
+            ->with('products', 'customer', 'invoice', 'invoices')
             ->first();
 
         return view('livewire.order.order-popup-card', compact('order'));

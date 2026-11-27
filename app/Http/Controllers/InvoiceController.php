@@ -2,83 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTransferObjects\InvoiceDto;
-use App\DataTransferObjects\InvoiceProductDto;
-use App\Domain\Invoice\Invoice;
-use App\Domain\Invoice\InvoiceRepository;
-use App\Domain\Invoice\InvoiceService;
-use App\Enums\OrderStatus;
-use App\Models\Order;
-use Barryvdh\DomPDF\PDF;
+use App\Domain\Invoice\Entities\Invoice;
+use App\Domain\Pdf\Exceptions\CannotGeneratePdfException;
+use App\Domain\Pdf\Exceptions\NoItemsForInvoiceSummaryException;
+use App\Domain\Pdf\Services\InvoiceSummaryPdfService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
-    public function __construct(private InvoiceRepository $invoices, private PDF $pdf)
+    public function __construct(private InvoiceSummaryPdfService $summaryPdf)
     {
-    }
-
-    /**
-     * Create an invoice for a single order - from order list
-     * @param Order $order
-     * @param InvoiceService $invoiceService
-     * @param Request $request
-     * @return RedirectResponse
-     * @throws \Throwable
-     */
-    public function createSingleInvoice(Order $order, InvoiceService $invoiceService, Request $request): RedirectResponse
-    {
-        if ($order->invoice()->exists()) {
-            return redirect()->route('invoices.download', ['invoice' => $order->invoice()->first()]);
-        }
-
-        $order->loadMissing('customer', 'products');
-
-
-        $invoiceDeliveryCharge = $request->input('invoice_delivery_charge');
-
-        DB::beginTransaction();
-        try {
-            $invoiceDto = InvoiceDto::from(
-                customer: $order->customer,
-                invoiceOrdersFrom: $order->order_due_at,
-                invoiceOrdersTo: $order->order_due_at,
-                order: $order,
-                invoiceDeliveryCharge: $invoiceDeliveryCharge
-            );
-
-            $invoice = $invoiceService->generateInvoice($invoiceDto);
-            $invoiceProductDTOs = $invoiceService->generateInvoiceProductDTOs($invoice, $order->products);
-            $invoiceService->generateInvoiceProductRecords($invoiceProductDTOs);
-
-            $invoiceTotal = $invoiceProductDTOs->sum(function (InvoiceProductDto $dto) {
-                    return $dto->productQty() * $dto->productUnitPrice();
-                }) + ($invoiceDeliveryCharge ?? 0);
-
-            $invoice->update([
-                'invoice_total' => $invoiceTotal
-            ]);
-
-            $order->update([
-                'order_status' => OrderStatus::O_DELIVERED_UNPAID->name
-            ]);
-
-            $invoiceService->generateInvoicePdfFromDtos($invoiceProductDTOs)->save($invoice->invoice_path, 'local');
-
-            DB::commit();
-            return redirect()->route('invoices.download', compact('invoice'));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            return redirect()->back()->withErrors(['invoice_error' => 'Error at creating invoice. Check log for more info']);
-        }
-
     }
 
     public function index()
@@ -105,13 +40,20 @@ class InvoiceController extends Controller
     /*
      * Download a PDF from an invoice
      */
-    public function download(Invoice|int $invoice)
+    public function download(Invoice|int $invoiceId)
     {
-        if(is_int($invoice)){
-            $invoice = Invoice::find($invoice);
+        $invoice = Invoice::find($invoiceId);
+        if (is_null($invoice)) {
+            abort(404);
         }
+
         $filename = 'INV-' . $invoice->invoice_number . 'pdf';
         $path = Storage::disk('local')->path($invoice->invoice_path);
+
+        if (!Storage::disk('local')->exists($invoice->invoice_path)) {
+            abort(404);
+        }
+
         return response()->download($path, 'INV-' . $invoice->invoice_number . '.pdf', [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => "attachment; filename=$filename"
@@ -123,6 +65,10 @@ class InvoiceController extends Controller
      */
     public function viewInline(Invoice $invoice)
     {
+        if (!Storage::disk('local')->exists($invoice->invoice_path)) {
+            abort(404);
+        }
+
         $path = Storage::disk('local')->path($invoice->invoice_path);
         $filename = 'INV-' . $invoice->invoice_number . '.pdf';
         return response()->file($path, [
@@ -132,17 +78,13 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function createInvoiceSummary(int $id): Response|View
+    public function createInvoiceSummary(int $id): Response|RedirectResponse
     {
-        $invoice = $this->invoices->findById($id);
-
-        abort_if(is_null($invoice), 404, 'Invoice not found');
-
-        $customer = $invoice->customer;
-        $products = $invoice->products;
-
-        $documentName = sprintf('%s-Invoice-%s-summary.pdf',$customer->getName(), $invoice->getInvoiceNumber());
-
-        return $this->pdf->loadView('pdf.invoice-summary', compact('invoice', 'customer', 'products'))->download($documentName);
+        try {
+            // an unknown invoice throws InvoiceNotFoundException, which is a 404 and handled as such
+            return $this->summaryPdf->forId($id)->download();
+        } catch (NoItemsForInvoiceSummaryException|CannotGeneratePdfException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

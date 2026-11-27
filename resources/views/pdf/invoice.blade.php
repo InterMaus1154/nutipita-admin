@@ -1,6 +1,10 @@
-@use(Illuminate\Support\Carbon)
+@use(App\Domain\Pdf\Entities\InvoicePdfData)
 @php
-    /** @var \App\Domain\Invoice\Invoice $invoice */
+    /** @var InvoicePdfData $data */
+    $invoice = $data->invoice;
+    $customer = $data->customer;
+    $pdfProducts = $data->products;
+    $total = $data->invoiceTotal;
 @endphp
 <head>
     <title>INV - {{$invoice->invoice_number}}</title>
@@ -219,14 +223,14 @@
                     <p style="font-size: 1.25rem;">Bill To:</p>
                     <p>
                         <strong>
-                            {{$customer->customer_name}}
+                            {{$customer->getName()}}
                         </strong>
                     </p>
                     <p></p>
-                    @if($customer->customer_trading_name)
+                    @if($customer->hasTradingName())
                         <p style="font-size: 1.25rem;">Trading As:</p>
                         <p>
-                            <strong>{{$customer->customer_trading_name}}</strong>
+                            <strong>{{$customer->getTradingName()}}</strong>
                         </p>
                     @endif
                     @if($customer->customer_optional_name)
@@ -259,13 +263,13 @@
                             <td>
                                 <strong>Invoice#</strong>
                             </td>
-                            <td>{{$invoice->invoice_number}}</td>
+                            <td>{{$invoice->getInvoiceNumber()}}</td>
                         </tr>
                         <tr>
                             <td>
                                 <strong>Invoice Date</strong>
                             </td>
-                            <td>{{Carbon::parse($invoice->invoice_issue_date)->format('d/m/Y')}}</td>
+                            <td>{{$invoice->getIssueDate()->format('d/m/Y')}}</td>
                         </tr>
                         <tr>
                             <td>
@@ -277,7 +281,7 @@
                             <td>
                                 <strong>Due Date</strong>
                             </td>
-                            <td>{{Carbon::parse($invoice->invoice_due_date)->format('d/m/Y')}}</td>
+                            <td>{{$invoice->getDueDate()->format('d/m/Y')}}</td>
                         </tr>
                     </table>
 
@@ -294,54 +298,35 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{--if it is coming from a bulk invoice generation--}}
-                @php($i = 1)
-                @if(isset($fromBulk))
-                    @foreach($products as $product)
-                        <tr>
-                            <td class="col-index">{{$i}}</td>
-                            <td class="col-description">
-                            <span
-                                class="product-data-name">{{$product['product_name']}} {{$product['product_weight_g']}}g</span>
-                                <br>
-                                <span class="product-data-desc">Pcs x Unit Price </span>
-                            </td>
-                            <td class="col-amount">
-                            <span
-                                class="product-data-name">@moneyFormat($product['total_quantity'] * $product['unit_price'])</span>
-                                <br>
-                                <span
-                                    class="product-data-desc">{{number_format($product['total_quantity'])}} x @unitPriceFormat($product['unit_price']) </span>
-                            </td>
-                        </tr>
-                        @php($i++)
-                    @endforeach
-                @else
-                    @foreach($products as $index => $product)
-                        <tr>
-                            <td class="col-index">{{$i}}</td>
-                            <td class="col-description">
-                            <span
-                                class="product-data-name">{{$product->product_name}} {{$product->product_weight_g}}g</span>
-                                <br>
-                                <span class="product-data-desc">Pcs x Unit Price </span>
-                            </td>
-                            <td class="col-amount">
-                            <span
-                                class="product-data-name">
-                                @moneyFormat($product->pivot->product_qty * $product->pivot->order_product_unit_price)
+                @foreach($pdfProducts as $pdfProduct)
+                    @php
+                        $product = $pdfProduct->product;
+                    @endphp
+                    <tr>
+                        <td class="col-index">{{$loop->iteration}}</td>
+                        <td class="col-description">
+                            <span class="product-data-name">{{$product->getName()}}
+                                @if($product->hasWeight())
+                                    {{$product->getWeight()}}g
+                                @endif
                             </span>
-                                <br>
-                                <span
-                                    class="product-data-desc">{{number_format($product->pivot->product_qty)}} x @unitPriceFormat($product->price)</span>
-                            </td>
-                        </tr>
-                        @php($i++)
-                    @endforeach
-                @endif
+                            <br>
+                            <span class="product-data-desc">Pcs x Unit Price</span>
+                        </td>
+                        <td class="col-amount">
+                            <span class="product-data-name">
+                                @moneyFormat($pdfProduct->productTotal)
+                            </span>
+                            <br>
+                            <span class="product-data-desc">
+                                {{number_format($pdfProduct->quantity)}} x @unitPriceFormat($pdfProduct->unitPrice)
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
                 @if(! $invoice->getDeliveryCharge()->isNull())
                     <tr>
-                        <td class="col-index">{{$i}}</td>
+                        <td class="col-index">{{count($pdfProducts) + 1}}</td>
                         <td class="col-description">
                             <span
                                 class="product-data-name">Nuti Pita</span>
@@ -364,14 +349,14 @@
                     <td></td>
                     <td class="col-amount text-right" style="white-space: nowrap;">
                         Sub Total:
-                        @moneyFormat($invoice->invoice_total)</td>
+                        @moneyFormat($total->subtotal())</td>
                 </tr>
-                @if($invoice->invoice_credit)
+                @if($total->hasCredit())
                     <tr>
                         <td></td>
                         <td class="text-left">Account Credit Applied:</td>
                         <td class="col-amount text-right">
-                            - @moneyFormat($invoice->invoice_credit)</td>
+                            - @moneyFormat($total->credit())</td>
                     </tr>
                 @endif
                 <tr>
@@ -380,7 +365,7 @@
                     <td class="col-amount text-right"
                         style="font-weight: bold; font-size: 1.25rem; white-space: nowrap;">
                         Total:
-                        @moneyFormat($invoice->invoice_total - ($invoice->invoice_credit ?? 0))</td>
+                        @moneyFormat($total->total())</td>
                 </tr>
                 </tfoot>
             </table>

@@ -2,12 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Domain\Invoice\Exceptions\CannotCreateInvoiceException;
+use App\Domain\Invoice\Services\InvoiceService;
+use App\Domain\Invoice\Strategies\CreateInvoiceStrategyFactory;
 use App\Models\Order;
-use App\Models\Product;
 use App\Services\LivewireHelpers\OrderListService;
 use App\Traits\HasSort;
 use Detection\MobileDetect;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -54,6 +55,16 @@ class OrderList extends Component
     public bool $mobileLoading = false;
     public int $mobilePage = 1;
 
+    private InvoiceService $invoiceService;
+
+    private CreateInvoiceStrategyFactory $strategies;
+
+    public function boot(InvoiceService $invoiceService, CreateInvoiceStrategyFactory $strategyFactory): void
+    {
+        $this->invoiceService = $invoiceService;
+        $this->strategies = $strategyFactory;
+    }
+
     private function fetchMobileOrders(): void
     {
         $query = $this->applySort(
@@ -61,7 +72,6 @@ class OrderList extends Component
         );
 
         $rows = $query
-            ->with('customer:customer_id,customer_name', 'invoice:invoice_id,order_id')
             ->forPage($this->mobilePage, 12)
             ->get()
             ->map(function (Order $order) {
@@ -74,7 +84,8 @@ class OrderList extends Component
                     'total_pita' => $order->total_pita,
                     'total_price' => $order->total_price,
                     'customer_name' => $order->customer->customer_name,
-                    'invoice_id' => $order->invoice?->invoice_id
+                    'invoice_id' => $order->getInvoiceId(),
+                    'hasInvoice' => $order->hasInvoice(),
                 ];
             })
             ->toArray();
@@ -91,7 +102,6 @@ class OrderList extends Component
         );
 
         $rows = $query
-            ->with('customer:customer_id,customer_name', 'invoice:invoice_id,order_id')
             ->forPage(1, 12 * $this->mobilePage)
             ->get()
             ->map(function (Order $order) {
@@ -104,7 +114,8 @@ class OrderList extends Component
                     'total_pita' => $order->total_pita,
                     'total_price' => $order->total_price,
                     'customer_name' => $order->customer->customer_name,
-                    'invoice_id' => $order->invoice?->invoice_id
+                    'invoice_id' => $order->getInvoiceId(),
+                    'hasInvoice' => $order->hasInvoice(),
                 ];
             })
             ->toArray();
@@ -127,9 +138,19 @@ class OrderList extends Component
 
     public function createInvoice(int $orderId): void
     {
-        $this->redirect(route('invoices.create-single', [
-            'order' => $orderId
-        ]));
+        try {
+            $this->invoiceService->createRecordUsingStrategy($this->strategies->single($orderId));
+            session()->flash('success', 'Invoice created');
+        } catch (CannotCreateInvoiceException $e) {
+            session()->flash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unknown error when generating invoice');
+            Log::error($e->getMessage(), ['exception' => $e]);
+        }
+
+        if ($this->isMobile) {
+            $this->refetchLoadedMobileOrders();
+        }
     }
 
     public function mount(): void
@@ -224,8 +245,6 @@ class OrderList extends Component
 
     public function render(): View
     {
-
-
         if ($this->disabled) {
             return view('livewire.order-list'); // no data is needed for the view when the list is disabled
         }
