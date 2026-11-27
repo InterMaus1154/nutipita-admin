@@ -41,8 +41,9 @@ class InvoiceSummaryPdfService extends AbstractPdfService
         $renderProducts = [];
         if ($displayMode === InvoiceSummaryDisplayMode::RENDER_ORDERS) {
 
+            $orders = $invoice->orders->sortBy(fn(Order $order) => $order->getDueDate());
             /** @var Order $order */
-            foreach ($invoice->orders as $order) {
+            foreach ($orders as $order) {
 
                 $products = [];
                 foreach ($order->products as $product) {
