@@ -134,5 +134,5 @@
                 ];
     @endphp
     <livewire:order-list :summaryVisibleByDefault="true" :withSummaryPdf="true" :prop-filters="$filters"
-                         :disabled="empty($customer_id)" :has-loading="false"/>
+                         :has-loading="false"/>
 </div>
