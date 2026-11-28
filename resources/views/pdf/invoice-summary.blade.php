@@ -52,7 +52,7 @@
 </head>
 <body>
 <header>
-    <h1 style="text-align: center">Summary for Invoice #{{$invoice->getInvoiceNumber()}}</h1>
+    <h1 style="text-align: center">Summary of Invoice #{{$invoice->getInvoiceNumber()}}</h1>
     <p style="text-align: center">(This is not the invoice)</p>
     <table style="width: 100%; border: none">
         <tr>
