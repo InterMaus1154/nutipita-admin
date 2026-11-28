@@ -22,7 +22,7 @@
 @endphp
 <html>
 <head>
-    <title>Summary for Invoice #{{$invoice->getInvoiceNumber()}}</title>
+    <title>Summary of Invoice #{{$invoice->getInvoiceNumber()}}</title>
     <style>
         * {
             margin: 0;
