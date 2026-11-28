@@ -22,7 +22,7 @@
 @endphp
 <html>
 <head>
-    <title>Invoice #{{$invoice->getInvoiceNumber()}} Summary</title>
+    <title>Summary for Invoice #{{$invoice->getInvoiceNumber()}}</title>
     <style>
         * {
             margin: 0;
@@ -52,7 +52,7 @@
 </head>
 <body>
 <header>
-    <h1 style="text-align: center">Invoice #{{$invoice->getInvoiceNumber()}} Summary</h1>
+    <h1 style="text-align: center">Summary for Invoice #{{$invoice->getInvoiceNumber()}}</h1>
     <p style="text-align: center">(This is not the invoice)</p>
     <table style="width: 100%; border: none">
         <tr>
@@ -61,7 +61,7 @@
             </td>
             <td style="text-align: right; font-size: 1.25rem; font-weight: bold; border: none; padding: 0">
                 @if(! is_null($invoice->getInvoiceFrom()) && ! is_null($invoice->getInvoiceTo()))
-                    {{$invoice->getInvoiceFrom()->format('m/d/Y')}} - {{$invoice->getInvoiceTo()->format('m/d/Y')}}
+                    {{$invoice->getInvoiceFrom()->format('d/m/Y')}} - {{$invoice->getInvoiceTo()->format('d/m/Y')}}
                 @endif
             </td>
         </tr>
@@ -103,15 +103,11 @@
                         <td style="text-align: center">-</td>
                     @else
                         <td style="text-align: center">
-                            {{amountFormat($line->qty)}} x {{unitPriceFormat($line->unitPrice)}}
-                            <br>
-                            {{moneyFormat($line->total)}}
+                            {{amountFormat($line->qty)}}
                         </td>
                     @endif
                 @endforeach
                 <td style="text-align: center">
-                    {{amountFormat(collect($order->products)->sum('qty'))}}
-                    <br>
                     {{moneyFormat(collect($order->products)->sum('total'))}}
                 </td>
             </tr>
@@ -126,20 +122,16 @@
                     $prices = $columnLines->pluck('unitPrice')->unique();
                 @endphp
                 <td style="text-align: center">
-                    {{amountFormat($columnLines->sum('qty'))}}@if($prices->count() === 1) x {{unitPriceFormat($prices->first())}}@endif
-                    <br>
-                    {{moneyFormat($columnLines->sum('total'))}}
+                    {{amountFormat($columnLines->sum('qty'))}}
                 </td>
             @endforeach
             <td style="text-align: center">
-                {{amountFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('qty'))}}
-                <br>
                 {{moneyFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('total'))}}
             </td>
         </tr>
         @if(! $invoice->getDeliveryCharge()->isNull())
             <tr>
-                <td colspan="{{$footerSpan}}" style="text-align: right">Nuti Pita / Delivery Charge ({{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}})</td>
+                <td colspan="{{$footerSpan}}" style="text-align: right">Nuti Pita (Delivery Charge) ({{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}})</td>
                 <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
             </tr>
         @endif
@@ -156,7 +148,7 @@
         @if(! $invoice->getDeliveryCharge()->isNull())
             <tr>
                 <td>#</td>
-                <td style="text-align: center">Nuti Pita / Delivery Charge</td>
+                <td style="text-align: center">Nuti Pita (Delivery Charge)</td>
                 <td style="text-align: center;">{{$invoice->getDeliveryCharge()->getModifier()}}</td>
                 <td style="text-align: center;">{{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
                 <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
