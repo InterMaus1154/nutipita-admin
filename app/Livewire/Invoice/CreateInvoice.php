@@ -189,7 +189,7 @@ class CreateInvoice extends Component
 
             session()->flash('success', 'Invoice created successfully!');
             session()->flash('invoice', $invoice);
-
+            $this->redirectRoute('invoices.index');
             $this->resetInvoiceForm();
         } catch (CannotCreateInvoiceException $e) {
             session()->flash('error', $e->getMessage());
