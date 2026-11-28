@@ -125,13 +125,13 @@
                     {{amountFormat($columnLines->sum('qty'))}}
                 </td>
             @endforeach
-            <td style="text-align: center">
+            <td style="text-align: center; font-weight: normal">
                 {{moneyFormat(collect($data->orderData)->flatMap(fn($order) => $order->products)->sum('total'))}}
             </td>
         </tr>
         @if(! $invoice->getDeliveryCharge()->isNull())
             <tr>
-                <td colspan="{{$footerSpan}}" style="text-align: right">Nuti Pita (Delivery Charge) ({{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}})</td>
+                <td colspan="{{$footerSpan}}" style="text-align: left">Nuti Pita (Delivery Charge) {{$invoice->getDeliveryCharge()->getModifier()}} x {{moneyFormat($invoice->getDeliveryCharge()->toFloat())}}</td>
                 <td style="text-align: center">{{moneyFormat($invoice->getDeliveryCharge()->getCalculated())}}</td>
             </tr>
         @endif
@@ -158,7 +158,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td style="font-weight: bold" colspan="{{$footerSpan}}">Sub Total</td>
+        <td style="font-weight: normal" colspan="{{$footerSpan}}">Sub Total</td>
         <td style="text-align: center;"> {{moneyFormat($invoice->getTotal()->subtotal())}} </td>
     </tr>
     @if($invoice->getTotal()->hasCredit())
@@ -169,7 +169,7 @@
     @endif
     <tr>
         <td style="font-weight: bold" colspan="{{$footerSpan}}">Total</td>
-        <td style="text-align: center;"> {{moneyFormat($invoice->getTotal()->total())}} </td>
+        <td style="text-align: center; font-weight: bold;"> {{moneyFormat($invoice->getTotal()->total())}} </td>
     </tr>
     </tfoot>
 </table>
